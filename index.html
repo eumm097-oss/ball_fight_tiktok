@@ -38,6 +38,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","
 .p2 .rail{background:var(--rail)}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
 .modal[hidden]{display:none}
+.codebox{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:30}
+.codecard{width:min(320px,100%);background:#fff;color:#111;border:2px solid #000;border-radius:14px;padding:18px 16px 14px}
+.codemsg{margin:0 0 12px;font-size:14px;line-height:1.6;font-weight:700;text-align:center}
+.codein{width:100%;box-sizing:border-box;padding:10px 12px;border:2px solid #000;border-radius:10px;font:700 18px/1 inherit;text-align:center;letter-spacing:.3em}
+.codeerr{min-height:18px;margin:6px 0 8px;font-size:12.5px;color:#e02424;text-align:center}
+.coderow{display:flex;gap:8px}.coderow button{flex:1;padding:10px 0;border:2px solid #000;border-radius:10px;background:#fff;font:700 14px/1 inherit;color:#111;cursor:pointer}.coderow .codeyes{background:#111;color:#fff}
 .panel{position:relative;width:100%;max-width:560px;min-height:min(70vh,480px);background:var(--bg);border:3px solid var(--ink);padding:56px 20px 28px}
 .dummy-row{margin-bottom:12px}
 .dummy-row .half{width:calc(50% - 6px)}
@@ -335,7 +341,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
       <button class="half" type="button" data-name="제리얌" data-cls="jy" data-kind="jy">제리얌</button>
       <button class="half" type="button" data-name="태권히어로" data-cls="nu" data-kind="nu">태권히어로</button>
       <button class="half" type="button" data-name="어둠속성 김켈리" data-cls="kk" data-kind="kk">어둠속성 김켈리</button>
-      <button class="half" type="button" data-name="숏타민" data-cls="st" data-kind="st">숏타민</button>
+      <button class="half" type="button" data-name="숏타민" data-cls="st" data-kind="st" data-locked="1"><svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2" fill="currentColor"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="15.5" r="1.5" fill="#505558"/></svg>숏타민</button>
       <button class="half" type="button" data-name="백기철 판타지" data-cls="bk" data-kind="bk">백기철 판타지</button>
     </div>
   </div>
@@ -346,6 +352,20 @@ function lockToast(){                 // 점검 중인 캐릭터를 누르면 �
   pn.querySelectorAll('.mtoast').forEach(x=>x.remove());
   const t=document.createElement('div');t.className='mtoast';t.textContent='점검 중인 캐릭터입니다.';pn.appendChild(t);
   try{t.animate([{opacity:0},{opacity:1,offset:.12},{opacity:1,offset:.8},{opacity:0}],{duration:1800,fill:'forwards'}).onfinish=()=>t.remove()}catch(e){setTimeout(()=>t.remove(),1800)}
+}
+let stOpen=false;                       // 점검 중인 캐릭터는 코드를 맞게 입력하면 이 페이지를 닫을 때까지 쓸 수 있음
+const codeOk=v=>{let h=0x811c9dc5;for(const b of new TextEncoder().encode('st-lock:'+v)){h^=b;h=Math.imul(h,0x01000193)>>>0}return h===1586651393};
+function askCode(done){
+  const box=document.createElement('div');box.className='codebox';
+  box.innerHTML='<div class="codecard"><p class="codemsg">점검 중인 캐릭터입니다.<br>플레이하려면 코드를 입력해야 합니다.</p><input class="codein" type="password" inputmode="numeric" autocomplete="off" maxlength="12" aria-label="코드"><p class="codeerr" aria-live="polite"></p><div class="coderow"><button type="button" class="codeno">취소</button><button type="button" class="codeyes">확인</button></div></div>';
+  document.body.appendChild(box);
+  const inp=box.querySelector('.codein'),err=box.querySelector('.codeerr'),close=()=>box.remove();
+  const go=()=>{if(codeOk(inp.value.trim())){stOpen=true;close();done()}else{err.textContent='코드가 틀렸습니다.';inp.value='';inp.focus()}};
+  box.querySelector('.codeyes').addEventListener('click',go);
+  box.querySelector('.codeno').addEventListener('click',close);
+  box.addEventListener('click',e=>{if(e.target===box)close()});
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')go();else if(e.key==='Escape')close()});
+  setTimeout(()=>inp.focus(),30);
 }
 function calcShift(){
   try{
@@ -923,7 +943,8 @@ function gameOver(){                 // 한 명이 죽으면 게임 종료
   later(()=>showVictory(chars.find(o=>o.alive)),800);
   
 }
-function hurt(c,d){if(!c.alive||revPause>0)return;if(c.kind==='st'&&d>0&&stDodge(c))return;let cut=0;if(c.resist&&!lostPas(c))cut=RESIST.cut;if(c.resistUntil>now)cut=Math.max(cut,c.resistCut||RESIST.cut);if(c.kind==='bk'&&!lostPas(c)){const o=foe(c);if(o)cut=Math.max(cut,resistOf(o))}if(cut>0&&d>0)d=d*(1-cut);const old=c.hp;c.hp=Math.max(0,Math.round((c.hp-d)*1e6)/1e6);renderHp(c);hpChange(c,old);if(c.hp<=0){if(c.kind==='nm'&&!c.revived)startRevive(c);else die(c)}}   // 받는 피해 증감으로 생긴 소수점은 반올림하지 않고 그대로 데이터에 남김
+function hurt(c,d,keep){if(!c.alive||revPause>0)return;if(c.kind==='st'&&d>0&&!keep&&stDodge(c))return;   // keep=true: 부딪힘 벽·몸 충돌 데미지는 회피로 피하지 않음
+let cut=0;if(c.resist&&!lostPas(c))cut=RESIST.cut;if(c.resistUntil>now)cut=Math.max(cut,c.resistCut||RESIST.cut);if(c.kind==='bk'&&!lostPas(c)){const o=foe(c);if(o)cut=Math.max(cut,resistOf(o))}if(cut>0&&d>0)d=d*(1-cut);const old=c.hp;c.hp=Math.max(0,Math.round((c.hp-d)*1e6)/1e6);renderHp(c);hpChange(c,old);if(c.hp<=0){if(c.kind==='nm'&&!c.revived)startRevive(c);else die(c)}}   // 받는 피해 증감으로 생긴 소수점은 반올림하지 않고 그대로 데이터에 남김
 const foe=c=>chars.find(o=>o!==c&&o.alive);
 const resistOf=o=>Math.max((o.resist&&!lostPas(o))?RESIST.cut:0,(o.resistUntil>now)?(o.resistCut||RESIST.cut):0);   // 지금 이 캐릭터가 가진 보호 수치
 const dist=(a,b)=>Math.floor(Math.hypot(a.x-b.x,a.y-b.y)*100+1e-9);          // 소수는 버림
@@ -1339,11 +1360,7 @@ function stDodge(c){                // 데미지를 입으면 게이지 1칸을 
   c.stG=Math.max(0,c.stG-1);
   try{
     playDodge();
-    const W=arenaEl.clientWidth,H=arenaEl.clientHeight,d=c.ball.offsetWidth||40,cx=c.x*W,cy=c.y*H;
-    const p=mk('pct','회피');p.style.left=cx+'px';p.style.top=(cy-d*.6)+'px';p.style.color='#f28c1a';p.style.fontWeight='900';
-    p.animate([{opacity:0,transform:'translate(-50%,-50%) scale(.6)'},{opacity:1,transform:'translate(-50%,calc(-50% - 10px)) scale(1)',offset:.25},{opacity:0,transform:'translate(-50%,calc(-50% - 28px)) scale(1)'}],
-      {duration:700,easing:'ease-out',fill:'forwards'}).onfinish=()=>p.remove();
-    c.ball.animate([{opacity:.35,transform:'scale(.92)'},{opacity:1,transform:'scale(1)'}],{duration:260,easing:'ease-out'});
+    c.ball.animate([{opacity:.3},{opacity:.3,offset:.25},{opacity:1}],{duration:500,easing:'ease-out'});   // 회피: 맞는 즉시 연해졌다가 0.5초 만에 원래대로
   }catch(e){}
   return true;
 }
@@ -1420,7 +1437,7 @@ function knockWall(m){
   if(now<(m.wallCd||0))return;m.wallCd=now+HIT_GUARD;   // 벽에 부딪힐 때마다 데미지 (같은 충돌이 한 번에 여러 번 세어지지만 않게)
   const W=arenaEl.clientWidth,H=arenaEl.clientHeight;
   playThud(.9);burstAt(m.x*W,m.y*H,'#ffd24a',.9,8);shake(6,220);
-  hurt(m,m.kbWall||JY.wallDmg);                                          // 힘으로는 늘어나지 않는 디버프 데미지
+  hurt(m,m.kbWall||JY.wallDmg,true);                                          // 힘으로는 늘어나지 않는 디버프 데미지
 }
 
 /* 포크: 머리 위에서 내려찍고, 75% → 65% → 40% → 20% 확률을 뚫을 때마다 다시 찍음 (최대 5번) */
@@ -1652,7 +1669,7 @@ function kbCollide(m){              // 부딪힘III: 캐릭터와 부딪힐 때�
   m.colCd=now+NU.colCd;
   const W=arenaEl.clientWidth,H=arenaEl.clientHeight;
   playThud(.8);burstAt(m.x*W,m.y*H,'#CD2E3A',.8,8);shake(5,180);
-  hurt(m,NU.col3);
+  hurt(m,NU.col3,true);
 }
 
 /* ---------- main loop ---------- */
@@ -2327,10 +2344,10 @@ function bkFlash(c,k){               // 한 칸이 다 찰 때마다 그 칸에 
     const el=document.createElement('s');el.className='bkflash';
     el.style.left=(k/BK.max*100)+'%';el.style.width=(100/BK.max)+'%';(c.bkBar||c.rb).append(el);
     el.animate([
-      {opacity:1,background:'#ffffff',boxShadow:'0 0 0 0 rgba(96,165,250,.95)',transform:'scaleY(1)'},
-      {opacity:1,background:'#bcd7ff',boxShadow:'0 0 12px 5px rgba(37,99,235,.85)',transform:'scaleY(2.1)',offset:.3},
-      {opacity:0,background:'#2563eb',boxShadow:'0 0 18px 8px rgba(37,99,235,0)',transform:'scaleY(1)'}
-    ],{duration:700,easing:'ease-out',fill:'forwards'}).onfinish=()=>el.remove();
+      {opacity:.75,background:'#dbe8ff',boxShadow:'0 0 0 0 rgba(96,165,250,.5)',transform:'scaleY(1)'},
+      {opacity:.75,background:'#bcd7ff',boxShadow:'0 0 6px 2px rgba(37,99,235,.45)',transform:'scaleY(1.4)',offset:.3},
+      {opacity:0,background:'#2563eb',boxShadow:'0 0 8px 3px rgba(37,99,235,0)',transform:'scaleY(1)'}
+    ],{duration:500,easing:'ease-out',fill:'forwards'}).onfinish=()=>el.remove();
   }catch(e){}
 }
 const BK_DEB=[['slow',14],['frail',12],['burn',12],['nopas',9],['silence',9],['slow2',6],['burn2',5]];
@@ -2417,8 +2434,7 @@ const INFO=[
      {n:'체력 베끼기',p:'패시브',d:'상대와 몸이 부딪히면 상대의 체력 '+BKD.take+'을 베껴 그만큼 회복한다(보호로 줄어든 만큼만 회복한다).'},
      {n:'디버프 걸기',p:BK.dbGap+'초마다',d:'상대에게 아무 디버프나 '+BK.debSec+'초 동안 건다. 센 디버프일수록 걸릴 확률이 낮다. 걸려 있는 동안은 '+BK.dbGap+'초 시간이 흐르지 않고, 정지 중에도 흐르지 않는다.'}
    ]},
-  {kind:'st',cls:'st',name:'숏타민',color:'#f28c1a',tag:'공격을 피하고 디버프에 면역인 공',
-   chips:['행운키링 게이지 '+ST.max+'칸','1칸당 '+ST.cell+'초'],
+  {kind:'st',cls:'st',name:'숏타민',color:'#f28c1a',tag:'점검 중인 캐릭터',locked:true,
    skills:[
      {n:'요력면역',p:'패시브',d:'부딪힘을 뺀 모든 디버프에 면역이다.'},
      {n:'행운키링',p:'게이지 1칸',d:'게이지는 2칸이고, 한 칸이 차는 데 '+ST.cell+'초가 걸린다. 데미지를 입으면 게이지 1칸을 쓰고 그 데미지를 피한다.'}]}
@@ -2613,7 +2629,7 @@ document.addEventListener('click',e=>{
 });
 document.querySelector('.panel').addEventListener('click',e=>{
   const o=e.target.closest('.half');if(!o||!side||phase!=='idle'||chars.some(c=>c.side===side))return;
-  if(o.dataset.locked){lockToast();return}
+  if(o.dataset.locked&&!stOpen){askCode(()=>{o.removeAttribute('data-locked');const lk=o.querySelector('.lk');if(lk)lk.remove();o.click()});return}
   const ball=document.createElement('div');
   ball.className='ball '+side+(o.dataset.dummy?' dummy':'')+' '+(o.dataset.cls||'');
   ball.innerHTML='<div class="aim"><i></i></div>';arenaEl.appendChild(ball);
