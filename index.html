@@ -271,10 +271,10 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .status.sm{color:#7c3aed;font-weight:500;font-size:calc(var(--W)/2*.054)}
 .ball.resist{border-width:2px;box-shadow:inset 0 0 0 2px #3b82f6}   /* 보호 이펙트: 푸른 외곽선 한 줄을 원래 테두리 안쪽에 붙임(전체 굵기 그대로) */
 .rb .bb{position:absolute;left:-1px;right:-1px;top:calc(100% + 6px + var(--i,0)*18px);height:14px;border:1px solid var(--ink);box-sizing:border-box;background:var(--rail)}
-.rb.tall{height:14px;top:0;transform:none}
+.rb .bb.bkcells{height:7px}   /* 백기철: 높이만 다른 캐릭터 게이지와 같은 7px, 위 게이지와 간격은 다른 캐릭터의 체력 게이지↔출혈 게이지 간격과 같음 */
 .rb .fill.dbf{background:#0ea5e9}
 .rb .bb span,.rb .dbtxt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 9px/1 "IBM Plex Sans KR","Noto Sans KR",sans-serif;color:#fff;-webkit-text-stroke:.5px #000;paint-order:stroke fill;white-space:nowrap;pointer-events:none;z-index:1}
-.rb .dbtxt{font-weight:900;-webkit-text-stroke:.6px #000;z-index:3}
+.rb .dbtxt{font-weight:900;font-size:7px;-webkit-text-stroke:.4px #000;z-index:3}
 .rb .bb i{position:absolute;inset:0;background:#b3001b;transform-origin:left center;transform:scaleX(0)}
 .hud>div.bleeding .status{margin-top:calc(10px + var(--nb,1)*18px + var(--tall,0px))}
 .auralayer{position:absolute;inset:0;pointer-events:none;z-index:1}
@@ -766,10 +766,10 @@ function makeChar(sd,o,ball){
     if(c.kind==='nu')setupNu(c);
     if(c.kind==='bk'){
       c.g=0;c.copyId=null;c.dbT=0;c.dbEnd=0;
-      c.rb.classList.add('tall');c.P.style.setProperty('--tall','7px');
+      c.P.style.setProperty('--tall','-7px');
       const cell=addBar(c,'bkcells','');cell.appendChild(c.fill);c.bkBar=cell;                  // 3칸 스킬 게이지는 아래 칸으로
       const df=document.createElement('i');df.className='fill dbf';const tx=document.createElement('span');tx.className='dbtxt';c.rb.append(df,tx);c.dbFill=df;c.dbTxt=tx;   // 위 칸은 디버프 게이지
-      for(let k=1;k<BK.max;k++)for(const host of [c.rb,cell]){const u=document.createElement('u');u.className='bkdiv';u.style.left=(k/BK.max*100)+'%';host.append(u)}
+      for(let k=1;k<BK.max;k++)for(const host of [cell]){const u=document.createElement('u');u.className='bkdiv';u.style.left=(k/BK.max*100)+'%';host.append(u)}
     }
   }
   if(c.kind==='kk'){                                                  // 머리 위에 처음부터 회색(불 꺼진) 신비마트 글자를 계속 띄움
@@ -1059,7 +1059,7 @@ function dropTag(c,kind){           // 머리 위 글자 한 개를 바로 치�
 }
 function addBar(c,cls,html){          // 체력바 밑에 게이지 바를 한 줄 더 붙임 (먼저 만든 것이 위, 나중에 만든 것이 아래 → 출혈바는 늘 맨 아래)
   const bb=document.createElement('div');bb.className='bb '+(cls||'');bb.innerHTML=html||'';
-  bb.style.setProperty('--i',c.bars||0);c.bars=(c.bars||0)+1;c.rb.appendChild(bb);
+  bb.style.setProperty('--i',c.bars||0);if(c.bkBar&&cls!=='bkcells')bb.style.top='calc(100% + 18px)';c.bars=(c.bars||0)+1;c.rb.appendChild(bb);
   c.P.classList.add('bleeding');c.P.style.setProperty('--nb',c.bars);return bb;
 }
 function startRevive(c){            // 체력이 0이 되면 바로 터지지 않고, 잠깐 멈춘 채로 '심장을 열고..' 연출 뒤 체력 가득 부활 (1번만)
@@ -1341,7 +1341,7 @@ function jyBump(a,b){               // 제리얌과 몸이 부딪힌 상대: 5 �
     if(t.alive)applyKnock(t,t.x-s.x,t.y-s.y,JY.bumpSec);
   }
 }
-const BKD={take:15,cd:HIT_GUARD};   // 백기철 판타지의 체력 베끼기: 몸이 부딪힌 상대의 체력 15를 베껴 그만큼 회복
+const BKD={take:7,cd:HIT_GUARD};   // 백기철 판타지의 체력 베끼기: 몸이 부딪힌 상대의 체력 15를 베껴 그만큼 회복
 function playDrain(){               // 체력 베끼기 효과음: 짧게 빨려 들어오는 '츄릅'
   if(!actx||actx.state!=='running')return;
   try{
@@ -1450,7 +1450,7 @@ function castJy(c){                 // 햄버거 30% / 치킨 30% / 야채 20% /
 /* ---------- 태권히어로: 아우라 + 주먹 ---------- */
 /* 아우라: 몸 가장자리에서 4m 바깥까지. 상대 몸이 아우라에 닿으면(두 공 사이 간격 4m 이내) 주먹이 나감 */
 const RESIST={cut:.3,cut2:.5,cut3:.7};   // 보호 30% / 보호II 50% / 보호III 70% 감소
-const NU={spin:60,aura:.06,hit:5,ult:50,need:5,sec:1,ultSec:2.5,p1:.9,col3:8,colCd:HIT_GUARD,cycle:5,offSec:1.5,fade:.4,fxSec:3};
+const NU={spin:60,aura:.06,hit:5,ult:50,gap:.3,need:5,sec:1,ultSec:2.5,p1:.9,col3:8,colCd:HIT_GUARD,cycle:5,offSec:1.5,fade:.4,fxSec:3};
 const nuReach=()=>R+NU.aura+R;
 const BURN={gap:.5,lo:1,hi:5,lo2:5,hi2:10};                                 // 연소: 0.5초마다 1~5 (연소II는 5~10)
 const TG_RED='#CD2E3A',TG_BLUE='#0047A0';                              // 태극기의 홍·청
@@ -1575,12 +1575,13 @@ function nuTick(dt){
     const hide=lost||(gone&&ph<NU.offSec-NU.fade);                                // 처음 0.4초 줄어들며 사라지고, 마지막 0.4초는 다시 넓어지며 돌아옴
     if(hide!==!!n.auraHide){n.auraHide=hide;if(n.aura)n.aura.el.classList.toggle('off',hide)}
     n.auraOff=gone||lost;
-    if(gone||lost||inBH(n))continue;
+    if(gone||lost||inBH(n)||now<n.punchAt)continue;
     const t=foe(n);if(!t||!t.alive)continue;
     if(Math.hypot(n.x-t.x,n.y-t.y)<=nuReach())nuPunch(n,t);
   }
 }
 function nuPunch(n,t){
+  n.punchAt=now+NU.gap;
   const ult=n.nuHits>=NU.need;      // 게이지가 가득 찬 채로 유지되다가, 다음 한 대가 궁극기
   const side=tgSide(n,t);           // 상대 몸이 닿은 태극 구역: red(위) / blue(아래)
   fistFx(n,t,ult,side);
@@ -2171,7 +2172,7 @@ function setSilenceUI(t){t.status.textContent=TRUTH.msg;t.status.classList.add('
 function sTruth(c,done){
   const t=foe(c);
   playTruth();
-  sched(1.0,()=>{try{if(c.alive&&t&&t.alive){truthFx(t);t.noPasUntil=now+TRUTH.sec;t.silenceUntil=now+TRUTH.sec;setSilenceUI(t)}}finally{done()}});
+  sched(1.0,()=>{try{if(c.alive&&t&&t.alive){truthFx(t);t.noPasUntil=now+TRUTH.sec;t.silenceUntil=now+TRUTH.sec;t.silShow=true;setSilenceUI(t)}}finally{done()}});
 }
 /* 신비마트 */
 const litFilter=l=>'grayscale('+(1-l).toFixed(2)+') brightness('+(1.9-.9*l).toFixed(2)+') opacity('+(.5+.5*l).toFixed(2)+')'
@@ -2233,8 +2234,8 @@ function martTick(c,dt){
 function kkTick(dt){
   for(const c of chars){
     if(c.noPasUntil&&now>=c.noPasUntil)c.noPasUntil=0;
-    if(c.silenceUntil&&now>=c.silenceUntil){c.silenceUntil=0;if(c.statusSm){c.statusSm=false;c.status.classList.remove('sm');c.status.textContent=c.mode==='boost'?'1년치 게이지 다 채우는 중':''}}
-    else if(c.silenceUntil&&c.status.textContent!==TRUTH.msg)setSilenceUI(c);
+    if(c.silenceUntil&&now>=c.silenceUntil){c.silenceUntil=0;c.silShow=false;if(c.statusSm){c.statusSm=false;c.status.classList.remove('sm');c.status.textContent=c.mode==='boost'?'1년치 게이지 다 채우는 중':''}}
+    else if(c.silShow&&c.silenceUntil&&c.status.textContent!==TRUTH.msg)setSilenceUI(c);   // '스킬을 어떻게 썼더라..?'는 김켈리의 진실 스킬에 걸렸을 때만 표시
     if(c.resistUntil&&now>=c.resistUntil)c.resistUntil=0;
     if(c.kind==='kk'&&c.alive)martTick(c,dt);
   }
@@ -2308,7 +2309,7 @@ function bkDebuff(b){                 // 상대에게 아무 디버프나 BK.deb
     else if(k==='burn')applyBurn(t,1,D);else if(k==='burn2')applyBurn(t,2,D);
     else if(k==='frail')t.frailUntil=now+D;
     else if(k==='nopas')t.noPasUntil=now+D;
-    else if(k==='silence'){t.silenceUntil=now+D;setSilenceUI(t)}
+    else if(k==='silence'){t.silenceUntil=Math.max(t.silenceUntil||0,now+D)}
     b.dbName=BK_DEBN[k];
     burstAt(t.x*arenaEl.clientWidth,t.y*arenaEl.clientHeight,'#2563eb',.8,8);return true;
   }
@@ -2364,7 +2365,7 @@ const INFO=[
    skills:[
      {n:'보호',p:'패시브',d:'받는 피해가 '+Math.round(RESIST.cut*100)+'% 줄어든다.'},
      {n:'태극 아우라',p:'패시브',d:'태권히어로 몸 둘레에 태극 아우라가 있다. 반지름은 몸 가장자리에서 '+Math.round(NU.aura*100)+'m이다. 아우라는 빨강 구역과 파랑 구역으로 나뉜다. 상대의 몸이 아우라에 닿으면(두 공 사이 간격이 '+Math.round(NU.aura*100)+'m 이내) 자동으로 주먹이 나간다. 같은 상대는 '+NU.gap+'초 간격으로 다시 때릴 수 있고, 태권히어로가 멈춤 상태일 땐 주먹도 안 나간다. 아우라는 '+NU.cycle+'초마다 '+NU.offSec+'초 동안 꺼지고, 그 동안은 주먹이 안 나간다(멈춤 중에는 이 시간도 멈춘다).'},
-     {n:'주먹',p:'일반 공격',d:NU.hit+' 데미지를 주고, '+Math.round(NU.p1*100)+'%는 부딪힘 '+NU.sec+'초, '+Math.round((1-NU.p1)*100)+'%는 부딪힘II '+NU.sec+'초를 건다. 쿨타임 없이 닿아 있는 동안 계속 때린다. 상대가 부딪힘 중이어도 또 때릴 수 있다. 맞은 구역이 빨강이면 연소 '+NU.fxSec+'초, 파랑이면 슬로우 '+NU.fxSec+'초를 준다. 블랙홀에 빠져 있는 동안은 주먹을 쓰지 못한다. 한 대 때릴 때마다 게이지가 1/'+NU.need+'씩 찬다(게이지는 파란색 '+NU.need+'칸이다).'},
+     {n:'주먹',p:'일반 공격',d:NU.hit+' 데미지를 주고, '+Math.round(NU.p1*100)+'%는 부딪힘 '+NU.sec+'초, '+Math.round((1-NU.p1)*100)+'%는 부딪힘II '+NU.sec+'초를 건다. 한 번 때리면 '+NU.gap+'초 동안은 다시 때리지 못한다. 상대가 부딪힘 중이어도 또 때릴 수 있다. 맞은 구역이 빨강이면 연소 '+NU.fxSec+'초, 파랑이면 슬로우 '+NU.fxSec+'초를 준다. 블랙홀에 빠져 있는 동안은 주먹을 쓰지 못한다. 한 대 때릴 때마다 게이지가 1/'+NU.need+'씩 찬다(게이지는 파란색 '+NU.need+'칸이다).'},
      {n:'궁극기',p:'게이지 가득',d:'게이지가 다 차면 궁극기 준비 상태가 되고, 태권히어로가 상대를 때릴 때까지 유지된다. 그다음 한 대가 궁극기다. '+NU.ult+' 데미지와 부딪힘III('+NU.ultSec+'초)을 주고, 빨강 구역이면 연소II, 파랑 구역이면 슬로우II를 '+NU.fxSec+'초 건다. 게이지는 처음으로 돌아간다.'}
    ]},
   {kind:'kk',cls:'kk',name:'어둠속성 김켈리',color:'#7c3aed',tag:'블랙홀로 끌어당기고 진실을 거짓으로 바꾸는 어둠 속성의 공',
@@ -2446,10 +2447,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='0.2.2';
+const PATCH_VERSION='0.3.4';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
-  {ver:'0.2.2',date:'2026-10-09',
+  {ver:'0.3.4',date:'2026-10-09',
    chars:[
      {who:'숏타민',tag:'new',lines:['신규 캐릭터 추가']},
      {who:'백기철 판타지',tag:'new',lines:['신규 캐릭터 추가']},
@@ -2467,7 +2468,7 @@ const PATCH_NOTES=[
        '주먹의 부딪힘 확률 {-70% → 90%}',
        '주먹의 부딪힘II 확률 {-30% → 10%}',
        '블랙홀에 빠진 상태에선 {~공격 불가}',
-       '공격 딜레이 {+0.5초 → 없음}',
+       '공격 딜레이 {+0.5초 → 0.3초}',
        '주먹 데미지 {-10 → 5}']},
      {who:'어둠속성 김켈리',tag:'nerf',lines:[
        '블랙홀 확률 {+30% → 35%}',
