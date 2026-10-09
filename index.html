@@ -170,6 +170,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .fxsub{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .26s ease,visibility 0s .26s}
 .fxsub.open{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .26s ease,visibility 0s 0s}
 .fxsub>div{min-height:0;overflow:hidden}
+.skr{display:flex;align-items:center;gap:2px;flex:none}.sktoggle{display:flex;align-items:center;justify-content:center;width:40px;height:30px;margin:-4px -6px -4px 0;padding:0;border:0;border-radius:8px;background:none;color:#111;cursor:pointer;-webkit-tap-highlight-color:transparent}.sktoggle svg{width:22px;height:9px;transition:transform .26s ease}.sktoggle[aria-expanded="true"] svg{transform:rotate(180deg)}.sktoggle:active{background:#f0f0f0}
 .fxsubin{margin-top:14px;padding:14px;border:1.5px solid var(--c);border-radius:12px;background:#fafafa}
 .audiohint{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:50%;transform:translateX(-50%);z-index:20;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.74);color:#fff;font:500 12px/1.3 "Noto Sans KR",sans-serif;white-space:nowrap;pointer-events:none}
 .audiohint[hidden]{display:none}
@@ -298,7 +299,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .pnver{margin:0 0 22px}
 .pnver:last-child{margin-bottom:0}
 .pnvh{display:flex;align-items:baseline;gap:10px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:12px}
-.pnvh b{font-size:19px}.pnvh span{font-size:12px;color:#999}
+.pnvh b{font-size:19px}.pnvh span{font-size:12px;color:#999}.pnvh i{font-style:normal;font-size:11px;font-weight:700;color:#fff;background:#e02424;padding:2px 7px;border-radius:3px;line-height:1.35;align-self:center}
 .pnsec{margin:14px 0 6px;font-size:13px;font-weight:700;color:#666;letter-spacing:.02em}
 .pnitem{margin:0 0 12px}
 .pnname{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;margin-bottom:5px}
@@ -334,7 +335,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
       <button class="half" type="button" data-name="제리얌" data-cls="jy" data-kind="jy">제리얌</button>
       <button class="half" type="button" data-name="태권히어로" data-cls="nu" data-kind="nu">태권히어로</button>
       <button class="half" type="button" data-name="어둠속성 김켈리" data-cls="kk" data-kind="kk">어둠속성 김켈리</button>
-      <button class="half" type="button" data-name="숏타민" data-cls="st" data-kind="st" data-locked="1"><svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10.5" rx="2" fill="currentColor"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="12" cy="15.5" r="1.5" fill="#505558"/></svg>숏타민</button>
+      <button class="half" type="button" data-name="숏타민" data-cls="st" data-kind="st">숏타민</button>
       <button class="half" type="button" data-name="백기철 판타지" data-cls="bk" data-kind="bk">백기철 판타지</button>
     </div>
   </div>
@@ -377,8 +378,8 @@ const STATS={nm:{speed:.55,cooldown:5,max:250},dummy:{speed:.55,cooldown:0,max:2
 let phase='idle',side=null;const used=[],timers=[];
 let chars=[],movers=[],events=[],follows=[],foods=[],projs=[],bhs=[],mletters=[],now=0,raf=0,last=0,over=false;
 function later(fn,ms){timers.push(setTimeout(fn,ms))}
-let revPause=0;                       // 낭만박상환 부활 연출 중이면 1: 모든 피해가 잠깐 멈춤
-let objStop=0;                         // 꼼짝마 중이면 1 이상: 밥상·포크 같은 모든 오브젝트가 같이 멈춤
+let revPause=0;                       // 낭만박상환 부활 연출 중이면 1: 모든 피해가 잠깐 정지
+let objStop=0;                         // 꼼짝마 중이면 1 이상: 밥상·포크 같은 모든 오브젝트가 같이 정지
 function sched(d,fn,obj,rev){events.push({t:now+d,fn,obj:!!obj,rev:!!rev})}   // rev=true: 부활 연출 자신의 일정 (부활 중에도 계속 진행)   // obj=true: 오브젝트(포크 등)의 일정 → 꼼짝마 동안 같이 밀림
 
 /* ---------- hit sound (Web Audio, no files) ---------- */
@@ -759,11 +760,12 @@ function makeChar(sd,o,ball){
   c.speed=STATS[c.kind].speed;c.cd=STATS[c.kind].cooldown;c.max=STATS[c.kind].max;
   c.color={nm:'#2f9e5b',dummy:'#8a8f92',jy:'#f26b35',nu:'#CD2E3A',kk:'#7c3aed',bk:'#2563eb',st:'#f28c1a'}[c.kind];c.nameColor={nm:'#2f9e5b',dummy:'var(--left)',jy:'#f26b35',nu:'#CD2E3A',kk:'#7c3aed',bk:'#2563eb',st:'#f28c1a'}[c.kind];
   c.immune=!!STATS[c.kind].immune;c.strUntil=0;c.slowUntil=0;c.buffUntil=0;c.buffMul=1;c.kbUntil=0;c.kbDur=1;c.ghostT=0;
-  if(c.kind==='nm'||c.kind==='jy'||c.kind==='nu'||c.kind==='kk'||c.kind==='bk'){
-    c.fill=document.createElement('i');c.fill.className=c.kind==='jy'?'fill jy':(c.kind==='kk'?'fill kk':(c.kind==='bk'?'fill bk':'fill'));
+  if(c.kind==='nm'||c.kind==='jy'||c.kind==='nu'||c.kind==='kk'||c.kind==='bk'||c.kind==='st'){
+    c.fill=document.createElement('i');c.fill.className=c.kind==='jy'?'fill jy':(c.kind==='kk'?'fill kk':(c.kind==='bk'?'fill bk':(c.kind==='st'?'fill st':'fill')));
     c.num=document.createElement('b');c.num.className='num';c.num.style[sd==='left'?'left':'right']='4px';
     c.rb.append(c.fill,c.num);
     if(c.kind==='nu')setupNu(c);
+    if(c.kind==='st'){c.stG=0;for(let k=1;k<ST.max;k++){const u=document.createElement('u');u.className='bkdiv';u.style.left=(k/ST.max*100)+'%';c.rb.append(u)}}
     if(c.kind==='bk'){
       c.g=0;c.copyId=null;c.dbT=0;c.dbEnd=0;
       c.P.style.setProperty('--tall','-7px');
@@ -921,7 +923,7 @@ function gameOver(){                 // 한 명이 죽으면 게임 종료
   later(()=>showVictory(chars.find(o=>o.alive)),800);
   
 }
-function hurt(c,d){if(!c.alive||revPause>0)return;let cut=0;if(c.resist&&!lostPas(c))cut=RESIST.cut;if(c.resistUntil>now)cut=Math.max(cut,c.resistCut||RESIST.cut);if(c.kind==='bk'&&!lostPas(c)){const o=foe(c);if(o)cut=Math.max(cut,resistOf(o))}if(cut>0&&d>0)d=d*(1-cut);const old=c.hp;c.hp=Math.max(0,Math.round((c.hp-d)*1e6)/1e6);renderHp(c);hpChange(c,old);if(c.hp<=0){if(c.kind==='nm'&&!c.revived)startRevive(c);else die(c)}}   // 받는 피해 증감으로 생긴 소수점은 반올림하지 않고 그대로 데이터에 남김
+function hurt(c,d){if(!c.alive||revPause>0)return;if(c.kind==='st'&&d>0&&stDodge(c))return;let cut=0;if(c.resist&&!lostPas(c))cut=RESIST.cut;if(c.resistUntil>now)cut=Math.max(cut,c.resistCut||RESIST.cut);if(c.kind==='bk'&&!lostPas(c)){const o=foe(c);if(o)cut=Math.max(cut,resistOf(o))}if(cut>0&&d>0)d=d*(1-cut);const old=c.hp;c.hp=Math.max(0,Math.round((c.hp-d)*1e6)/1e6);renderHp(c);hpChange(c,old);if(c.hp<=0){if(c.kind==='nm'&&!c.revived)startRevive(c);else die(c)}}   // 받는 피해 증감으로 생긴 소수점은 반올림하지 않고 그대로 데이터에 남김
 const foe=c=>chars.find(o=>o!==c&&o.alive);
 const resistOf=o=>Math.max((o.resist&&!lostPas(o))?RESIST.cut:0,(o.resistUntil>now)?(o.resistCut||RESIST.cut):0);   // 지금 이 캐릭터가 가진 보호 수치
 const dist=(a,b)=>Math.floor(Math.hypot(a.x-b.x,a.y-b.y)*100+1e-9);          // 소수는 버림
@@ -1089,7 +1091,7 @@ function applyTempBleed(t,lvl,sec){   // 백기철 판타지의 디버프로 걸
   if(t.tbUntil>now){t.tbLvl=Math.max(t.tbLvl||1,lvl);t.tbUntil=Math.max(t.tbUntil,now+sec)}
   else{t.tbLvl=lvl;t.tbUntil=now+sec;t.tbNext=now}
 }
-function bleedTick(dt){             // 출혈: 10초에 한 번 체력 5 (멈춤 중에는 시간도 같이 멈춤)
+function bleedTick(dt){             // 출혈: 10초에 한 번 체력 5 (정지 중에는 시간도 같이 정지)
   for(const c of chars){
     if(!c.tbUntil||!c.alive||over)continue;
     if(c.frozen>0){c.tbNext+=dt;c.tbUntil+=dt;continue}
@@ -1320,7 +1322,38 @@ function tableHit(p,t){
   hurt(t,(JY.tableDmg+atk(p.owner))*frail(p.owner));
   if(t.alive)applyKnock(t,p.vx,p.vy,JY.knockSec,2);                      // 이런 반찬 안 먹찬의 밥상 = 부딪힘II
 }
-/* 부딪힘: 맞으면 빠르게 밀려나고(밥상·포크 1.5초 / 제리얌 몸 부딪힘 1초), 벽에 부딪힐 때마다 JY.wallDmg(3) 데미지 (제리얌은 면역). 별도의 '당했다' 글자 표시는 없음 */
+/* 부딪힘: 맞으면 빠르게 밀려나고(밥상·포크 1.5초 / 제리얌 몸통 박치기 1초), 벽에 부딪힐 때마다 JY.wallDmg(3) 데미지 (제리얌은 면역). 별도의 '당했다' 글자 표시는 없음 */
+const debImmune=t=>!!t&&t.kind==='st';   // 숏타민: 요력면역(부딪힘을 뺀 모든 디버프 면역)
+const ST={max:2,cell:7.5};               // 숏타민 회피 게이지: 2칸, 칸마다 7.5초
+function playDodge(){               // 회피 효과음: 짧게 스치는 '슉'
+  if(!actx||actx.state!=='running')return;
+  try{
+    const t=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();
+    o.type='sine';o.frequency.setValueAtTime(1500,t);o.frequency.exponentialRampToValueAtTime(500,t+.14);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.14,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+.17);
+    o.connect(g);g.connect(master);o.start(t);o.stop(t+.2);
+  }catch(e){}
+}
+function stDodge(c){                // 데미지를 입으면 게이지 1칸을 쓰고 그 데미지를 피함
+  if((c.stG||0)<1-1e-9)return false;
+  c.stG=Math.max(0,c.stG-1);
+  try{
+    playDodge();
+    const W=arenaEl.clientWidth,H=arenaEl.clientHeight,d=c.ball.offsetWidth||40,cx=c.x*W,cy=c.y*H;
+    const p=mk('pct','회피');p.style.left=cx+'px';p.style.top=(cy-d*.6)+'px';p.style.color='#f28c1a';p.style.fontWeight='900';
+    p.animate([{opacity:0,transform:'translate(-50%,-50%) scale(.6)'},{opacity:1,transform:'translate(-50%,calc(-50% - 10px)) scale(1)',offset:.25},{opacity:0,transform:'translate(-50%,calc(-50% - 28px)) scale(1)'}],
+      {duration:700,easing:'ease-out',fill:'forwards'}).onfinish=()=>p.remove();
+    c.ball.animate([{opacity:.35,transform:'scale(.92)'},{opacity:1,transform:'scale(1)'}],{duration:260,easing:'ease-out'});
+  }catch(e){}
+  return true;
+}
+function stTick(dt){
+  for(const c of chars){
+    if(c.kind!=='st'||!c.alive||!c.started)continue;
+    if(!c.frozen&&!(revPause>0))c.stG=Math.min(ST.max,(c.stG||0)+dt/ST.cell);
+    if(c.fill)c.fill.style.transform='scaleX('+((c.stG||0)/ST.max)+')';
+  }
+}
 function applyKnock(t,dx,dy,sec,lvl){
   if(t.immune)return false
   sec=sec||JY.knockSec;
@@ -1404,7 +1437,7 @@ function sFork(c,done){
   const schedF=(d,fn)=>sched(d,fn,true);
   const HOV=-(R+.22),HIT=-.015;
   let phase='appear',t0=now,fin=false;
-  f.pause=dt=>{t0+=dt};                                             // 꼼짝마 동안 포크 동작 시간도 멈춤
+  f.pause=dt=>{t0+=dt};                                             // 꼼짝마 동안 포크 동작 시간도 정지
   f.dy=HOV-.12;el.style.opacity=0;
   f.upd=()=>{
     const e=now-t0;
@@ -1478,11 +1511,13 @@ function tgSide(n,t){               // 상대 몸이 닿은 태극 구역: 상�
   return y<0?(inR?'blue':'red'):(inL?'red':'blue');
 }
 function applySlow(t,lvl,sec){      // 슬로우(×.5) / 슬로우II(×.25): 겹치지 않고 더 센 쪽이 적용, 시간은 더 긴 쪽으로
+  if(debImmune(t))return;
   const mul=lvl>=2?SLOW.mul2:SLOW.mul,until=now+sec;
   if(t.slowUntil>now){t.slowMul=Math.min(t.slowMul||1,mul);t.slowUntil=Math.max(t.slowUntil,until)}
   else{t.slowMul=mul;t.slowUntil=until}
 }
 function applyBurn(t,lvl,sec){          // 연소 3초: 이미 타는 중이면 더 센 쪽 + 시간 갱신 (0.5초 틱 간격은 그대로 이어감)
+  if(debImmune(t))return;
   const until=now+(sec||NU.fxSec);
   if(t.burnUntil>now){t.burnLvl=Math.max(t.burnLvl||1,lvl);t.burnUntil=Math.max(t.burnUntil,until)}
   else{t.burnLvl=lvl;t.burnUntil=until;t.burnNext=now+BURN.gap}
@@ -1562,12 +1597,12 @@ function nuGauge(c){                // 주먹 한 대마다 게이지 1/5, 다 �
   if(full&&!c.nuFull)chargeFx(c);
   c.nuFull=full;
 }
-const inBH=m=>bhs.some(b=>b.phase>=1&&b.owner!==m);   // 블랙홀에 빠진 상태(상대가 소환한 블랙홀이 발동 중)
+const inBH=m=>bhs.some(b=>b.phase>=1&&b.owner!==m);   // 우주의 반응에 빠진 상태(상대가 소환한 우주의 반응이 발동 중)
 function nuTick(dt){
   for(const n of chars){
-    if(n.kind!=='nu'||!n.alive||!n.started||n.frozen>0)continue;       // 멈춤 중에는 아우라 시간도, 주먹도 멈춤
+    if(n.kind!=='nu'||!n.alive||!n.started||n.frozen>0)continue;       // 정지 중에는 아우라 시간도, 주먹도 정지
     n.nuClock=(n.nuClock||0)+dt;
-    n.tgAng=(n.tgAng==null?TG_DEG:n.tgAng)-NU.spin*dt;                  // 태극 아우라가 반시계방향으로 계속 돎 (멈춤 중엔 같이 멈춤)
+    n.tgAng=(n.tgAng==null?TG_DEG:n.tgAng)-NU.spin*dt;                  // 태극 아우라가 반시계방향으로 계속 돎 (정지 중엔 같이 정지)
     if(!n.tgGs)n.tgGs=n.aura?[...n.aura.el.querySelectorAll('.tgrot')]:[];
     {const tr='rotate('+n.tgAng.toFixed(2)+')';for(const g of n.tgGs)g.setAttribute('transform',tr)}
     const ph=n.nuClock%NU.cycle,gone=n.nuClock>=NU.cycle&&ph<NU.offSec;   // 5초마다 1초 동안 아우라 없음(주먹도 없음)
@@ -1658,12 +1693,12 @@ let lastMeet=0;                       // 마지막으로 공끼리 부딪힌 시
 function tickBody(t){
   let dt=Math.max(0,(t-last)/1000);last=t;if(dt>.25)dt=.25;   // 프레임이 늦어져도 실제 시간 기준 (탭 복귀 때만 제한)
   now+=dt;
-  if(objStop>0){                                                    // 꼼짝마 중: 밥상·포크 등 모든 오브젝트의 시간도 멈춤
+  if(objStop>0){                                                    // 꼼짝마 중: 밥상·포크 등 모든 오브젝트의 시간도 정지
     for(const p of projs)p.born+=dt;
     for(const f of follows)if(f.pause)f.pause(dt);
     for(const ev of events)if(ev.obj)ev.t+=dt;
   }
-  if(revPause>0)for(const ev of events)if(!ev.rev&&!ev.obj)ev.t+=dt;   // 부활 연출 중에는 진행 중이던 스킬 일정도 전부 멈춤 (스킬이 새로 써지지 않음)
+  if(revPause>0)for(const ev of events)if(!ev.rev&&!ev.obj)ev.t+=dt;   // 부활 연출 중에는 진행 중이던 스킬 일정도 전부 정지 (스킬이 새로 써지지 않음)
   events.sort((a,b)=>a.t-b.t);
   while(events.length&&events[0].t<=now){const ev=events.shift();try{ev.fn()}catch(err){console.error(err)}events.sort((a,b)=>a.t-b.t)}
   if(over){raf=0;return}
@@ -1731,8 +1766,8 @@ function tickBody(t){
     m.ball.style.left=m.x*100+'%';m.ball.style.top=m.y*100+'%';
   }
 
-  tickFoods();buffTick(dt);nuTick(dt);burnTick();bleedTick(dt);kkTick(dt);bkTick(dt);bhTick(dt);
-  for(const c of chars){               // 안전장치: 멈춤/스킬 상태가 비정상적으로 오래 가면 풀어줌
+  tickFoods();buffTick(dt);nuTick(dt);burnTick();bleedTick(dt);kkTick(dt);bkTick(dt);stTick(dt);bhTick(dt);
+  for(const c of chars){               // 안전장치: 정지/스킬 상태가 비정상적으로 오래 가면 풀어줌
     if(!c.alive)continue;
     if(c.frozen>0){c.fz=(c.fz||0)+dt;if(c.fz>8){c.frozen=0;c.fz=0}}else c.fz=0;
     if(c.mode==='cast'&&now-c.skillT>12){c.mode='fill';c.gauge=0}
@@ -1776,7 +1811,7 @@ function tickBody(t){
 }
 
 
-/* ---------- 어둠속성 김켈리: 블랙홀 / 진실이 거짓으로 / 신비마트 ---------- */
+/* ---------- 어둠속성 김켈리: 우주의 반응 / 진실이 거짓으로 / 신비마트 ---------- */
 const BH={size:.32,emerge:1,hold:6,shrink:1.6,pullD0:.32,pull:.6,pullFar:.06,slowSpeed:.3,rMin:2,rMax:26,dust:520,stars:64};   // size: 지름 32m = 반지름 16m / pullR: 끌어당기는 범위(반지름) / pull: 중심에서의 끌림 속도(맵 폭/초) / r: 초당 1데미지가 들어오는 횟수(겉쪽→중심)
 const TRUTH={sec:5,msg:'스킬을 어떻게 썼더라..?'};
 const MART={heal:40,buffMul:1.5,buffSec:10,fade:2.5,pickR:.05};
@@ -1786,7 +1821,7 @@ const ZP=6.2832;
 function tagTint(c,col){const t=c.tags[c.tags.length-1];if(t)t.el.style.color=col}
 /* 효과음 */
 let lastBhT=0;
-function playBHSummon(){            // 블랙홀 등장: 우우웅 우우웅 하며 차오르다가 마지막에 '쿵'
+function playBHSummon(){            // 우주의 반응 등장: 우우웅 우우웅 하며 차오르다가 마지막에 '쿵'
   if(!actx||actx.state!=='running')return;
   try{
     const t=actx.currentTime,out=actx.createGain();out.gain.value=.95;out.connect(master);
@@ -1805,7 +1840,7 @@ function playBHSummon(){            // 블랙홀 등장: 우우웅 우우웅 하
     k.connect(kg);kg.connect(out);k.start(tb);k.stop(tb+.6);
   }catch(e){}
 }
-/* 블랙홀이 있는 동안 계속 나는 소리: 우우우우웅 우우우우웅 (천천히 커졌다 작아졌다) */
+/* 우주의 반응이 있는 동안 계속 나는 소리: 우우우우웅 우우우우웅 (천천히 커졌다 작아졌다) */
 function bhHumStart(bh){
   if(!actx||actx.state!=='running')return;
   try{
@@ -1838,7 +1873,7 @@ function bhHumKill(bh){
 }
 let bhNoiseBuf=null;
 let bhSp=null;
-function bhSprayUpdate(u){          // 블랙홀에 닿아 있는 동안(데미지가 들어오는 동안) 낮은 피치의 "우위이이이이잉" 소리 하나가 계속 남. u: 0~1 (중심일수록 큼), 닿은 상대가 없으면 -1
+function bhSprayUpdate(u){          // 우주의 반응에 닿아 있는 동안(데미지가 들어오는 동안) 낮은 피치의 "우위이이이이잉" 소리 하나가 계속 남. u: 0~1 (중심일수록 큼), 닿은 상대가 없으면 -1
   if(!actx||actx.state!=='running'){return}
   try{
     const t=actx.currentTime;
@@ -1867,7 +1902,7 @@ function bhSprayUpdate(u){          // 블랙홀에 닿아 있는 동안(데미�
     }else{bhSp.bp.frequency.setTargetAtTime(f,t,.15);bhSp.g.gain.setTargetAtTime(.22+u*.12,t,.12)}
   }catch(e){}
 }
-function playBHEnd(){               // 블랙홀이 줄어들며 사라질 때: 빨려 들어가는 소리
+function playBHEnd(){               // 우주의 반응이 줄어들며 사라질 때: 빨려 들어가는 소리
   if(!actx||actx.state!=='running')return;
   try{
     const t=actx.currentTime,sr=actx.sampleRate,out=actx.createGain();out.gain.value=.7;out.connect(master);
@@ -1926,8 +1961,8 @@ function playMartAll(){             // 신비마트 완성: 올라가는 아르�
     });
   }catch(e){}
 }
-/* 블랙홀 */
-function makeBH(owner){            // 필드 무작위 위치 (블랙홀 전체가 맵 안에 들어오게)
+/* 우주의 반응 */
+function makeBH(owner){            // 필드 무작위 위치 (우주의 반응 전체가 맵 안에 들어오게)
   const half=BH.size/2,x=half+Math.random()*(1-2*half),y=half+Math.random()*(1-2*half);
   const side=BH.size*3,dpr=Math.min(2,window.devicePixelRatio||1),W=arenaEl.clientWidth;
   const cv=document.createElement('canvas');cv.className='bhole';
@@ -2102,7 +2137,7 @@ function drawBH(b){
   ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
 }
 function removeBH(b){bhHumKill(b);b.cv.remove();bhs=bhs.filter(x=>x!==b)}
-function bhBaseSpeed(m){            // 블랙홀이 발동해 있는 동안은 상대(블랙홀 주인이 아닌 쪽)의 기본 이동속도가 0.3으로 낮아짐 (상태효과가 아니라 속도 값 자체를 낮춤)
+function bhBaseSpeed(m){            // 우주의 반응이 발동해 있는 동안은 상대(우주의 반응 주인이 아닌 쪽)의 기본 이동속도가 0.3으로 낮아짐 (상태효과가 아니라 속도 값 자체를 낮춤)
   for(const b of bhs)if(b.phase>=1&&b.owner!==m)return Math.min(m.speed,BH.slowSpeed);
   return m.speed;
 }
@@ -2172,7 +2207,7 @@ function setSilenceUI(t){t.status.textContent=TRUTH.msg;t.status.classList.add('
 function sTruth(c,done){
   const t=foe(c);
   playTruth();
-  sched(1.0,()=>{try{if(c.alive&&t&&t.alive){truthFx(t);t.noPasUntil=now+TRUTH.sec;t.silenceUntil=now+TRUTH.sec;t.silShow=true;setSilenceUI(t)}}finally{done()}});
+  sched(1.0,()=>{try{if(c.alive&&t&&t.alive&&!debImmune(t)){truthFx(t);t.noPasUntil=now+TRUTH.sec;t.silenceUntil=now+TRUTH.sec;t.silShow=true;setSilenceUI(t)}}finally{done()}});
 }
 /* 신비마트 */
 const litFilter=l=>'grayscale('+(1-l).toFixed(2)+') brightness('+(1.9-.9*l).toFixed(2)+') opacity('+(.5+.5*l).toFixed(2)+')'
@@ -2241,7 +2276,7 @@ function kkTick(dt){
   }
 }
 function martAvail(c){return !c.martBuff&&!c.mart.got.some(Boolean)&&!mletters.some(l=>l.owner===c)}   // 이미 낸 글자를 다 모으기 전에는 신비마트가 다시 나오지 않음
-function castKK(c){                 // 블랙홀 30% / 진실이 거짓으로 30% / 신비마트 40% (연속 블랙홀 금지, 신비마트 진행 중이면 제외 → 남은 스킬끼리 같은 비율)
+function castKK(c){                 // 우주의 반응 30% / 진실이 거짓으로 30% / 신비마트 40% (연속 우주의 반응 금지, 신비마트 진행 중이면 제외 → 남은 스킬끼리 같은 비율)
   const t=foe(c);if(!t){c.gauge=0;return}
   const opts=[['bh',.35],['truth',.2],['mart',.45]].filter(([k])=>!(k==='bh'&&c.lastKK==='bh')&&!(k==='truth'&&c.lastKK==='truth')&&!(k==='mart'&&!martAvail(c)));
   let r=Math.random()*opts.reduce((a,o)=>a+o[1],0),pick=opts[0][0];
@@ -2301,7 +2336,7 @@ function bkFlash(c,k){               // 한 칸이 다 찰 때마다 그 칸에 
 const BK_DEB=[['slow',14],['frail',12],['burn',12],['nopas',9],['silence',9],['slow2',6],['burn2',5]];
 const BK_DEBN={slow:'슬로우',slow2:'슬로우II',burn:'연소',burn2:'연소II',frail:'빈약함',nopas:'패시브 상실',silence:'스킬 실패'};   // 센 디버프일수록 확률이 낮음
 function bkDebuff(b){                 // 상대에게 아무 디버프나 BK.debSec초 동안 (단계 구분 없이, 센 것일수록 드물게)
-  const t=foe(b);if(!t||!t.alive)return false;const D=BK.debSec;
+  const t=foe(b);if(!t||!t.alive||debImmune(t))return false;const D=BK.debSec;
   for(let tr=0;tr<6;tr++){
     let r=Math.random()*BK_DEB.reduce((a,x)=>a+x[1],0),k=BK_DEB[0][0];
     for(const [n,w] of BK_DEB){if(r<w){k=n;break}r-=w}
@@ -2330,7 +2365,7 @@ function bkTick(dt){
       c.dbFill.style.transform='scaleX('+(on?Math.max(0,Math.min(1,(c.dbEnd-now)/BK.debSec)):Math.min(1,c.dbT/BK.dbGap))+')';
       const tx=on?(c.dbName||''):'';if(c.dbTxt.textContent!==tx)c.dbTxt.textContent=tx;
     }
-    if(!c.frozen&&!(revPause>0)){                              // 18초마다 디버프 (디버프가 걸려 있는 동안은 시간이 흐르지 않고, 멈춤 중에도 안 흐름)
+    if(!c.frozen&&!(revPause>0)){                              // 18초마다 디버프 (디버프가 걸려 있는 동안은 시간이 흐르지 않고, 정지 중에도 안 흐름)
       if(c.dbEnd>now){}else{c.dbEnd=0;c.dbT+=dt;if(c.dbT>=BK.dbGap){c.dbT=0;if(c.silenceUntil>now)burstAt(c.x*arenaEl.clientWidth,c.y*arenaEl.clientHeight,'#9aa0a6',.5,4);else if(bkDebuff(c))c.dbEnd=now+BK.debSec}}
     }
     c.fill.style.transform='scaleX('+(c.g/BK.max)+')';
@@ -2353,63 +2388,67 @@ const INFO=[
    ]},
   {kind:'jy',cls:'jy',name:'제리얌',color:'#f26b35',tag:'음식을 소환해 먹고 싸우는 단단한 공',
    skills:[
-     {n:'햄버거',p:'30%',d:'필드 무작위 위치에 햄버거를 만든다. 제리얌이 닿아서 먹으면 체력을 '+JY.burgerHeal+' 회복하고(고정 수치, 최대 체력을 넘지 않는다), 10초 동안 힘(공격력 +10) 효과를 얻는다.'},
-     {n:'치킨',p:'30%',d:'치킨을 만든다. 먹으면 5초 동안 이동속도가 2배가 된다.'},
-     {n:'야채',p:'20%',d:'야채를 만든다. 제리얌이 닿으면 스킬이 끝날 때까지 멈춰서 "이런 반찬 안 먹찬"을 외치고, 상대 쪽으로 밥상을 던진다(유도 없음). 밥상은 벽에 5번 튕기면 사라지고, 제리얌은 그냥 통과한다. 상대가 맞으면 60 데미지를 입고 부딪힘II가 발동한다. 부딪힘II: 1.5초 동안 빠르게 밀려나고, 그동안 벽에 부딪힐 때마다 8 데미지를 더 입는다(부딪힘은 3).'},
+     {n:'일찐과의 밥상',p:'80%',d:'제리얌이 스킬로 만든 음식(햄버거, 치킨, 야채)은 상대가 닿아도 아무 영향 없이 통과한다. 먹기 전까지 사라지지 않고 필드에 계속 쌓인다.',
+      subs:[
+       {n:'햄버거',p:'30%',d:'필드 무작위 위치에 햄버거를 만든다. 제리얌이 닿아서 먹으면 체력을 '+JY.burgerHeal+' 회복하고(고정 수치, 최대 체력을 넘지 않는다), 10초 동안 힘(공격력 +10) 효과를 얻는다.'},
+       {n:'치킨',p:'30%',d:'치킨을 만든다. 먹으면 5초 동안 이동속도가 2배가 된다.'},
+       {n:'야채',p:'20%',d:'야채를 만든다. 제리얌이 닿으면 스킬이 끝날 때까지 멈춰서 "이런 반찬 안 먹찬"을 외치고, 상대 쪽으로 밥상을 던진다(유도 없음). 밥상은 벽에 5번 튕기면 사라지고, 제리얌은 그냥 통과한다. 상대가 맞으면 60 데미지를 입고 부딪힘II가 발동한다. 부딪힘II: 1.5초 동안 빠르게 밀려나고, 그동안 벽에 부딪힐 때마다 8 데미지를 더 입는다(부딪힘은 3).'}]},
      {n:'포크',p:'20%',d:'상대 머리 위에서 포크가 내려찍는다('+JY.forkDmg+' 데미지). 그 뒤 75% → 65% → 40% → 20% 확률을 뚫을 때마다 포크가 다시 올라와 또 찍는다. 최대 5번까지 찍는다. 20%를 뚫은 마지막 포크는 10 데미지를 더 주고 부딪힘을 준다.'},
-     {n:'몸 부딪힘',p:'패시브',d:'제리얌과 몸이 부딪힌 상대는 5 데미지를 입고 1초 동안 부딪힘 효과를 받는다. 이미 부딪힘이 걸려 있을 때 제리얌과 또 닿으면 남은 시간이 1초로 다시 시작되고, 또 튕겨 나간다. 빠르게 연달아 닿아도 닿은 만큼 데미지를 입는다.'},
-     {n:'소환한 음식',p:'패시브',d:'제리얌이 만든 음식은 상대가 닿아도 아무 영향 없이 통과한다. 먹기 전까지 사라지지 않고 필드에 계속 쌓인다.'}
+     {n:'몸통 박치기',p:'패시브',d:'제리얌과 몸이 부딪힌 상대는 5 데미지를 입고 1초 동안 부딪힘 효과를 받는다. 이미 부딪힘이 걸려 있을 때 제리얌과 또 닿으면 남은 시간이 1초로 다시 시작되고, 또 튕겨 나간다. 빠르게 연달아 닿아도 닿은 만큼 데미지를 입는다.'}
    ]},
   {kind:'nu',cls:'nu',name:'태권히어로',color:'#CD2E3A',tag:'태극 아우라 안에 들어온 상대를 주먹으로 때리는 근접형',
    chips:['HP '+STATS.nu.max,'이동속도 '+STATS.nu.speed],
    skills:[
      {n:'보호',p:'패시브',d:'받는 피해가 '+Math.round(RESIST.cut*100)+'% 줄어든다.'},
-     {n:'태극 아우라',p:'패시브',d:'태권히어로 몸 둘레에 태극 아우라가 있다. 반지름은 몸 가장자리에서 '+Math.round(NU.aura*100)+'m이다. 아우라는 빨강 구역과 파랑 구역으로 나뉜다. 상대의 몸이 아우라에 닿으면(두 공 사이 간격이 '+Math.round(NU.aura*100)+'m 이내) 자동으로 주먹이 나간다. 같은 상대는 '+NU.gap+'초 간격으로 다시 때릴 수 있고, 태권히어로가 멈춤 상태일 땐 주먹도 안 나간다. 아우라는 '+NU.cycle+'초마다 '+NU.offSec+'초 동안 꺼지고, 그 동안은 주먹이 안 나간다(멈춤 중에는 이 시간도 멈춘다).'},
-     {n:'주먹',p:'일반 공격',d:NU.hit+' 데미지를 주고, '+Math.round(NU.p1*100)+'%는 부딪힘 '+NU.sec+'초, '+Math.round((1-NU.p1)*100)+'%는 부딪힘II '+NU.sec+'초를 건다. 한 번 때리면 '+NU.gap+'초 동안은 다시 때리지 못한다. 상대가 부딪힘 중이어도 또 때릴 수 있다. 맞은 구역이 빨강이면 연소 '+NU.fxSec+'초, 파랑이면 슬로우 '+NU.fxSec+'초를 준다. 블랙홀에 빠져 있는 동안은 주먹을 쓰지 못한다. 한 대 때릴 때마다 게이지가 1/'+NU.need+'씩 찬다(게이지는 파란색 '+NU.need+'칸이다).'},
-     {n:'궁극기',p:'게이지 가득',d:'게이지가 다 차면 궁극기 준비 상태가 되고, 태권히어로가 상대를 때릴 때까지 유지된다. 그다음 한 대가 궁극기다. '+NU.ult+' 데미지와 부딪힘III('+NU.ultSec+'초)을 주고, 빨강 구역이면 연소II, 파랑 구역이면 슬로우II를 '+NU.fxSec+'초 건다. 게이지는 처음으로 돌아간다.'}
+     {n:'태극 아우라',p:'패시브',d:'태권히어로 몸 둘레에 태극 아우라가 있다(반지름은 몸 가장자리에서 '+Math.round(NU.aura*100)+'m, 빨강 구역과 파랑 구역으로 나뉜다). 상대의 몸이 아우라에 닿으면 자동으로 주먹이 나가서 '+NU.hit+' 데미지를 주고, '+Math.round(NU.p1*100)+'%는 부딪힘 '+NU.sec+'초, '+Math.round((1-NU.p1)*100)+'%는 부딪힘II '+NU.sec+'초를 건다. 맞은 구역이 빨강이면 연소 '+NU.fxSec+'초, 파랑이면 슬로우 '+NU.fxSec+'초를 준다. 한 번 때리면 '+NU.gap+'초 동안은 다시 때리지 못하고, 정지 상태이거나 우주의 반응에 빠져 있을 땐 주먹이 나가지 않는다. 아우라는 '+NU.cycle+'초마다 '+NU.offSec+'초 동안 꺼지고, 그 동안도 주먹이 나가지 않는다.'},
+     {n:'정권찌르기',p:'게이지 가득',d:'주먹으로 한 대 때릴 때마다 게이지가 1/'+NU.need+'씩 찬다(게이지는 파란색 '+NU.need+'칸이다). 게이지가 다 차면 준비 상태가 되고, 다음에 상대를 때리는 한 대가 정권찌르기다. '+NU.ult+' 데미지와 부딪힘III('+NU.ultSec+'초)을 주고, 빨강 구역이면 연소II, 파랑 구역이면 슬로우II를 '+NU.fxSec+'초 건다. 게이지는 처음으로 돌아간다.'}
    ]},
-  {kind:'kk',cls:'kk',name:'어둠속성 김켈리',color:'#7c3aed',tag:'블랙홀로 끌어당기고 진실을 거짓으로 바꾸는 어둠 속성의 공',
+  {kind:'kk',cls:'kk',name:'어둠속성 김켈리',color:'#7c3aed',tag:'우주의 반응으로 끌어당기고 진실을 거짓으로 바꾸는 어둠 속성의 공',
    skills:[
-     {n:'블랙홀',p:'35%',d:'필드 무작위 위치에 블랙홀을 소환한다(연속으로 두 번 나오지 않는다). 소환되고 '+BH.emerge+'초 뒤부터 효과가 발동한다. 반지름 '+Math.round(BH.size*50)+'m(지름 '+Math.round(BH.size*100)+'m)이다. 상대의 이동속도가 '+BH.slowSpeed+'으로 낮아지고, 상대를 중심으로 끌어당긴다(범위는 경기장 전체이고, 멀수록 약하다), 닿으면 1 데미지가 초당 '+BH.rMin+'~'+BH.rMax+'번 들어온다(중심일수록 많다). '+BH.hold+'초 동안 유지된 뒤 사라진다. 김켈리는 영향을 받지 않는다.'},
+     {n:'우주의 반응',p:'35%',d:'필드 무작위 위치에 우주의 반응을 소환한다(연속으로 두 번 나오지 않는다). 소환되고 '+BH.emerge+'초 뒤부터 효과가 발동한다. 반지름 '+Math.round(BH.size*50)+'m(지름 '+Math.round(BH.size*100)+'m)이다. 상대의 이동속도가 '+BH.slowSpeed+'으로 낮아지고, 상대를 중심으로 끌어당긴다(범위는 경기장 전체이고, 멀수록 약하다), 닿으면 1 데미지가 초당 '+BH.rMin+'~'+BH.rMax+'번 들어온다(중심일수록 많다). '+BH.hold+'초 동안 유지된 뒤 사라진다. 김켈리는 영향을 받지 않는다.'},
      {n:'내가 진실을 말하면 우주가 반응해서 진실이 거짓으로 바뀌어.',p:'20%',d:'상대는 '+TRUTH.sec+'초 동안 패시브를 잃는다. 그동안 상대가 스킬을 쓰면 스킬이 실패하고 게이지만 비워진다.'},
      {n:'신비마트',p:'45%',d:'필드 무작위 위치에 신·비·마·트 글자가 나타난다. 김켈리가 4개를 다 모으면 체력을 '+MART.heal+' 회복하고(최대 체력을 넘지 않는다), '+MART.buffSec+'초 동안 이동속도 증가(×'+MART.buffMul+')와 보호II를 얻는다. 글자를 다 모으기 전이나 효과가 진행 중일 때는 다시 쓰지 못한다.'}
    ]},
-  {kind:'st',cls:'st',name:'숏타민',color:'#f28c1a',tag:'점검 중인 캐릭터',locked:true,skills:[]},
   {kind:'bk',cls:'bk',name:'백기철 판타지',color:'#2563eb',tag:'상대의 스킬과 이로운 효과를 베끼는 공',
    chips:['스킬 게이지 '+BK.max+'칸','1칸당 '+BK.cell+'초'],
    skills:[
-     {n:'베끼기',p:'게이지 1칸',d:'상대가 나에게 데미지를 주는 스킬(또는 낭만박상환의 회복 스킬)을 쓰고 그 스킬이 끝나면, 게이지 1칸을 쓰고 상대와 똑같은 스킬을 쓴다. 쓰는 동안 사진이 상대와 똑같아지고 이름이 "'+BK.name+'"로 바뀌며, 스킬이 끝나면 돌아온다. 베끼는 중에는 다시 발동하지 않는다.\n베낄 수 있는 스킬: 꼼짝마!, 체력별로 데미지 드립니다, 체력별로 회복해 드립니다, 야채, 포크, 블랙홀.'},
-     {n:'이로운 효과 따라하기',p:'패시브',d:'상대가 이로운 효과(이동속도 증가, 힘, 보호 등)를 가지고 있으면 똑같이 얻는다. 디버프는 따라하지 않는다.'},
+     {n:'베끼기',p:'게이지 1칸',d:'상대가 나에게 데미지를 주는 스킬(또는 낭만박상환의 회복 스킬)을 쓰고 그 스킬이 끝나면, 게이지 1칸을 쓰고 상대와 똑같은 스킬을 쓴다. 쓰는 동안 사진이 상대와 똑같아지고 이름이 "'+BK.name+'"로 바뀌며, 스킬이 끝나면 돌아온다. 베끼는 중에는 다시 발동하지 않는다.\n베낄 수 있는 스킬: 꼼짝마!, 체력별로 데미지 드립니다, 체력별로 회복해 드립니다, 야채, 포크, 우주의 반응.'},
+     {n:'버프 베끼기',p:'패시브',d:'상대가 이로운 효과(이동속도 증가, 힘, 보호 등)를 가지고 있으면 똑같이 얻는다. 디버프는 따라하지 않는다.'},
      {n:'체력 베끼기',p:'패시브',d:'상대와 몸이 부딪히면 상대의 체력 '+BKD.take+'을 베껴 그만큼 회복한다(보호로 줄어든 만큼만 회복한다).'},
-     {n:'디버프 걸기',p:BK.dbGap+'초마다',d:'상대에게 아무 디버프나 '+BK.debSec+'초 동안 건다. 센 디버프일수록 걸릴 확률이 낮다. 걸려 있는 동안은 '+BK.dbGap+'초 시간이 흐르지 않고, 멈춤 중에도 흐르지 않는다.'}
-   ]}
+     {n:'디버프 걸기',p:BK.dbGap+'초마다',d:'상대에게 아무 디버프나 '+BK.debSec+'초 동안 건다. 센 디버프일수록 걸릴 확률이 낮다. 걸려 있는 동안은 '+BK.dbGap+'초 시간이 흐르지 않고, 정지 중에도 흐르지 않는다.'}
+   ]},
+  {kind:'st',cls:'st',name:'숏타민',color:'#f28c1a',tag:'공격을 피하고 디버프에 면역인 공',
+   chips:['행운키링 게이지 '+ST.max+'칸','1칸당 '+ST.cell+'초'],
+   skills:[
+     {n:'요력면역',p:'패시브',d:'부딪힘을 뺀 모든 디버프에 면역이다.'},
+     {n:'행운키링',p:'게이지 1칸',d:'게이지는 2칸이고, 한 칸이 차는 데 '+ST.cell+'초가 걸린다. 데미지를 입으면 게이지 1칸을 쓰고 그 데미지를 피한다.'}]}
 ];
+const CHEV="<svg viewBox='0 0 24 10' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><polyline points='2.5,2.5 12,7.5 21.5,2.5'/></svg>";   // 납작하고 각이 넓은 ∨
 function renderFx(){                 // 상태효과 정리 (수치는 게임에서 쓰는 값에서 가져와요)
   const esc=t=>String(t).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
   const FX=[
-    {e:'⏸️',n:'멈춤',c:'#4a4f52',tag:'이동 정지',chips:[],d:'움직이지 못하고 스킬 게이지도 차지 않는다. 풀리면 하던 방향 그대로 다시 움직인다. 꼼짝마가 발동하는 동안은 밥상, 포크 같은 모든 오브젝트도 같이 멈췄다가 풀리면 이어서 움직인다.',src:'꼼짝마!(나와 상대 모두, 발사까지 약 '+FREEZE_SHOT.toFixed(1)+'초) · 야채(제리얌·백기철 판타지, 약 1.3초)'},
+    {e:'⏸️',n:'정지',c:'#4a4f52',tag:'이동 정지',chips:[],d:'움직이지 못하고 스킬 게이지도 차지 않는다. 풀리면 하던 방향 그대로 다시 움직인다. 꼼짝마가 발동하는 동안은 밥상, 포크 같은 모든 오브젝트도 같이 멈췄다가 풀리면 이어서 움직인다.',src:'꼼짝마!(나와 상대 모두, 발사까지 약 '+FREEZE_SHOT.toFixed(1)+'초) · 야채(제리얌·백기철 판타지, 약 1.3초)'},
     {e:'🐌',n:'슬로우',c:'#3b82f6',tag:'디버프',chips:[],d:'이동속도가 절반이 된다. 이미 걸려 있을 때 또 맞아도 겹쳐지지 않고 시간만 처음부터 다시 시작한다. 부딪힘으로 밀려나는 속도에는 영향이 없다.',src:'꼼짝마!를 맞았을 때(낭만박상환, 베낀 백기철 판타지) · 태권히어로의 주먹(파랑 구역) · 백기철 판타지의 디버프(5초)'},
-    {e:'🧊',n:'슬로우II',c:'#0047A0',tag:'디버프 (강화)',chips:[],d:'슬로우보다 훨씬 느려진다. 이동속도가 1/4(×'+SLOW.mul2+')가 된다. 슬로우와 겹치면 더 센 쪽이 적용되고 시간은 더 긴 쪽으로 이어진다. 부딪힘으로 밀려나는 속도에는 영향이 없다.',src:'태권히어로의 궁극기(파랑 구역) · 백기철 판타지의 디버프(5초)'},
+    {e:'🧊',n:'슬로우II',c:'#0047A0',tag:'디버프 (강화)',chips:[],d:'슬로우보다 훨씬 느려진다. 이동속도가 1/4(×'+SLOW.mul2+')가 된다. 슬로우와 겹치면 더 센 쪽이 적용되고 시간은 더 긴 쪽으로 이어진다. 부딪힘으로 밀려나는 속도에는 영향이 없다.',src:'태권히어로의 정권찌르기(파랑 구역) · 백기철 판타지의 디버프(5초)'},
     {e:flameSvg(false),n:'연소',c:'#e8590c',tag:'디버프',chips:[],d:'0.5초마다 체력이 '+BURN.lo+'~'+BURN.hi+'씩 깎인다. 공격력 버프(힘)로는 늘어나지 않는다. 이미 타는 중에 또 걸리면 시간이 처음부터 다시 시작한다(더 센 연소가 우선).',src:'태권히어로의 주먹(빨강 구역) · 백기철 판타지의 디버프(5초)'},
-    {e:'🌋',n:'연소II',c:'#c92a2a',tag:'디버프 (강화)',chips:[],d:'연소와 같지만 한 번에 '+BURN.lo2+'~'+BURN.hi2+'씩 깎인다.',src:'태권히어로의 궁극기(빨강 구역) · 백기철 판타지의 디버프(5초)'},
-    {e:'🩸',n:'출혈',c:'#b3001b',tag:'디버프 (영구)',chips:[],d:'부활한 뒤로 '+BLEED.gap+'초에 한 번씩 체력이 '+BLEED.dmg+'씩 깎인다. 시간이 지나도 풀리지 않는다. 멈춤 중에는 시간도 같이 멈춘다. 출혈로도 쓰러질 수 있고, 그땐 다시 부활하지 않는다.',src:'낭만박상환의 부활(한 번 부활한 뒤 계속)'},
+    {e:'🌋',n:'연소II',c:'#c92a2a',tag:'디버프 (강화)',chips:[],d:'연소와 같지만 한 번에 '+BURN.lo2+'~'+BURN.hi2+'씩 깎인다.',src:'태권히어로의 정권찌르기(빨강 구역) · 백기철 판타지의 디버프(5초)'},
+    {e:'🩸',n:'출혈',c:'#b3001b',tag:'디버프 (영구)',chips:[],d:'부활한 뒤로 '+BLEED.gap+'초에 한 번씩 체력이 '+BLEED.dmg+'씩 깎인다. 시간이 지나도 풀리지 않는다. 정지 중에는 시간도 같이 멈춘다. 출혈로도 쓰러질 수 있고, 그땐 다시 부활하지 않는다.',src:'낭만박상환의 부활(한 번 부활한 뒤 계속)'},
     {e:'🩸',n:'출혈II',c:'#8a0016',tag:'디버프 (강화)',chips:[],d:'출혈과 같지만 '+BLEED2.gap+'초에 한 번씩 체력이 '+BLEED2.dmg+'씩 깎인다.',src:'현재 얻을 수 있는 캐릭터가 없다'},
-    {e:'🥀',n:'빈약함',c:'#6b7280',tag:'디버프',chips:[],d:'자신이 주는 데미지가 '+Math.round(FRAIL.cut*100)+'% 줄어든다(꼼짝마, 체력별로 데미지, 밥상, 포크, 블랙홀, 주먹 등). 연소·출혈 같은 디버프가 주는 데미지는 줄어들지 않는다.',src:'백기철 판타지의 디버프('+BK.debSec+'초)'},
+    {e:'🥀',n:'빈약함',c:'#6b7280',tag:'디버프',chips:[],d:'자신이 주는 데미지가 '+Math.round(FRAIL.cut*100)+'% 줄어든다(꼼짝마, 체력별로 데미지, 밥상, 포크, 우주의 반응, 주먹 등). 연소·출혈 같은 디버프가 주는 데미지는 줄어들지 않는다.',src:'백기철 판타지의 디버프('+BK.debSec+'초)'},
     {e:'🛡️',n:'보호',c:'#3b82f6',tag:'버프',chips:[],d:'받는 피해가 '+Math.round(RESIST.cut*100)+'% 줄어든다. 연소·출혈 같은 지속 피해와 벽 충돌 데미지에도 똑같이 적용된다.',src:'태권히어로(항상)'},
     {e:'🛡️',n:'보호II',c:'#2563eb',tag:'버프 (강화)',chips:[],d:'받는 피해가 '+Math.round(RESIST.cut2*100)+'% 줄어든다. 그 밖의 규칙은 보호와 같다. 이미 다른 보호가 있어도 가장 센 쪽 하나만 적용된다. 신비마트로 얻으면 '+MART.buffSec+'초 동안 유지된다.',src:'신비마트를 다 모았을 때(김켈리, '+MART.buffSec+'초)'},
     {e:'🛡️',n:'보호III',c:'#1d4ed8',tag:'버프 (최강)',chips:[],d:'받는 피해가 '+Math.round(RESIST.cut3*100)+'% 줄어든다. 그 밖의 규칙은 보호와 같다. 이미 다른 보호가 있어도 가장 센 쪽 하나만 적용된다.',src:'현재 얻을 수 있는 캐릭터가 없다'},
     {e:'💥',n:'부딪힘',c:'#e5484d',tag:'밀려남',chips:['포크 마지막 타 '+JY.knockSec+'초'],d:'처음엔 빠르게 밀려나다가 점점 원래 속도로 돌아온다. 밀려나는 동안 벽에 부딪힐 때마다 '+JY.wallDmg+' 데미지를 입는다. 이미 부딪힘이 걸려 있을 때 제리얌과 또 닿으면 남은 시간이 1초로 다시 시작되고 또 튕겨 나간다.',src:'포크 마지막 타 · 제리얌과 몸이 부딪힐 때 · 태권히어로의 주먹(70%)'},
     {e:'💢',n:'부딪힘II',c:'#c62828',tag:'밀려남 (강화)',chips:[],d:'부딪힘과 똑같이 빠르게 밀려나지만, 벽에 부딪힐 때마다 입는 데미지가 '+JY.wallDmg2+'으로 더 크다. 이미 부딪힘이 걸려 있을 때 부딪힘II를 맞으면 더 센 쪽이 적용된다.',src:'이런 반찬 안 먹찬의 밥상(제리얌) · 태권히어로의 주먹(30%)'},
-    {e:'☄️',n:'부딪힘III',c:'#2d3136',tag:'밀려남 (최강)',chips:[],d:'부딪힘II처럼 빠르게 밀려나는데, 벽에 부딪힐 때마다 '+JY.wallDmg2+' 데미지에 더해 다른 캐릭터와 부딪혀도 '+NU.col3+' 데미지를 입는다(닿을 때마다, 빠르게 연달아 닿아도 닿은 만큼). 이미 다른 부딪힘이 걸려 있어도 더 센 쪽이 적용된다.',src:'태권히어로의 궁극기'},
+    {e:'☄️',n:'부딪힘III',c:'#2d3136',tag:'밀려남 (최강)',chips:[],d:'부딪힘II처럼 빠르게 밀려나는데, 벽에 부딪힐 때마다 '+JY.wallDmg2+' 데미지에 더해 다른 캐릭터와 부딪혀도 '+NU.col3+' 데미지를 입는다(닿을 때마다, 빠르게 연달아 닿아도 닿은 만큼). 이미 다른 부딪힘이 걸려 있어도 더 센 쪽이 적용된다.',src:'태권히어로의 정권찌르기'},
     {e:'⚡',n:'이동속도 증가',c:'#ff8a00',tag:'버프',chips:[],d:'이동속도가 늘어난다(치킨은 '+JY.buffMul+'배, 신비마트는 '+MART.buffMul+'배). 이미 걸려 있을 때 또 얻어도 겹쳐지지 않고 가장 큰 값 하나만 적용되며 시간만 처음부터 다시 시작한다.',src:'치킨(제리얌) · 신비마트를 다 모았을 때(김켈리, '+MART.buffSec+'초)'},
-    {e:'💪',n:'힘',c:'#e5484d',tag:'버프',chips:[],d:'내가 입히는 직접 공격과 스킬 데미지가 '+JY.strAtk+'만큼 늘어난다(꼼짝마, 체력별로 데미지, 밥상, 포크, 몸 부딪힘 등). 부딪힘 같은 디버프 상태효과가 주는 데미지(벽 충돌)는 힘으로 늘어나지 않는다. 이미 걸려 있을 때 또 얻어도 겹치지 않고 시간만 처음부터 다시 시작한다.',src:'햄버거(제리얌)'},
-    {e:'🫥',n:'패시브 상실',c:'#7c3aed',tag:'디버프',chips:[],d:''+TRUTH.sec+'초 동안 패시브가 모두 사라진다(제리얌의 몸 부딪힘, 태권히어로의 보호와 태극 아우라, 백기철 판타지의 체력 베끼기와 이로운 효과 따라하기 등. 낭만박상환의 부활은 사라지지 않는다). 시간이 지나면 원래대로 돌아온다.',src:'내가 진실을 말하면 우주가 반응해서 진실이 거짓으로 바뀌어.(김켈리) · 백기철 판타지의 디버프(5초)'},
+    {e:'💪',n:'힘',c:'#e5484d',tag:'버프',chips:[],d:'내가 입히는 직접 공격과 스킬 데미지가 '+JY.strAtk+'만큼 늘어난다(꼼짝마, 체력별로 데미지, 밥상, 포크, 몸통 박치기 등). 부딪힘 같은 디버프 상태효과가 주는 데미지(벽 충돌)는 힘으로 늘어나지 않는다. 이미 걸려 있을 때 또 얻어도 겹치지 않고 시간만 처음부터 다시 시작한다.',src:'햄버거(제리얌)'},
+    {e:'🫥',n:'패시브 상실',c:'#7c3aed',tag:'디버프',chips:[],d:''+TRUTH.sec+'초 동안 패시브가 모두 사라진다(제리얌의 몸통 박치기, 태권히어로의 보호와 태극 아우라, 백기철 판타지의 체력 베끼기와 버프 베끼기 등. 낭만박상환의 부활은 사라지지 않는다). 시간이 지나면 원래대로 돌아온다.',src:'내가 진실을 말하면 우주가 반응해서 진실이 거짓으로 바뀌어.(김켈리) · 백기철 판타지의 디버프(5초)'},
     {e:'❓',n:'스킬 실패',c:'#7c3aed',tag:'디버프',chips:[],d:TRUTH.sec+'초 동안 스킬이 써지지 않는다. 게이지가 다 차서 스킬을 쓰려고 하면 아무 일도 일어나지 않고 게이지만 비워진다.',src:'내가 진실을 말하면 우주가 반응해서 진실이 거짓으로 바뀌어.(김켈리) · 백기철 판타지의 디버프(5초)'}
   ];
   const inner=x=>'<div class="ghead"><div class="fxic" style="--c:'+x.c+'">'+x.e+'</div><div><div class="gname" style="--c:'+x.c+'">'+esc(x.n)+'</div><div class="gtag">'+esc(x.tag)+'</div></div></div>'
     +(x.chips.length?'<div class="chips">'+x.chips.map(c=>'<span class="chip">'+esc(c)+'</span>').join('')+'</div>':'')
     +'<p class="skd">'+esc(x.d)+'</p><p class="fxsrc">걸리는 경우: '+esc(x.src)+'</p>';
-  const CHEV="<svg viewBox='0 0 24 10' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><polyline points='2.5,2.5 12,7.5 21.5,2.5'/></svg>";   // 납작하고 각이 넓은 ∨
   const KIDS={'출혈':['출혈II'],'부딪힘':['부딪힘II','부딪힘III'],'연소':['연소II'],'슬로우':['슬로우II'],'보호':['보호II','보호III']};          // 카드 오른쪽 위 화살표로 펼쳐지는 강화 버전들
   const HINT={'출혈':'출혈II가','부딪힘':'부딪힘II와 부딪힘III이','연소':'연소II가','슬로우':'슬로우II가','보호':'보호II와 보호III이'};
   const kid=new Set(Object.values(KIDS).flat());
@@ -2428,7 +2467,7 @@ function renderGuide(){
     const st=STATS[i.kind]||{};
     const chips=i.locked?['점검 중']:(i.chips||['HP '+st.max,'이동속도 '+st.speed,st.cooldown>0?'스킬 쿨타임 '+st.cooldown+'초':'스킬 없음']);
     const sk=i.skills.length
-      ?'<div class="skills">'+i.skills.map(k=>'<div class="sk"><div class="skh"><span class="skn">'+esc(k.n)+'</span><span class="skp">'+esc(k.p)+'</span></div><p class="skd">'+esc(k.d)+'</p></div>').join('')+'</div>'
+      ?'<div class="skills">'+i.skills.map(k=>'<div class="sk"><div class="skh"><span class="skn">'+esc(k.n)+'</span><span class="skr"><span class="skp">'+esc(k.p)+'</span>'+(k.subs?'<button class="sktoggle" type="button" aria-expanded="false" aria-label="펼치기">'+CHEV+'</button>':'')+'</span></div><p class="skd">'+esc(k.d)+'</p>'+(k.subs?'<div class="fxsub"><div>'+k.subs.map(x=>'<div class="fxsubin" style="--c:'+i.color+'"><div class="skh"><span class="skn">'+esc(x.n)+'</span><span class="skp">'+esc(x.p)+'</span></div><p class="skd">'+esc(x.d)+'</p></div>').join('')+'</div></div>':'')+'</div>').join('')+'</div>'
       :'<p class="noskill">'+(i.locked?'현재 점검 중이다.':'아직 스킬이 없다.')+'</p>';
     return '<article class="gcard"><div class="ghead"><div class="av '+i.cls+'" style="--c:'+i.color+'"></div><div><div class="gname" style="--c:'+i.color+'">'+esc(i.name)+'</div><div class="gtag">'+esc(i.tag)+'</div></div></div>'
       +'<div class="chips">'+chips.map(c=>'<span class="chip">'+esc(c)+'</span>').join('')+'</div>'+sk+'</article>';
@@ -2438,8 +2477,8 @@ renderGuide();
 (function(){                           // 부딪힘 카드의 화살표: 부딪힘II 펼치기/접기
   const g=document.getElementById('guide');if(!g)return;
   g.addEventListener('click',e=>{
-    const b=e.target.closest('.fxtoggle');if(!b)return;
-    const sub=b.closest('.gcard').querySelector('.fxsub'),open=!sub.classList.contains('open');
+    const b=e.target.closest('.fxtoggle,.sktoggle');if(!b)return;
+    const sub=(b.closest('.sk')||b.closest('.gcard')).querySelector('.fxsub'),open=!sub.classList.contains('open');
     sub.classList.toggle('open',open);b.setAttribute('aria-expanded',String(open));b.setAttribute('aria-label',open?'접기':'펼치기');
   });
 })();
@@ -2452,7 +2491,34 @@ const PATCH_VERSION='0.3.4';
 const PATCH_NOTES=[
   {ver:'0.3.4',date:'2026-10-09',
    chars:[
-     {who:'숏타민',tag:'new',lines:['신규 캐릭터 추가']},
+     {who:'숏타민',tag:'new',lines:[
+       '신규 캐릭터 추가',
+       '{~요력면역} 패시브 추가',
+       '{~행운키링} 패시브 추가']}
+   ],
+   fx:[],
+   sys:[
+     {who:'스킬&상태 효과 이름 대규모 변경',lines:[
+       '(백기철 판타지) 이로운 효과 따라하기 → 버프 베끼기',
+       '(숏타민) 회피 → 행운키링',
+       '(숏타민) 행운키링 → 요력면역',
+       '(어둠속성 김켈리) 블랙홀 → 우주의 반응',
+       '(태권히어로) 궁극기 → 정권찌르기',
+       '(제리얌) 소환한 음식 → 일찐과의 밥상',
+       '(제리얌) 몸 부딪힘 → 몸통 박치기',
+       '(상태효과) 멈춤 → 정지']}
+   ]},
+  {ver:'0.3.3',date:'2026-10-09',hot:true,
+   chars:[
+     {who:'백기철 판타지',tag:'adj',lines:['체력 베끼기 {-15 → 7}']},
+     {who:'태권히어로',tag:'adj',lines:['공격 딜레이 {-없음 → 0.3초}']}
+   ],
+   fx:[
+     {who:'스킬 실패',tag:'adj',lines:['"스킬을 어떻게 썼더라..?" 문구 {~김켈리의 진실 스킬에 걸렸을 때만} 표시']}
+   ],
+   sys:[]},
+  {ver:'0.2.2',date:'2026-10-09',
+   chars:[
      {who:'백기철 판타지',tag:'new',lines:['신규 캐릭터 추가']},
      {who:'낭만박상환',tag:'adj',lines:[
        '꼼짝마 확률 {~40% → 30%}',
@@ -2467,21 +2533,21 @@ const PATCH_NOTES=[
      {who:'태권히어로',tag:'adj',lines:[
        '주먹의 부딪힘 확률 {-70% → 90%}',
        '주먹의 부딪힘II 확률 {-30% → 10%}',
-       '블랙홀에 빠진 상태에선 {~공격 불가}',
-       '공격 딜레이 {+0.5초 → 0.3초}',
+       '우주의 반응에 빠진 상태에선 {~공격 불가}',
+       '공격 딜레이 {+0.5초 → 없음}',
        '주먹 데미지 {-10 → 5}']},
      {who:'어둠속성 김켈리',tag:'nerf',lines:[
-       '블랙홀 확률 {+30% → 35%}',
+       '우주의 반응 확률 {+30% → 35%}',
        '내가 진실을 말하면 우주가 반응해서 진실이 거짓으로 바뀌어. 확률 {-30% → 20%}',
        '내가 진실을 말하면 우주가 반응해서 진실이 거짓으로 바뀌어.가 {~연달아 나오지 않도록} 변경',
        '신비마트 확률 {+40% → 45%}',
-       '블랙홀 유지 시간 {-6.5초 → 6초}',
-       '블랙홀 겉쪽 초당 데미지 횟수 {-3번 → 2번}',
-       '블랙홀 중심 초당 데미지 횟수 {+22번 → 26번}',
-       '블랙홀이 줄어드는 동안 데미지 횟수가 {~서서히 낮아지도록} 변경 (끝날 즈음에는 거의 들어오지 않음)',
-       '블랙홀이 끌어당기는 힘(중심) {-1.1 → 0.6}',
-       '블랙홀이 끌어당기는 범위 반지름 {+50m → 경기장 전체} (경기장 전반에서 강하게 끌어당기고, 멀수록 약해지며 먼 곳에서는 조금씩만 끌려감)',
-       '블랙홀이 발동해 있는 동안 상대 이동속도 {+0.55 → 0.3} (상태효과가 아닌 이동속도 자체 감소)']}
+       '우주의 반응 유지 시간 {-6.5초 → 6초}',
+       '우주의 반응 겉쪽 초당 데미지 횟수 {-3번 → 2번}',
+       '우주의 반응 중심 초당 데미지 횟수 {+22번 → 26번}',
+       '우주의 반응이 줄어드는 동안 데미지 횟수가 {~서서히 낮아지도록} 변경 (끝날 즈음에는 거의 들어오지 않음)',
+       '우주의 반응이 끌어당기는 힘(중심) {-1.1 → 0.6}',
+       '우주의 반응이 끌어당기는 범위 반지름 {+50m → 경기장 전체} (경기장 전반에서 강하게 끌어당기고, 멀수록 약해지며 먼 곳에서는 조금씩만 끌려감)',
+       '우주의 반응이 발동해 있는 동안 상대 이동속도 {+0.55 → 0.3} (상태효과가 아닌 이동속도 자체 감소)']}
    ],
    fx:[
      {who:'출혈',tag:'adj',lines:['출혈 데미지 {-10 → 5}','출혈 간격 {-5초 → 10초}']},
@@ -2509,10 +2575,10 @@ const PATCH_NOTES=[
   const items=a=>a.length?[...a].sort((x,y)=>(autoTag(y)==='new')-(autoTag(x)==='new')).map(it=>'<div class="pnitem"><div class="pnname">'+esc(it.who)+'<span class="pntag '+autoTag(it)+'">'+TAGS[autoTag(it)]+'</span>'+cnt(it.lines)+'</div><ul>'+it.lines.map(l=>'<li>'+fmt(l)+'</li>').join('')+'</ul></div>').join(''):'<div class="pnnone">변경 사항 없음</div>';
   const body=document.getElementById('pnbody'),modalEl=document.getElementById('pnmodal');
   if(!body||!modalEl)return;
-  body.innerHTML=PATCH_NOTES.map(v=>'<section class="pnver"><div class="pnvh"><b>v'+v.ver+'</b><span>'+(v.date||'')+'</span></div>'
+  body.innerHTML=PATCH_NOTES.map(v=>'<section class="pnver"><div class="pnvh"><b>v'+v.ver+'</b>'+(v.hot?'<i>긴급패치</i>':'')+'<span>'+(v.date||'')+'</span></div>'
     +'<div class="pnsec">캐릭터</div>'+items(v.chars||[])
     +'<div class="pnsec">상태효과</div>'+items(v.fx||[])
-    +'<div class="pnsec">시스템</div>'+((v.sys&&v.sys.length)?'<ul class="pnsys">'+v.sys.map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul>':'<div class="pnnone">변경 사항 없음</div>')
+    +'<div class="pnsec">시스템</div>'+((v.sys&&v.sys.length)?v.sys.filter(l=>typeof l==='object').map(o=>'<div class="pnitem"><div class="pnname">'+esc(o.who)+'</div><ul>'+o.lines.map(l=>'<li>'+fmt(l)+'</li>').join('')+'</ul></div>').join('')+(v.sys.some(l=>typeof l==='string')?'<ul class="pnsys">'+v.sys.filter(l=>typeof l==='string').map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul>':''):'<div class="pnnone">변경 사항 없음</div>')
     +'</section>').join('');
   const open=()=>{modalEl.hidden=false;document.querySelector('.pnpanel').scrollTop=0},close=()=>{modalEl.hidden=true};
   document.getElementById('pnbtn').addEventListener('click',open);
@@ -2581,7 +2647,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM()});
 ['pointerdown','touchend','click'].forEach(ev=>document.addEventListener(ev,initAudio,{passive:true}));   // 터치할 때마다 소리 잠금 해제/복구
 setInterval(()=>{resumeAudio();audioHint()},1000);                      // 소리가 멈춰 있으면 1초마다 다시 시도
 window.addEventListener&&['pageshow','focus'].forEach(ev=>window.addEventListener(ev,()=>{resumeAudio();audioHint()}));
-function bhAudioOff(){bhs.forEach(b=>{if(!b.sndEnd)bhHumSet(b,false)});bhSprayUpdate(-1)}   // 화면을 나가면 블랙홀 소리도 같이 끔
+function bhAudioOff(){bhs.forEach(b=>{if(!b.sndEnd)bhHumSet(b,false)});bhSprayUpdate(-1)}   // 화면을 나가면 우주의 반응 소리도 같이 끔
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){last=performance.now();initAudio()}else{bhAudioOff();audioHint()}});
 window.addEventListener('pagehide',bhAudioOff);window.addEventListener('blur',bhAudioOff);   // 앱 복귀 시 시간 점프/소리 끊김 방지
 </script>
