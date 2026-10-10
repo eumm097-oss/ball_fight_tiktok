@@ -318,7 +318,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .admtabs{width:6em;flex:none;display:flex;flex-direction:column;gap:0.4em;padding:0.8em 0.6em;background:#0d0d0d;border-right:0.1em solid rgba(224,0,255,.3)}
 .admtab{height:2.8em;border:0;border-radius:0.7em;background:transparent;color:#a9adbb;font-size:1.05em;font-weight:600;font-family:inherit;cursor:pointer;text-align:left;padding:0 0.7em;white-space:nowrap}
 .admtab.on{background:linear-gradient(90deg,rgba(255,31,61,.3),rgba(224,0,255,.3));color:#fff;box-shadow:inset 0 0 0 1px rgba(255,60,200,.55)}
-.admpane{flex:1;overflow:auto;padding:1em 1em}
+.admpane{contain:content;flex:1;overflow:auto;padding:1em 1em}
 .admpg{display:none}.admpg.on{display:block}
 .admh{font-size:1.2em;font-weight:700;margin-bottom:0.6em;color:#cfd2dc}.admsub{font-size:1.05em;font-weight:700;color:#e3d94a;letter-spacing:.04em;margin:0.2em 0 0.6em}.admch{background:#151515;border:0.1em solid #2c2c2c;border-radius:0.9em;padding:0.7em 0.8em;margin-bottom:0.7em}.admcn{display:flex;align-items:center;gap:0.6em;margin-bottom:0.6em;font-size:1.2em}.admcn b{font-weight:700}.admcn i{font-style:normal;font-size:0.95em;font-weight:700;color:#8b90a0;background:rgba(255,255,255,.07);padding:0.1em 0.5em;border-radius:0.4em}.admsw{margin-left:auto;border:0.1em solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#8b90a0;font-weight:600;font-size:1em;font-family:inherit;border-radius:2em;padding:0.3em 0.8em;cursor:pointer}.admsw.on{background:linear-gradient(90deg,rgba(255,31,61,.35),rgba(224,0,255,.35));border-color:#ff3dbd;color:#fff}.admsw span{font-weight:700}.admsk{display:flex;flex-wrap:wrap;gap:0.5em}.admtg{margin-bottom:0.6em}.admtg .admsw{margin-left:0}.admbtn.admheal{border-color:#2bff5a;background:rgba(43,255,90,.08)}.admbtn{border:0.1em solid #17e3d6;background:rgba(23,227,214,.07);color:#fff;font-weight:600;font-size:1.05em;font-family:inherit;border-radius:0.7em;padding:0.5em 0.8em;cursor:pointer}.admbtn:disabled{opacity:.35;cursor:default}.admnote{font-size:1em;color:#8b90a0;margin-top:0.5em}
 .admnone{font-size:1.1em;color:#8b90a0}
@@ -368,8 +368,8 @@ body.scr-online:not(.in-net) .onl{display:flex}
 .nmin{flex:1;min-width:0;height:38px;border:2px solid var(--ink);border-radius:0;padding:0 10px;font:500 16px/1 "Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111;background:#fff;outline:none;-webkit-user-select:text;user-select:text;-webkit-appearance:none;appearance:none}
 .nmin:focus{box-shadow:inset 0 0 0 1px var(--ink)}
 .nmin::placeholder{color:#9a9fa2}
-.nmrow.dev .nmin{padding-right:30px}
-.nmrow.dev::after{content:'';position:absolute;right:calc(var(--okw,58px) + 14px);top:50%;width:18px;height:18px;margin-top:-9px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg transform='rotate(45 12 12)'%3E%3Crect x='10.3' y='9.6' width='3.4' height='13' rx='1.5' fill='%231d5cff' stroke='%230a2f8f' stroke-width='1.1'/%3E%3Cpath d='M7.2 1.6h9.3a.9.9 0 0 1 .9.9v7.4a.9.9 0 0 1-.9.9h-6.3V8.1h3.9V5.3H7.2a.9.9 0 0 1-.9-.9v-1.9a.9.9 0 0 1 .9-.9z' fill='%231d5cff' stroke='%230a2f8f' stroke-width='1.1'/%3E%3Crect x='7.6' y='7.2' width='6.6' height='2.4' rx='.6' fill='%231d5cff' stroke='%230a2f8f' stroke-width='1.1'/%3E%3C/g%3E%3C/svg%3E") center/contain no-repeat;pointer-events:none}
+.nmrow.dev .nmin{padding-right:54px}
+.nmrow.dev::after{content:'제작자';position:absolute;right:calc(var(--okw,58px) + 14px);top:50%;transform:translateY(-50%);font:900 13px/1 "Noto Sans KR",sans-serif;color:#1d5cff;pointer-events:none}
 .nmok{flex:none;width:58px;height:38px;border:2px solid var(--ink);border-radius:0;background:#111;color:#fff;font:700 15px/1 "Noto Sans KR",sans-serif;cursor:pointer;padding:0}
 .nmok:active,.chpick:active,.mkbtn:active,.netleave:active,.chatbtn:active,.mbtns button:active{transform:scale(.96)}
 .nmmsg{min-height:18px;margin-top:3px;font:700 13px/18px "Noto Sans KR",sans-serif;text-align:center}
@@ -405,11 +405,15 @@ body.in-net .netrow{display:flex}
 .chatbtn.cool .cbase path{fill:#d5d8da}
 .chatbtn.cool .cfill{opacity:1}
 .chatbtn .cfill path{fill:#111}
-.chatmenu{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);z-index:6;display:grid;grid-template-columns:1fr 1fr;gap:6px;width:min(92%,300px);padding:8px;background:#fff;border:2px solid var(--ink)}
+.chatmenu{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;gap:6px;width:min(96vw,360px);padding:8px;background:#fff;border:2px solid var(--ink)}
 .chatmenu[hidden]{display:none}
+.chlog{height:150px;overflow-y:auto;overscroll-behavior:contain;border:2px solid var(--ink);padding:6px 8px;font:500 13.5px/1.45 "Noto Sans KR",sans-serif;color:#111;text-align:left;-webkit-user-select:text;user-select:text}
+.chlog:empty::before{content:'아직 채팅이 없습니다';color:#9a9fa2}
+.chl{word-break:break-all}.chl b{font-weight:800;color:#d32f2f}.chl.me b{color:#1d5cff}
+.chq{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
 .chatmenu button{height:34px;border:2px solid var(--ink);border-radius:0;background:#fff;color:#111;font:700 14px/1 "Noto Sans KR",sans-serif;cursor:pointer;padding:0 4px}
 .chatmenu button:active{background:#111;color:#fff}
-.chatmenu .ccbtn{grid-column:1/-1;color:#1d5cff}.chatmenu .ccbtn[hidden],.ccrow[hidden]{display:none}
+.chq button{height:28px;font-size:12.5px}.chatmenu .ccbtn{height:30px;font-size:13px;color:#1d5cff}.chatmenu .ccbtn[hidden],.ccrow[hidden]{display:none}
 .ccrow{grid-column:1/-1;display:flex;gap:6px}.ccin{flex:1;min-width:0;height:34px;border:2px solid var(--ink);border-radius:0;padding:0 8px;font:500 16px/1 "Noto Sans KR",sans-serif;color:#111;background:#fff;outline:none;-webkit-user-select:text;user-select:text}.chatmenu .ccsend{flex:none;padding:0 10px;background:#111;color:#fff}
 .p1,.p2{position:relative}
 .nick{display:none;font:700 13px/1.15 "Noto Sans KR",sans-serif;color:#111;margin-bottom:3px;min-height:15px}
@@ -3301,7 +3305,7 @@ function openAdmin(){
     if(ss!==sig){sig=ss;admRenderChars(box)}
     admSwSync(box);
     if(w.classList.contains('min'))return;
-    admInfo(info);
+    if(w.querySelector('.admpg.on[data-p="main"]'))admInfo(info);   // 보고 있는 탭만 갱신
     const l2=admLog.length+':'+(admLog[0]?admLog[0].t:'');if(l2!==lsig){lsig=l2;logs.innerHTML=admLogHTML()}
     const c2=JSON.stringify([PRES_DAYS,[...PRES_STAR]]);if(c2!==csig){csig=c2;ccub.innerHTML=admCcuHTML()}
     const s2=chars.map(c=>c.side+c.kind).join('|');if(s2!==ssig){ssig=s2;stb.innerHTML=admStatsHTML()}   // 줄은 캐릭터가 바뀔 때만 다시 그림 (꾹 누르는 중·입력 중에 안 끊기게)
@@ -3309,7 +3313,7 @@ function openAdmin(){
     admVals(w);
     admSync();
   };
-  refresh();setInterval(refresh,300);
+  refresh();setInterval(()=>{if(!document.hidden)refresh()},400);
 }
 const ADM_SK={                              // 관리자: 캐릭터별 바로 쓰기 버튼 (연출·대기 없이 누르는 즉시 효과, 빠르게 누르면 그만큼 빠르게)
   nm:[['꼼짝마!',c=>admFreeze(c)],['체력별 데미지',c=>admPct(c)],['체력별 회복',c=>admHealPct(c)],['1년후',c=>{for(let i=0;i<5;i++){const r=Math.random();(r<.4?admFreeze:r<.7?admPct:admHealPct)(c)}}]],
@@ -3439,7 +3443,7 @@ function admInfo(box){                           // 메인: 지금 경기 상황
       +'<div class="admkv"><span>체력</span><b>'+Math.ceil(c.hp-1e-9)+' / '+c.max+'</b><span>게이지</span><b>'+Math.round(Math.min(1,g)*100)+'%</b><span>이동속도</span><b>'+(+c.speed.toFixed(2))+'</b></div>'
       +'<div class="admfx">'+(fxs.length?fxs.map(x=>'<em>'+esc(x)+'</em>').join(''):'<span class="admnone">효과 없음</span>')+'</div></div>';
   }
-  box.innerHTML=h;
+  if(box._h!==h){box._h=h;box.innerHTML=h}   // 바뀐 게 있을 때만 다시 그림
 }
 function admCcuHTML(){                          // 날짜별 최고 동접 (최근 날짜가 위)
   const ks=Object.keys(PRES_DAYS).sort().reverse();
@@ -3678,7 +3682,7 @@ const netCol=n=>{const h=netHalf(n);if(!h)return '#5f6467';return NET_COL[h.data
 const netSlot=i=>'bftball-'+NET_PROTO+'-q'+i;
 const netOpp=()=>NET.mySide==='left'?'right':'left';
 function netSend(o){try{if(NET.conn&&NET.conn.open)NET.conn.send(o)}catch(e){}}
-function netWho(info,cls,me){const chip=me?'<i class="nme">나</i>':'';return '<span class="nwho'+(cls?' '+cls:'')+'"><span class="nwl">'+(me==='r'?chip:'')+'<span class="nwn">'+netEsc(info.name)+'</span>'+(info.dev?WRENCH+(cls==='big'?'':'<span class="devtxt">제작자</span>'):'')+(me&&me!=='r'?chip:'')+'</span>'+(info.dev?'<span class="devcap">ball_fight_tiktok</span>':'')+'</span>'}
+function netWho(info,cls,me){const chip=me?'<i class="nme">나</i>':'';return '<span class="nwho'+(cls?' '+cls:'')+'"><span class="nwl">'+(me==='r'?chip:'')+'<span class="nwn">'+netEsc(info.name)+'</span>'+(info.dev?'<span class="devtxt">제작자</span>':'')+(me&&me!=='r'?chip:'')+'</span>'+(info.dev?'<span class="devcap">ball_fight_tiktok</span>':'')+'</span>'}
 
 /* 화면 넘기기: 로비 ⇄ 온라인 (반쯤 걸친 상태로 멈추지 않고 항상 둘 중 하나) */
 function netCanSwipe(){const pn=document.getElementById('pnmodal');return phase==='idle'&&!NET.match&&NET.state==='idle'&&!NET.anim&&modal.hidden&&(!pn||pn.hidden)&&!document.querySelector('.pwmodal')}
@@ -3710,10 +3714,11 @@ function netDots(){document.querySelectorAll('.pgdots i').forEach((d,i)=>d.class
 const onlEl=document.querySelector('.onl'),nmIn=onlEl.querySelector('.nmin'),nmMsg=onlEl.querySelector('.nmmsg'),chBtn=onlEl.querySelector('.chpick');
 function netMsg(t,cls){nmMsg.textContent=t;nmMsg.className='nmmsg '+cls;nmMsg.getAnimations().forEach(a=>a.cancel());nmMsg.animate([{opacity:0,transform:'translateY(-3px)'},{opacity:1,transform:'none'}],{duration:180,easing:'ease-out'})}
 function netSaveName(auto){
-  const raw=nmIn.value,dev=/\[\s*bft48\s*\]/i.test(raw),nm=raw.replace(/\[\s*bft48\s*\]/ig,'').replace(/\s+/g,' ').trim();   // 제작자 코드는 이름에서 빼고 표시만 바꿈
+  const raw=nmIn.value,dev0=/\[\s*bft48\s*\]/i.test(raw),nm=raw.replace(/\[\s*bft48\s*\]/ig,'').replace(/\s+/g,' ').trim();   // 제작자 코드는 이름에서 빼고 표시만 바꿈
   if(!nm){if(!auto||raw)netMsg('이름을 입력해 주세요','bad');return false}
   if(!/^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]+$/.test(nm)){netMsg('숫자·영어·한글·띄어쓰기·!·?·.·~·( )만 쓸 수 있어요','bad');return false}   // 쓸 수 있는 글자
   if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(nm)){netMsg('띄어쓰기·기호만으로는 이름을 만들 수 없어요','bad');return false}
+  const dev=dev0||(nm===NET.me.name&&NET.me.dev);   // 코드가 빠진 같은 이름이면 제작자 표시는 그대로
   if([...nm].length>6){netMsg('이름은 6글자까지 쓸 수 있어요','bad');return false}
   if(auto&&nm===NET.me.name&&dev===NET.me.dev){if(nmMsg.classList.contains('bad'))nmMsg.textContent='';return true}   // 바뀐 게 없으면 그대로
   NET.me.name=nm;NET.me.dev=dev;try{localStorage.setItem('bftNick',nm);localStorage.setItem('bftDev',dev?'1':'0')}catch(e){}
@@ -3751,7 +3756,7 @@ function netOvEl(){
   m.innerHTML='<div class="mbox" role="dialog" aria-modal="true"><div class="mtt"><span class="mtt1">매칭 중...</span><span class="mdots" hidden></span></div>'
     +'<div class="mfield"><canvas></canvas></div><div class="mstat"></div><div class="mtime">00:00</div><div class="kkad" hidden>상대가 없으면 오픈채팅에서 같이 할 사람을 구해보세요<br><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">오픈채팅 들어가기</a></div><div class="mvs" hidden></div>'
     +'<div class="mbtns"><button type="button" class="mretry" hidden>다시 시도</button><button type="button" class="mcancel">취소</button></div>'
-    +'<div class="mtip"><b>TIP:</b>이름에 파란 몽키스패너가 있다면 그건 제작자일겁니다!</div></div>';
+    +'<div class="mtip"><b>TIP:</b>이름 옆에 파란 글씨로 제작자라고 써 있다면 그건 제작자일겁니다!</div></div>';
   document.body.appendChild(m);
   m.querySelector('.mcancel').addEventListener('click',netCancel);
   m.querySelector('.mretry').addEventListener('click',()=>{netCancel();netFind()});
@@ -3897,7 +3902,7 @@ function netMatched(){
 
 /* 경기 준비: 같은 씨앗으로 두 폰에 같은 캐릭터 배치 → 각자 출발 방향 정하기 */
 function netSetup(){
-  resetGame();document.querySelector('.netkk').hidden=true;
+  resetGame();document.querySelector('.netkk').hidden=true;chatMenu.querySelector('.chlog').innerHTML='';
   document.body.classList.add('in-net');
   rngSeed(NET.seed);
   Object.assign(NET,{step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false});NET.hist.clear();
@@ -4061,8 +4066,8 @@ document.querySelector('.netleave').addEventListener('click',netLeave);
 
 /* 빠른 채팅 */
 const chatBtn=document.querySelector('.chatbtn'),chatMenu=document.querySelector('.chatmenu');
-chatMenu.innerHTML=NET_CHAT.map((t,i)=>'<button type="button" data-ci="'+i+'">'+netEsc(t)+'</button>').join('')
-  +'<button type="button" class="ccbtn" data-cc="1">메시지 보내기</button><div class="ccrow" hidden><input class="ccin" type="text" maxlength="30" placeholder="메시지를 입력해주세요." autocomplete="off" enterkeyhint="send"><button type="button" class="ccsend">보내기</button></div>';
+chatMenu.innerHTML='<div class="chlog"></div><div class="chq">'+NET_CHAT.map((t,i)=>'<button type="button" data-ci="'+i+'">'+netEsc(t)+'</button>').join('')
+  +'</div><button type="button" class="ccbtn" data-cc="1">메시지 보내기</button><div class="ccrow" hidden><input class="ccin" type="text" maxlength="30" placeholder="메시지를 입력해주세요." autocomplete="off" enterkeyhint="send"><button type="button" class="ccsend">보내기</button></div>';
 const netIsAdm=()=>{try{return localStorage.getItem('bftAdm')==='1'||!!NET.me.dev}catch(e){return !!NET.me.dev}};   // 어드민 패널을 연 적 있는 사람(또는 제작자)만 직접 메시지
 function netChatClose(){chatMenu.hidden=true}
 let netChatSeq=0;const netChatGot=new Set();
@@ -4070,7 +4075,7 @@ function netChatSend(i){                         // 상대가 받았다고 답�
   const id=++netChatSeq+'-'+Math.random().toString(36).slice(2,6);let n=0;const msg=typeof i==='string'?{t:'chat',txt:i,id}:{t:'chat',i,id};
   const go=()=>{if(!NET.conn||NET.chatAck===id||n++>=5)return;netSend(msg);setTimeout(go,600)};go();
 }
-chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){chatMenu.querySelector('.ccbtn').hidden=!netIsAdm();chatMenu.querySelector('.ccrow').hidden=true}});
+chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){const L=chatMenu.querySelector('.chlog');L.scrollTop=L.scrollHeight;chatMenu.querySelector('.ccbtn').hidden=!netIsAdm();chatMenu.querySelector('.ccrow').hidden=true}});
 {const row=chatMenu.querySelector('.ccrow'),inp=row.querySelector('.ccin');
   chatMenu.querySelector('.ccbtn').addEventListener('click',e=>{e.stopPropagation();row.hidden=!row.hidden;if(!row.hidden)inp.focus()});
   const sendT=()=>{const t=inp.value.replace(/\s+/g,' ').trim().slice(0,30);if(!t)return;inp.value='';inp.blur();netChatClose();netChatSend(t);netChatShow(NET.mySide,t)};
@@ -4081,6 +4086,9 @@ chatMenu.addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!
 document.addEventListener('pointerdown',e=>{if(!chatMenu.hidden&&!e.target.closest('.chatmenu,.chatbtn'))netChatClose()});
 function netChatShow(sd,i){
   if(!NET.match)return;
+  {const L=chatMenu.querySelector('.chlog'),info=sd===NET.mySide?NET.me:NET.op,ln=document.createElement('div');   // 채팅 기록
+    ln.className='chl'+(sd===NET.mySide?' me':'');ln.innerHTML='<b>'+netEsc(info?info.name:'?')+'</b>'+(info&&info.dev?'<span class="devtxt">제작자</span>':'')+' ';ln.appendChild(document.createTextNode(typeof i==='string'?i:(NET_CHAT[i]||'')));
+    L.appendChild(ln);while(L.childElementCount>60)L.firstChild.remove();L.scrollTop=L.scrollHeight}
   const P=document.querySelector(sd==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());
   const b=document.createElement('div');b.className='chatpop';b.textContent=typeof i==='string'?i:(NET_CHAT[i]||'');P.appendChild(b);
   const hide=()=>setTimeout(()=>b.remove(),2400);
