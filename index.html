@@ -270,7 +270,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .kksign{transform:translate(-50%,-100%);display:flex;align-items:flex-end;width:calc(var(--W)*.2);pointer-events:none}
 .kksign img{display:block;height:auto;user-select:none;-webkit-user-drag:none}
 .mletter{display:flex;align-items:center;transform:translate(-50%,-50%);height:calc(var(--W)*.09);pointer-events:none}
-.kitem{position:absolute;transform:translate(-50%,-50%);height:calc(var(--W)*.085);aspect-ratio:118/370;pointer-events:none}.kitem img{display:block;height:100%;width:auto;filter:drop-shadow(0 0 4px rgba(255,200,60,.7));animation:mlf 1.6s ease-in-out infinite alternate}
+.kitem{position:absolute;transform:translate(-50%,-50%);height:calc(var(--W)*.12);aspect-ratio:118/370;pointer-events:none}.kitem img{display:block;height:100%;width:auto;filter:drop-shadow(0 0 4px rgba(255,200,60,.7));animation:mlf 1.6s ease-in-out infinite alternate}
 .mletter img{display:block;height:100%;width:auto;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 0 3px rgba(170,120,255,.45));animation:mlf 1.6s ease-in-out infinite alternate}
 @keyframes mlf{from{transform:translateY(-2px)}to{transform:translateY(2px)}}
 .bhole{transform:translate(-50%,-50%);pointer-events:none;aspect-ratio:1/1;height:auto}
@@ -1385,12 +1385,14 @@ function rodHit(c,a0){
 function stSpawnKey(c){               // 맵에 행운키링 소환 (최대 2개, 숏타민에게서 멀수록 잘 뽑힘)
   const cap=(c.stG||0)>=ST.max-1e-9?1:2;               // 회피 칸이 꽉 차면 맵에는 최대 1개만 쌓임
   if(c.stItems.length>=cap)return;
-  const cand=[];
-  for(let k=0;k<40&&cand.length<10;k++){
+  const cand=[],W=aW(),H=aH(),outR=(ROD.len+.07)*W;               // 각목이 닿는 반경(+키링 크기) 안에는 나오지 않음
+  const dpx=(cx,cy)=>Math.hypot((cx-c.x)*W,(cy-c.y)*H);
+  for(let k=0;k<80&&cand.length<10;k++){
     const cx=.1+Math.random()*.8,cy=.1+Math.random()*.8,d=Math.hypot(cx-c.x,cy-c.y);
-    if(d>.2&&c.stItems.every(o=>Math.hypot(o.x-cx,o.y-cy)>.15))cand.push([cx,cy,d*d]);
+    if(dpx(cx,cy)>outR&&c.stItems.every(o=>Math.hypot(o.x-cx,o.y-cy)>.15))cand.push([cx,cy,d*d]);
   }
   let x=.1+Math.random()*.8,y=.1+Math.random()*.8;
+  if(!cand.length){for(let k=0;k<200&&dpx(x,y)<=outR;k++){x=.1+Math.random()*.8;y=.1+Math.random()*.8}}
   if(cand.length){let r=Math.random()*cand.reduce((a,q)=>a+q[2],0);for(const q of cand){x=q[0];y=q[1];if(r<q[2])break;r-=q[2]}}
   const el=document.createElement('div');el.className='kitem';el.innerHTML='<img alt="" draggable="false" src="'+KEY_IMG+'">';
   auraLayer.prepend(el);el.style.left=x*100+'%';el.style.top=y*100+'%';
