@@ -201,7 +201,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .aura.off{transform:translate(-50%,-50%) scale(0);opacity:0;animation:none;transition:transform .4s ease-in-out,opacity .4s ease-in-out}
 .rail.cells5 .rb::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(var(--ink),var(--ink)) 20% 0/2px 100% no-repeat,linear-gradient(var(--ink),var(--ink)) 40% 0/2px 100% no-repeat,linear-gradient(var(--ink),var(--ink)) 60% 0/2px 100% no-repeat,linear-gradient(var(--ink),var(--ink)) 80% 0/2px 100% no-repeat}
 .aura{border:0;background:none;box-shadow:none}
-.aura .tg{position:absolute;inset:0;width:100%;height:100%;opacity:.95}
+.aura .tg{position:absolute;inset:0;width:100%;height:100%;opacity:.95}.aura,.aura .tgglow,.aura .orbit,.aura .tri,.aura .wave,.bkaura,.ball{will-change:transform}
 .aura .tgglow{position:absolute;inset:0;width:100%;height:100%;transform:scale(1.12);filter:blur(calc(var(--W)*.014));opacity:.35;animation:tgglow 1.8s ease-in-out infinite;pointer-events:none}
 .aura .wave{position:absolute;inset:0;border-radius:50%;border:3px solid;box-sizing:border-box;opacity:0;pointer-events:none;animation:tgwave 2.4s ease-out infinite}
 .aura .wave.r{border-color:rgba(205,46,58,.6)}
@@ -272,7 +272,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .nmtxt{display:inline-grid}.nmtxt>span{grid-area:1/1}
 .rb .bkdiv{position:absolute;top:0;bottom:0;width:1px;margin-left:-.5px;background:var(--ink);z-index:2;pointer-events:none}
 .rb .fill.st{background:#f5a01a}.rb .fill.um{background:#8d9298}
-.umfx{position:absolute;left:50%;top:50%;width:calc(var(--W)*.9);aspect-ratio:400/230;transform:translate(-50%,-50%);pointer-events:none;opacity:0;z-index:6;mix-blend-mode:multiply}.umfx canvas{display:block;width:100%;height:100%}
+.umfx{position:absolute;left:50%;top:50%;width:calc(var(--W)*.9);aspect-ratio:400/230;transform:translate(-50%,-50%);pointer-events:none;opacity:0;z-index:6;will-change:transform,opacity}.umfx canvas{display:block;width:100%;height:100%}
 .umwin{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;pointer-events:none}.umvclip{position:absolute;inset:0;overflow:visible;pointer-events:none}.umclip{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:5}
 .umring{position:absolute;border:5px solid #fff6b0;border-radius:50%;box-sizing:border-box;transform:translate(-50%,-50%);pointer-events:none;width:0;height:0;background:radial-gradient(circle,rgba(255,212,0,0) 55%,rgba(255,212,0,.10) 80%,rgba(255,230,90,.28) 100%);box-shadow:0 0 10px 3px rgba(255,212,0,.9),0 0 26px 8px rgba(255,150,0,.45),inset 0 0 12px 3px rgba(255,212,0,.6)}.umring::before,.umring::after{content:'';position:absolute;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}.umring::before{width:84%;height:84%;border:2px solid rgba(255,190,0,.75);box-shadow:0 0 8px 2px rgba(255,170,0,.45)}.umring::after{width:66%;height:66%;border:1.5px dashed rgba(255,235,120,.55)}
 .kksign{transform:translate(-50%,-100%);display:flex;align-items:flex-end;width:calc(var(--W)*.2);pointer-events:none}
@@ -304,7 +304,27 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .pnbtn svg{display:block;width:100%;height:100%}
 .pnbtn:active{color:#444}
 .stage:has(.end:not([hidden])) .vtag,.stage:has(.end:not([hidden])) .pnbtn{display:none}
-.half.lockd{background:#9a9ea1;position:relative}.half.lockd::after{content:'점검 중';position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:#fff;background:#e5484d;padding:1px 6px;border-radius:3px}.pwmodal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.pwbox{width:100%;max-width:300px;background:var(--bg,#fff);border:3px solid var(--ink,#111);padding:18px;font-family:inherit}.pwt{font-size:18px;font-weight:700;margin-bottom:6px}.pwd{font-size:13px;color:#555;margin-bottom:12px}.pwin{width:100%;box-sizing:border-box;height:40px;font-size:18px;padding:0 10px;border:2px solid var(--ink,#111);border-radius:0;font-family:inherit;letter-spacing:.2em}.pwin:focus{outline:none;border-color:#111}.pwerr{min-height:18px;font-size:12px;color:#e5484d;margin:6px 0 4px}.pwbtns{display:flex;gap:8px}.pwbtns button{flex:1;height:38px;font-family:inherit;font-size:15px;font-weight:700;border:2px solid var(--ink,#111);border-radius:0;cursor:pointer}.pwno{background:#fff;color:#111}.pwyes{background:#111;color:#fff}.pnmodal{position:fixed;inset:0;overscroll-behavior:contain;touch-action:pan-y;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:12}
+.half.lockd{background:#9a9ea1;position:relative}.half.lockd::after{content:'점검 중';position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:#fff;background:#e5484d;padding:1px 6px;border-radius:3px}
+.adm{position:fixed;inset:0;pointer-events:none;z-index:40;font-family:"IBM Plex Sans KR","Noto Sans KR",sans-serif}
+.admwin,.admico{position:fixed;pointer-events:auto}
+.admwin{width:min(380px,calc(100vw - 24px));height:min(300px,60vh);display:flex;flex-direction:column;background:rgba(18,20,26,.94);color:#e8eaf0;border:1px solid rgba(124,92,255,.55);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.45);overflow:hidden;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.adm.min .admwin{display:none}.adm:not(.min) .admico{display:none}
+.admhd{display:flex;align-items:center;gap:8px;height:38px;padding:0 6px 0 12px;background:linear-gradient(90deg,rgba(124,92,255,.35),rgba(124,92,255,.08));cursor:grab;touch-action:none;flex:none}
+.admdot{width:8px;height:8px;border-radius:50%;background:#7c5cff;box-shadow:0 0 8px #7c5cff}
+.admtt{font-size:14px;font-weight:700;letter-spacing:.02em;flex:1}
+.admmin{width:30px;height:30px;border:0;border-radius:8px;background:rgba(255,255,255,.08);color:#e8eaf0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.admmin svg,.admico svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.admmain{flex:1;display:flex;min-height:0}
+.admtabs{width:78px;flex:none;display:flex;flex-direction:column;gap:4px;padding:8px 6px;background:rgba(255,255,255,.03);border-right:1px solid rgba(255,255,255,.06)}
+.admtab{height:32px;border:0;border-radius:8px;background:transparent;color:#a9adbb;font:600 12px inherit;font-family:inherit;cursor:pointer;text-align:left;padding:0 10px}
+.admtab.on{background:rgba(124,92,255,.22);color:#fff}
+.admpane{flex:1;overflow:auto;padding:12px 14px}
+.admpg{display:none}.admpg.on{display:block}
+.admh{font-size:15px;font-weight:700;margin-bottom:8px}
+.admnone{font-size:13px;color:#8b90a0}
+.admico{width:46px;height:46px;border-radius:12px;border:1px solid rgba(124,92,255,.7);background:rgba(18,20,26,.92);color:#cfc4ff;box-shadow:0 6px 18px rgba(0,0,0,.4),0 0 10px rgba(124,92,255,.35);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:none}
+.admico svg{width:24px;height:24px}
+.fxic[data-fx]{-webkit-touch-callout:none;touch-action:manipulation}.pwmodal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.pwbox{width:100%;max-width:300px;background:var(--bg,#fff);border:3px solid var(--ink,#111);padding:18px;font-family:inherit}.pwt{font-size:18px;font-weight:700;margin-bottom:6px}.pwd{font-size:13px;color:#555;margin-bottom:12px}.pwin{width:100%;box-sizing:border-box;height:40px;font-size:18px;padding:0 10px;border:2px solid var(--ink,#111);border-radius:0;font-family:inherit;letter-spacing:.2em}.pwin:focus{outline:none;border-color:#111}.pwerr{min-height:18px;font-size:12px;color:#e5484d;margin:6px 0 4px}.pwbtns{display:flex;gap:8px}.pwbtns button{flex:1;height:38px;font-family:inherit;font-size:15px;font-weight:700;border:2px solid var(--ink,#111);border-radius:0;cursor:pointer}.pwno{background:#fff;color:#111}.pwyes{background:#111;color:#fff}.pnmodal{position:fixed;inset:0;overscroll-behavior:contain;touch-action:pan-y;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:12}
 .pnmodal[hidden]{display:none}
 .pnpanel{position:relative;width:100%;max-width:560px;max-height:min(86vh,720px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--bg);border:3px solid var(--ink);padding:52px 20px 24px;font-family:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111;-webkit-font-smoothing:antialiased}
 .pnclose{position:absolute;top:8px;right:8px;width:36px;height:36px;font-size:20px;line-height:1;color:var(--ink);background:transparent;border:2px solid var(--ink);cursor:pointer}
@@ -1230,10 +1250,12 @@ function burstAt(cx,cy,col,sc,n){   // 임팩트: 링 + 번쩍 + 불꽃 (px 좌�
   try{
     const W=aW(),base=W*.1*sc;
     const ring=mk('pring','');ring.style.left=cx+'px';ring.style.top=cy+'px';ring.style.borderColor=col;
-    ring.animate([{width:base*.4+'px',height:base*.4+'px',borderWidth:'5px',opacity:1},{width:base*2+'px',height:base*2+'px',borderWidth:'1px',opacity:0}],
+    ring.style.width=ring.style.height=base*2+'px';ring.style.borderWidth='3px';   // 크기 대신 transform으로 키움 (레이아웃 계산 없이 가볍게)
+    ring.animate([{transform:'translate(-50%,-50%) scale(.2)',opacity:1},{transform:'translate(-50%,-50%) scale(1)',opacity:0}],
       {duration:380,easing:'cubic-bezier(.15,.7,.3,1)',fill:'forwards'}).onfinish=()=>ring.remove();
     const fl=mk('impact','');fl.style.left=cx+'px';fl.style.top=cy+'px';
     fl.animate([{opacity:1,transform:'scale(.5)'},{opacity:0,transform:'scale('+(1.4+sc*.5)+')'}],{duration:170,easing:'ease-out',fill:'forwards'}).onfinish=()=>fl.remove();
+    if(fx.childElementCount>160)n=Math.min(n,3);                   // 효과가 너무 많이 쌓이면 불꽃 수를 줄여서 렉 방지
     for(let i=0;i<n;i++){
       const a=Math.random()*Math.PI*2,len=W*(.05+Math.random()*.1)*sc,rot=a*180/Math.PI+90;
       const sp=mk('spark','');sp.style.left=cx+'px';sp.style.top=cy+'px';sp.style.background=col;
@@ -1621,8 +1643,8 @@ const UMP=[
   {fr:UM_FR,aud:UM_AUD,fps:30,w:450,h:497,size:0.562,imgs:null,buf:null,dec:false},
   {fr:UM2_FR,aud:UM2_AUD,fps:30,w:510,h:306,size:.9,alpha:.92,fade:true,imgs:null,buf:null,dec:false}];
 const UM2={sec:3.05,beats:[.2,.9,1.6,2.3],sx:276/340,sy:199/204,dmg:20,fall:1.5,dmgMin:8,tam:45,tamR:.07,wall:.2,knock:.3,kLv:1,dur:.6,maxR:1.45,thick:.012,shake:14};   // 박자 = 템버린이 바닥에 닿는 시각(초) / sx,sy = 그 지점(영상 안 비율)
-let umClip=null,umP2=null,umRings=[];
-const umPl=[{},{}];                     // 영상마다 따로 재생 (두 영상이 동시에 나올 수 있게)
+let umClip=null,umP2=null,umRings=[],umCasts=[],umAllPl=[];   // 엄....edit 두 명(미러전)도 각자 따로 재생·판정
+const umPlOf=c=>{if(!c.umPl){c.umPl=[{},{}];umAllPl.push(...c.umPl)}return c.umPl};
 function umB64(b){const s=atob(b),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
 function umLoad(){
   if(!umWinBuf&&!umWinDec&&actx){umWinDec=true;try{const p=actx.decodeAudioData(umB64(UM_WIN_AUD).buffer,b=>{umWinBuf=b},()=>{umWinDec=false});if(p&&p.catch)p.catch(()=>{})}catch(e){umWinDec=false}}
@@ -1631,21 +1653,21 @@ function umLoad(){
       pt.bmp=[];if(window.createImageBitmap)pt.imgs.forEach((im,i)=>{im.decode().then(()=>createImageBitmap(im)).then(bm=>{pt.bmp[i]=bm}).catch(()=>{})});}   // 미리 디코딩해서 재생 중 끊김 방지
     if(!pt.buf&&!pt.dec&&actx){
       pt.dec=true;
-      try{const p=actx.decodeAudioData(umB64(pt.aud).buffer,bf=>{pt.buf=bf;UMP.forEach((q,k)=>{if(q===pt)umAud(k)})},()=>{pt.dec=false});if(p&&p.catch)p.catch(()=>{})}catch(e){pt.dec=false}
+      try{const p=actx.decodeAudioData(umB64(pt.aud).buffer,bf=>{pt.buf=bf;UMP.forEach((q,k)=>{if(q===pt)umAllPl.filter((P,i)=>i%2===k).forEach(P=>umAud(P,k))})},()=>{pt.dec=false});if(p&&p.catch)p.catch(()=>{})}catch(e){pt.dec=false}
     }
   }
 }
-function umAud(k){                     // 소리: 효과음과 같은 볼륨 조절·게임 종료 시 음소거를 따름 (소리가 늦게 준비되면 지금 시점부터 이어서 재생)
-  const P=umPl[k],pt=UMP[k];if(!P.on||P.src||!pt.buf||!actx||!master)return;
+function umAud(P,k){                   // 소리: 효과음과 같은 볼륨 조절·게임 종료 시 음소거를 따름 (소리가 늦게 준비되면 지금 시점부터 이어서 재생)
+  const pt=UMP[k];if(!P.on||P.src||!pt.buf||!actx||!master)return;
   try{
     if(actx.state==='suspended')actx.resume();
     const sr=actx.createBufferSource();sr.buffer=pt.buf;sr.connect(master);
     sr.start(0,Math.min(pt.buf.duration-.01,Math.max(0,(performance.now()-P.t0)/1000)));P.src=sr;
   }catch(e){}
 }
-function umEnsure(){
+function umEnsure(c){
   try{
-    for(const P of umPl){
+    for(const P of umPlOf(c)){
       if(P.box&&P.box.isConnected)continue;
       P.box=document.createElement('div');P.box.className='umfx';
       P.cv=document.createElement('canvas');P.box.appendChild(P.cv);
@@ -1654,34 +1676,35 @@ function umEnsure(){
     return true;
   }catch(e){console.error(e);return false}
 }
-function umStopOne(k){
-  const P=umPl[k];P.on=false;P.next=null;cancelAnimationFrame(P.raf||0);P.raf=0;
+function umStopOne(P){
+  P.on=false;P.next=null;cancelAnimationFrame(P.raf||0);P.raf=0;
   try{if(P.src)P.src.stop(over&&actx?actx.currentTime+.25:0)}catch(e){}   // 게임이 끝날 땐 페이드아웃이 끝난 뒤 멈춤
   P.src=null;if(P.box)P.box.style.opacity=0;
 }
-function umStop(rings){
-  umStopOne(0);umStopOne(1);
-  if(rings){umP2=null;umRings=[];if(umClip){const g=umClip.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,umClip.width,umClip.height)}}
+function umStop(rings,c){                // c가 있으면 그 엄....edit 것만, 없으면 전부
+  (c?umPlOf(c):umAllPl).forEach(umStopOne);
+  if(rings&&!c){umAllPl.forEach(P=>{if(P.box&&P.box.parentNode)P.box.parentNode.remove()});umAllPl=[];chars.forEach(o=>{o.umPl=null})}   // 판이 끝나면 영상 상자 정리
+  if(rings){umP2=null;umCasts=[];umRings=[];if(umClip){const g=umClip.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,umClip.width,umClip.height)}}
 }
-function umFrame(k){
-  const P=umPl[k],pt=UMP[k];P.raf=0;if(!P.on||!P.cv)return;
+function umFrame(P,k){
+  const pt=UMP[k];P.raf=0;if(!P.on||!P.cv)return;
   const el=(performance.now()-P.t0)/1000;
   if(P.next&&el>=UM.link){const f=P.next;P.next=null;f();if(!P.on)return}   // 1번 영상이 끝나는 순간 바로 2번 영상
-  if(el>=pt.fr.length/pt.fps+.05){umStopOne(k);return}               // 영상이 끝나면 사라짐
+  if(el>=pt.fr.length/pt.fps+.05){umStopOne(P);return}               // 영상이 끝나면 사라짐
   const i=Math.min(pt.fr.length-1,Math.floor(el*pt.fps));
   const src=(pt.bmp&&pt.bmp[i])||(pt.imgs[i]&&pt.imgs[i].complete?pt.imgs[i]:null);
   if(i!==P.idx&&src){
     try{const ctx=P.cv.getContext('2d');ctx.clearRect(0,0,pt.w,pt.h);ctx.drawImage(src,0,0,pt.w,pt.h);P.idx=i}catch(e){}
   }
-  P.raf=requestAnimationFrame(()=>umFrame(k));
+  P.raf=requestAnimationFrame(()=>umFrame(P,k));
 }
-function umStart(k,cx,cy,flip){       // k번째 영상을 (cx,cy) 중심에 틀기 (flip: 좌우 반전)
-  const pt=UMP[k],P=umPl[k];
-  umStopOne(k);P.on=true;P.t0=performance.now();P.idx=-1;
+function umStart(c,k,cx,cy,flip){     // c의 k번째 영상을 (cx,cy) 중심에 틀기 (flip: 좌우 반전)
+  const pt=UMP[k],P=umPlOf(c)[k];
+  umStopOne(P);P.on=true;P.t0=performance.now();P.idx=-1;
   P.cv.width=pt.w;P.cv.height=pt.h;
   const s=P.box.style;s.width='calc(var(--W)*'+pt.size+')';s.aspectRatio=pt.w+'/'+pt.h;s.left=(cx*100)+'%';s.top=(cy*100)+'%';s.transform='translate(-50%,-50%)'+(flip?' scaleX(-1)':'');s.opacity=(pt.alpha!=null?pt.alpha:UM.alpha);
   const mk=pt.fade?'linear-gradient(to bottom,#000 92%,transparent 100%)':'none';P.cv.style.maskImage=P.cv.style.webkitMaskImage=mk;   // 아래가 뚝 잘린 영상은 아래쪽을 서서히 흐리게
-  umAud(k);P.raf=requestAnimationFrame(()=>umFrame(k));
+  umAud(P,k);P.raf=requestAnimationFrame(()=>umFrame(P,k));
 }
 function umWinPlay(w){                // 엄....edit 승리: 공 사진 자리에 영상을 반복 재생
   const imgs=UM_WIN.map(b=>{const im=new Image();im.src='data:image/webp;base64,'+b;return im});
@@ -1700,27 +1723,28 @@ function umThump(amp){               // 쿠쿵! : 아래로 한 번 크게 내�
   const y=v=>({transform:'translateY('+v+'px)'});
   shakeAnim=el.animate([y(0),{...y(amp),offset:.2},y(0)],{duration:220,easing:'ease-out'});   // 쿵! 한 번
 }
-function umRing(sx,sy){               // 템버린이 내려찍힌 자리에서 퍼지는 노란 파동
+function umRing(owner,sx,sy){               // 템버린이 내려찍힌 자리에서 퍼지는 노란 파동
   if(!umClip||!umClip.isConnected){umClip=document.createElement('canvas');umClip.className='umclip';arenaEl.appendChild(umClip)}   // 파동은 캔버스 한 장에 그림(가벼움), 경기장 밖은 안 그려짐
-  umRings.push({x:sx,y:sy,age:0,hit:false});
+  umRings.push({owner,x:sx,y:sy,age:0,hit:false});
   try{burstAt(sx*aW(),sy*aH(),'#ffd400',1.3,12)}catch(e){}           // 찍는 순간 번쩍
   try{playHit()}catch(e){}
   try{umThump(UM2.shake)}catch(e){}                         // 템버린을 칠 때마다 쿠쿵! 한 번
 }
-function umTam(sx,sy){                 // 템버린에 직접 맞으면 30 데미지 (이어서 퍼지는 파동 데미지도 따로 받음)
+function umTam(owner,sx,sy){           // 템버린에 직접 맞으면 데미지 (이어서 퍼지는 파동 데미지도 따로 받음) — 쓴 사람만 빼고 모두
   for(const c of chars){
-    if(c.kind==='um'||!c.alive||!c.started)continue;
+    if(c===owner||!c.alive||!c.started)continue;
     if(Math.hypot(c.x-sx,c.y-sy)<=R+UM2.tamR)hurt(c,UM2.tam);
   }
 }
 function umTick(dt){
-  if(umP2&&!over){
-    const age=now-umP2.t0;
-    UM2.beats.forEach((bt,i)=>{if(!umP2.fired[i]&&age>=bt){umP2.fired[i]=true;umTam(umP2.sx,umP2.sy);umRing(umP2.sx,umP2.sy)}});
+  if(!over)for(const P2 of umCasts.slice()){
+    const age=now-P2.t0;
+    UM2.beats.forEach((bt,i)=>{if(!P2.fired[i]&&age>=bt){P2.fired[i]=true;if(P2.owner.alive){umTam(P2.owner,P2.sx,P2.sy);umRing(P2.owner,P2.sx,P2.sy)}}});
+    if(age>UM2.sec+1)umCasts=umCasts.filter(x=>x!==P2);
   }
   let g=null;
   if(umClip&&(umRings.length||umClip.dirty)){
-    const W=aW(),H=aH(),dpr=Math.min(2,window.devicePixelRatio||1),cw=Math.round(W*dpr),ch=Math.round(H*dpr);
+    const W=aW(),H=aH(),dpr=Math.min(1.5,window.devicePixelRatio||1),cw=Math.round(W*dpr),ch=Math.round(H*dpr);
     if(umClip.width!==cw||umClip.height!==ch){umClip.width=cw;umClip.height=ch}
     g=umClip.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,W,H);umClip.dirty=umRings.length>0;
   }
@@ -1738,9 +1762,9 @@ function umTick(dt){
       g.setLineDash([6,6]);g.beginPath();g.arc(px,py,rr*.66,0,6.2832);g.strokeStyle='rgba(255,235,120,.55)';g.lineWidth=1.5;g.stroke();g.setLineDash([]);
       g.globalAlpha=1;
     }
-    if(!w.hit&&!over&&umP2){
+    if(!w.hit&&!over){
       for(const c of chars){
-        if(c.kind==='um'||!c.alive||!c.started)continue;
+        if(c===w.owner||!c.alive||!c.started)continue;
         if(Math.abs(Math.hypot(c.x-w.x,c.y-w.y)-r)<=R+UM2.thick){w.hit=true;const wd=Math.max(UM2.dmgMin,UM2.dmg-UM2.fall*Math.floor(r*100/10+1e-9));hurt(c,wd);if(c.alive)applyKnock(c,c.x-w.x,c.y-w.y,UM2.knock,UM2.kLv);break}   // 파동에 닿으면 10 데미지 (한 파동에 한 번)
       }
     }
@@ -1749,23 +1773,23 @@ function umTick(dt){
 }
 function castUm(c){
   umLoad();
-  if(!umEnsure()){c.gauge=0;c.mode='fill';return}
+  if(!umEnsure(c)){c.gauge=0;c.mode='fill';return}
   c.mode='cast';c.skillT=now;
   let fin=false;
-  const end=()=>{if(fin)return;fin=true;umStop(false);if(c.alive&&c.mode==='cast'){c.gauge=0;c.mode='fill'}};
+  const end=()=>{if(fin)return;fin=true;umStop(false,c);if(c.alive&&c.mode==='cast'){c.gauge=0;c.mode='fill'}};
   const tf=foe(c),flip=!!(tf&&tf.x<c.x);                  // 스킬 쓸 때 상대가 왼쪽에 있으면 영상을 좌우 반전
-  umStart(0,.5,.5,false);                                 // 1) 맵 가운데 영상 (UM은 반전하지 않음)
+  umStart(c,0,.5,.5,false);                                 // 1) 맵 가운데 영상 (UM은 반전하지 않음)
   let go2=false;
   const second=()=>{                                      // 2) 1번 영상이 끝나면 바로: 랜덤 위치 템버린 영상 + 박자마다 노란 파동
-    if(go2||fin||over)return;go2=true;umPl[0].next=null;
+    if(go2||fin||over||!c.alive)return;go2=true;umPlOf(c)[0].next=null;
     const p=UMP[1],bw=p.size,bh=p.size*p.h/p.w;
     const t=foe(c),cl=v=>Math.min(1-UM2.wall,Math.max(UM2.wall,v)),sx=cl(t?t.x:.5),sy=cl(t?t.y:.5);   // 템버린 찍는 자리 = 그 순간 상대 위치 (벽·구석에서 10m 안쪽으로는 당겨옴)
     const cx=sx-((flip?1-UM2.sx:UM2.sx)-.5)*bw,cy=sy-(UM2.sy-.5)*bh;   // 영상은 그 자리에 맞춰서 (반전이면 템버린 위치도 반대쪽, 맵 밖으로 나가도 됨)
-    umP2={t0:now,fired:[],sx,sy};
-    umStart(1,cx,cy,flip);
+    umP2={owner:c,t0:now,fired:[],sx,sy};umCasts.push(umP2);
+    umStart(c,1,cx,cy,flip);
     sched(UM2.sec,end);
   };
-  umPl[0].next=second;                                    // 영상 재생이 끝나는 즉시 (화면 시간 기준)
+  umPlOf(c)[0].next=second;                                    // 영상 재생이 끝나는 즉시 (화면 시간 기준)
   sched(UM.sec,second);                                   // 혹시 놓쳐도 게임 시간으로 보장
 }
 function castJy(c){                 // 햄버거 25% / 치킨 30% / 야채 25% / 포크 20%
@@ -2794,7 +2818,7 @@ function renderFx(){                 // 상태효과 정리 (수치는 게임에
     {e:'💪',n:'힘',c:'#e5484d',tag:'버프',chips:[],d:'내가 입히는 직접 공격과 스킬 데미지가 '+JY.strAtk+'만큼 늘어난다(꼼짝마, 체력별로 데미지, 밥상, 포크, 몸통 박치기 등). 부딪힘 같은 디버프 상태효과가 주는 데미지(벽 충돌)는 힘으로 늘어나지 않는다. 이미 걸려 있을 때 또 얻어도 겹치지 않고 시간만 처음부터 다시 시작한다.',src:'햄버거(제리얌)'},
     {e:'🔒',n:'봉인',c:'#7c3aed',tag:'디버프',chips:[],d:'패시브와 스킬이 함께 봉인된다. 걸려 있는 동안 패시브가 모두 사라지고(제리얌의 몸통 박치기, 태권히어로의 보호와 태극 아우라, 백기철 판타지의 체력 베끼기와 버프 베끼기 등. 낭만박상환의 부활은 사라지지 않는다), 게이지가 다 차서 스킬을 쓰려고 해도 아무 일도 일어나지 않고 게이지만 비워진다. 시간이 지나면 원래대로 돌아온다.',src:'내가 진실을 말하면 우주가 반응해서 진실이 거짓으로 바뀌어.(김켈리, '+TRUTH.sec+'초) · 백기철 판타지의 디버프('+BK.debSec+'초)'}
   ];
-  const inner=x=>'<div class="ghead"><div class="fxic" style="--c:'+x.c+'">'+x.e+'</div><div><div class="gname" style="--c:'+x.c+'">'+esc(x.n)+'</div><div class="gtag">'+esc(x.tag)+'</div></div></div>'
+  const inner=x=>'<div class="ghead"><div class="fxic" data-fx="'+esc(x.n)+'" style="--c:'+x.c+'">'+x.e+'</div><div><div class="gname" style="--c:'+x.c+'">'+esc(x.n)+'</div><div class="gtag">'+esc(x.tag)+'</div></div></div>'
     +(x.chips.length?'<div class="chips">'+x.chips.map(c=>'<span class="chip">'+esc(c)+'</span>').join('')+'</div>':'')
     +'<p class="skd">'+esc(x.d)+'</p><p class="fxsrc">걸리는 경우: '+esc(x.src)+'</p>';
   const KIDS={'출혈':['출혈II'],'부딪힘':['부딪힘II','부딪힘III'],'연소':['연소II'],'슬로우':['슬로우II'],'보호':['보호II','보호III']};          // 카드 오른쪽 위 화살표로 펼쳐지는 강화 버전들
@@ -2834,9 +2858,16 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='0.5.6';
+const PATCH_VERSION='0.5.7';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'0.5.7',date:'2026-10-10',
+   chars:[],
+   fx:[],
+   sys:[
+     {who:'미러전',lines:['엄....edit 미러전에서 서로 템버린·파동 데미지가 들어가지 않던 버그 수정','엄....edit 미러전에서 한쪽 스킬 영상과 파동이 다른 쪽 스킬에 끊기던 버그 수정']},
+     {who:'최적화',lines:['태권히어로, 엄....edit 등 효과가 많을 때 렉이 걸리던 현상 개선']}
+   ]},
   {ver:'0.5.6',date:'2026-10-10',
    chars:[
      {who:'엄....edit',tag:'new',lines:['신규 캐릭터 추가']},
@@ -2948,12 +2979,12 @@ const PATCH_NOTES=[
   const items=a=>a.length?[...a].sort((x,y)=>(autoTag(y)==='new')-(autoTag(x)==='new')).map(it=>'<div class="pnitem"><div class="pnname">'+esc(it.who)+(nn(it.lines,'+')+nn(it.lines,'-')+nn(it.lines,'~')||it.tag==='new'||it.tag==='rework'?'<span class="pntag '+autoTag(it)+'">'+TAGS[autoTag(it)]+'</span>':'')+(nn(it.lines,'*')?'<span class="pntag vis">비주얼 업데이트</span>':'')+cnt(it.lines)+'</div><ul>'+it.lines.map(l=>'<li>'+fmt(l)+'</li>').join('')+'</ul></div>').join(''):'<div class="pnnone">변경 사항 없음</div>';
   const body=document.getElementById('pnbody'),modalEl=document.getElementById('pnmodal');
   if(!body||!modalEl)return;
-  body.innerHTML=PATCH_NOTES.map((v,vi)=>{const head='<b>v'+v.ver+'</b>'+(v.hot?'<i>긴급패치</i>':'')+'<span>'+(v.date||'')+'</span>';return (vi<1?'<section class="pnver"><div class="pnvh">'+head+'</div>':'<details class="pnver pnold"><summary class="pnvh">'+head+'<em class="pnarr">'+CHEV+'</em></summary>')
+  body.innerHTML=PATCH_NOTES.map((v,vi)=>{const head='<b>v'+v.ver+'</b>'+(v.hot?'<i>긴급패치</i>':'')+'<span>'+(v.date||'')+'</span>';return (vi<1?'<section class="pnver"><div class="pnvh">'+head+'</div>':'<details class="pnver pnold"'+(vi===1?' open':'')+'><summary class="pnvh">'+head+'<em class="pnarr">'+CHEV+'</em></summary>')
     +'<div class="pnsec">캐릭터</div>'+items(v.chars||[])
     +'<div class="pnsec">상태효과</div>'+items(v.fx||[])
     +'<div class="pnsec">시스템</div>'+((v.sys&&v.sys.length)?v.sys.filter(l=>typeof l==='object').map(o=>'<div class="pnitem"><div class="pnname">'+esc(o.who)+'</div><ul>'+o.lines.map(l=>'<li>'+fmt(l)+'</li>').join('')+'</ul></div>').join('')+(v.sys.some(l=>typeof l==='string')?'<ul class="pnsys">'+v.sys.filter(l=>typeof l==='string').map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul>':''):'<div class="pnnone">변경 사항 없음</div>')
     +(v.vis?'<div class="pnsec">비주얼 업데이트</div>'+(v.vis.length?v.vis.map(o=>'<div class="pnitem"><div class="pnname">'+esc(o.who)+'</div><ul>'+o.lines.map(l=>'<li>'+fmt(l)+'</li>').join('')+'</ul></div>').join(''):'<div class="pnnone">변경 사항 없음</div>'):'')
-    +(vi<1?'</section>':'</details>')}).join('');   // 현재 버전만 펼쳐 두고, 지난 패치노트는 전부 접어 둠
+    +(vi<1?'</section>':'</details>')}).join('');   // 현재 버전과 바로 전 버전은 펼쳐 두고, 그 전 패치노트는 접어 둠
   let lockY=0;
   const lock=on=>{                     // 패치노트가 열려 있는 동안 뒤 화면은 스크롤되지 않게 (아이폰 사파리 포함: body를 그 자리에 고정)
     const b=document.body,h=document.documentElement;
@@ -2973,6 +3004,46 @@ const PATCH_NOTES=[
 })();
 document.querySelector('.more').addEventListener('click',()=>{const g=document.getElementById('guide');if(g)g.scrollIntoView({behavior:'smooth',block:'start'})});
 
+/* ---------- 관리자 패널: 도움말의 슬로우II 얼음 아이콘을 꾹 누르면 열림 ---------- */
+(function(){
+  let tm=0;const HOLD=1500;
+  const cancel=()=>{if(tm){clearTimeout(tm);tm=0}};
+  document.addEventListener('pointerdown',e=>{const ic=e.target.closest('.fxic[data-fx="슬로우II"]');if(!ic)return;cancel();
+    tm=setTimeout(()=>{tm=0;try{if(navigator.vibrate)navigator.vibrate(30)}catch(_){}openAdmin()},HOLD)});
+  ['pointerup','pointercancel','pointerleave','scroll'].forEach(t=>document.addEventListener(t,cancel,true));
+  document.addEventListener('contextmenu',e=>{if(e.target.closest('.fxic'))e.preventDefault()});
+})();
+function openAdmin(){                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
+  let w=document.querySelector('.adm');
+  if(w){w.classList.remove('min');return}
+  w=document.createElement('div');w.className='adm';
+  const TABS=[['main','메인'],['char','캐릭터'],['game','게임'],['set','설정']];
+  w.innerHTML='<div class="admwin"><div class="admhd"><span class="admdot"></span><span class="admtt">관리자 패널</span><button type="button" class="admmin" aria-label="접기"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button></div>'
+    +'<div class="admmain"><div class="admtabs">'+TABS.map((t,k)=>'<button type="button" class="admtab'+(k?'':' on')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'
+    +'<div class="admpane">'+TABS.map((t,k)=>'<div class="admpg'+(k?'':' on')+'" data-p="'+t[0]+'"><div class="admh">'+t[1]+'</div><div class="admnone">준비 중</div></div>').join('')+'</div></div></div>'
+    +'<button type="button" class="admico" aria-label="관리자 패널 펼치기"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 12h8M8 15h5"/></svg></button>';
+  document.body.appendChild(w);
+  const win=w.querySelector('.admwin'),ico=w.querySelector('.admico');
+  const clamp=(el,x,y)=>{const r=el.getBoundingClientRect(),vw=innerWidth,vh=innerHeight;return[Math.min(Math.max(0,x),Math.max(0,vw-r.width)),Math.min(Math.max(0,y),Math.max(0,vh-r.height))]};
+  const place=(el,x,y)=>{[x,y]=clamp(el,x,y);el.style.left=x+'px';el.style.top=y+'px'};
+  const drag=(handle,el,onTap)=>{                 // 끌면 옮겨지고, 거의 안 움직이고 떼면 탭
+    let sx,sy,ox,oy,id=null,moved=false;
+    handle.addEventListener('pointerdown',e=>{if(e.target.closest('.admmin'))return;id=e.pointerId;moved=false;sx=e.clientX;sy=e.clientY;const r=el.getBoundingClientRect();ox=r.left;oy=r.top;try{handle.setPointerCapture(id)}catch(_){}});
+    handle.addEventListener('pointermove',e=>{if(e.pointerId!==id)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(!moved&&Math.hypot(dx,dy)<6)return;moved=true;place(el,ox+dx,oy+dy)});
+    const up=e=>{if(e.pointerId!==id)return;id=null;if(!moved&&onTap)onTap()};
+    handle.addEventListener('pointerup',up);handle.addEventListener('pointercancel',()=>{id=null});
+  };
+  place(win,(innerWidth-Math.min(innerWidth-24,380))/2,Math.max(12,innerHeight*.12));
+  place(ico,innerWidth-64,innerHeight*.3);
+  drag(w.querySelector('.admhd'),win);
+  drag(ico,ico,()=>w.classList.remove('min'));
+  w.querySelector('.admmin').addEventListener('click',()=>w.classList.add('min'));
+  w.querySelectorAll('.admtab').forEach(b=>b.addEventListener('click',()=>{
+    w.querySelectorAll('.admtab').forEach(x=>x.classList.toggle('on',x===b));
+    w.querySelectorAll('.admpg').forEach(x=>x.classList.toggle('on',x.dataset.p===b.dataset.t));
+  }));
+  addEventListener('resize',()=>{for(const el of [win,ico]){const r=el.getBoundingClientRect();place(el,r.left,r.top)}});
+}
 /* ---------- 점검 중 캐릭터 비밀번호 ---------- */
 function askPw(o){
   const m=document.createElement('div');m.className='pwmodal';
