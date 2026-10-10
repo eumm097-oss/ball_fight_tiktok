@@ -333,6 +333,9 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .admlog{font-size:1em;padding:0.4em 0;border-bottom:0.1em solid #222}.admlog i{color:#8b90a0;font-style:normal;margin-right:0.5em}.admlog span{color:#8b90a0}
 .admrange{flex:2;min-width:0;accent-color:#ff3dbd}.admsw.on[data-a="spd"]{color:#fff}
 .admccr{display:flex;align-items:center;gap:0.6em}.admccr .ccd{color:#fff;min-width:6.5em}.admccr b{flex:1}.ccstar{border:0;background:none;color:#8b90a0;font-size:1.4em;line-height:1;padding:0 0.2em;cursor:pointer;font-family:inherit}.ccstar.on{color:#f7c531}
+.netkk{flex:none;display:flex;align-items:center;height:38px;padding:0 10px;font:700 14px/1 "Noto Sans KR",sans-serif;color:#191919;background:#fee500;border:2px solid var(--ink);border-radius:5px;text-decoration:none}.netkk[hidden]{display:none}
+.gkk{margin:28px 0 0;padding:12px 14px;border:2px solid #111;font-size:14px;line-height:1.6;color:#333;word-break:keep-all}.gkk a{color:#1d5cff;font-weight:800;white-space:nowrap}
+.pnkk{display:block;margin:-4px 0 16px;font-size:13px;font-weight:700;color:#1d5cff;text-decoration:underline}
 .admhitcv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
 
 .fxic[data-fx]{-webkit-touch-callout:none;touch-action:manipulation}.pwmodal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.pwbox{width:100%;max-width:300px;background:var(--bg,#fff);border:3px solid var(--ink,#111);padding:18px;font-family:inherit}.pwt{font-size:18px;font-weight:700;margin-bottom:6px}.pwd{font-size:13px;color:#555;margin-bottom:12px}.pwin{width:100%;box-sizing:border-box;height:40px;font-size:18px;padding:0 10px;border:2px solid var(--ink,#111);border-radius:0;font-family:inherit;letter-spacing:.2em}.pwin:focus{outline:none;border-color:#111}.pwerr{min-height:18px;font-size:12px;color:#e5484d;margin:6px 0 4px}.pwbtns{display:flex;gap:8px}.pwbtns button{flex:1;height:38px;font-family:inherit;font-size:15px;font-weight:700;border:2px solid var(--ink,#111);border-radius:0;cursor:pointer}.pwno{background:#fff;color:#111}.pwyes{background:#111;color:#fff}.pnmodal{position:fixed;inset:0;overscroll-behavior:contain;touch-action:pan-y;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:12}
@@ -385,6 +388,8 @@ body.in-net .pgdots,body.in-net .pnbtn,body.in-net .vtag,body.in-net .kkbtn,body
 .stage:has(.end:not([hidden])) .kkbtn,.stage:has(.end:not([hidden])) .kkpop{display:none}
 .kkbtn{position:absolute;right:52px;top:calc(10px + env(safe-area-inset-top,0px));width:38px;height:38px;padding:6px;background:none;border:0;color:#8a8f92;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .kkbtn svg{display:block;width:100%;height:100%}
+.kkbtn.new::after{content:'';position:absolute;top:6px;right:5px;width:8px;height:8px;border-radius:50%;background:#e03131;border:1.5px solid #fff}
+.kkad{display:block;margin-top:10px;font-size:13px;font-weight:600;color:#333;line-height:1.5;word-break:keep-all}.kkad[hidden]{display:none}.kkad a{color:#1d5cff;font-weight:800}
 @media (max-width:380px){.credit{font-size:11.5px}.kkbtn{right:44px;width:32px;padding:4px}}
 .kkbtn:active{transform:scale(.92)}
 .kkpop{position:absolute;right:10px;top:calc(52px + env(safe-area-inset-top,0px));z-index:12;max-width:calc(100% - 20px);padding:9px 11px;background:#fff;border:2px solid var(--ink);font:600 13px/1.3 "IBM Plex Sans KR","Noto Sans KR",sans-serif}
@@ -404,7 +409,8 @@ body.in-net .netrow{display:flex}
 .chatmenu[hidden]{display:none}
 .chatmenu button{height:34px;border:2px solid var(--ink);border-radius:0;background:#fff;color:#111;font:700 14px/1 "Noto Sans KR",sans-serif;cursor:pointer;padding:0 4px}
 .chatmenu button:active{background:#111;color:#fff}
-.chatmenu button:last-child:nth-child(odd){grid-column:1/-1}
+.chatmenu .ccbtn{grid-column:1/-1;color:#1d5cff}.chatmenu .ccbtn[hidden],.ccrow[hidden]{display:none}
+.ccrow{grid-column:1/-1;display:flex;gap:6px}.ccin{flex:1;min-width:0;height:34px;border:2px solid var(--ink);border-radius:0;padding:0 8px;font:500 16px/1 "Noto Sans KR",sans-serif;color:#111;background:#fff;outline:none;-webkit-user-select:text;user-select:text}.chatmenu .ccsend{flex:none;padding:0 10px;background:#111;color:#fff}
 .p1,.p2{position:relative}
 .nick{display:none;font:700 13px/1.15 "Noto Sans KR",sans-serif;color:#111;margin-bottom:3px;min-height:15px}
 body.in-net .nick{display:block}
@@ -478,9 +484,9 @@ body.in-net .nick{display:block}
     <div class="p2"><div class="name"><button class="add" type="button">추가하기</button></div><div class="hp">250 / 250</div><div class="rail"><div class="rb"></div></div><div class="status"></div></div>
   </div>
   <div class="end-row"><button class="start" type="button">시작하기</button><button class="end" type="button" hidden>나가기</button></div>
-  <div class="netrow"><button class="chatbtn" type="button" aria-label="빠른 채팅"><svg class="cbase" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg><svg class="cfill" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg></button><button class="netleave" type="button">나가기</button><div class="chatmenu" hidden></div></div>
+  <div class="netrow"><button class="chatbtn" type="button" aria-label="빠른 채팅"><svg class="cbase" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg><svg class="cfill" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg></button><button class="netleave" type="button">나가기</button><a class="netkk" href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener" hidden>오픈채팅</a><div class="chatmenu" hidden></div></div>
   <div class="onl"><div class="nmrow"><input class="nmin" type="text" maxlength="30" placeholder="이름 정하기" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="이름"><button class="nmok" type="button">확인</button></div><div class="nmmsg" aria-live="polite"></div><button class="chpick" type="button"><i></i><span>캐릭터 선택</span></button><div class="mkrow"><button class="mkbtn" type="button">매칭 시작</button></div></div>
-<div class="pgdots" aria-hidden="true"><i></i><i class="on"></i></div><div class="onhint">← 화면을 오른쪽으로 밀면 온라인 모드</div>
+<div class="pgdots" aria-hidden="true"><i></i><i class="on"></i></div><div class="onhint">화면을 오른쪽으로 밀면 온라인 모드</div>
 </div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">https://open.kakao.com/o/gi4UJORi</a></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div></div>
 <div class="pnmodal" id="pnmodal" hidden><div class="pnpanel" role="dialog" aria-modal="true" aria-label="패치노트"><div class="pntitle">패치노트</div><button class="pnclose" id="pnclose" type="button" aria-label="닫기">✕</button><div id="pnbody"></div></div></div>
 <div id="audiohint" class="audiohint" hidden>🔇 소리가 멈췄어요. 화면을 한 번 터치해 주세요</div>
@@ -3006,7 +3012,7 @@ function renderGuide(){
       :'<p class="noskill">'+(i.locked?'현재 점검 중이다.':'아직 스킬이 없다.')+'</p>';
     return '<article class="gcard"><div class="ghead"><div class="av '+i.cls+'" style="--c:'+i.color+'"></div><div><div class="gname" style="--c:'+i.color+'">'+esc(i.name)+'</div><div class="gtag">'+esc(i.tag)+'</div></div></div>'
       +'<div class="chips">'+chips.map(c=>'<span class="chip">'+esc(c)+'</span>').join('')+'</div>'+sk+'</article>';
-  }).join('')+renderFx();
+  }).join('')+renderFx()+'<div class="gkk">같이 할 사람 구하기 · 패치 소식은 오픈채팅에서 <a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">오픈채팅 들어가기</a></div>';
 }
 renderGuide();
 (function(){                           // 부딪힘 카드의 화살표: 부딪힘II 펼치기/접기
@@ -3153,7 +3159,7 @@ const PATCH_NOTES=[
   const items=a=>a.length?[...a].sort((x,y)=>(autoTag(y)==='new')-(autoTag(x)==='new')).map(it=>'<div class="pnitem"><div class="pnname">'+esc(it.who)+(nn(it.lines,'+')+nn(it.lines,'-')+nn(it.lines,'~')||it.tag==='new'||it.tag==='rework'?'<span class="pntag '+autoTag(it)+'">'+TAGS[autoTag(it)]+'</span>':'')+(nn(it.lines,'*')?'<span class="pntag vis">비주얼 업데이트</span>':'')+cnt(it.lines)+'</div><ul>'+it.lines.map(l=>'<li>'+fmt(l)+'</li>').join('')+'</ul></div>').join(''):'<div class="pnnone">변경 사항 없음</div>';
   const body=document.getElementById('pnbody'),modalEl=document.getElementById('pnmodal');
   if(!body||!modalEl)return;
-  body.innerHTML=PATCH_NOTES.map((v,vi)=>{const head='<b>v'+v.ver+'</b>'+(v.hot?'<i>긴급패치</i>':'')+(v.big?'<i class="pnbigt">대규모 업데이트!</i>':'')+'<span>'+(v.date||'')+'</span>';return (vi<1?'<section class="pnver"><div class="pnvh">'+head+'</div>':'<details class="pnver pnold"'+(vi===1?' open':'')+'><summary class="pnvh">'+head+'<em class="pnarr">'+CHEV+'</em></summary>')
+  body.innerHTML='<a class="pnkk" href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">업데이트 소식·같이 할 사람은 오픈채팅에서 →</a>'+PATCH_NOTES.map((v,vi)=>{const head='<b>v'+v.ver+'</b>'+(v.hot?'<i>긴급패치</i>':'')+(v.big?'<i class="pnbigt">대규모 업데이트!</i>':'')+'<span>'+(v.date||'')+'</span>';return (vi<1?'<section class="pnver"><div class="pnvh">'+head+'</div>':'<details class="pnver pnold"'+(vi===1?' open':'')+'><summary class="pnvh">'+head+'<em class="pnarr">'+CHEV+'</em></summary>')
     +'<div class="pnsec">캐릭터</div>'+items(v.chars||[])
     +'<div class="pnsec">상태효과</div>'+items(v.fx||[])
     +'<div class="pnsec">시스템</div>'+((v.sys&&v.sys.length)?v.sys.filter(l=>typeof l==='object').map(o=>'<div class="pnitem"><div class="pnname">'+esc(o.who)+'</div><ul>'+o.lines.map(l=>'<li>'+fmt(l)+'</li>').join('')+'</ul></div>').join('')+(v.sys.some(l=>typeof l==='string')?'<ul class="pnsys">'+v.sys.filter(l=>typeof l==='string').map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul>':''):'<div class="pnnone">변경 사항 없음</div>')
@@ -3203,7 +3209,8 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="admsub">패널</div><div class="admrow"><span>투명도</span><input type="range" class="admrange" data-a="op" min="30" max="100" step="5"><b data-o="op"></b></div><div class="admsk">'+bt('panelreset','위치·크기 초기화','admsub2')+'</div>';
   return '';
 }
-function openAdmin(){                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
+function openAdmin(){
+  try{localStorage.setItem('bftAdm','1')}catch(e){}                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
   let w=document.querySelector('.adm');
   if(w){if(w._expand)w._expand(true);return}
   w=document.createElement('div');w.className='adm';
@@ -3424,7 +3431,7 @@ function admFx(c){                               // 지금 걸려 있는 효과 
 }
 function admInfo(box){                           // 메인: 지금 경기 상황
   const esc=admEsc;
-  let h='<div class="admkv"><span>상태</span><b>'+(over?'종료':(admPause&&phase==='run'?'일시정지':ADM_PH[phase]||phase))+'</b><span>경기 시간</span><b>'+now.toFixed(1)+'초</b><span>게임 속도</span><b>×'+admSpd+'</b><span>접속자</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.n+'명':'확인 중'+(typeof PRES!=='undefined'&&PRES.st?' · '+PRES.st:''))+'</b><span>오늘 최대 동접</span><b>'+(typeof PRES_DAYS!=='undefined'&&PRES_DAYS[ccuDay()]?PRES_DAYS[ccuDay()].n+'명':'-')+'</b></div>';
+  let h='<div class="admkv"><span>상태</span><b>'+(over?'종료':(admPause&&phase==='run'?'일시정지':ADM_PH[phase]||phase))+'</b><span>경기 시간</span><b>'+now.toFixed(1)+'초</b><span>게임 속도</span><b>×'+admSpd+'</b><span>접속자</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.n+'명':'확인 중'+(typeof PRES!=='undefined'&&PRES.st?' · '+PRES.st:''))+'</b><span>매칭 중</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.q+'명':'-')+'</b><span>경기 중</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.mt+'명':'-')+'</b><span>오늘 최대 동접</span><b>'+(typeof PRES_DAYS!=='undefined'&&PRES_DAYS[ccuDay()]?PRES_DAYS[ccuDay()].n+'명':'-')+'</b></div>';
   if(!chars.length)h+='<div class="admnone">게임에 추가된 캐릭터가 없습니다.</div>';
   for(const c of chars){
     const g=c.kind==='bk'?(c.g||0)/BK.max:(c.kind==='nu'?(c.nuHits||0)/NU.need:(c.gauge||0)),fxs=admFx(c);
@@ -3661,7 +3668,7 @@ const NET={screen:'lobby',state:'idle',searchId:0,peers:[],conn:null,host:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
 const NET_PROTO='b158',NET_SLOTS=4,NET_SNAP=30;
-const NET_CHAT=['안녕하세요!','GG!','안돼!','나이스!','엄.','예?','아니'];
+const NET_CHAT=['안녕하세요!','GG!','아니','나이스!','엄.','예?'];
 try{NET.me.name=localStorage.getItem('bftNick')||'';NET.me.dev=localStorage.getItem('bftDev')==='1';NET.pick=localStorage.getItem('bftPick')||null}catch(e){}
 const netEsc=t=>String(t).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 const WRENCH='<svg class="wrench" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(45 12 12)"><rect x="10.3" y="9.6" width="3.4" height="13" rx="1.5" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1"/><path d="M7.2 1.6h9.3a.9.9 0 0 1 .9.9v7.4a.9.9 0 0 1-.9.9h-6.3V8.1h3.9V5.3H7.2a.9.9 0 0 1-.9-.9v-1.9a.9.9 0 0 1 .9-.9z" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1" stroke-linejoin="round"/><rect x="7.6" y="7.2" width="6.6" height="2.4" rx=".6" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1"/><path d="M10.6 11.6h2.8M10.6 13.1h2.8" stroke="#0a2f8f" stroke-width=".9" stroke-linecap="round"/></g></svg>';
@@ -3742,7 +3749,7 @@ function netOvEl(){
   let m=document.querySelector('.mmodal');if(m)return m;
   m=document.createElement('div');m.className='mmodal';m.hidden=true;
   m.innerHTML='<div class="mbox" role="dialog" aria-modal="true"><div class="mtt"><span class="mtt1">매칭 중...</span><span class="mdots" hidden></span></div>'
-    +'<div class="mfield"><canvas></canvas></div><div class="mstat"></div><div class="mtime">00:00</div><div class="mvs" hidden></div>'
+    +'<div class="mfield"><canvas></canvas></div><div class="mstat"></div><div class="mtime">00:00</div><div class="kkad" hidden>상대가 없으면 오픈채팅에서 같이 할 사람을 구해보세요<br><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">오픈채팅 들어가기</a></div><div class="mvs" hidden></div>'
     +'<div class="mbtns"><button type="button" class="mretry" hidden>다시 시도</button><button type="button" class="mcancel">취소</button></div>'
     +'<div class="mtip"><b>TIP:</b>이름에 파란 몽키스패너가 있다면 그건 제작자일겁니다!</div></div>';
   document.body.appendChild(m);
@@ -3754,7 +3761,7 @@ function netOvShow(){
   const m=netOvEl();m.hidden=false;m.className='mmodal';
   m.querySelector('.mtt1').textContent='매칭 중...';m.querySelector('.mdots').hidden=true;
   m.querySelector('.mfield').hidden=false;m.querySelector('.mtime').hidden=false;m.querySelector('.mvs').hidden=true;m.querySelector('.mstat').hidden=false;
-  m.querySelector('.mretry').hidden=true;const cb=m.querySelector('.mcancel');cb.hidden=false;cb.textContent='취소';
+  m.querySelector('.mretry').hidden=true;m.querySelector('.kkad').hidden=true;const cb=m.querySelector('.mcancel');cb.hidden=false;cb.textContent='취소';
   /* 작은 경기장 안에서 내 공과 '?' 공이 튕겨 다니는 대기 화면 */
   const cv=m.querySelector('canvas'),g=cv.getContext('2d'),S=120,dpr=Math.min(2,devicePixelRatio||1);cv.width=cv.height=S*dpr;
   const r=11,col=NET.myCh&&NET.myCh!=='random'?netCol(NET.myCh):'#5f6467';
@@ -3767,7 +3774,7 @@ function netOvShow(){
   cancelAnimationFrame(netOvRaf);
   const fr=()=>{
     if(m.hidden||NET.state!=='search'){netOvRaf=0;return}
-    const s=Math.floor((performance.now()-NET.t0)/1000);m.querySelector('.mtime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+    const s=Math.floor((performance.now()-NET.t0)/1000);{const ad=m.querySelector('.kkad');if(ad.hidden!==(s<10))ad.hidden=s<10}m.querySelector('.mtime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
     netOvRaf=requestAnimationFrame(fr);
   };
   netOvRaf=requestAnimationFrame(fr);
@@ -3775,6 +3782,7 @@ function netOvShow(){
 function netStat(t){const m=netOvEl(),el=m.querySelector('.mstat');if(el.textContent===t)return;el.textContent=t}
 function netOvHide(){const m=document.querySelector('.mmodal');if(!m||m.hidden)return;m.hidden=true}
 function netFail(t){
+  netOvEl().querySelector('.kkad').hidden=true;
   NET.state='fail';NET.peers.slice().forEach(netKill);
   const m=netOvEl();m.querySelector('.mtt1').textContent='연결 실패';m.querySelector('.mdots').hidden=true;m.querySelector('.mfield').hidden=true;m.querySelector('.mtime').hidden=true;
   netStat(t);m.querySelector('.mretry').hidden=false;m.querySelector('.mcancel').textContent='닫기';
@@ -3879,7 +3887,7 @@ function netMatched(){
   NET.peers.slice().forEach(p=>{if(p!==c.provider)netKill(p);else{try{p.disconnect()}catch(_){}}});   // 서버 자리는 비워 주고(다음 사람이 쓸 수 있게) 상대와의 연결만 남김
   c.on('data',netData);c.on('close',()=>netClosed());c.on('error',()=>{});
   netBeep([660,990],.09);
-  const m=netOvEl();cancelAnimationFrame(netOvRaf);
+  const m=netOvEl();cancelAnimationFrame(netOvRaf);m.querySelector('.kkad').hidden=true;
   m.querySelector('.mtt1').textContent='매칭 완료!';m.querySelector('.mdots').hidden=true;m.querySelector('.mfield').hidden=true;m.querySelector('.mtime').hidden=true;m.querySelector('.mstat').hidden=true;m.querySelector('.mcancel').hidden=true;m.querySelector('.mretry').hidden=true;
   const v=m.querySelector('.mvs');v.hidden=false;
   const side=(info,me)=>'<div class="mvp">'+netWho(info)+'<span class="mvc" style="--cc:'+netCol(info.ch)+'">'+netEsc(info.ch)+'</span>'+(me?'<i class="mme">나</i>':'')+'</div>';
@@ -3889,7 +3897,7 @@ function netMatched(){
 
 /* 경기 준비: 같은 씨앗으로 두 폰에 같은 캐릭터 배치 → 각자 출발 방향 정하기 */
 function netSetup(){
-  resetGame();
+  resetGame();document.querySelector('.netkk').hidden=true;
   document.body.classList.add('in-net');
   rngSeed(NET.seed);
   Object.assign(NET,{step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false});NET.hist.clear();
@@ -3974,7 +3982,7 @@ function netData(d){
   else if(d.t==='go'){if(!NET.host)netGo(d.L,d.R,d.sl,d.sr)}
   else if(d.t==='s'){if(!NET.host&&NET.sim&&!over&&Array.isArray(d.c)){NET.pend.push(d);if(d.k-NET.step>45)NET.acc+=(d.k-NET.step-15)*FIX}}
   else if(d.t==='end'){if(!NET.host)netHostEnd(d.w)}
-  else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);const i=d.i|0,t=performance.now();if(i>=0&&i<NET_CHAT.length&&t-NET.lastOpChat>0){NET.lastOpChat=t;netChatShow(netOpp(),i)}}
+  else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);if(typeof d.txt==='string'){const x=d.txt.replace(/\s+/g,' ').trim().slice(0,30);if(x)netChatShow(netOpp(),x)}else{const i=d.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(netOpp(),i)}}
   else if(d.t==='cack'){NET.chatAck=d.id}
   else if(d.t==='bye')netClosed();
 }
@@ -4014,6 +4022,7 @@ function netVictory(side){
     crown.animate([{transform:'translate(-50%,-100%) translateY(-18px) scale(.5)',opacity:0},{transform:'translate(-50%,-100%) translateY(2px) scale(1.1)',opacity:1,offset:.7},{transform:'translate(-50%,-100%) scale(1)',opacity:1}],{duration:350,easing:'ease-out',fill:'forwards'});
   }
   if(first){netConfetti();netFanfare()}
+  document.querySelector('.netkk').hidden=false;          // 경기가 끝나면 나가기 옆에 오픈채팅
 }
 function netConfetti(){                              // 위에서 종이 조각이 흩날리며 떨어짐
   try{
@@ -4044,7 +4053,7 @@ function netLeave(){
   netSend({t:'bye'});const c=NET.conn;NET.conn=null;
   setTimeout(()=>{try{if(c)c.close()}catch(_){}NET.peers.slice().forEach(netKill)},150);
   NET.match=false;NET.sim=false;NET.state='idle';NET.aiming=false;arenaEl.classList.remove('aiming');netChatClose();
-  resetGame();document.body.classList.remove('in-net');
+  resetGame();document.body.classList.remove('in-net');document.querySelector('.netkk').hidden=true;
   document.querySelectorAll('.nick,.chatpop').forEach(e=>e.remove());
   netPaintOnl();
 }
@@ -4052,14 +4061,20 @@ document.querySelector('.netleave').addEventListener('click',netLeave);
 
 /* 빠른 채팅 */
 const chatBtn=document.querySelector('.chatbtn'),chatMenu=document.querySelector('.chatmenu');
-chatMenu.innerHTML=NET_CHAT.map((t,i)=>'<button type="button" data-ci="'+i+'">'+netEsc(t)+'</button>').join('');
+chatMenu.innerHTML=NET_CHAT.map((t,i)=>'<button type="button" data-ci="'+i+'">'+netEsc(t)+'</button>').join('')
+  +'<button type="button" class="ccbtn" data-cc="1">메시지 보내기</button><div class="ccrow" hidden><input class="ccin" type="text" maxlength="30" placeholder="메시지를 입력해주세요." autocomplete="off" enterkeyhint="send"><button type="button" class="ccsend">보내기</button></div>';
+const netIsAdm=()=>{try{return localStorage.getItem('bftAdm')==='1'||!!NET.me.dev}catch(e){return !!NET.me.dev}};   // 어드민 패널을 연 적 있는 사람(또는 제작자)만 직접 메시지
 function netChatClose(){chatMenu.hidden=true}
 let netChatSeq=0;const netChatGot=new Set();
-function netChatSend(i){                         // 상대가 받았다고 답할 때까지 0.6초마다 다시 보냄 (최대 5번)
-  const id=++netChatSeq+'-'+Math.random().toString(36).slice(2,6);let n=0;
-  const go=()=>{if(!NET.conn||NET.chatAck===id||n++>=5)return;netSend({t:'chat',i,id});setTimeout(go,600)};go();
+function netChatSend(i){                         // 상대가 받았다고 답할 때까지 0.6초마다 다시 보냄 (최대 5번) — i: 번호 또는 직접 쓴 글
+  const id=++netChatSeq+'-'+Math.random().toString(36).slice(2,6);let n=0;const msg=typeof i==='string'?{t:'chat',txt:i,id}:{t:'chat',i,id};
+  const go=()=>{if(!NET.conn||NET.chatAck===id||n++>=5)return;netSend(msg);setTimeout(go,600)};go();
 }
-chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden});
+chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){chatMenu.querySelector('.ccbtn').hidden=!netIsAdm();chatMenu.querySelector('.ccrow').hidden=true}});
+{const row=chatMenu.querySelector('.ccrow'),inp=row.querySelector('.ccin');
+  chatMenu.querySelector('.ccbtn').addEventListener('click',e=>{e.stopPropagation();row.hidden=!row.hidden;if(!row.hidden)inp.focus()});
+  const sendT=()=>{const t=inp.value.replace(/\s+/g,' ').trim().slice(0,30);if(!t)return;inp.value='';inp.blur();netChatClose();netChatSend(t);netChatShow(NET.mySide,t)};
+  row.querySelector('.ccsend').addEventListener('click',e=>{e.stopPropagation();sendT()});inp.addEventListener('keydown',e=>{if(e.key==='Enter')sendT()})}
 chatMenu.addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!b)return;e.stopPropagation();const i=+b.dataset.ci;
   netChatClose();netChatSend(i);netChatShow(NET.mySide,i);
 });
@@ -4067,7 +4082,7 @@ document.addEventListener('pointerdown',e=>{if(!chatMenu.hidden&&!e.target.close
 function netChatShow(sd,i){
   if(!NET.match)return;
   const P=document.querySelector(sd==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());
-  const b=document.createElement('div');b.className='chatpop';b.textContent=NET_CHAT[i]||'';P.appendChild(b);
+  const b=document.createElement('div');b.className='chatpop';b.textContent=typeof i==='string'?i:(NET_CHAT[i]||'');P.appendChild(b);
   const hide=()=>setTimeout(()=>b.remove(),2400);
   if(document.hidden)document.addEventListener('visibilitychange',function v(){if(!document.hidden){document.removeEventListener('visibilitychange',v);hide()}});else hide();   // 다른 화면을 보고 있었으면 돌아왔을 때부터 2.4초 보여 줌
   netBeep([sd===NET.mySide?880:740],.05);
@@ -4084,19 +4099,21 @@ function ccuSet(k,n,t){if(!(n>0))return false;const lim=ccuDay(Date.now()-7*864e
 function ccuMerge(d){let ch=false;if(d&&typeof d==='object')for(const k in d)if(/^\d{4}-\d\d-\d\d$/.test(k)&&d[k])ch=ccuSet(k,d[k].n|0,+d[k].t)||ch;return ch}
 const ccuRecent=()=>{const o={},lim=ccuDay(Date.now()-7*864e5);for(const k in PRES_DAYS)if(k>lim)o[k]=PRES_DAYS[k];return o};
 ccuPurge();setInterval(ccuPurge,60000);
+setInterval(()=>{const s=presMy();if(s===PRES.lastS)return;PRES.lastS=s;if(PRES.hub)presCast();else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'st',s})}catch(_){}}},1000);   // 매칭 시작·끝날 때 모임 자리에 바로 알림
 function presMax(n){return ccuSet(ccuDay(),n,Date.now())}
-const PRES={st:'온라인 기능 불러오는 중',peer:null,conns:new Set(),hub:false,n:0,gen:0,to:0,last:0,conn:null};   // 15초마다 서로 신호를 주고받고, 40초 동안 소식이 없으면 끊긴 것으로 봄
+const presMy=()=>NET.state==='search'?'q':(NET.match?'m':'i');   // 내 상태: 매칭 중 / 경기 중 / 그 외
+const PRES={q:0,mt:0,st:'온라인 기능 불러오는 중',peer:null,conns:new Set(),hub:false,n:0,gen:0,to:0,last:0,conn:null};   // 15초마다 서로 신호를 주고받고, 40초 동안 소식이 없으면 끊긴 것으로 봄
 const PRES_ID='bftball-hub-1';
 function presKill(){clearTimeout(PRES.to);PRES.conn=null;if(PRES.peer){try{PRES.peer.destroy()}catch(_){}}PRES.peer=null;PRES.hub=false;PRES.conns.clear()}
 function presLater(ms){const g=PRES.gen;clearTimeout(PRES.to);PRES.to=setTimeout(()=>{if(g===PRES.gen)presTry()},ms==null?1200+Math.random()*2500:ms)}
-function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;presMax(PRES.n);for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,days:ccuRecent()})}catch(_){}}}
+function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;presMax(PRES.n);const all=[presMy(),...[...PRES.conns].map(c=>c._s||'i')];PRES.q=all.filter(x=>x==='q').length;PRES.mt=all.filter(x=>x==='m').length;for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,q:PRES.q,mt:PRES.mt,days:ccuRecent()})}catch(_){}}}
 function presTry(){
   presKill();const g=++PRES.gen;let p;
   try{p=new Peer(PRES_ID,netOpts())}catch(e){presLater(15000);return}
   PRES.peer=p;
   p.on('open',()=>{if(g!==PRES.gen)return;PRES.hub=true;PRES.st='';presCast()});
   p.on('connection',c=>{if(g!==PRES.gen)return;
-    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
+    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&(d.t==='st'||d.t==='ping')&&d.s&&d.s!==c._s){c._s=d.s;presCast()}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
     const rm=()=>{if(PRES.conns.delete(c))presCast()};c.on('close',rm);c.on('error',rm)});
   p.on('error',e=>{if(g!==PRES.gen)return;if(e&&e.type==='unavailable-id')presJoin();else if(!PRES.hub){PRES.st='서버 연결 실패 ('+(e&&e.type||'?')+')';presLater()}});
   p.on('disconnected',()=>{if(g===PRES.gen)presLater(800)});
@@ -4108,19 +4125,21 @@ function presJoin(){
   PRES.to=setTimeout(()=>{if(g===PRES.gen&&!PRES.n)presLater()},12000);
   q.on('open',()=>{if(g!==PRES.gen)return;PRES.st='다른 접속자와 연결하는 중';let c;try{c=q.connect(PRES_ID,{reliable:true,serialization:'json'})}catch(e){presLater();return}
     PRES.conn=c;PRES.last=Date.now();
-    c.on('open',()=>{try{c.send({t:'max',days:ccuRecent()})}catch(_){}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
-    c.on('data',d=>{if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
+    c.on('open',()=>{try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy()})}catch(_){}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
+    c.on('data',d=>{if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
     c.on('close',()=>{if(g===PRES.gen){PRES.n=0;presLater()}});c.on('error',()=>{if(g===PRES.gen){PRES.n=0;presLater()}})});
   q.on('error',e=>{if(g!==PRES.gen)return;PRES.st='연결 다시 시도 중 ('+(e&&e.type||'?')+')';if(e&&e.type==='peer-unavailable')presLater(300+Math.random()*700);else presLater()});
 }
 setInterval(()=>{const t=Date.now();
   if(PRES.hub){for(const c of [...PRES.conns])if(t-(c._seen||t)>40000){PRES.conns.delete(c);try{c.close()}catch(_){}}presCast()}
-  else if(PRES.conn){try{if(PRES.conn.open)PRES.conn.send({t:'ping'})}catch(_){}if(PRES.n&&t-PRES.last>40000){PRES.n=0;presLater(200)}}
+  else if(PRES.conn){try{if(PRES.conn.open)PRES.conn.send({t:'ping',s:presMy()})}catch(_){}if(PRES.n&&t-PRES.last>40000){PRES.n=0;presLater(200)}}
 },15000);
 setTimeout(()=>{netLib().then(()=>{PRES.st='서버에 연결하는 중';presTry()}).catch(()=>{PRES.st='온라인 기능을 불러오지 못함 (인터넷·브라우저 확인)'})},1500);
 
 netPaintOnl();netDots();
-{const b=document.getElementById('kkbtn'),pp=document.getElementById('kkpop');   // 오픈채팅: 말풍선 누르면 링크, 링크 누르면 참여
+{const b=document.getElementById('kkbtn'),pp=document.getElementById('kkpop');
+  try{if(!localStorage.getItem('bftKkSeen'))b.classList.add('new')}catch(_){b.classList.add('new')}   // 한 번도 안 눌렀으면 빨간 점
+  b.addEventListener('click',()=>{b.classList.remove('new');try{localStorage.setItem('bftKkSeen','1')}catch(_){}});   // 오픈채팅: 말풍선 누르면 링크, 링크 누르면 참여
   b.addEventListener('click',e=>{e.stopPropagation();pp.hidden=!pp.hidden});
   document.addEventListener('pointerdown',e=>{if(!pp.hidden&&!e.target.closest('#kkpop,#kkbtn'))pp.hidden=true})}
 </script>
