@@ -3902,9 +3902,9 @@ function netNick(sd,info,me){const P=document.querySelector(sd==='left'?'.p1':'.
   n.innerHTML=netWho(info,'',me?(sd==='right'?'r':'l'):'')}
 function netAimStart(){
   const c=chars.find(o=>o.side===NET.mySide);if(!c)return;
-  NET.myDir=Math.random()*360;const aim=c.ball.querySelector('.aim');aim.style.opacity=1;aim.style.transform='rotate('+NET.myDir+'deg)';
+  NET.myDir=null;NET.opDir=null;NET.opGot=false;NET.goGot=false;c.ball.querySelector('.aim').style.opacity=0;   // 처음엔 방향 없음 (누르면 화살표가 생김)
   arenaEl.classList.add('aiming');NET.aiming=true;
-  const show=n=>{count.innerHTML='<span class="aimtx"><small>눌러서 출발 방향 정하기</small><b>'+n+'</b></span>'};
+  const show=n=>{count.innerHTML='<span class="aimtx"><small>출발 방향을 정해주세요</small><b>'+n+'</b></span>'};
   show(5);for(let i=1;i<5;i++)later(()=>{if(NET.aiming)show(5-i)},i*1000);
   later(netAimEnd,5000);
 }
@@ -3912,7 +3912,7 @@ function netAimAt(e){
   const c=chars.find(o=>o.side===NET.mySide);if(!c)return;
   const r=arenaEl.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height,dx=x-c.x,dy=y-c.y;
   if(Math.hypot(dx,dy)<.015)return;
-  NET.myDir=(Math.atan2(dy,dx)*180/Math.PI+360)%360;c.ball.querySelector('.aim').style.transform='rotate('+NET.myDir+'deg)';
+  NET.myDir=(Math.atan2(dy,dx)*180/Math.PI+360)%360;const a=c.ball.querySelector('.aim');a.style.opacity=1;a.style.transform='rotate('+NET.myDir+'deg)';
 }
 arenaEl.addEventListener('pointerdown',e=>{if(!NET.aiming)return;e.preventDefault();NET.aimPid=e.pointerId;try{arenaEl.setPointerCapture(e.pointerId)}catch(_){}netAimAt(e)});
 arenaEl.addEventListener('pointermove',e=>{if(NET.aiming&&NET.aimPid===e.pointerId)netAimAt(e)});
@@ -3920,22 +3920,31 @@ arenaEl.addEventListener('pointermove',e=>{if(NET.aiming&&NET.aimPid===e.pointer
 function netAimEnd(){
   if(!NET.match||NET.aimEnded)return;
   NET.aiming=false;NET.aimEnded=true;arenaEl.classList.remove('aiming');
-  if(!NET.sim)count.innerHTML='<span class="aimtx"><small>상대를 기다리는 중</small></span>';
-  netSend({t:'dir',d:NET.myDir});
-  if(NET.host){netTryGo();later(()=>{if(!NET.goSent){if(NET.opDir==null)NET.opDir=Math.random()*360;netTryGo()}},4000)}
+  if(!NET.goGot)count.innerHTML='<span class="aimtx"><small>상대를 기다리는 중</small></span>';
+  netSend({t:'dir',d:NET.myDir});                       // 안 정했으면 null
+  if(NET.host){netTryGo();later(()=>{if(!NET.goSent){NET.opGot=true;netTryGo()}},4000)}
 }
 function netTryGo(){
-  if(!NET.host||NET.goSent||!NET.aimEnded||NET.myDir==null||NET.opDir==null)return;
-  NET.goSent=true;const d={};d[NET.mySide]=NET.myDir;d[netOpp()]=NET.opDir;
-  netSend({t:'go',L:d.left,R:d.right});netGo(d.left,d.right);
+  if(!NET.host||NET.goSent||!NET.aimEnded||!NET.opGot)return;
+  NET.goSent=true;const d={},set={};d[NET.mySide]=NET.myDir;d[netOpp()]=NET.opDir;
+  for(const k of ['left','right']){set[k]=d[k]!=null;if(!set[k])d[k]=Math.random()*360}   // 안 정한 사람은 원래 게임처럼 랜덤 (방장이 정해서 두 폰이 같게)
+  netSend({t:'go',L:d.left,R:d.right,sl:set.left,sr:set.right});netGo(d.left,d.right,set.left,set.right);
 }
-function netGo(L,R){
-  if(NET.sim)return;
+function netGo(L,R,sl,sr){                            // 3·2·1: 정한 사람은 방향 공개, 안 정한 사람은 화살표가 빙빙 돌다가 멈춤
+  if(NET.goGot||NET.sim)return;NET.goGot=true;
   NET.aiming=false;NET.aimEnded=true;arenaEl.classList.remove('aiming');
-  NET.sim=true;NET.step=0;NET.acc=0;
-  count.textContent='시작!';later(()=>{if(count.textContent==='시작!')count.textContent=''},900);
-  phase='run';
-  for(const [sd,d] of [['left',L],['right',R]]){const c=chars.find(o=>o.side===sd);if(!c)continue;c.ball.querySelector('.aim').style.opacity=0;launch(c.ball,+d||0)}
+  const D={left:+L||0,right:+R||0},S={left:!!sl,right:!!sr};
+  used.length=0;
+  for(const sd of ['left','right']){const c=chars.find(o=>o.side===sd);if(!c)continue;const a=c.ball.querySelector('.aim');
+    if(S[sd]){a.style.opacity=1;a.style.transform='rotate('+D[sd]+'deg)'}else{a.style.transform='';spin(c.ball)}}
+  ['3','2','1','시작!'].forEach((t,i)=>later(()=>{if(NET.match)count.textContent=t},i*1000));
+  later(()=>{for(const sd of ['left','right']){const c=chars.find(o=>o.side===sd);if(c&&c.ball._anim){c.ball._anim.cancel();c.ball._anim=null;const a=c.ball.querySelector('.aim');a.style.opacity=1;a.style.transform='rotate('+D[sd]+'deg)'}}},3000);
+  later(()=>{
+    if(!NET.match)return;
+    NET.sim=true;NET.step=0;NET.acc=0;phase='run';
+    for(const sd of ['left','right']){const c=chars.find(o=>o.side===sd);if(!c)continue;c.ball.querySelector('.aim').style.opacity=0;launch(c.ball,D[sd])}
+  },3350);
+  later(()=>{if(count.textContent==='시작!')count.textContent=''},4000);
 }
 
 /* 경기 중: 방장이 0.25초마다 상태를 보내고, 상대 폰은 같은 순간의 자기 계산과 비교해서 어긋났으면 맞춤 */
@@ -3960,8 +3969,8 @@ function netFix(s,h){
 }
 function netData(d){
   if(!d||typeof d!=='object')return;
-  if(d.t==='dir'){if(NET.host&&!NET.goSent){NET.opDir=+d.d||0;netTryGo()}}
-  else if(d.t==='go'){if(!NET.host)netGo(d.L,d.R)}
+  if(d.t==='dir'){if(NET.host&&!NET.goSent){NET.opDir=d.d==null?null:(+d.d||0);NET.opGot=true;netTryGo()}}
+  else if(d.t==='go'){if(!NET.host)netGo(d.L,d.R,d.sl,d.sr)}
   else if(d.t==='s'){if(!NET.host&&NET.sim&&!over&&Array.isArray(d.c)){NET.pend.push(d);if(d.k-NET.step>45)NET.acc+=(d.k-NET.step-15)*FIX}}
   else if(d.t==='end'){if(!NET.host)netHostEnd(d.w)}
   else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);const i=d.i|0,t=performance.now();if(i>=0&&i<NET_CHAT.length&&t-NET.lastOpChat>0){NET.lastOpChat=t;netChatShow(netOpp(),i)}}
