@@ -377,7 +377,8 @@ body.scr-online:not(.in-net) .onl{display:flex}
 .chpick.set{background:#3f4447}
 .mkrow{display:flex;justify-content:center;width:100%;margin-top:14px}
 .mkbtn{width:50%;height:38px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:var(--bar);border:2px solid var(--ink);border-radius:5px;cursor:pointer}
-.wrap{position:relative}.pgdots{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);display:flex;gap:7px;pointer-events:none}
+.wrap{position:relative}.onhint{position:absolute;left:0;right:0;bottom:-24px;text-align:center;font:600 11.5px/1 "IBM Plex Sans KR","Noto Sans KR",sans-serif;color:#8d9193;pointer-events:none}
+body.scr-online .onhint,.stage:has(.end:not([hidden])) .onhint{display:none}.pgdots{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);display:flex;gap:7px;pointer-events:none}
 .pgdots i{width:7px;height:7px;border-radius:50%;background:#c8cbcc;transition:background .2s,transform .2s}
 .pgdots i.on{background:#111;transform:scale(1.15)}
 body.in-net .pgdots,body.in-net .pnbtn,body.in-net .vtag,body.in-net .kkbtn,body.in-net .kkpop{display:none}
@@ -479,7 +480,7 @@ body.in-net .nick{display:block}
   <div class="end-row"><button class="start" type="button">시작하기</button><button class="end" type="button" hidden>나가기</button></div>
   <div class="netrow"><button class="chatbtn" type="button" aria-label="빠른 채팅"><svg class="cbase" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg><svg class="cfill" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg></button><button class="netleave" type="button">나가기</button><div class="chatmenu" hidden></div></div>
   <div class="onl"><div class="nmrow"><input class="nmin" type="text" maxlength="30" placeholder="이름 정하기" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="이름"><button class="nmok" type="button">확인</button></div><div class="nmmsg" aria-live="polite"></div><button class="chpick" type="button"><i></i><span>캐릭터 선택</span></button><div class="mkrow"><button class="mkbtn" type="button">매칭 시작</button></div></div>
-<div class="pgdots" aria-hidden="true"><i></i><i class="on"></i></div>
+<div class="pgdots" aria-hidden="true"><i></i><i class="on"></i></div><div class="onhint">← 화면을 오른쪽으로 밀면 온라인 모드</div>
 </div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">https://open.kakao.com/o/gi4UJORi</a></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div></div>
 <div class="pnmodal" id="pnmodal" hidden><div class="pnpanel" role="dialog" aria-modal="true" aria-label="패치노트"><div class="pntitle">패치노트</div><button class="pnclose" id="pnclose" type="button" aria-label="닫기">✕</button><div id="pnbody"></div></div></div>
 <div id="audiohint" class="audiohint" hidden>🔇 소리가 멈췄어요. 화면을 한 번 터치해 주세요</div>
@@ -3026,7 +3027,7 @@ const PATCH_NOTES=[
   {ver:'1.5.8',date:'2026-10-11',big:true,
    chars:[],
    fx:[],
-   sys:['온라인 매칭 기능 추가']},
+   sys:['온라인 매칭 기능 추가','온라인 모드 가는 법: 로비에서 화면을 오른쪽으로 밀기 → 이름 정하기 → 캐릭터 선택 → 매칭 시작 (다시 왼쪽으로 밀면 로비)']},
   {ver:'0.5.8',date:'2026-10-11',
    chars:[],
    fx:[],
@@ -3423,7 +3424,7 @@ function admFx(c){                               // 지금 걸려 있는 효과 
 }
 function admInfo(box){                           // 메인: 지금 경기 상황
   const esc=admEsc;
-  let h='<div class="admkv"><span>상태</span><b>'+(over?'종료':(admPause&&phase==='run'?'일시정지':ADM_PH[phase]||phase))+'</b><span>경기 시간</span><b>'+now.toFixed(1)+'초</b><span>게임 속도</span><b>×'+admSpd+'</b><span>접속자</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.n+'명':'확인 중')+'</b><span>오늘 최대 동접</span><b>'+(typeof PRES_DAYS!=='undefined'&&PRES_DAYS[ccuDay()]?PRES_DAYS[ccuDay()].n+'명':'-')+'</b></div>';
+  let h='<div class="admkv"><span>상태</span><b>'+(over?'종료':(admPause&&phase==='run'?'일시정지':ADM_PH[phase]||phase))+'</b><span>경기 시간</span><b>'+now.toFixed(1)+'초</b><span>게임 속도</span><b>×'+admSpd+'</b><span>접속자</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.n+'명':'확인 중'+(typeof PRES!=='undefined'&&PRES.st?' · '+PRES.st:''))+'</b><span>오늘 최대 동접</span><b>'+(typeof PRES_DAYS!=='undefined'&&PRES_DAYS[ccuDay()]?PRES_DAYS[ccuDay()].n+'명':'-')+'</b></div>';
   if(!chars.length)h+='<div class="admnone">게임에 추가된 캐릭터가 없습니다.</div>';
   for(const c of chars){
     const g=c.kind==='bk'?(c.g||0)/BK.max:(c.kind==='nu'?(c.nuHits||0)/NU.need:(c.gauge||0)),fxs=admFx(c);
@@ -4084,7 +4085,7 @@ function ccuMerge(d){let ch=false;if(d&&typeof d==='object')for(const k in d)if(
 const ccuRecent=()=>{const o={},lim=ccuDay(Date.now()-7*864e5);for(const k in PRES_DAYS)if(k>lim)o[k]=PRES_DAYS[k];return o};
 ccuPurge();setInterval(ccuPurge,60000);
 function presMax(n){return ccuSet(ccuDay(),n,Date.now())}
-const PRES={peer:null,conns:new Set(),hub:false,n:0,gen:0,to:0,last:0,conn:null};   // 15초마다 서로 신호를 주고받고, 40초 동안 소식이 없으면 끊긴 것으로 봄
+const PRES={st:'온라인 기능 불러오는 중',peer:null,conns:new Set(),hub:false,n:0,gen:0,to:0,last:0,conn:null};   // 15초마다 서로 신호를 주고받고, 40초 동안 소식이 없으면 끊긴 것으로 봄
 const PRES_ID='bftball-hub-1';
 function presKill(){clearTimeout(PRES.to);PRES.conn=null;if(PRES.peer){try{PRES.peer.destroy()}catch(_){}}PRES.peer=null;PRES.hub=false;PRES.conns.clear()}
 function presLater(ms){const g=PRES.gen;clearTimeout(PRES.to);PRES.to=setTimeout(()=>{if(g===PRES.gen)presTry()},ms==null?1200+Math.random()*2500:ms)}
@@ -4093,11 +4094,11 @@ function presTry(){
   presKill();const g=++PRES.gen;let p;
   try{p=new Peer(PRES_ID,netOpts())}catch(e){presLater(15000);return}
   PRES.peer=p;
-  p.on('open',()=>{if(g!==PRES.gen)return;PRES.hub=true;presCast()});
+  p.on('open',()=>{if(g!==PRES.gen)return;PRES.hub=true;PRES.st='';presCast()});
   p.on('connection',c=>{if(g!==PRES.gen)return;
     c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
     const rm=()=>{if(PRES.conns.delete(c))presCast()};c.on('close',rm);c.on('error',rm)});
-  p.on('error',e=>{if(g!==PRES.gen)return;if(e&&e.type==='unavailable-id')presJoin();else if(!PRES.hub)presLater()});
+  p.on('error',e=>{if(g!==PRES.gen)return;if(e&&e.type==='unavailable-id')presJoin();else if(!PRES.hub){PRES.st='서버 연결 실패 ('+(e&&e.type||'?')+')';presLater()}});
   p.on('disconnected',()=>{if(g===PRES.gen)presLater(800)});
 }
 function presJoin(){
@@ -4105,18 +4106,18 @@ function presJoin(){
   try{q=new Peer(netOpts())}catch(e){presLater(15000);return}
   PRES.peer=q;
   PRES.to=setTimeout(()=>{if(g===PRES.gen&&!PRES.n)presLater()},12000);
-  q.on('open',()=>{if(g!==PRES.gen)return;let c;try{c=q.connect(PRES_ID,{reliable:true,serialization:'json'})}catch(e){presLater();return}
+  q.on('open',()=>{if(g!==PRES.gen)return;PRES.st='다른 접속자와 연결하는 중';let c;try{c=q.connect(PRES_ID,{reliable:true,serialization:'json'})}catch(e){presLater();return}
     PRES.conn=c;PRES.last=Date.now();
     c.on('open',()=>{try{c.send({t:'max',days:ccuRecent()})}catch(_){}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
-    c.on('data',d=>{if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
+    c.on('data',d=>{if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
     c.on('close',()=>{if(g===PRES.gen){PRES.n=0;presLater()}});c.on('error',()=>{if(g===PRES.gen){PRES.n=0;presLater()}})});
-  q.on('error',e=>{if(g!==PRES.gen)return;if(e&&e.type==='peer-unavailable')presLater(300+Math.random()*700);else presLater()});
+  q.on('error',e=>{if(g!==PRES.gen)return;PRES.st='연결 다시 시도 중 ('+(e&&e.type||'?')+')';if(e&&e.type==='peer-unavailable')presLater(300+Math.random()*700);else presLater()});
 }
 setInterval(()=>{const t=Date.now();
   if(PRES.hub){for(const c of [...PRES.conns])if(t-(c._seen||t)>40000){PRES.conns.delete(c);try{c.close()}catch(_){}}presCast()}
   else if(PRES.conn){try{if(PRES.conn.open)PRES.conn.send({t:'ping'})}catch(_){}if(PRES.n&&t-PRES.last>40000){PRES.n=0;presLater(200)}}
 },15000);
-setTimeout(()=>{netLib().then(presTry).catch(()=>{})},1500);
+setTimeout(()=>{netLib().then(()=>{PRES.st='서버에 연결하는 중';presTry()}).catch(()=>{PRES.st='온라인 기능을 불러오지 못함 (인터넷·브라우저 확인)'})},1500);
 
 netPaintOnl();netDots();
 {const b=document.getElementById('kkbtn'),pp=document.getElementById('kkpop');   // 오픈채팅: 말풍선 누르면 링크, 링크 누르면 참여
