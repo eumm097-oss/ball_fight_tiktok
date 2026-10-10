@@ -18,7 +18,7 @@ body{margin:0;overflow-x:hidden;overflow-x:clip;touch-action:pan-y;background:va
 .wrap{width:100%;max-width:560px;padding:12px 16px 8px;transform:translateY(-3vh)}
 .arena{aspect-ratio:1/1;width:100%;border:4px solid var(--ink);display:flex;align-items:center;justify-content:center;background:var(--bg)}
 .arena{position:relative;align-items:flex-start;overflow:visible}
-.start{position:relative;width:50%;height:38px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:var(--bar);border:2px solid var(--ink);border-radius:5px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);text-shadow:0 1px 0 rgba(0,0,0,.25);cursor:pointer}
+.start{position:relative;width:50%;height:38px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:var(--bar);border:2px solid var(--ink);border-radius:5px;cursor:pointer}
 .start::before{content:'';flex:none;width:.62em;height:.8em}
 .start::after{content:'';flex:none;width:0;height:0;border-left:.62em solid #fff;border-top:.4em solid transparent;border-bottom:.4em solid transparent}
 .count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:calc((min(100vw,560px) - 40px)*.085);font-weight:700;color:var(--ink);line-height:1;padding:0 0 calc(var(--shift,.05)*2em);pointer-events:none;z-index:6}
@@ -63,7 +63,7 @@ body{margin:0;overflow-x:hidden;overflow-x:clip;touch-action:pan-y;background:va
 .ball.nm{background:#fff var(--img-nm) center/cover no-repeat}
 .hud>div:not(.on) .hp,.hud>div:not(.on) .rail{visibility:hidden}
 .end-row{display:flex;justify-content:center;margin-top:46px}
-.end{position:relative;width:50%;height:38px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:#d32f2f;border:2px solid var(--ink);border-radius:5px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.22);text-shadow:0 1px 0 rgba(0,0,0,.3);cursor:pointer}
+.end{position:relative;width:50%;height:38px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:#d32f2f;border:2px solid var(--ink);border-radius:5px;cursor:pointer}
 .end::before{content:'';flex:none;width:1.4em;height:1.4em}
 .end::after{content:'';flex:none;width:1.4em;height:1.4em;background:url(data:image/png;base64,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) center/contain no-repeat}
 .end:active{transform:scale(.96)}
@@ -375,7 +375,7 @@ body.scr-online:not(.in-net) .onl{display:flex}
 .chpick.set i{display:block}
 .chpick.set{background:#3f4447}
 .mkrow{display:flex;justify-content:center;width:100%;margin-top:14px}
-.mkbtn{width:50%;height:38px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:var(--bar);border:2px solid var(--ink);border-radius:5px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);text-shadow:0 1px 0 rgba(0,0,0,.25);cursor:pointer}
+.mkbtn{width:50%;height:38px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:var(--bar);border:2px solid var(--ink);border-radius:5px;cursor:pointer}
 .wrap{position:relative}.pgdots{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);display:flex;gap:7px;pointer-events:none}
 .pgdots i{width:7px;height:7px;border-radius:50%;background:#c8cbcc;transition:background .2s,transform .2s}
 .pgdots i.on{background:#111;transform:scale(1.15)}
@@ -390,7 +390,7 @@ body.in-net .pgdots,body.in-net .pnbtn,body.in-net .vtag,body.in-net .kkbtn,body
 .kkpop a{color:#1d5cff;text-decoration:underline;word-break:break-all;-webkit-user-select:none;user-select:none}
 .netrow{display:none;position:relative;justify-content:center;align-items:center;gap:10px;margin-top:46px}
 body.in-net .netrow{display:flex}
-.netleave{width:50%;height:38px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:#d32f2f;border:2px solid var(--ink);border-radius:5px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.22);text-shadow:0 1px 0 rgba(0,0,0,.25);cursor:pointer}
+.netleave{width:50%;height:38px;font-weight:700;font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em;font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:#d32f2f;border:2px solid var(--ink);border-radius:5px;cursor:pointer}
 .chatbtn{position:relative;width:38px;height:38px;flex:none;padding:6px;background:#fff;border:2px solid var(--ink);border-radius:5px;cursor:pointer}
 .chatbtn svg{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);display:block}
 .chatbtn .cbase path{fill:#111}
@@ -398,7 +398,7 @@ body.in-net .netrow{display:flex}
 .chatbtn.cool .cbase path{fill:#d5d8da}
 .chatbtn.cool .cfill{opacity:1}
 .chatbtn .cfill path{fill:#111}
-.chatmenu{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);z-index:6;display:grid;grid-template-columns:1fr 1fr;gap:6px;width:min(92%,300px);padding:8px;background:#fff;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.chatmenu{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);z-index:6;display:grid;grid-template-columns:1fr 1fr;gap:6px;width:min(92%,300px);padding:8px;background:#fff;border:2px solid var(--ink)}
 .chatmenu[hidden]{display:none}
 .chatmenu button{height:34px;border:2px solid var(--ink);border-radius:0;background:#fff;color:#111;font:700 14px/1 "Noto Sans KR",sans-serif;cursor:pointer;padding:0 4px}
 .chatmenu button:active{background:#111;color:#fff}
@@ -419,9 +419,9 @@ body.in-net .nick{display:block}
 .ntct{font-size:19px;font-weight:900;margin-bottom:10px}
 .ntcm{font-size:15px;font-weight:500;line-height:1.55;word-break:keep-all;margin:0 0 16px}
 .ntcbtns{display:flex;gap:8px;justify-content:center}
-.ntclink{flex:1;display:flex;align-items:center;justify-content:center;height:36px;font:700 15px/1 "Noto Sans KR",sans-serif;color:#191919;background:#fee500;border:2px solid var(--ink);border-radius:5px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12);text-decoration:none;-webkit-user-select:none}
+.ntclink{flex:1;display:flex;align-items:center;justify-content:center;height:36px;font:700 15px/1 "Noto Sans KR",sans-serif;color:#191919;background:#fee500;border:2px solid var(--ink);border-radius:5px;text-decoration:none;-webkit-user-select:none}
 .ntclink:active{transform:scale(.96)}
-.ntcok{flex:1;height:36px;font:700 16px/1 "Noto Sans KR",sans-serif;color:#fff;background:var(--bar);border:2px solid var(--ink);border-radius:5px;box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);cursor:pointer}
+.ntcok{flex:1;height:36px;font:700 16px/1 "Noto Sans KR",sans-serif;color:#fff;background:var(--bar);border:2px solid var(--ink);border-radius:5px;cursor:pointer}
 .ntcok:active{transform:scale(.96)}
 .devcap{display:inline-block;margin-top:2px;font:italic 800 9.5px/1 "IBM Plex Sans KR","Noto Sans KR",sans-serif;letter-spacing:.07em;color:#1d5cff;padding:1px 0 2px;border-bottom:2px solid #1d5cff;white-space:nowrap}
 .chatpop{position:absolute;bottom:calc(100% + 8px);left:0;z-index:4;max-width:100%;padding:6px 10px 7px;background:#fff;border:2px solid var(--ink);font:800 14px/1.1 "Noto Sans KR",sans-serif;color:#111;white-space:nowrap;transform-origin:20px 100%;pointer-events:none}
@@ -442,11 +442,11 @@ body.in-net .nick{display:block}
 .ntoast{position:absolute;left:50%;top:22px;z-index:8;padding:8px 14px;background:#111;color:#fff;font:700 14px/1 "Noto Sans KR",sans-serif;white-space:nowrap;pointer-events:none;transform:translateX(-50%)}
 .mmodal{position:fixed;inset:0;z-index:25;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
 .mmodal[hidden]{display:none}
-.mbox{width:100%;max-width:330px;background:#fff;border:3px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:18px 16px 14px;text-align:center;font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111}
+.mbox{width:100%;max-width:330px;background:#fff;border:3px solid var(--ink);padding:18px 16px 14px;text-align:center;font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111}
 .mtt{display:flex;align-items:baseline;justify-content:center;gap:2px;font-size:22px;font-weight:900;letter-spacing:-.01em}
-.mdots{display:inline-flex;gap:3px;margin-left:3px}
+.mdots{display:inline-flex;gap:3px;margin-left:2px;align-self:flex-end;margin-bottom:6px}
 .mdots[hidden]{display:none}
-.mdots i{width:5px;height:5px;background:#111;animation:mdot 1.1s infinite ease-in-out}
+.mdots i{width:4px;height:4px;background:#111}
 .mdots i:nth-child(2){animation-delay:.15s}.mdots i:nth-child(3){animation-delay:.3s}
 @keyframes mdot{0%,60%,100%{transform:translateY(0);opacity:.25}30%{transform:translateY(-6px);opacity:1}}
 .mfield{width:126px;height:126px;margin:14px auto 10px;border:3px solid var(--ink);background:#fff}
@@ -459,9 +459,9 @@ body.in-net .nick{display:block}
 .mvp .nwho{align-items:center;max-width:100%}
 .mvc{font-size:12px;font-weight:700;color:#fff;background:var(--cc);border:2px solid var(--ink);padding:3px 6px 4px;white-space:nowrap}
 .mme{font-style:normal;font-size:10px;font-weight:800;color:#fff;background:#111;padding:2px 4px 3px}
-.mvsx{font-size:30px;font-weight:900;font-style:italic;color:#d32f2f;-webkit-text-stroke:1px #111;letter-spacing:-.04em}
+.mvsx{font-size:24px;font-weight:900;color:#111}
 .mbtns{display:flex;gap:8px;justify-content:center;margin-top:14px}
-.mbtns button{width:46%;height:34px;font:700 15px/1 "Noto Sans KR",sans-serif;color:#fff;border:2px solid var(--ink);border-radius:5px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.2);cursor:pointer}
+.mbtns button{width:46%;height:34px;font:700 15px/1 "Noto Sans KR",sans-serif;color:#fff;border:2px solid var(--ink);border-radius:5px;cursor:pointer}
 .mcancel{background:#d32f2f}.mretry{background:var(--bar)}
 .mtip{margin-top:14px;padding-top:10px;border-top:2px dashed #111;font-size:12.5px;line-height:1.5;font-weight:500;color:#444;word-break:keep-all}
 .mtip b{font-weight:900;color:#111}
@@ -479,7 +479,7 @@ body.in-net .nick{display:block}
   <div class="netrow"><button class="chatbtn" type="button" aria-label="빠른 채팅"><svg class="cbase" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg><svg class="cfill" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg></button><button class="netleave" type="button">나가기</button><div class="chatmenu" hidden></div></div>
   <div class="onl"><div class="nmrow"><input class="nmin" type="text" maxlength="30" placeholder="이름 정하기" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="이름"><button class="nmok" type="button">확인</button></div><div class="nmmsg" aria-live="polite"></div><button class="chpick" type="button"><i></i><span>캐릭터 선택</span></button><div class="mkrow"><button class="mkbtn" type="button">매칭 시작</button></div></div>
 <div class="pgdots" aria-hidden="true"><i></i><i class="on"></i></div>
-</div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><a href="https://open.kakao.com/o/sJsBKORi" target="_blank" rel="noopener">https://open.kakao.com/o/sJsBKORi</a></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div></div>
+</div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">https://open.kakao.com/o/gi4UJORi</a></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div></div>
 <div class="pnmodal" id="pnmodal" hidden><div class="pnpanel" role="dialog" aria-modal="true" aria-label="패치노트"><div class="pntitle">패치노트</div><button class="pnclose" id="pnclose" type="button" aria-label="닫기">✕</button><div id="pnbody"></div></div></div>
 <div id="audiohint" class="audiohint" hidden>🔇 소리가 멈췄어요. 화면을 한 번 터치해 주세요</div>
 <section class="guide" id="guide" aria-label="도움말"></section>
@@ -3694,8 +3694,8 @@ function netMsg(t,cls){nmMsg.textContent=t;nmMsg.className='nmmsg '+cls;nmMsg.ge
 function netSaveName(auto){
   const raw=nmIn.value,dev=/\[\s*bft48\s*\]/i.test(raw),nm=raw.replace(/\[\s*bft48\s*\]/ig,'').replace(/\s+/g,' ').trim();   // 제작자 코드는 이름에서 빼고 표시만 바꿈
   if(!nm){if(!auto||raw)netMsg('이름을 입력해 주세요','bad');return false}
-  if(!/^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?]+$/.test(nm)){netMsg('숫자·영어·한글·띄어쓰기·!·?만 쓸 수 있어요','bad');return false}   // 쓸 수 있는 글자
-  if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(nm)){netMsg('띄어쓰기·!·?만으로는 이름을 만들 수 없어요','bad');return false}
+  if(!/^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]+$/.test(nm)){netMsg('숫자·영어·한글·띄어쓰기·!·?·.·~·( )만 쓸 수 있어요','bad');return false}   // 쓸 수 있는 글자
+  if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(nm)){netMsg('띄어쓰기·기호만으로는 이름을 만들 수 없어요','bad');return false}
   if([...nm].length>6){netMsg('이름은 6글자까지 쓸 수 있어요','bad');return false}
   if(auto&&nm===NET.me.name&&dev===NET.me.dev){if(nmMsg.classList.contains('bad'))nmMsg.textContent='';return true}   // 바뀐 게 없으면 그대로
   NET.me.name=nm;NET.me.dev=dev;try{localStorage.setItem('bftNick',nm);localStorage.setItem('bftDev',dev?'1':'0')}catch(e){}
@@ -3730,7 +3730,7 @@ let netOvRaf=0;
 function netOvEl(){
   let m=document.querySelector('.mmodal');if(m)return m;
   m=document.createElement('div');m.className='mmodal';m.hidden=true;
-  m.innerHTML='<div class="mbox" role="dialog" aria-modal="true"><div class="mtt"><span class="mtt1">매칭 중</span><span class="mdots"><i></i><i></i><i></i></span></div>'
+  m.innerHTML='<div class="mbox" role="dialog" aria-modal="true"><div class="mtt"><span class="mtt1">매칭 중...</span><span class="mdots" hidden></span></div>'
     +'<div class="mfield"><canvas></canvas></div><div class="mstat"></div><div class="mtime">00:00</div><div class="mvs" hidden></div>'
     +'<div class="mbtns"><button type="button" class="mretry" hidden>다시 시도</button><button type="button" class="mcancel">취소</button></div>'
     +'<div class="mtip"><b>TIP:</b>이름에 파란 몽키스패너가 있다면 그건 제작자일겁니다!</div></div>';
@@ -3741,31 +3741,28 @@ function netOvEl(){
 }
 function netOvShow(){
   const m=netOvEl();m.hidden=false;m.className='mmodal';
-  m.querySelector('.mtt1').textContent='매칭 중';m.querySelector('.mdots').hidden=false;
+  m.querySelector('.mtt1').textContent='매칭 중...';m.querySelector('.mdots').hidden=true;
   m.querySelector('.mfield').hidden=false;m.querySelector('.mtime').hidden=false;m.querySelector('.mvs').hidden=true;m.querySelector('.mstat').hidden=false;
   m.querySelector('.mretry').hidden=true;const cb=m.querySelector('.mcancel');cb.hidden=false;cb.textContent='취소';
-  m.querySelector('.mbox').animate([{transform:'translateY(14px)',opacity:0},{transform:'none',opacity:1}],{duration:200,easing:'cubic-bezier(.2,.8,.3,1)'});
   /* 작은 경기장 안에서 내 공과 '?' 공이 튕겨 다니는 대기 화면 */
   const cv=m.querySelector('canvas'),g=cv.getContext('2d'),S=120,dpr=Math.min(2,devicePixelRatio||1);cv.width=cv.height=S*dpr;
   const r=11,col=NET.myCh&&NET.myCh!=='random'?netCol(NET.myCh):'#5f6467';
-  const b=[{x:34,y:40,vx:62,vy:47},{x:86,y:82,vx:-55,vy:-58}];let lt=performance.now();
+  const b=[{x:30,y:60},{x:90,y:60}];   // 움직이지 않는 그림: 내 공 vs ? 공
+  g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,S,S);
+  g.lineWidth=2.5;g.fillStyle=col;g.strokeStyle='#000';g.beginPath();g.arc(b[0].x,b[0].y,r+3,0,6.2832);g.fill();g.stroke();
+  g.fillStyle='#fff';g.setLineDash([3,3]);g.beginPath();g.arc(b[1].x,b[1].y,r+3,0,6.2832);g.fill();g.stroke();g.setLineDash([]);
+  g.fillStyle='#000';g.textAlign='center';g.textBaseline='middle';g.font='900 15px "Noto Sans KR",sans-serif';g.fillText('?',b[1].x,b[1].y+1);
+  g.font='900 14px "Noto Sans KR",sans-serif';g.fillText('vs',60,61);
   cancelAnimationFrame(netOvRaf);
-  const fr=t=>{
+  const fr=()=>{
     if(m.hidden||NET.state!=='search'){netOvRaf=0;return}
-    const dt=Math.min(.05,(t-lt)/1000);lt=t;
-    for(const o of b){o.x+=o.vx*dt;o.y+=o.vy*dt;if(o.x<r){o.x=r;o.vx=Math.abs(o.vx)}if(o.x>S-r){o.x=S-r;o.vx=-Math.abs(o.vx)}if(o.y<r){o.y=r;o.vy=Math.abs(o.vy)}if(o.y>S-r){o.y=S-r;o.vy=-Math.abs(o.vy)}}
-    {const [a,c]=b,dx=c.x-a.x,dy=c.y-a.y,d=Math.hypot(dx,dy)||1;if(d<2*r){const nx=dx/d,ny=dy/d,vn=(a.vx-c.vx)*nx+(a.vy-c.vy)*ny;if(vn>0){a.vx-=vn*nx;a.vy-=vn*ny;c.vx+=vn*nx;c.vy+=vn*ny}const ov=(2*r-d)/2;a.x-=nx*ov;a.y-=ny*ov;c.x+=nx*ov;c.y+=ny*ov}}
-    g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,S,S);
-    g.lineWidth=2.5;g.fillStyle=col;g.strokeStyle='#000';g.beginPath();g.arc(b[0].x,b[0].y,r,0,6.2832);g.fill();g.stroke();
-    g.fillStyle='#fff';g.setLineDash([3,3]);g.beginPath();g.arc(b[1].x,b[1].y,r,0,6.2832);g.fill();g.stroke();g.setLineDash([]);
-    g.fillStyle='#000';g.font='900 13px "Noto Sans KR",sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('?',b[1].x,b[1].y+1);
     const s=Math.floor((performance.now()-NET.t0)/1000);m.querySelector('.mtime').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
     netOvRaf=requestAnimationFrame(fr);
   };
   netOvRaf=requestAnimationFrame(fr);
 }
-function netStat(t){const m=netOvEl(),el=m.querySelector('.mstat');if(el.textContent===t)return;el.textContent=t;el.animate([{opacity:.2},{opacity:1}],{duration:200})}
-function netOvHide(){const m=document.querySelector('.mmodal');if(!m||m.hidden)return;m.querySelector('.mbox').animate([{opacity:1},{opacity:0,transform:'scale(.97)'}],{duration:150}).onfinish=()=>{m.hidden=true}}
+function netStat(t){const m=netOvEl(),el=m.querySelector('.mstat');if(el.textContent===t)return;el.textContent=t}
+function netOvHide(){const m=document.querySelector('.mmodal');if(!m||m.hidden)return;m.hidden=true}
 function netFail(t){
   NET.state='fail';NET.peers.slice().forEach(netKill);
   const m=netOvEl();m.querySelector('.mtt1').textContent='연결 실패';m.querySelector('.mdots').hidden=true;m.querySelector('.mfield').hidden=true;m.querySelector('.mtime').hidden=true;
@@ -3794,7 +3791,7 @@ function netPeer(id){return new Promise((res,rej)=>{
   p.on('error',e=>{if(done)return;done=true;clearTimeout(to);netKill(p);rej(e||{})});
 })}
 const netInfo=()=>({name:NET.me.name,dev:!!NET.me.dev,ch:NET.myCh});
-function netCleanInfo(d){let n=String(d&&d.name||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?]/g,'').replace(/\s+/g,' ').trim();if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(n))n='';return {name:[...(n||'???')].slice(0,6).join(''),dev:!!(d&&d.dev),ch:netHalf(d&&d.ch)?d.ch:'더미'}}
+function netCleanInfo(d){let n=String(d&&d.name||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').replace(/\s+/g,' ').trim();if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(n))n='';return {name:[...(n||'???')].slice(0,6).join(''),dev:!!(d&&d.dev),ch:netHalf(d&&d.ch)?d.ch:'더미'}}
 function netJoin(me,id){return new Promise(res=>{
   let done=false,c=null,to=0;
   const fin=r=>{if(done)return;done=true;clearTimeout(to);try{me.off('error',onErr)}catch(_){}if(r!=='ok'&&c){try{c.close()}catch(_){}}res(r)};
@@ -3876,7 +3873,6 @@ function netMatched(){
   const v=m.querySelector('.mvs');v.hidden=false;
   const side=(info,me)=>'<div class="mvp">'+netWho(info)+'<span class="mvc" style="--cc:'+netCol(info.ch)+'">'+netEsc(info.ch)+'</span>'+(me?'<i class="mme">나</i>':'')+'</div>';
   v.innerHTML=side(NET.me.name?netInfo():NET.me,true)+'<b class="mvsx">VS</b>'+side(NET.op,false);
-  v.animate([{transform:'scale(.85)',opacity:0},{transform:'scale(1.04)',opacity:1,offset:.7},{transform:'none',opacity:1}],{duration:320,easing:'ease-out'});
   setTimeout(()=>{if(!NET.match)return;netOvHide();netSetup()},1900);
 }
 
@@ -3958,7 +3954,8 @@ function netData(d){
   else if(d.t==='go'){if(!NET.host)netGo(d.L,d.R)}
   else if(d.t==='s'){if(!NET.host&&NET.sim&&!over&&Array.isArray(d.c)){NET.pend.push(d);if(d.k-NET.step>45)NET.acc+=(d.k-NET.step-15)*FIX}}
   else if(d.t==='end'){if(!NET.host)netHostEnd(d.w)}
-  else if(d.t==='chat'){const i=d.i|0,t=performance.now();if(i>=0&&i<NET_CHAT.length&&t-NET.lastOpChat>1200){NET.lastOpChat=t;netChatShow(netOpp(),i)}}
+  else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);const i=d.i|0,t=performance.now();if(i>=0&&i<NET_CHAT.length&&t-NET.lastOpChat>0){NET.lastOpChat=t;netChatShow(netOpp(),i)}}
+  else if(d.t==='cack'){NET.chatAck=d.id}
   else if(d.t==='bye')netClosed();
 }
 function netClosed(){
@@ -4037,20 +4034,22 @@ document.querySelector('.netleave').addEventListener('click',netLeave);
 const chatBtn=document.querySelector('.chatbtn'),chatMenu=document.querySelector('.chatmenu');
 chatMenu.innerHTML=NET_CHAT.map((t,i)=>'<button type="button" data-ci="'+i+'">'+netEsc(t)+'</button>').join('');
 function netChatClose(){chatMenu.hidden=true}
-chatBtn.addEventListener('click',e=>{e.stopPropagation();if(chatBtn.classList.contains('cool'))return;chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden)chatMenu.animate([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:140,easing:'ease-out'})});
+let netChatSeq=0;const netChatGot=new Set();
+function netChatSend(i){                         // 상대가 받았다고 답할 때까지 0.6초마다 다시 보냄 (최대 5번)
+  const id=++netChatSeq+'-'+Math.random().toString(36).slice(2,6);let n=0;
+  const go=()=>{if(!NET.conn||NET.chatAck===id||n++>=5)return;netSend({t:'chat',i,id});setTimeout(go,600)};go();
+}
+chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden});
 chatMenu.addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!b)return;e.stopPropagation();const i=+b.dataset.ci;
-  netChatClose();netSend({t:'chat',i});netChatShow(NET.mySide,i);
-  chatBtn.classList.add('cool');const f=chatBtn.querySelector('.cfill');                // 1.5초 대기: 말풍선이 아래에서부터 색이 차오름
-  f.getAnimations().forEach(a=>a.cancel());
-  f.animate([{clipPath:'inset(100% 0 0 0)'},{clipPath:'inset(0 0 0 0)'}],{duration:1500,easing:'linear'}).onfinish=()=>{chatBtn.classList.remove('cool');chatBtn.animate([{transform:'scale(1.12)'},{transform:'none'}],{duration:160})};
+  netChatClose();netChatSend(i);netChatShow(NET.mySide,i);
 });
 document.addEventListener('pointerdown',e=>{if(!chatMenu.hidden&&!e.target.closest('.chatmenu,.chatbtn'))netChatClose()});
 function netChatShow(sd,i){
   if(!NET.match)return;
   const P=document.querySelector(sd==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());
   const b=document.createElement('div');b.className='chatpop';b.textContent=NET_CHAT[i]||'';P.appendChild(b);
-  b.animate([{transform:'translateY(6px) scale(.6)',opacity:0},{transform:'translateY(0) scale(1.06)',opacity:1,offset:.55},{transform:'none',opacity:1}],{duration:240,easing:'ease-out'});
-  setTimeout(()=>{if(!b.isConnected)return;b.animate([{opacity:1},{opacity:0,transform:'translateY(-4px)'}],{duration:220,fill:'forwards'}).onfinish=()=>b.remove()},2400);
+  const hide=()=>setTimeout(()=>b.remove(),2400);
+  if(document.hidden)document.addEventListener('visibilitychange',function v(){if(!document.hidden){document.removeEventListener('visibilitychange',v);hide()}});else hide();   // 다른 화면을 보고 있었으면 돌아왔을 때부터 2.4초 보여 줌
   netBeep([sd===NET.mySide?880:740],.05);
 }
 /* 접속자 수: 처음 들어온 사람의 폰이 '모임 자리'(hub)를 맡고, 다른 사람은 거기에 연결만 해 둠 → 연결 수 = 접속자 수 (어드민 패널에만 표시) */
