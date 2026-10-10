@@ -3316,7 +3316,7 @@ function openAdmin(){
   refresh();setInterval(()=>{if(!document.hidden)refresh()},400);
 }
 const ADM_SK={                              // 관리자: 캐릭터별 바로 쓰기 버튼 (연출·대기 없이 누르는 즉시 효과, 빠르게 누르면 그만큼 빠르게)
-  nm:[['꼼짝마!',c=>admFreeze(c)],['체력별 데미지',c=>admPct(c)],['체력별 회복',c=>admHealPct(c)],['1년후',c=>{for(let i=0;i<5;i++){const r=Math.random();(r<.4?admFreeze:r<.7?admPct:admHealPct)(c)}}]],
+  nm:[['꼼짝마!',c=>admFreeze(c)],['체력별 데미지',c=>admPct(c)],['체력별 회복',c=>admHealPct(c)],['1년후',c=>{for(let i=0;i<5;i++){const r=grand();(r<.4?admFreeze:r<.7?admPct:admHealPct)(c)}}]],
   jy:[['햄버거',c=>spawnFood(c,'burger')],['치킨',c=>spawnFood(c,'chicken')],['야채',c=>spawnFood(c,'veg')],['포크',c=>admFork(c)]],
   nu:[['주먹',c=>{const t=admT(c);if(t){if(c.nuHits>=NU.need)c.nuHits=NU.need-1;nuPunch(c,t)}}],['정권찌르기',c=>{const t=admT(c);if(t){c.nuHits=NU.need;nuPunch(c,t)}}],['정권찌르기 준비',c=>{c.nuHits=NU.need;nuGauge(c)}]],   // 거리와 상관없이 바로 때림
   kk:[['우주의 반응',c=>makeBH(c)],['진실이 거짓으로',c=>admTruth(c)],['신비마트',c=>sMart(c)]],
@@ -3334,7 +3334,7 @@ function admFork(c){                        // 포크: 바로 찍고, 확률을 
   for(let k=1;k<=5&&t.alive;k++){
     hurt(t,(JY.forkDmg+(k===5?JY.forkExtra:0)+atk(c))*frail(c));
     try{playStab();burstAt(t.x*W,t.y*H,k===5?'#ff3b30':'#ffffff',1+.12*k,8)}catch(e){}
-    if(k===5||Math.random()>=JY.forkOdds[k-1])break;
+    if(k===5||grand()>=JY.forkOdds[k-1])break;
   }
 }
 function admTruth(c){const t=admT(c);if(!t||debImmune(t))return;try{playTruth();truthFx(t)}catch(e){}
@@ -3370,22 +3370,21 @@ function admRenderChars(box){const esc=admEsc;
   }).join('');
   box.querySelectorAll('.admbtn').forEach(b=>b.addEventListener('click',()=>{
     const c=chars.find(o=>o.side===b.dataset.side);if(!c||!c.alive||!c.started||over)return;
-    const k=(ADM_SK[c.kind]||[])[+b.dataset.i];if(!k)return;
-    try{k[1](c)}catch(e){console.error(e)}
-    admFlash(b);
+    if(!(ADM_SK[c.kind]||[])[+b.dataset.i])return;
+    admCmd({a:'sk',side:c.side,i:+b.dataset.i});admFlash(b);
   }));
   box.querySelectorAll('.admsw').forEach(b=>b.addEventListener('click',()=>{
     const c=chars.find(o=>o.side===b.dataset.side);if(!c)return;admFlash(b);
-    const k=b.dataset.k;if(k==='pas')c.admNoPas=!c.admNoPas;else if(k==='stop')c.admStop=!c.admStop;else if(k==='god')c.admGod=!c.admGod;
-    admSwSync(box);
+    admCmd({a:'sw',side:c.side,k:b.dataset.k});admSwSync(box);
   }));
   box.querySelectorAll('.admheal').forEach(b=>b.addEventListener('click',()=>{
     const c=chars.find(o=>o.side===b.dataset.side);if(!c||!c.alive||over)return;
-    heal(c,c.max-c.hp);admFlash(b);
+    admCmd({a:'heal',side:c.side});admFlash(b);
   }));
   admSwSync(box);
 }
-function admSummon(name,slot){             // 관리자: 게임 중이든 아니든 캐릭터를 바로 소환 (slot: auto / left(1P) / right(2P))
+function admSummon(name,slot){
+  if(NET.match){netToast('온라인 경기 중에는 소환할 수 없어요');return}             // 관리자: 게임 중이든 아니든 캐릭터를 바로 소환 (slot: auto / left(1P) / right(2P))
   const o=[...document.querySelectorAll('.modal .half')].find(h=>h.dataset.name===name);if(!o)return;
   if(over)resetGame();
   let sd=slot==='left'||slot==='right'?slot:['left','right'].find(k=>!chars.some(c=>c.side===k));
@@ -3495,21 +3494,51 @@ function admDeb(c,k){                            // 고른 공에게 바로 상�
     else if(k==='burn'||k==='burn2')applyBurn(c,k==='burn2'?2:1,D);
     else if(k==='frail')c.frailUntil=Math.max(c.frailUntil||0,now+D);
     else if(k==='seal'){c.noPasUntil=Math.max(c.noPasUntil||0,now+D);c.silenceUntil=Math.max(c.silenceUntil||0,now+D)}
-    else if(k==='knock'){const a=Math.random()*Math.PI*2;applyKnock(c,Math.cos(a),Math.sin(a),.6,1)}
+    else if(k==='knock'){const a=grand()*Math.PI*2;applyKnock(c,Math.cos(a),Math.sin(a),.6,1)}
   }finally{debSkip=false}
   try{burstAt(c.x*aW(),c.y*aH(),(typeof BK_DEBC!=='undefined'&&BK_DEBC[k])||'#ffffff',.7,6)}catch(e){}
 }
 function admSetHp(c,v){if(!c.alive||over)return;const old=c.hp;c.hp=Math.max(1,Math.min(c.max,v));renderHp(c);hpChange(c,old)}
 function admRestart(){                           // 같은 캐릭터로 바로 다시 시작
-  if(NET.match)return;
+  if(NET.match){netToast('온라인 경기 중에는 다시 시작할 수 없어요');return}
   const list=chars.map(c=>[c.side,c.name]);resetGame();
   for(const [sd,n] of list){const o=[...document.querySelectorAll('.modal .half')].find(h=>h.dataset.name===n);if(o)addCharAt(sd,o,true)}
   if(chars.length)btn.click();
 }
 function admSkip(){                              // 카운트다운 건너뛰고 바로 싸움 시작
-  if(NET.match||(phase!=='count'&&phase!=='freeze'))return;
+  if(NET.match){if(NET.aiming)netAimEnd();return}   // 온라인: 내 방향 정하기를 바로 끝냄
+  if(phase!=='count'&&phase!=='freeze')return;
   timers.forEach(clearTimeout);timers.length=0;count.textContent='';
   phase='run';document.querySelectorAll('.ball').forEach(release);
+}
+/* 어드민 조작을 명령으로 만들어서 실행 — 온라인 경기 중이면 상대 폰에도 보내서 두 폰이 같은 순간(같은 계산 단계)에 똑같이 실행 */
+function admCmd(m){
+  if(NET.match&&NET.conn){m.k2=NET.sim?NET.step+24:-1;netSend({t:'adm',c:m});if(m.k2<0)admExec(m);else NET.admQ.push(m)}
+  else admExec(m);
+}
+function admExec(m){
+  const c=m.side?chars.find(o=>o.side===m.side):null,a=m.a;
+  try{
+  if(a==='sk'&&c){if(!c.alive||over)return;const k=(ADM_SK[c.kind]||[])[m.i|0];if(k)k[1](c)}
+  else if(a==='sw'&&c){if(m.k==='pas')c.admNoPas=!c.admNoPas;else if(m.k==='stop')c.admStop=!c.admStop;else if(m.k==='god')c.admGod=!c.admGod}
+  else if(a==='heal'&&c){if(c.alive&&!over)heal(c,c.max-c.hp)}
+  else if(a==='stat'&&c){const f=m.f,d=+m.d||0;
+    if(f==='max'){const old=c.hp;c.max=Math.max(1,Math.min(99999,Math.round(c.max+d)));c.hp=Math.min(c.hp,c.max);renderHp(c);hpChange(c,old)}
+    else if(f==='speed')c.speed=Math.max(0,Math.min(10,Math.round((c.speed+d)*1000)/1000));
+    else if(f==='cd')c.cd=Math.max(0,Math.min(600,Math.round((c.cd+d)*100)/100))}
+  else if(a==='statreset'&&c){const s=STATS[c.kind],old=c.hp;c.speed=s.speed;c.cd=s.cooldown;c.max=s.max;c.hp=Math.min(c.hp,c.max);renderHp(c);hpChange(c,old)}
+  else if(a==='odds'){const g=m.g,k=m.k,d=+m.d||0,r=v=>Math.max(0,Math.round(v*1000)/1000);
+    if(g==='nm'&&k in NM_ODDS)NM_ODDS[k]=r(NM_ODDS[k]+d);else if(g==='kk'&&k in KK_ODDS)KK_ODDS[k]=r(KK_ODDS[k]+d);
+    else{const x=BK_DEB.find(x=>x[0]===k);if(x)x[1]=r(x[1]+d)}}
+  else if(a==='oddsreset'){const g=m.g;if(g==='nm')Object.assign(NM_ODDS,NM_DEF);else if(g==='kk')Object.assign(KK_ODDS,KK_DEF);else BK_DEB.forEach((x,i)=>x[1]=BK_DEF[i])}
+  else if(a==='hp1'&&c)admSetHp(c,1);
+  else if(a==='kill'&&c){if(c.alive&&!over){const g=c.admGod;c.admGod=false;hurt(c,c.hp+1e6,true);c.admGod=g}}
+  else if(a==='gauge'&&c){if(!c.alive||over)return;if(c.kind==='bk')c.g=BK.max;else if(c.kind==='nu'){c.nuHits=NU.need;nuGauge(c)}else if(c.mode==='fill')c.gauge=1}
+  else if(a==='deb'&&c)admDeb(c,m.k);
+  else if(a==='center'&&c){c.x=.5;c.y=.5}
+  else if(a==='tpTo'&&c){if(c.alive){c.x=Math.min(1-RW,Math.max(RW,+m.x||.5));c.y=Math.min(1-RW,Math.max(RW,+m.y||.5));try{burstAt(c.x*aW(),c.y*aH(),'#ffffff',.6,6)}catch(_){}}}
+  }catch(e){console.error(e)}
+  admSync();
 }
 function admAct(a,b){
   const c=b.dataset.side?chars.find(o=>o.side===b.dataset.side):null;
@@ -3519,21 +3548,11 @@ function admAct(a,b){
   else if(a==='end')resetGame();
   else if(a==='spd')admSpd=+b.dataset.v;
   else if(a==='spdpm')admSpd=Math.max(.05,Math.min(10,Math.round((admSpd+(+b.dataset.d)*admStepOf('spd'))*1000)/1000));   // 게임 속도 ×0.05 ~ ×10
-  else if(a==='stat'&&c){const f=b.dataset.f,d=+b.dataset.d*admStepOf('stat:'+c.side+':'+f);
-    if(f==='max'){const old=c.hp;c.max=Math.max(1,Math.min(99999,Math.round(c.max+d)));c.hp=Math.min(c.hp,c.max);renderHp(c);hpChange(c,old)}
-    else if(f==='speed')c.speed=Math.max(0,Math.min(10,Math.round((c.speed+d)*1000)/1000));
-    else if(f==='cd')c.cd=Math.max(0,Math.min(600,Math.round((c.cd+d)*100)/100))}
-  else if(a==='statreset'&&c){const s=STATS[c.kind],old=c.hp;c.speed=s.speed;c.cd=s.cooldown;c.max=s.max;c.hp=Math.min(c.hp,c.max);renderHp(c);hpChange(c,old)}
-  else if(a==='odds'){const g=b.dataset.g,k=b.dataset.k,d=+b.dataset.d*admStepOf('odds:'+g+':'+k),r=v=>Math.max(0,Math.round(v*1000)/1000);
-    if(g==='nm')NM_ODDS[k]=r(NM_ODDS[k]+d);else if(g==='kk')KK_ODDS[k]=r(KK_ODDS[k]+d);
-    else{const x=BK_DEB.find(x=>x[0]===k);if(x)x[1]=r(x[1]+d)}}
-  else if(a==='oddsreset'){const g=b.dataset.g;if(g==='nm')Object.assign(NM_ODDS,NM_DEF);else if(g==='kk')Object.assign(KK_ODDS,KK_DEF);else BK_DEB.forEach((x,i)=>x[1]=BK_DEF[i])}
-  else if(a==='hp1'&&c)admSetHp(c,1);
-  else if(a==='kill'&&c){if(c.alive&&!over){const g=c.admGod;c.admGod=false;hurt(c,c.hp+1e6,true);c.admGod=g}}
-  else if(a==='gauge'&&c){if(!c.alive||over)return;if(c.kind==='bk')c.g=BK.max;else if(c.kind==='nu'){c.nuHits=NU.need;nuGauge(c)}else if(c.mode==='fill')c.gauge=1}
-  else if(a==='deb'&&c)admDeb(c,b.dataset.k);
+  else if(a==='stat'&&c)admCmd({a,side:c.side,f:b.dataset.f,d:+b.dataset.d*admStepOf('stat:'+c.side+':'+b.dataset.f)});
+  else if(a==='odds')admCmd({a,g:b.dataset.g,k:b.dataset.k,d:+b.dataset.d*admStepOf('odds:'+b.dataset.g+':'+b.dataset.k)});
+  else if(a==='oddsreset')admCmd({a,g:b.dataset.g});
+  else if(['statreset','hp1','kill','gauge','deb','center'].includes(a)&&c)admCmd({a,side:c.side,k:b.dataset.k});
   else if(a==='tp'&&c)admTp=admTp===c?null:c;
-  else if(a==='center'&&c){c.x=.5;c.y=.5}
   else if(a==='ccstar'){const k=b.dataset.k;if(PRES_STAR.has(k))PRES_STAR.delete(k);else PRES_STAR.add(k);ccuSave();ccuPurge()}
   else if(a==='mute'){admMute=!admMute;admApplyVol();admSave()}
   else if(a==='shake'){admNoShake=!admNoShake;admSave()}
@@ -3578,7 +3597,7 @@ document.addEventListener('pointerdown',e=>{        // 맵 터치로 이동: 고
   if(!admTp)return;if(e.target.closest('.adm .admwin,.adm .admico'))return;
   const r=arenaEl.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
   const c=admTp;admTp=null;e.preventDefault();e.stopPropagation();
-  if(c.alive){c.x=Math.min(1-RW,Math.max(RW,(e.clientX-r.left)/r.width));c.y=Math.min(1-RW,Math.max(RW,(e.clientY-r.top)/r.height));try{burstAt(c.x*aW(),c.y*aH(),'#ffffff',.6,6)}catch(_){}}
+  if(c.alive)admCmd({a:'tpTo',side:c.side,x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height});
   admSync();
 },true);
 /* ---------- 점검 중 캐릭터 비밀번호 ---------- */
@@ -3667,7 +3686,7 @@ function bhAudioOff(){bhs.forEach(b=>{if(!b.sndEnd)bhHumSet(b,false)});bhSprayUp
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(!NET.sim)last=performance.now();initAudio()}else{bhAudioOff();audioHint()}});
 window.addEventListener('pagehide',bhAudioOff);window.addEventListener('blur',bhAudioOff);   // 앱 복귀 시 시간 점프/소리 끊김 방지
 /* ---------- 온라인 매칭 (로비에서 오른쪽으로 넘기면 나오는 화면) ---------- */
-const NET={screen:'lobby',state:'idle',searchId:0,peers:[],conn:null,host:false,match:false,sim:false,anim:false,
+const NET={admQ:[],screen:'lobby',state:'idle',searchId:0,peers:[],conn:null,host:false,match:false,sim:false,anim:false,
   seed:0,mySide:null,me:{name:'',dev:false},op:null,myCh:null,pick:null,picking:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
@@ -3905,7 +3924,7 @@ function netSetup(){
   resetGame();document.querySelector('.netkk').hidden=true;chatMenu.querySelector('.chlog').innerHTML='';
   document.body.classList.add('in-net');
   rngSeed(NET.seed);
-  Object.assign(NET,{step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false});NET.hist.clear();
+  Object.assign(NET,{admQ:[],step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false});NET.hist.clear();
   const L=NET.mySide==='left'?NET.me:NET.op,Rt=NET.mySide==='left'?NET.op:NET.me,lc=NET.mySide==='left'?NET.myCh:NET.op.ch,rc=NET.mySide==='left'?NET.op.ch:NET.myCh;
   addCharAt('left',netHalf(lc)||netHalf('더미'),false);addCharAt('right',netHalf(rc)||netHalf('더미'),false);
   netNick('left',L,NET.mySide==='left');netNick('right',Rt,NET.mySide==='right');
@@ -3969,6 +3988,7 @@ function netAfterStep(){
     if(NET.host)netSend({t:'s',k:NET.step,c:cs,r:rngS});
     else{NET.hist.set(NET.step,{c:cs,r:rngS,n:rngN});if(NET.hist.size>48)NET.hist.delete(NET.hist.keys().next().value)}
   }
+  if(NET.admQ.length){const due=NET.admQ.filter(m=>m.k2<=NET.step);if(due.length){NET.admQ=NET.admQ.filter(m=>m.k2>NET.step);due.forEach(admExec)}}   // 어드민 명령: 정해 둔 단계에서 실행
   if(!NET.host&&NET.pend.length)NET.pend=NET.pend.filter(s=>{if(s.k>NET.step)return true;const h=NET.hist.get(s.k);if(h)netFix(s,h);return false});
 }
 function netFix(s,h){
@@ -3989,6 +4009,7 @@ function netData(d){
   else if(d.t==='end'){if(!NET.host)netHostEnd(d.w)}
   else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);if(typeof d.txt==='string'){const x=d.txt.replace(/\s+/g,' ').trim().slice(0,30);if(x)netChatShow(netOpp(),x)}else{const i=d.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(netOpp(),i)}}
   else if(d.t==='cack'){NET.chatAck=d.id}
+  else if(d.t==='adm'&&d.c&&typeof d.c==='object'){const m=d.c;if(!NET.sim||m.k2<0||m.k2<=NET.step)admExec(m);else NET.admQ.push(m)}
   else if(d.t==='bye')netClosed();
 }
 function netClosed(){
