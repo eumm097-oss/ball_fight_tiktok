@@ -3600,7 +3600,7 @@ function modRender(w){
   const now=Date.now(),rem=e=>Math.max(0,(+e.cu||0)-now);
   const pen=Object.keys(all).filter(id=>rem(all[id])>0||(all[id].g|0)>0).sort((a,b)=>rem(all[b])-rem(all[a])||(all[b].g|0)-(all[a].g|0));
   const warn=Object.keys(all).filter(id=>(all[id].w|0)>0).sort((a,b)=>(all[b].w|0)-(all[a].w|0)).slice(0,60);
-  const me=w.querySelector('.modme');me.innerHTML='<span>내 아이디</span><b>'+PID+'</b><span>지금 상대</span><b>'+(NET.match&&NET.op?admEsc(NET.op.name)+' ('+(NET.op.pid||'?')+')':'-')+'</b>';
+  const me=w.querySelector('.modme');me.innerHTML='<span>내 아이디</span><b>'+PID+'</b><span>기록 저장소</span><b>'+(CLD.ok===true?'정상':CLD.ok===false?'연결 안 됨':'확인 중')+'</b><span>지금 상대</span><b>'+(NET.match&&NET.op?admEsc(NET.op.name)+' ('+(NET.op.pid||'?')+')':'-')+'</b>';
   w.querySelector('.modpen').innerHTML=pen.length?pen.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">패널티를 받고 있는 사람이 없습니다.</div>';
   w.querySelector('.modwarn').innerHTML=warn.length?warn.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">경고 기록이 없습니다.</div>';
   w.querySelectorAll('.modchat[data-id]').forEach(el=>{const d=modChatData[el.dataset.id];if(d)el.innerHTML=d});
@@ -3711,7 +3711,7 @@ function admAct(a,b){
   else if(a==='modwhy'||a==='modchat'){const id=b.dataset.id,box=b.closest('.modr').querySelector(a==='modwhy'?'.modwhy':'.modchat');box.hidden=!box.hidden;const key=(a==='modwhy'?'w':'c')+id;if(box.hidden)modOpen.delete(key);else modOpen.add(key);
     if(a==='modchat'&&!box.hidden){box.innerHTML='<div class="admnone">불러오는 중...</div>';modQuery(id,r=>{const h=r?(r.log.length?r.log.slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> '+admEsc(x.m||'')+(x.to?' <i>→ '+admEsc(x.to)+'</i>':'')+'</div>').join(''):'<div class="admnone">채팅 기록이 없습니다.</div>'):'<div class="admnone">지금 접속 중이 아니라 불러올 수 없습니다.</div>';modChatData[id]=h;document.querySelectorAll('.modchat[data-id="'+id+'"]').forEach(el=>{el.innerHTML=h})})}}
   else if(a==='modun'||a==='modreset'){const id=b.dataset.id,ua=a==='modreset'?'reset':'unpen';
-    if(id===PID){PEN.cu=0;PEN.g=0;if(ua==='reset'){PEN.w=0;PEN_LOG=[]}PEN.u=Date.now();penSave();regPublish()}else regAdmin(id,ua);
+    if(id===PID){if(ua==='reset'){PEN.w=0;PEN_LOG=[]}else{PEN.cu=0;PEN.g=0}PEN.u=Date.now();penSave();regPublish()}else regAdmin(id,ua);
     const w=document.querySelector('.adm');if(w)modRender(w)}
   else if(a==='modfind'){const w=document.querySelector('.adm'),q=(w.querySelector('.modq').value||'').toUpperCase().replace(/[^A-Z0-9]/g,''),res=w.querySelector('.modres');
     if(!/^[A-Z2-9]{6}$/.test(q)){res.innerHTML='<div class="admnone">아이디 6자리를 입력하세요.</div>';return}
@@ -4338,14 +4338,14 @@ function regSelf(){return {n:NET.me.name||'?',w:PEN.w,cu:PEN.cu,g:PEN.g,log:PEN_
 function regMerge(map,from){
   let ch=false;if(!map||typeof map!=='object')return false;
   for(const id in map){if(!/^[A-Z2-9]{6}$/.test(id))continue;const e=map[id];if(!e||typeof e!=='object')continue;
-    if(id===PID){if((+e.ub||0)>(PEN.ub||0)){PEN.ub=+e.ub;PEN.cu=0;PEN.g=0;if(e.ua==='reset'){PEN.w=0;PEN_LOG=[]}PEN.u=Date.now();penSave();regPublish();try{netToast(e.ua==='reset'?'관리자가 경고를 초기화했어요':'관리자가 채팅 금지를 풀었어요')}catch(_){}}continue}
+    if(id===PID){if((+e.ub||0)>(PEN.ub||0)){PEN.ub=+e.ub;if(e.ua==='reset'){PEN.w=0;PEN_LOG=[]}else{PEN.cu=0;PEN.g=0}PEN.u=Date.now();penSave();regPublish();try{netToast(e.ua==='reset'?'관리자가 경고를 초기화했어요':'관리자가 채팅 금지를 풀었어요')}catch(_){}}continue}
     const o=REG[id];if(!o||(+e.u||0)>(+o.u||0)){REG[id]={n:String(e.n||'?').slice(0,6),w:e.w|0,cu:+e.cu||0,g:e.g|0,log:Array.isArray(e.log)?e.log.slice(-10).map(x=>({t:+x.t||0,m:String(x.m||'').slice(0,30),r:String(x.r||'').slice(0,12)})):[],u:+e.u||0,ub:+e.ub||0,ua:e.ua==='reset'?'reset':(e.ua?'unpen':undefined)};regChg.add(id);ch=true}}
   if(ch){regSave();regFlush()}return ch;
 }
 function regFlush(){clearTimeout(regT);regT=setTimeout(()=>{if(!regChg.size)return;const o={};for(const id of regChg)if(REG[id])o[id]=REG[id];regChg.clear();
   if(PRES.hub){for(const c of PRES.conns){try{if(c.open)c.send({t:'reg',e:o})}catch(_){}}}else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'reg',e:o})}catch(_){}}},1500)}   // 모아서 1.5초에 한 번만 보냄
-function regPublish(){if(PEN.w>0||REG[PID]){REG[PID]=regSelf();regChg.add(PID);regSave();regFlush()}}
-function regAdmin(id,ua){const e=REG[id];if(!e)return;const now=Date.now();REG[id]=Object.assign({},e,{cu:0,g:0,u:now,ub:now,ua},ua==='reset'?{w:0,log:[]}:{});regChg.add(id);regSave();regFlush()}   // 어드민: 바로 풀기 / 경고 초기화
+function regPublish(){if(PEN.w>0||REG[PID]){REG[PID]=regSelf();regChg.add(PID);regSave();regFlush();cldSoon()}}
+function regAdmin(id,ua){const e=REG[id];if(!e)return;const now=Date.now();REG[id]=Object.assign({},e,{u:now,ub:now,ua},ua==='reset'?{w:0,log:[]}:{cu:0,g:0});regChg.add(id);regSave();regFlush();cldSoon(1500)}   // 어드민: 바로 풀기 / 경고 초기화
 /* 채팅 기록 조회: 어드민 → 모임 자리 → 그 사람 폰 → 다시 어드민 */
 const MODQ={};
 function modQuery(id,cb){const rid=Math.random().toString(36).slice(2,8);MODQ[rid]=cb;setTimeout(()=>{if(MODQ[rid]){delete MODQ[rid];cb(null)}},6000);
@@ -4360,10 +4360,51 @@ function annShow(m){                                // 전체 공지: 위에서 
 }
 let ANN_LOG=[];try{ANN_LOG=JSON.parse(localStorage.getItem('bftAnnLog')||'[]')||[]}catch(e){}
 function annGot(d){if(!d||typeof d.m!=='string'||annSeen.has(d.id))return false;annSeen.add(d.id);annShow(d.m);
-  ANN_LOG.push({t:Date.now(),m:String(d.m).slice(0,80),pid:/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:'?',n:String(d.n||'?').slice(0,6)});ANN_LOG=ANN_LOG.slice(-50);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}   // 공지 기록: 누가(아이디) 무엇을
+  ANN_LOG.push({t:Date.now(),m:String(d.m).slice(0,80),pid:/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:'?',n:String(d.n||'?').slice(0,6),id:String(d.id||'').slice(0,12)});ANN_LOG=ANN_LOG.slice(-50);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}   // 공지 기록: 누가(아이디) 무엇을
   return true}
-function annSend(m){const d={t:'ann',m:String(m).slice(0,80),id:Math.random().toString(36).slice(2,10),pid:PID,n:NET.me.name||'?'};annGot(d);
+function annSend(m){const d={t:'ann',m:String(m).slice(0,80),id:Math.random().toString(36).slice(2,10),pid:PID,n:NET.me.name||'?'};annGot(d);cldSoon(1500);
   if(PRES.hub){for(const c of PRES.conns){try{if(c.open)c.send(d)}catch(_){}}}else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(d)}catch(_){}}}
+/* 클라우드 기록: 접속 중이 아니어도 남도록 무료 JSON 저장소(npoint)에 경고·공지 기록을 저장 (채팅 원문은 저장하지 않음) */
+const CLD_URL='https://api.npoint.io/47f3571657f7282501d6';
+var CLD={busy:false,again:false,ok:null,last:0,t:0,adm:false};
+const cldKey=x=>x.id||(x.t+'|'+x.pid+'|'+x.m);
+async function cldFetch(){const r=await fetch(CLD_URL,{cache:'no-store'});if(!r.ok)throw new Error('get');const j=await r.json();return j&&typeof j==='object'&&!Array.isArray(j)?j:{}}
+const cldNeed=()=>PEN.w>0||!!REG[PID];
+function cldPull(d){                                  // 저장소 → 내 폰
+  if(d.reg&&typeof d.reg==='object'&&!Array.isArray(d.reg))regMerge(d.reg);
+  if(Array.isArray(d.ann)){const have=new Set(ANN_LOG.map(cldKey));let ch=false;
+    for(const x of d.ann.slice(-100)){if(!x||typeof x.m!=='string')continue;const e={t:+x.t||0,m:x.m.slice(0,80),pid:/^[A-Z2-9]{6}$/.test(x.pid)?x.pid:'?',n:String(x.n||'?').slice(0,6),id:String(x.id||'').slice(0,12)};
+      if(e.id)annSeen.add(e.id);if(have.has(cldKey(e)))continue;have.add(cldKey(e));ANN_LOG.push(e);ch=true}
+    if(ch){ANN_LOG.sort((a,b)=>a.t-b.t);ANN_LOG=ANN_LOG.slice(-50);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}}}
+}
+function cldMergeInto(d){                             // 내 폰 → 저장소 (바뀐 게 있으면 true)
+  let ch=false;
+  if(!d.reg||typeof d.reg!=='object'||Array.isArray(d.reg)){d.reg={};ch=true}
+  const mine=Object.assign({},REG);if(cldNeed())mine[PID]=regSelf();
+  for(const id in mine){const e=mine[id],o=d.reg[id];if(!o||(+e.u||0)>(+o.u||0)){d.reg[id]=e;ch=true}}
+  {const ks=Object.keys(d.reg);if(ks.length>150){ks.sort((a,b)=>(d.reg[a].u||0)-(d.reg[b].u||0)).slice(0,ks.length-150).forEach(k=>delete d.reg[k]);ch=true}}
+  if(!Array.isArray(d.ann)){d.ann=[];ch=true}
+  {const have=new Set(d.ann.map(cldKey));for(const x of ANN_LOG){if(!have.has(cldKey(x))){d.ann.push(x);have.add(cldKey(x));ch=true}}
+   d.ann.sort((a,b)=>(a.t||0)-(b.t||0));if(d.ann.length>100)d.ann=d.ann.slice(-100)}
+  return ch;
+}
+async function cldSync(push){
+  if(CLD.busy){if(push)CLD.again=true;return}
+  CLD.busy=true;
+  try{
+    for(let i=0;i<3;i++){
+      const d=await cldFetch();cldPull(d);
+      if(!push||!cldMergeInto(d))break;
+      const r=await fetch(CLD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
+      if(!r.ok)throw new Error('post');
+    }
+    CLD.ok=true;CLD.last=Date.now();
+  }catch(e){CLD.ok=false}
+  CLD.busy=false;if(CLD.again){CLD.again=false;cldSoon()}
+}
+function cldSoon(ms){if(typeof CLD==='undefined'||!CLD)return;clearTimeout(CLD.t);CLD.t=setTimeout(()=>cldSync(true),ms||4000)}
+setTimeout(()=>{if(cldNeed())cldSync(true)},3000);    // 경고가 있는 사람은 시작할 때 저장소와 맞춤 (관리자가 푼 패널티도 여기서 받음)
+setInterval(()=>{const open=!!document.querySelector('.adm');if(open&&(!CLD.adm||Date.now()-CLD.last>60000)){CLD.adm=true;cldSync(true)}if(!open)CLD.adm=false},5000);   // 어드민 패널을 열면 저장소 기록을 가져옴
 function presHubData(c,d){                        // 모임 자리가 받은 메시지
   if(d.t==='ann'){if(annGot(d))for(const x of PRES.conns){if(x!==c)try{if(x.open)x.send(d)}catch(_){}}return}
   if(d.t==='room'||d.t==='roomsq'){roomHub(c,d);return}
