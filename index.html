@@ -402,7 +402,7 @@ em.usrst{margin-left:auto;font-style:normal;font-weight:800;font-size:0.85em;col
 .dmpop{position:fixed;left:50%;transform:translateX(-50%);top:calc(8px + env(safe-area-inset-top,0px));z-index:62;display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:min(340px,calc(100vw - 24px));padding:9px 12px;background:#fff;border:3px solid var(--ink);color:#111;text-align:left;cursor:pointer}
 .dmpop b{font-size:13px}.dmpop span{font-size:14.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kickov{position:fixed;top:0;left:0;right:0;bottom:0;z-index:95;background:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
-.usrops{flex-wrap:wrap;margin-top:0.2em}.usrops .admstep{width:3.4em}.usru{flex:none!important;color:#cfd2dc}.usrkicked{display:flex;align-items:center;gap:0.6em;color:#ff5c7a}.usrkicked b{color:#ff5c7a}.usrkicked .admbtn{margin-left:auto}
+.usrops{flex-wrap:wrap;margin-top:0.2em}.usrwhy{flex:1 1 8em!important;height:2.3em;font-size:1em}.usrops .admstep{width:3.4em}.usru{flex:none!important;color:#cfd2dc}.usrkicked{display:flex;align-items:center;gap:0.6em;color:#ff5c7a}.usrkicked b{color:#ff5c7a}.usrkicked .admbtn{margin-left:auto}
 .usrroom{display:flex;align-items:center;gap:0.6em;width:100%;margin:0 0 0.4em;padding:0.55em 0.7em;background:#151515;border:0.1em solid #2c2c2c;border-radius:0.6em;color:#fff;font:inherit;font-size:1.05em;text-align:left;cursor:pointer}.usrroom.on{border-color:#17e3d6;background:rgba(23,227,214,.08)}
 .usrroom i{font-style:normal;font-family:monospace;color:#8b90a0;font-size:0.9em}.usrroom span{margin-left:auto;color:#8b90a0;font-size:0.9em}
 .usrhist{max-height:22em;overflow:auto;overscroll-behavior:contain;padding:0.3em 0.2em;border-top:0.1em solid #2c2c2c}.usrsy{color:#8b90a0!important;text-align:center}.usrsm{color:#8b90a0;font-weight:500}
@@ -629,7 +629,13 @@ function dbgErr(m,all){if(!all){try{if(localStorage.getItem('bftAdm')!=='1')retu
   try{let el=document.querySelector('.dbgerr');if(!el){el=document.createElement('div');el.className='dbgerr';document.body.appendChild(el)}
     el.textContent='오류: '+String(m).slice(0,160);el.hidden=false;clearTimeout(dbgErr.t);dbgErr.t=setTimeout(()=>{el.hidden=true},9000)}catch(_){}}
 window.addEventListener('error',e=>dbgErr((e.message||'?')+(e.lineno?' (줄 '+e.lineno+')':'')));
-var NMX=40;   // 이름을 주고받을 때 최대 길이 (일반은 6글자로 정해지고, 제작자만 40글자까지)
+var NMX=40;
+var PT={t:0,d:{}};try{const v=JSON.parse(localStorage.getItem('bftPt')||'null');if(v&&typeof v==='object'){PT.t=+v.t||0;if(v.d&&typeof v.d==='object')for(const k in v.d)if(/^\d{4}-\d\d-\d\d$/.test(k))PT.d[k]=+v.d[k]||0}}catch(e){}   // 플레이 타임: 게임 화면을 보고 있던 시간(ms) · 날짜별
+{let last=Date.now(),sv=0;const tick=()=>{const now=Date.now(),dt=Math.min(15000,Math.max(0,now-last));last=now;if(document.hidden)return;
+    PT.t+=dt;const k=new Date(now+9*3600e3).toISOString().slice(0,10);PT.d[k]=(PT.d[k]||0)+dt;
+    if(now-sv>30000){sv=now;const ks=Object.keys(PT.d).sort();ks.slice(0,Math.max(0,ks.length-14)).forEach(x=>delete PT.d[x]);try{localStorage.setItem('bftPt',JSON.stringify(PT))}catch(e){}}};
+  setInterval(tick,5000);document.addEventListener('visibilitychange',()=>{if(document.hidden)tick();last=Date.now()})}
+const ptText=min=>{min=Math.floor(min||0);const h=Math.floor(min/60);return h?h+'시간 '+(min%60)+'분':min+'분'};   // 이름을 주고받을 때 최대 길이 (일반은 6글자로 정해지고, 제작자만 40글자까지)
 let uiOpenT=-1e9;
 function uiOpen(id){const t=performance.now();if(t-uiOpenT<600)return;uiOpenT=t;try{if(id==='prbtn')prShow();else frShow()}catch(err){dbgErr((err&&err.message)||err,1)}}
 {let dn=null;                                      // 프로필·친구 버튼: 손을 뗄 때 바로 열고, 클릭으로도 열림 (둘 중 먼저 온 것 한 번만)
@@ -3221,9 +3227,15 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='3.8.13';
+const PATCH_VERSION='3.8.14';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'3.8.14',date:'2026-10-11',
+   chars:[],
+   fx:[],
+   sys:[
+     {who:'친구',lines:['마지막 접속 표시 (오프라인인 친구는 몇 분·몇 시간 전에 접속했는지 표시)']}
+   ]},
   {ver:'3.8.13',date:'2026-10-11',
    chars:[],
    fx:[],
@@ -3453,7 +3465,8 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="admsub">경고 기록</div><div class="modwarn"></div>'
     +'<div class="admsub">플레이어 검색</div><div class="admrow"><input class="modq" type="text" maxlength="6" placeholder="플레이어 아이디 6자리" autocomplete="off" autocapitalize="characters"><button type="button" class="admbtn" data-a="modfind">검색</button></div><div class="modres"></div>'
     +'<div class="admnote">경고 기록은 접속한 사람들 폰을 타고 모입니다. 채팅 기록은 그 사람이 지금 접속해 있을 때만 불러올 수 있습니다.</div>';
-  if(k==='user')return '<div class="admsub">유저 검색</div><div class="admrow"><input class="modq usrq" type="text" maxlength="12" placeholder="아이디 또는 이름" autocomplete="off" style="text-transform:none"><button type="button" class="admbtn admsub2" data-a="usrref">새로고침</button></div>'
+  if(k==='user')return '<div class="admsub">블랙리스트 <span class="usrblc"></span></div><div class="usrbl"></div>'
+    +'<div class="admsub">유저 검색</div><div class="admrow"><input class="modq usrq" type="text" maxlength="12" placeholder="아이디 또는 이름" autocomplete="off" style="text-transform:none"><button type="button" class="admbtn admsub2" data-a="usrref">새로고침</button></div>'
     +'<div class="admsub">유저 <span class="usrcnt"></span></div><div class="usrlist"></div>'
     +'<div class="admsub">친구 관계</div><div class="usrpairs"></div>'
     +'<div class="admnote">이름을 정한 적이 있는 유저만 나옵니다. 유저를 누르면 친구·받은 요청·보낸 요청이 펼쳐집니다. 접속 상태는 실시간, 친구 기록은 1분마다 새로 받아 옵니다.</div>';
@@ -3742,34 +3755,49 @@ function modRender(w){
   w.querySelector('.modwarn').innerHTML=warn.length?warn.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">경고 기록이 없습니다.</div>';
   w.querySelectorAll('.modchat[data-id]').forEach(el=>{const d=modChatData[el.dataset.id];if(d)el.innerHTML=d});
 }
-const usrOpen=new Set(),usrKick={},usrFr={};   // usrFr[아이디]: 친구 정보(대화방 목록·고른 방·기록)
+const usrOpen=new Set(),usrKick={},usrFr={};   // usrFr[아이디]: 친구 정보(고른 방·불러오는 중)
+/* 어드민 폰에 1대1 대화를 모아 둠: 접속 중인 사람 폰에서 가져올 때마다 쌓여서, 나중에 둘 다 꺼져 있어도 볼 수 있음 (공개 저장소에는 올리지 않음) */
+const admIs=()=>{try{return localStorage.getItem('bftAdm')==='1'}catch(e){return false}};
+var ADMDM={p:{},f:{}};                              // p: '아이디|아이디' → [{i,t,a(보낸 사람),m}] · f: 마지막으로 모은 시각
+try{if(admIs()){const v=JSON.parse(localStorage.getItem('bftAdmDm')||'null');if(v&&v.p&&typeof v.p==='object'){ADMDM.p=v.p;ADMDM.f=v.f||{}}}}catch(e){}
+const admPair=(a,b)=>a<b?a+'|'+b:b+'|'+a;
+let admDmT=0;function admDmSave(){clearTimeout(admDmT);admDmT=setTimeout(()=>{
+  const ks=Object.keys(ADMDM.p);if(ks.length>400){const last=k=>{const L=ADMDM.p[k];return L.length?L[L.length-1].t:0};ks.sort((a,b)=>last(a)-last(b)).slice(0,ks.length-400).forEach(k=>{delete ADMDM.p[k];delete ADMDM.f[k]})}
+  try{localStorage.setItem('bftAdmDm',JSON.stringify(ADMDM))}catch(e){}},800)}
+function admDmPut(uid,dmc){                         // uid 폰에서 받은 친구별 대화를 모음 (같은 메시지는 한 번만)
+  if(!dmc||typeof dmc!=='object')return;const now=Date.now();
+  for(const w in dmc){if(!/^[A-Z2-9]{6}$/.test(w)||!Array.isArray(dmc[w]))continue;const k=admPair(uid,w),L=ADMDM.p[k]||(ADMDM.p[k]=[]),have=new Set(L.map(x=>x.i));
+    for(const x of dmc[w]){if(!x||x.sy||!x.i||have.has(x.i)||typeof x.m!=='string')continue;have.add(x.i);L.push({i:String(x.i).slice(0,16),t:+x.t||0,a:x.me?uid:w,m:x.m.slice(0,100)})}
+    L.sort((a,b)=>a.t-b.t);if(L.length>300)L.splice(0,L.length-300);ADMDM.f[k]=now}
+  admDmSave()}
+{let qi=0;setInterval(()=>{                         // 어드민 폰이 켜져 있으면 친구가 있는 접속자들의 대화를 조금씩 모음
+  if(!admIs()||document.hidden||!(PRES.hub||(PRES.conn&&PRES.conn.open)))return;
+  const ids=[];for(const k in FRX.e){const e=FRX.e[k];if(e.st!=='f')continue;for(const id of [e.a,e.b])if(!ids.includes(id))ids.push(id)}
+  for(const id in DM.c)if(!ids.includes(PID))ids.push(PID);
+  const now=Date.now(),on=ids.filter(id=>(id===PID||FRP.pl[id])&&now-(ADMDM.q&&ADMDM.q[id]||0)>90000);if(!on.length)return;
+  const id=on[qi++%on.length];(ADMDM.q||(ADMDM.q={}))[id]=now;
+  modQuery(id,r=>{if(r&&r.dmc){admDmPut(id,r.dmc);const w=document.querySelector('.adm');if(w&&usrFr[id])usrRender(w)}},{k:'dm'})},4000)}
+function usrRooms(id,U){                            // 그 사람의 대화방: 친구 + 모아 둔 대화가 있는 사람
+  const set=new Set(U[id]?U[id].f:[]);for(const k in ADMDM.p){const [a,b]=k.split('|');if(a===id)set.add(b);else if(b===id)set.add(a)}
+  return [...set].map(w=>{const L=ADMDM.p[admPair(id,w)]||[];return {w,c:L.length,t:L.length?L[L.length-1].t:0}}).sort((a,b)=>b.t-a.t||a.w.localeCompare(b.w))}
 function usrFrHTML(id,U){
   const F=usrFr[id];if(!F)return '';
-  const nmOf=w=>(F.nm&&F.nm[w])||usrNm(U,w),f=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
-  if(F.st==='load')return '<div class="modchat"><div class="admnone">불러오는 중...</div></div>';
-  let h='<div class="modchat usrfr"><div class="admlbl">대화방 '+F.rooms.length+'개'+(F.src==='friend'?' <span class="usrsm">(이 사람이 접속해 있지 않아서 친구 쪽 기록으로 불러와요)</span>':'')+'</div>';
-  h+=F.rooms.length?F.rooms.map(r=>'<button type="button" class="usrroom'+(F.sel===r.w?' on':'')+'" data-a="usrroom" data-id="'+id+'" data-w="'+r.w+'"><b>'+admEsc(nmOf(r.w))+'</b><i>'+r.w+'</i><span>'+(r.c==null?'눌러서 불러오기':(r.c?r.c+'개 · '+f(r.t):'대화 없음'))+'</span></button>').join(''):'<div class="admnone">친구가 없습니다.</div>';
-  if(F.sel){const w=F.sel,L=F.data[w];
-    h+='<div class="admlbl">'+admEsc(usrNm(U,id))+' ↔ '+admEsc(nmOf(w))+' 대화 기록</div>';
-    if(L==='load')h+='<div class="admnone">불러오는 중...</div>';
-    else if(L==='off')h+='<div class="admnone">두 사람 모두 지금 접속해 있지 않아서 불러올 수 없습니다.</div>';
-    else if(!L||!L.length)h+='<div class="admnone">대화 기록이 없습니다.</div>';
-    else h+='<div class="usrhist" data-id="'+id+'">'+L.map(x=>x.sy?'<div class="modli usrsy">'+f(x.t)+' · '+admEsc(x.m)+'</div>':'<div class="modli"><span>'+f(x.t)+'</span> <b class="usrn">'+admEsc(x.a===id?usrNm(U,id):nmOf(w))+'</b> '+admEsc(x.m)+'</div>').join('')+'</div>'}
+  const f=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}),rooms=usrRooms(id,U);
+  let h='<div class="modchat usrfr"><div class="admlbl">대화방 '+rooms.length+'개'+(F.load?' <span class="usrsm">(최신 기록 불러오는 중...)</span>':'')+'</div>';
+  h+=rooms.length?rooms.map(r=>'<button type="button" class="usrroom'+(F.sel===r.w?' on':'')+'" data-a="usrroom" data-id="'+id+'" data-w="'+r.w+'"><b>'+admEsc(usrNm(U,r.w))+'</b><i>'+r.w+'</i><span>'+(r.c?r.c+'개 · '+f(r.t):'기록 없음')+'</span></button>').join(''):'<div class="admnone">친구가 없습니다.</div>';
+  if(F.sel){const w=F.sel,k=admPair(id,w),L=ADMDM.p[k]||[];
+    h+='<div class="admlbl">'+admEsc(usrNm(U,id))+' ↔ '+admEsc(usrNm(U,w))+' 대화 기록'+(F.rl?' <span class="usrsm">(불러오는 중...)</span>':'')+'</div>';
+    h+=L.length?'<div class="usrhist" data-id="'+id+'">'+L.map(x=>'<div class="modli"><span>'+f(x.t)+'</span> <b class="usrn">'+admEsc(usrNm(U,x.a))+'</b> '+admEsc(x.m)+'</div>').join('')+'</div>'
+      :'<div class="admnone">'+(F.rl?'':'모아 둔 대화가 없습니다. 둘 중 한 명이 접속해 있을 때 다시 눌러 보세요.')+'</div>';
+    if(ADMDM.f[k])h+='<div class="admnote">마지막으로 모은 시각 '+f(ADMDM.f[k])+'</div>'}
   return h+'</div>'}
-function usrFrLoad(id){                             // 그 사람 폰에서 친구별 1대1 대화를 모두 가져옴 (접속 중이 아니면 친구 목록만)
-  const w=document.querySelector('.adm');usrFr[id]={st:'load'};if(w)usrRender(w);
-  modQuery(id,r=>{
-    const {U}=usrData(),u=U[id];
-    if(r&&r.dmc){const rooms=Object.keys(r.dmc).map(k=>{const L=r.dmc[k];return {w:k,c:L.filter(x=>!x.sy).length,t:L.length?L[L.length-1].t:0}}).sort((a,b)=>b.t-a.t||a.w.localeCompare(b.w));
-      const data={};for(const k in r.dmc)data[k]=r.dmc[k].map(x=>Object.assign({a:x.me?id:k},x));
-      usrFr[id]={st:'ok',src:'self',rooms,data,nm:r.nm,sel:null}}
-    else usrFr[id]={st:'ok',src:'friend',rooms:(u?u.f:[]).map(k=>({w:k,c:null,t:0})),data:{},nm:{},sel:null};
-    const w2=document.querySelector('.adm');if(w2)usrRender(w2)},{k:'dm'})}
-function usrRoom(id,k){                             // 대화방 하나 열기 (친구 쪽에서만 가져올 수 있으면 친구에게 물어봄)
+function usrFrLoad(id){                             // 그 사람이 접속 중이면 그 폰에서 최신 대화를 가져와서 모음
+  const w=document.querySelector('.adm'),on=id===PID||!!FRP.pl[id];usrFr[id]={sel:null,load:on,rl:false};if(w)usrRender(w);if(!on)return;
+  modQuery(id,r=>{if(r&&r.dmc)admDmPut(id,r.dmc);if(usrFr[id])usrFr[id].load=false;const w2=document.querySelector('.adm');if(w2)usrRender(w2)},{k:'dm'})}
+function usrRoom(id,k){                             // 대화방 열기: 둘 중 접속 중인 사람이 있으면 그 폰에서 최신 기록도 가져옴
   const F=usrFr[id];if(!F)return;F.sel=F.sel===k?null:k;const w=document.querySelector('.adm');
-  if(F.sel&&F.src==='friend'&&!Array.isArray(F.data[k])){F.data[k]='load';
-    modQuery(k,r=>{const L=r&&r.dmc&&r.dmc[id];F.data[k]=L?L.map(x=>Object.assign({a:x.me?k:id},x)):'off';const R=F.rooms.find(x=>x.w===k);if(R&&Array.isArray(F.data[k])){R.c=F.data[k].filter(x=>!x.sy).length;R.t=L.length?L[L.length-1].t:0}
-      const w2=document.querySelector('.adm');if(w2)usrRender(w2)},{k:'dm',w:id})}
+  if(F.sel){const who=(k===PID||FRP.pl[k])?k:((id===PID||FRP.pl[id])?id:null);
+    if(who){F.rl=true;modQuery(who,r=>{if(r&&r.dmc)admDmPut(who,r.dmc);F.rl=false;const w2=document.querySelector('.adm');if(w2)usrRender(w2)},{k:'dm',w:who===k?id:k})}}
   if(w)usrRender(w)}
 function usrData(){                              // 어드민: 저장소 기록 + 내 폰 기록을 합쳐 유저별로 정리
   const E={};for(const k in FRX.e)E[k]=FRX.e[k];for(const k in FR.e)if(!E[k]||E[k].u<FR.e[k].u)E[k]=FR.e[k];
@@ -3780,7 +3808,7 @@ function usrData(){                              // 어드민: 저장소 기록 
     if(e.st==='f'){A.f.push(e.b);B.f.push(e.a);pairs.push(e)}
     else if(e.by===e.a){A.o.push(e.b);B.i.push(e.a)}else{B.o.push(e.a);A.i.push(e.b)}}
   for(const id in U){const u=U[id],x=id===PID?{n:NET.me.name}:(FRX.n[id]||FR.n[id]||(REG[id]?{n:REG[id].n}:null)),p=id===PID?[presMy()]:FRP.pl[id];
-    u.n=(p&&p[1])||(x&&x.n)||'?';u.s=p&&FRST[p[0]]?FRST[p[0]]:['오프라인','off',3]}
+    u.n=(p&&p[1])||(x&&x.n)||'?';u.s=p&&FRST[p[0]]?FRST[p[0]]:[offText(id),'off',3];u.ls=id===PID?Date.now():lastSeen(id);u.pt=id===PID?Math.floor(PT.t/60000):(FRX.pt[id]||0)}
   return {U,pairs};
 }
 const usrNm=(U,id)=>(U[id]?U[id].n:'?');
@@ -3790,16 +3818,23 @@ function usrRender(w){
   let L=Object.values(U).filter(match).sort((a,b)=>a.s[2]-b.s[2]||b.f.length-a.f.length||a.n.localeCompare(b.n,'ko'));
   const total=L.length;L=L.slice(0,100);
   w.querySelector('.usrcnt').textContent='('+total+'명'+(total>100?' · 100명만 표시':'')+')'+(PRES.n?' · 지금 접속 '+PRES.n+'명':' · 접속 서버 연결 안 됨'+(PRES.st?' ('+PRES.st+')':''));
-  const line=(id,extra)=>{const u=U[id]||{n:'?',s:['오프라인','off']};return '<div class="modli"><b class="usrn">'+admEsc(u.n)+'</b> <span>'+id+'</span> <em class="usrst '+u.s[1]+'">'+u.s[0]+'</em>'+(extra||'')+'</div>'};
+  const line=(id,extra)=>{const u=U[id]||{n:'?',s:[offText(id),'off']};return '<div class="modli"><b class="usrn">'+admEsc(u.n)+'</b> <span>'+id+'</span> <em class="usrst '+u.s[1]+'">'+u.s[0]+'</em>'+(extra||'')+'</div>'};
+  {const now=Date.now(),B=Object.keys(REG).filter(id=>(+REG[id].kb||0)>now).sort((a,b)=>REG[a].kb-REG[b].kb);   // 블랙리스트: 지금 추방 중인 사람
+    w.querySelector('.usrblc').textContent='('+B.length+'명)';
+    w.querySelector('.usrbl').innerHTML=B.length?B.map(id=>{const r=REG[id],tm=Math.ceil((r.kb-now)/60000),h=Math.floor(tm/60),m=tm%60,nm=U[id]?U[id].n:(r.n||'?');
+      return '<div class="admch usrblr"><div class="admcn"><b>'+admEsc(nm)+'</b><i>'+id+'</i><span class="modw">'+(h?h+'시간 ':'')+m+'분 남음</span></div>'
+        +'<div class="modl">사유 <b>'+(r.kr?admEsc(r.kr):'없음')+'</b> · 끝나는 시각 <b>'+new Date(r.kb).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</b></div>'
+        +'<div class="admsk"><button type="button" class="admbtn admheal" data-a="usrunkick" data-id="'+id+'">바로 해제</button><button type="button" class="admbtn admsub2" data-a="usrcopy" data-id="'+id+'">아이디 복사</button></div></div>'}).join(''):'<div class="admnone">추방 중인 사람이 없습니다.</div>'}
   const sk={};w.querySelectorAll('.usrhist[data-id]').forEach(e=>{sk[e.dataset.id]=e.scrollTop});
   w.querySelector('.usrlist').innerHTML=L.length?L.map(u=>{
     const open=usrOpen.has(u.id);
     return '<div class="admch usr"><button type="button" class="usrhd" data-a="usrtog" data-id="'+u.id+'"><b>'+admEsc(u.n)+'</b><i>'+u.id+'</i><em class="usrst '+u.s[1]+'">'+u.s[0]+'</em></button>'
       +'<div class="modl">친구 <b>'+u.f.length+'</b>명 · 받은 요청 <b>'+u.i.length+'</b> · 보낸 요청 <b>'+u.o.length+'</b></div>'
-      +(()=>{const r=REG[u.id],kl=r?Math.max(0,(+r.kb||0)-Date.now()):0,kv=usrKick[u.id]||{},kh=Math.floor(kl/3600000),km=Math.ceil(kl%3600000/60000);
+      +'<div class="modl">마지막 접속 <b>'+(u.s[1]!=='off'?'지금 접속 중':(u.ls?agoText(u.ls)+' ('+new Date(u.ls).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+')':'기록 없음'))+'</b> · 플레이 타임 <b>'+(u.pt?ptText(u.pt):'기록 없음')+'</b></div>'
+      +(()=>{const r=REG[u.id],kl=r?Math.max(0,(+r.kb||0)-Date.now()):0,kv=usrKick[u.id]||{},ktm=Math.ceil(kl/60000),kh=Math.floor(ktm/60),km=ktm%60;
         return '<div class="admrow usrops"><button type="button" class="admbtn admsub2" data-a="usrcopy" data-id="'+u.id+'">아이디 복사</button>'
-          +(u.id===PID?'':'<input class="admstep" data-kid="'+u.id+'" data-k="h" inputmode="numeric" placeholder="0" value="'+admEsc(kv.h||'')+'"><span class="usru">시간</span><input class="admstep" data-kid="'+u.id+'" data-k="m" inputmode="numeric" placeholder="0" value="'+admEsc(kv.m||'')+'"><span class="usru">분</span><button type="button" class="admbtn admred" data-a="usrkick" data-id="'+u.id+'">추방</button>')+'</div>'
-          +(kl>0?'<div class="modl usrkicked">추방 중 · 남은 시간 <b>'+(kh?kh+'시간 ':'')+km+'분</b><button type="button" class="admbtn admheal" data-a="usrunkick" data-id="'+u.id+'">추방 해제</button></div>':'')})()
+          +(u.id===PID?'':'<input class="admstep" data-kid="'+u.id+'" data-k="h" inputmode="numeric" placeholder="0" value="'+admEsc(kv.h||'')+'"><span class="usru">시간</span><input class="admstep" data-kid="'+u.id+'" data-k="m" inputmode="numeric" placeholder="0" value="'+admEsc(kv.m||'')+'"><span class="usru">분</span><input class="modq usrwhy" data-kid="'+u.id+'" data-k="r" maxlength="60" placeholder="추방 사유 (선택)" style="text-transform:none" value="'+admEsc(kv.r||'')+'"><button type="button" class="admbtn admred" data-a="usrkick" data-id="'+u.id+'">추방</button>')+'</div>'
+          +(kl>0?'<div class="modl usrkicked">추방 중 · 남은 시간 <b>'+(kh?kh+'시간 ':'')+km+'분</b>'+(r.kr?' · 사유 <b>'+admEsc(r.kr)+'</b>':'')+'<button type="button" class="admbtn admheal" data-a="usrunkick" data-id="'+u.id+'">추방 해제</button></div>':'')})()
       +(open?'<div class="modwhy">'
         +(u.f.length?'<div class="admlbl">친구</div>'+u.f.map(id=>line(id)).join(''):'<div class="admnone">친구가 없습니다.</div>')
         +(u.i.length?'<div class="admlbl">받은 요청</div>'+u.i.map(id=>line(id)).join(''):'')
@@ -3807,7 +3842,7 @@ function usrRender(w){
         +'<div class="admsk" style="margin-top:0.6em"><button type="button" class="admbtn" data-a="usrfr" data-id="'+u.id+'">친구 정보</button><button type="button" class="admbtn" data-a="usrchat" data-id="'+u.id+'">게임 채팅 기록</button></div>'
         +usrFrHTML(u.id,U)+(usrChatData[u.id]?'<div class="modchat">'+usrChatData[u.id]+'</div>':'')+'</div>':'')+'</div>'}).join(''):'<div class="admnone">'+(q?'검색 결과가 없습니다.':'아직 등록된 유저가 없습니다.')+'</div>';
   w.querySelectorAll('.usrhist[data-id]').forEach(e=>{e.scrollTop=e.dataset.id in sk?sk[e.dataset.id]:e.scrollHeight});
-  w.querySelector('.usrlist').oninput=e=>{const i=e.target;if(i.dataset&&i.dataset.kid){i.value=i.value.replace(/[^0-9]/g,'').slice(0,4);(usrKick[i.dataset.kid]||(usrKick[i.dataset.kid]={}))[i.dataset.k]=i.value}};   // 입력 중인 값은 다시 그려도 남게
+  w.querySelector('.usrlist').oninput=e=>{const i=e.target;if(i.dataset&&i.dataset.kid){if(i.dataset.k!=='r')i.value=i.value.replace(/[^0-9]/g,'').slice(0,4);(usrKick[i.dataset.kid]||(usrKick[i.dataset.kid]={}))[i.dataset.k]=i.value}};   // 입력 중인 값은 다시 그려도 남게
   const P=pairs.filter(e=>match(U[e.a])||match(U[e.b])).sort((a,b)=>b.u-a.u);
   w.querySelector('.usrpairs').innerHTML=P.length?P.slice(0,80).map(e=>'<div class="admlog"><b class="usrn">'+admEsc(usrNm(U,e.a))+'</b> <span>'+e.a+'</span> ↔ <b class="usrn">'+admEsc(usrNm(U,e.b))+'</b> <span>'+e.b+'</span></div>').join('')+(P.length>80?'<div class="admnote">최근 80쌍만 표시 중 ('+P.length+'쌍)</div>':''):'<div class="admnone">친구 관계가 없습니다.</div>';
 }
@@ -3932,7 +3967,7 @@ function admAct(a,b){
     if(a==='usrunkick'){regKick(id,0)}
     else{const row=b.closest('.usrops'),v=k=>Math.max(0,parseInt((row.querySelector('[data-k="'+k+'"]')||{}).value||'0',10)||0),min=v('h')*60+v('m');
       if(min<=0){b.textContent='시간을 넣어 주세요';setTimeout(()=>{if(b.isConnected)b.textContent='추방'},1400);return}
-      regKick(id,Date.now()+min*60000);delete usrKick[id]}
+      const why=((row.querySelector('[data-k="r"]')||{}).value||'');regKick(id,Date.now()+min*60000,why);delete usrKick[id]}
     if(w)usrRender(w)}
   else if(a==='usrchat'){const id=b.dataset.id;usrChatData[id]='<div class="admnone">불러오는 중...</div>';{const w=document.querySelector('.adm');if(w)usrRender(w)}modQuery(id,r=>{usrChatData[id]=modChatHTML(r);const w=document.querySelector('.adm');if(w)usrRender(w)})}
   else if(a==='spec'){specJoin(b.dataset.k)}
@@ -4560,37 +4595,38 @@ const regChg=new Set();let regT=0;
 function regSave(){const ks=Object.keys(REG);if(ks.length>300){ks.sort((a,b)=>regKeep(REG[a])-regKeep(REG[b])).slice(0,ks.length-300).forEach(k=>delete REG[k])}
   const old=Date.now()-14*864e5;for(const k in REG){const e=REG[k];if((e.u||0)<old&&!((e.cu||0)>Date.now()||(e.g|0)>0||(e.kb||0)>Date.now()))delete REG[k]}
   try{localStorage.setItem('bftReg',JSON.stringify(REG))}catch(e){}}
-function regSelf(){return {n:NET.me.name||'?',w:PEN.w,cu:PEN.cu,g:PEN.g,log:PEN_LOG.slice(-10),u:PEN.u,ub:PEN.ub,kb:+PEN.kb||0,ku:+PEN.ku||0}}
-function regClean(e){return {n:String(e.n||'?').slice(0,NMX),w:e.w|0,cu:+e.cu||0,g:e.g|0,log:Array.isArray(e.log)?e.log.slice(-10).map(x=>({t:+x.t||0,m:String(x.m||'').slice(0,30),r:String(x.r||'').slice(0,12)})):[],u:+e.u||0,ub:+e.ub||0,ua:e.ua==='reset'?'reset':(e.ua?'unpen':undefined),kb:+e.kb||0,ku:+e.ku||0}}
+function regSelf(){return {n:NET.me.name||'?',w:PEN.w,cu:PEN.cu,g:PEN.g,log:PEN_LOG.slice(-10),u:PEN.u,ub:PEN.ub,kb:+PEN.kb||0,ku:+PEN.ku||0,kr:String(PEN.kr||'')}}
+function regClean(e){return {n:String(e.n||'?').slice(0,NMX),w:e.w|0,cu:+e.cu||0,g:e.g|0,log:Array.isArray(e.log)?e.log.slice(-10).map(x=>({t:+x.t||0,m:String(x.m||'').slice(0,30),r:String(x.r||'').slice(0,12)})):[],u:+e.u||0,ub:+e.ub||0,ua:e.ua==='reset'?'reset':(e.ua?'unpen':undefined),kb:+e.kb||0,ku:+e.ku||0,kr:String(e.kr||'').slice(0,60)}}
 function regMix(o,e){                              // 경고 기록은 더 나중 것, 추방·패널티 해제 표시는 각각 더 나중에 정한 것
   if(!o)return e;if(!e)return o;
   const base=(+e.u||0)>(+o.u||0)?e:o,k=(+e.ku||0)>(+o.ku||0)?e:o,b=(+e.ub||0)>(+o.ub||0)?e:o;
   if(base===k&&base===b)return base;
-  return Object.assign({},base,{kb:+k.kb||0,ku:+k.ku||0,ub:+b.ub||0,ua:b.ua})}
+  return Object.assign({},base,{kb:+k.kb||0,ku:+k.ku||0,kr:String(k.kr||''),ub:+b.ub||0,ua:b.ua})}
 const regKeep=e=>(+e.kb||0)>Date.now()?9e15:(+e.u||0);   // 개수 제한으로 지울 때 추방 중인 사람은 남김
 function regMerge(map,from){
   let ch=false;if(!map||typeof map!=='object')return false;
   for(const id in map){if(!/^[A-Z2-9]{6}$/.test(id))continue;const e=map[id];if(!e||typeof e!=='object')continue;
-    if(id===PID&&(+e.ku||0)>(+PEN.ku||0)){PEN.ku=+e.ku;PEN.kb=+e.kb||0;penSave();if(PEN.w>0||REG[PID])regPublish();kickCheck()}   // 관리자가 정한 추방
+    if(id===PID&&(+e.ku||0)>(+PEN.ku||0)){PEN.ku=+e.ku;PEN.kb=+e.kb||0;PEN.kr=String(e.kr||'').slice(0,60);penSave();if(PEN.w>0||REG[PID])regPublish();kickCheck()}   // 관리자가 정한 추방
     if(id===PID){if((+e.ub||0)>(PEN.ub||0)){PEN.ub=+e.ub;if(e.ua==='reset'){PEN.w=0;PEN_LOG=[]}else{PEN.cu=0;PEN.g=0}PEN.u=Date.now();penSave();regPublish();try{netToast(e.ua==='reset'?'관리자가 경고를 초기화했어요':'관리자가 채팅 금지를 풀었어요')}catch(_){}}continue}
     const o=REG[id],m=regMix(o,regClean(e));if(m!==o){REG[id]=m;regChg.add(id);ch=true}}
   if(ch){regSave();regFlush()}return ch;
 }
 function regFlush(){clearTimeout(regT);regT=setTimeout(()=>{if(!regChg.size)return;const o={};for(const id of regChg)if(REG[id])o[id]=REG[id];regChg.clear();
   if(PRES.hub){for(const c of PRES.conns){try{if(c.open)c.send({t:'reg',e:o})}catch(_){}}}else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'reg',e:o})}catch(_){}}},1500)}   // 모아서 1.5초에 한 번만 보냄
-function regKick(id,until){                         // 어드민: 그 아이디를 until까지 추방 (0이면 해제). 접속 중이면 바로, 아니면 다음 접속 때 적용
+function regKick(id,until,why){                     // 어드민: 그 아이디를 until까지 추방 (0이면 해제) · why: 사유. 접속 중이면 바로, 아니면 다음 접속 때 적용
   if(!/^[A-Z2-9]{6}$/.test(id)||id===PID)return;const now=Date.now();
   const e=REG[id]||{n:(FRX.n[id]&&FRX.n[id].n)||'?',w:0,cu:0,g:0,log:[],u:now,ub:0};
-  REG[id]=Object.assign({},e,{kb:until>now?until:0,ku:now});regChg.add(id);regSave();regFlush();cldSoon(1500)}
+  REG[id]=Object.assign({},e,{kb:until>now?until:0,ku:now,kr:until>now?String(why||'').replace(/\s+/g,' ').trim().slice(0,60):''});regChg.add(id);regSave();regFlush();cldSoon(1500)}
 const kickLeft=()=>Math.max(0,(+PEN.kb||0)-Date.now());
 function kickCheck(){                              // 추방 중이면 화면 전체를 막고 남은 시간 표시 (온라인 경기·방·매칭에서 바로 나감)
   const left=kickLeft();let el=document.querySelector('.kickov');
   if(left<=0){if(el)el.remove();return}
-  if(!el){el=document.createElement('div');el.className='kickov';el.innerHTML='<div class="iabox"><div class="iatt">관리자에게 추방됐어요</div><div class="iatx kickt"></div><div class="iatx iasm">시간이 지나면 다시 할 수 있어요.</div></div>';document.body.appendChild(el);
+  if(!el){el=document.createElement('div');el.className='kickov';el.innerHTML='<div class="iabox"><div class="iatt">관리자에게 추방됐어요</div><div class="iatx kickt"></div><div class="iatx kickr"></div><div class="iatx iasm">시간이 지나면 다시 할 수 있어요.</div></div>';document.body.appendChild(el);
     try{if(NET.spec)specLeave();else if(NET.room)roomClose();else if(NET.match)netLeave();else if(NET.state==='search')netCancel()}catch(_){}
     try{frHide();prHide();roomHide()}catch(_){}}
   const h=Math.floor(left/3600000),m=Math.floor(left%3600000/60000),sc=Math.ceil(left%60000/1000);
   el.querySelector('.kickt').textContent='남은 시간 '+(h?h+'시간 '+m+'분':(m?m+'분 '+sc+'초':sc+'초'));
+  {const r=el.querySelector('.kickr'),t=PEN.kr?'사유: '+PEN.kr:'';if(r.textContent!==t)r.textContent=t;r.hidden=!t}
 }
 setInterval(kickCheck,1000);
 function regPublish(){if(PEN.w>0||REG[PID]){REG[PID]=regSelf();regChg.add(PID);regSave();regFlush();cldSoon()}}
@@ -4603,7 +4639,7 @@ function modQuery(id,cb,opt){const rid=Math.random().toString(36).slice(2,8),k=o
 function modAnswer(d){                             // 어드민이 물어본 내 기록 (게임 채팅 · 1대1 대화)
   const r={t:'qr',rid:d.rid,id:PID,n:NET.me.name};
   if(d.k==='dm'){const w=/^[A-Z2-9]{6}$/.test(d.w)?d.w:null,o={},nm={};
-    for(const id in DM.c){if(w&&id!==w)continue;o[id]=DM.c[id].slice(-100).map(x=>({t:x.t,me:x.me?1:0,m:x.m,sy:x.sy?1:0}));nm[id]=frNameOf(id)}
+    for(const id in DM.c){if(w&&id!==w)continue;o[id]=DM.c[id].slice(-100).map(x=>({i:x.i,t:x.t,me:x.me?1:0,m:x.m,sy:x.sy?1:0}));nm[id]=frNameOf(id)}
     for(const id of frFriends())if((!w||id===w)&&!o[id]){o[id]=[];nm[id]=frNameOf(id)}
     r.dmc=o;r.nm=nm}
   else{r.log=MY_CHAT;r.dm=dmRecent()}
@@ -4611,7 +4647,7 @@ function modAnswer(d){                             // 어드민이 물어본 내
 function modParse(d){if(!d||d.none)return null;
   const o={n:String(d.n||'?').slice(0,NMX),log:Array.isArray(d.log)?d.log.slice(-50):[],dm:Array.isArray(d.dm)?d.dm.slice(-80).filter(x=>x&&typeof x.m==='string').map(x=>({t:+x.t||0,w:String(x.w||'?').slice(0,6),n:String(x.n||'?').slice(0,NMX),me:!!x.me,m:x.m.slice(0,100)})):[]};
   if(d.dmc&&typeof d.dmc==='object'){o.dmc={};o.nm={};let k=0;
-    for(const w in d.dmc){if(!/^[A-Z2-9]{6}$/.test(w)||!Array.isArray(d.dmc[w])||k++>60)continue;o.dmc[w]=d.dmc[w].slice(-100).filter(x=>x&&typeof x.m==='string').map(x=>({t:+x.t||0,me:!!x.me,m:x.m.slice(0,100),sy:!!x.sy}));o.nm[w]=String((d.nm&&d.nm[w])||'?').slice(0,NMX)}}
+    for(const w in d.dmc){if(!/^[A-Z2-9]{6}$/.test(w)||!Array.isArray(d.dmc[w])||k++>60)continue;o.dmc[w]=d.dmc[w].slice(-100).filter(x=>x&&typeof x.m==='string').map(x=>({i:String(x.i||'').slice(0,16),t:+x.t||0,me:!!x.me,m:x.m.slice(0,100),sy:!!x.sy}));o.nm[w]=String((d.nm&&d.nm[w])||'?').slice(0,NMX)}}
   return o}
 const annSeen=new Set();
 function annShow(m){                                // 전체 공지: 위에서 사르르 나타났다가 6초 뒤 사라짐
@@ -4679,7 +4715,8 @@ async function cldSync(push){
   CLD.fv=-1;CLD.busy=false;if(CLD.again){CLD.again=false;cldSoon()}
 }
 function cldSoon(ms){if(typeof CLD==='undefined'||!CLD)return;clearTimeout(CLD.t);CLD.t=setTimeout(()=>cldSync(true),ms||4000)}
-setTimeout(()=>{cldSync(cldNeed()||frNeedPush())},2500+Math.random()*3000);    // 시작할 때 저장소와 맞춤 (관리자가 푼 패널티, 접속 안 했을 때 온 친구 요청도 여기서 받음)
+setTimeout(()=>{cldSync(true)},2500+Math.random()*3000);
+setInterval(()=>{if(!document.hidden&&!CLD.busy)cldSync(true)},9*60000);   // 마지막 접속·플레이 타임 올림 (바뀐 게 없으면 읽기만)    // 시작할 때 저장소와 맞춤 (관리자가 푼 패널티, 접속 안 했을 때 온 친구 요청도 여기서 받음)
 setInterval(()=>{const open=!!document.querySelector('.adm');if(open&&(!CLD.adm||Date.now()-CLD.last>60000)){CLD.adm=true;cldSync(true)}if(!open)CLD.adm=false},5000);   // 어드민 패널을 열면 저장소 기록을 가져옴
 /* ---------- 관전 (어드민 전용): 진행 중인 경기 목록 → 관전 버튼 → 같은 씨앗으로 따라 계산하며 지켜봄 ---------- */
 var SPEC={list:null,t:0,joining:null,sig:''};
@@ -4840,8 +4877,8 @@ function specLeave(){
 /* 친구: 아이디로 요청 · 수락/거절 · 삭제 · 접속 상태 · 방 초대. 관계는 기록 저장소에도 저장돼서 상대가 접속해 있지 않아도 요청이 전달됨 */
 const FRID=/^[A-Z2-9]{6}$/;
 const frKey=(x,y)=>x<y?x+y:y+x;
-var FR={e:{},n:{},s:{},reg:'',dirty:false};      // e: 관계(두 아이디를 정렬해 붙인 값 → {a,b,st,by,u}) · n: 아이디 → 이름 · s: 이미 본 요청
-var FRX={e:{},n:{},v:0};                         // 저장소에서 받아 온 전체 기록 (어드민 유저 탭용, 저장 안 함)
+var FR={e:{},n:{},s:{},ls:{},reg:'',dirty:false};   // ls: 친구를 마지막으로 접속 중으로 본 시각      // e: 관계(두 아이디를 정렬해 붙인 값 → {a,b,st,by,u}) · n: 아이디 → 이름 · s: 이미 본 요청
+var FRX={e:{},n:{},v:0,ls:{},pt:{}};   // ls: 저장소에 남은 마지막 접속 · pt: 플레이 타임(분)                         // 저장소에서 받아 온 전체 기록 (어드민 유저 탭용, 저장 안 함)
 var FRP={pl:{},plS:'',v:0,ver:0,sig:'',tab:'list',ask:'',inv:{},chat:null};
 function frClean(x){if(!x||typeof x!=='object')return null;const a=x.a,b=x.b;if(!FRID.test(a)||!FRID.test(b)||a>=b)return null;
   if(x.st!=='p'&&x.st!=='f'&&x.st!=='x')return null;if(x.by!==a&&x.by!==b)return null;return {a,b,st:x.st,by:x.by,u:+x.u||0}}
@@ -4849,6 +4886,7 @@ try{const v=JSON.parse(localStorage.getItem('bftFr')||'null');if(v&&typeof v==='
   for(const k in (v.e||{})){const e=frClean(v.e[k]);if(e&&(e.a===PID||e.b===PID))FR.e[e.a+e.b]=e}
   for(const k in (v.n||{})){const x=v.n[k];if(FRID.test(k)&&x&&typeof x.n==='string')FR.n[k]={n:x.n.slice(0,NMX),u:+x.u||0}}
   for(const k in (v.s||{}))if(FR.e[k])FR.s[k]=+v.s[k]||0;
+  for(const k in (v.ls||{}))if(FRID.test(k))FR.ls[k]=+v.ls[k]||0;
   FR.reg=typeof v.reg==='string'?v.reg:'';FR.dirty=!!v.dirty}}catch(e){}
 function frSave(){try{localStorage.setItem('bftFr',JSON.stringify(FR))}catch(e){}}
 function frName(id,n,u){n=String(n||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').trim();if(!n)return false;n=[...n].slice(0,NMX).join('');
@@ -4874,9 +4912,9 @@ function frNotify(id,t){if(!NET.match)netToast(frNameOf(id)+' 님이 '+t)}
 /* 저장소 ↔ 내 폰 */
 function frPull(d){
   const fe=d.fe&&typeof d.fe==='object'&&!Array.isArray(d.fe)?d.fe:{},fu=d.fu&&typeof d.fu==='object'&&!Array.isArray(d.fu)?d.fu:{};
-  FRX.e={};FRX.n={};
+  FRX.e={};FRX.n={};FRX.ls={};FRX.pt={};
   for(const k in fe){const e=frClean(fe[k]);if(e)FRX.e[e.a+e.b]=e}
-  for(const k in fu){const x=fu[k];if(FRID.test(k)&&x&&typeof x.n==='string')FRX.n[k]={n:x.n.slice(0,NMX),u:+x.u||0}}
+  for(const k in fu){const x=fu[k];if(!FRID.test(k)||!x||typeof x!=='object')continue;if(typeof x.n==='string')FRX.n[k]={n:x.n.slice(0,NMX),u:+x.u||0};if(+x.ls)FRX.ls[k]=+x.ls;if(+x.pt)FRX.pt[k]=+x.pt}
   FRX.v++;
   let ch=false,inc=null,acc=null;
   for(const k in FRX.e){const e=FRX.e[k];if(e.a!==PID&&e.b!==PID)continue;const had=FR.e[k];
@@ -4893,7 +4931,11 @@ function frMerge(d){
   if(!d.fe||typeof d.fe!=='object'||Array.isArray(d.fe)){d.fe={};ch=true}
   if(!d.fu||typeof d.fu!=='object'||Array.isArray(d.fu)){d.fu={};ch=true}
   for(const k in FR.e){const e=FR.e[k],o=d.fe[k];if(!o||(+o.u||0)<e.u){d.fe[k]={a:e.a,b:e.b,st:e.st,by:e.by,u:e.u};ch=true}}
-  const nm=NET.me.name;if(nm){const o=d.fu[PID];if(!o||o.n!==nm){d.fu[PID]={n:nm,u:Date.now()};ch=true}}
+  {const nm=NET.me.name,o=d.fu[PID];if(nm||o){const e=o&&typeof o==='object'?Object.assign({},o):{},now=Date.now();let c=false;   // 내 이름 · 마지막 접속(8분마다) · 플레이 타임
+    if(nm&&e.n!==nm){e.n=nm;e.u=now;c=true}
+    if(now-(+e.ls||0)>8*60000){e.ls=now;c=true}
+    const pt=Math.floor(PT.t/60000);if(pt>(+e.pt||0)){e.pt=pt;c=true}
+    if(c){d.fu[PID]=e;ch=true}}}
   {const ks=Object.keys(d.fe);if(ks.length>4000){ks.sort((a,b)=>((d.fe[a].st==='x'?0:1e15)+(d.fe[a].u||0))-((d.fe[b].st==='x'?0:1e15)+(d.fe[b].u||0))).slice(0,ks.length-4000).forEach(k=>delete d.fe[k]);ch=true}}
   {const ks=Object.keys(d.fu);if(ks.length>4000){ks.sort((a,b)=>(d.fu[a].u||0)-(d.fu[b].u||0)).slice(0,ks.length-4000).forEach(k=>delete d.fu[k]);ch=true}}
   return ch;
@@ -4904,10 +4946,11 @@ setInterval(()=>{if(document.hidden||CLD.busy)return;const t=Date.now();
   else if(t-CLD.last>(PRES.hub||(PRES.conn&&PRES.conn.open)?300000:60000))cldSync(false)},30000);   // 평소 5분, 접속자 연결이 끊겨 있으면 1분마다 저장소 확인
 async function cldFresh(){for(let i=0;i<50&&CLD.busy;i++)await new Promise(r=>setTimeout(r,120));await cldSync(false)}
 /* 접속 상태: 모임 자리가 친구들의 상태를 알려 줌 (내 친구 아이디 목록만 보냄) */
-function frIds(){const s=new Set(frFriends());if(document.querySelector('.adm')){for(const id in FRX.n)s.add(id);for(const id in REG)s.add(id)}return [...s].slice(0,500)}
+function frIds(){const s=new Set(frFriends());if(admIs()){for(const id in FRX.n)s.add(id);for(const id in REG)s.add(id)}return [...s].slice(0,500)}
 function presPl(ids){const o={};if(!ids||!ids.length)return o;
   for(const id of ids){if(id===PID){o[id]=[presMy(),NET.me.name||''];continue}for(const c of PRES.conns){if(c._pid===id&&c.open){o[id]=[c._s||'i',c._n||''];break}}}return o}
 function frPl(pl){const s=JSON.stringify(pl||{});if(s===FRP.plS)return;FRP.plS=s;const o={};
+  {const now=Date.now();let c=false;for(const id in FRP.pl)if(!(pl&&pl[id])){FR.ls[id]=now;c=true}if(c)frSave()}   // 방금 나간 친구: 마지막 접속 시각 기록
   for(const id in pl)if(FRID.test(id)&&Array.isArray(pl[id]))o[id]=[String(pl[id][0]).slice(0,1),String(pl[id][1]||'').slice(0,NMX)];
   FRP.pl=o;FRP.v++;setTimeout(dmFlush,300);let ch=false;for(const id in o)if(o[id][1]&&FR.e[frKey(PID,id)]&&frName(id,o[id][1]))ch=true;if(ch)frSave();frUI()}
 setInterval(()=>{const ids=frIds(),sig=ids.join();
@@ -4983,7 +5026,11 @@ function frBuild(){
 function frShow(){const m=frBuild();m.hidden=false;FRP.ask='';frUI();if(Date.now()-CLD.last>15000)cldSync(false)}
 function frHide(){if(frEl)frEl.hidden=true;FRP.ask='';FRP.chat=null;frUI()}
 const FRST={i:['온라인','on',0],q:['매칭 중','q',1],m:['경기 중','m',2]};
-const frStat=id=>{const p=FRP.pl[id];return p&&FRST[p[0]]?FRST[p[0]]:['오프라인','off',3]};
+const lastSeen=id=>Math.max(FR.ls[id]||0,FRX.ls[id]||0);
+function agoText(t){if(!t)return '';const d=Math.max(0,Date.now()-t),m=Math.floor(d/60000),h=Math.floor(m/60),dd=Math.floor(h/24);
+  return m<2?'방금 전':m<60?m+'분 전':h<24?h+'시간 전':dd<30?dd+'일 전':new Date(t).toLocaleDateString('ko-KR',{year:'2-digit',month:'numeric',day:'numeric'})}
+const offText=id=>{const t=lastSeen(id);return t?agoText(t)+' 접속':'오프라인'};   // 오프라인인 친구: 마지막 접속
+const frStat=id=>{const p=FRP.pl[id];return p&&FRST[p[0]]?FRST[p[0]]:[offText(id),'off',3]};
 function frLive(id){const p=FRP.pl[id];return (p&&p[1])||frNameOf(id)}
 function frRender(){
   const m=frEl;if(!m||m.hidden)return;
@@ -5081,6 +5128,7 @@ function dmFlush(){                               // 아직 못 받은 내 메�
   for(const id in DM.c){if(!FRP.pl[id]||!dmIsFr(id))continue;for(const x of DM.c[id])if(x.me&&!x.s&&now-(x.lt||0)>8000&&n<30){x.lt=now;n++;toHub({t:'dm',to:id,i:x.i,m:x.m})}}
 }
 setInterval(dmFlush,4000);
+setInterval(()=>{const now=Date.now();let c=false;for(const id in FRP.pl){FR.ls[id]=now;c=true}if(c)frSave();if(frOpen())frRender()},60000);   // 접속 중인 친구는 1분마다 '마지막으로 본 시각' 갱신 · 'N분 전' 글자도 갱신
 function dmGot(d){
   if(d.t==='dm'){
     const from=d.from;if(!FRID.test(from)||!dmIsFr(from))return;
