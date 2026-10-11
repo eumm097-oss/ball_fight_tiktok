@@ -447,6 +447,7 @@ body.in-net .netrow{display:flex}
 .chatbtn svg{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);display:block}
 .chatbtn .cbase path{fill:#111}
 .chatbtn .cfill{opacity:0}
+.chatbtn.unread::after{content:'';position:absolute;top:-6px;right:-6px;width:12px;height:12px;border-radius:50%;background:#e03131;border:2px solid #fff}
 .chatbtn.cool .cbase path{fill:#d5d8da}
 .chatbtn.cool .cfill{opacity:1}
 .chatbtn .cfill path{fill:#111}
@@ -1761,7 +1762,7 @@ function jyBump(a,b){if(ally(a,b))return;               // 제리얌과 몸이 �
     if(t.alive)applyKnock(t,t.x-s.x,t.y-s.y,JY.bumpSec);
   }
 }
-const BKA={tick:.1,dmg:1,heal:.6,soul:.75,soulSec:.25};
+const BKA={tick:.09,dmg:1,heal:.6,soul:.75,soulSec:.25};
 const bkRad=()=>.24;                    // 백기철 아우라 반지름(몸 중심에서) 24m
 const bkReach=()=>bkRad()+R;            // 상대 몸이 닿는 거리   // 백기철 판타지 아우라: 상대 몸이 닿아 있는 동안 0.1초마다 1 데미지, 같은 만큼 회복
 const BKD={take:7,cd:HIT_GUARD};   // 백기철 판타지의 체력 베끼기: 몸이 부딪힌 상대의 체력 15를 베껴 그만큼 회복
@@ -3118,7 +3119,9 @@ const PATCH_VERSION='2.7.12';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'2.7.12',date:'2026-10-11',
-   chars:[],
+   chars:[
+     {who:'백기철 판타지',tag:'buff',lines:['체력 베끼는 아우라 공격 간격 {+0.1초 → 0.09초}']}
+   ],
    fx:[],
    sys:[
      {who:'방',lines:['온라인 방 추가 (빠른 매칭 옆 방 버튼)','방 제목·공개/비공개·비밀번호 설정 (비밀번호는 만들 때만 설정 가능)','공개 방 목록에서 입장하거나 방 코드로 입장','방장이 상대 추방, 공개/비공개 전환 가능','대기실에서 채팅 가능 (빠른 채팅 없음)','방 안에서 캐릭터 선택','방 코드 옆에 복사 버튼 추가','방 창을 접어도 방이 유지되고, 접어 두면 작은 버튼으로 다시 열기·상대 유무 확인','시작 버튼 크기 축소']},
@@ -4102,7 +4105,7 @@ function netSetup(){
   resetGame();document.querySelector('.netkk').hidden=true;chatMenu.querySelector('.chlog').innerHTML='';
   document.body.classList.add('in-net');
   rngSeed(NET.seed);
-  Object.assign(NET,{cons:false,admQ:[],step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false,admHist:[],spK:null});NET.hist.clear();
+  Object.assign(NET,{cons:false,admQ:[],step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false,admHist:[],spK:null});NET.hist.clear();chatBtn.classList.remove('unread');
   {const me=netInfo(),op=NET.op||{};NET.mInfo={L:Object.assign({},NET.mySide==='left'?me:op),R:Object.assign({},NET.mySide==='left'?op:me)}}
   const L=NET.mySide==='left'?NET.me:NET.op,Rt=NET.mySide==='left'?NET.op:NET.me,lc=NET.mySide==='left'?NET.myCh:NET.op.ch,rc=NET.mySide==='left'?NET.op.ch:NET.myCh;
   addCharAt('left',netHalf(lc)||netHalf('더미'),false);addCharAt('right',netHalf(rc)||netHalf('더미'),false);
@@ -4190,7 +4193,7 @@ function netData(d){
   else if(d.t==='end'){if(!NET.host)netHostEnd(d.w)}
   else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);if(typeof d.txt==='string'){let x=d.txt.replace(/\s+/g,' ').trim().slice(0,30);const mc=modCheck(x);if(mc.pi||(mc.bad&&!NET.cons))x='***';if(x)netChatShow(netOpp(),x)}else{const i=d.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(netOpp(),i)}}
   else if(d.t==='cack'){NET.chatAck=d.id}
-  else if(d.t==='cons'){if(d.a==='req'&&!NET.cons)netConsAsk();else if(d.a==='ok'){NET.cons=true;netSysLine('비속어 합의 완료! 이번 판은 서로 비속어를 써도 돼요')}else if(d.a==='no')netSysLine('상대가 비속어 합의를 거절했어요')}
+  else if(d.t==='cons'){if(d.a==='req'&&!NET.cons)netConsAsk();else if(d.a==='ok'){NET.cons=true;netSysLine('비속어 합의 완료! 이번 판은 서로 비속어를 써도 돼요');chatMark()}else if(d.a==='no'){netSysLine('상대가 비속어 합의를 거절했어요');chatMark()}}
   else if(d.t==='adm'&&d.c&&typeof d.c==='object'){const m=d.c;NET.admHist.push(Object.assign({},m));if(!NET.sim||m.k2<0||m.k2<=NET.step)admExec(m);else NET.admQ.push(m)}
   else if(d.t==='bye')netClosed();
 }
@@ -4479,7 +4482,7 @@ function specChatIn(d){                             // 어드민이 보낸 채�
   if(!NET.match||NET.spec||String(NET.seed|0)!==d.k)return;
   let x=String(d.txt||'').replace(/\s+/g,' ').trim().slice(0,30);if(!x)return;
   const mc=modCheck(x);if(mc.pi||(mc.bad&&!NET.cons))x='***';
-  chatLogLine(String(d.n||'?').slice(0,6),!!d.dev,x,false);
+  chatLogLine(String(d.n||'?').slice(0,6),!!d.dev,x,false);chatMark();
 }
 function chatLogLine(name,dev,text,me){
   const L=chatMenu.querySelector('.chlog'),ln=document.createElement('div');ln.className='chl'+(me?' me':'');
@@ -4562,7 +4565,7 @@ function specData(o){
   else if(o.a==='chat'){const sd=o.sd==='right'?'right':'left';
     if(typeof o.txt==='string'){const x=o.txt.replace(/\s+/g,' ').trim().slice(0,30);if(x)netChatShow(sd,x)}
     else{const i=o.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(sd,i)}}
-  else if(o.a==='achat'){const x=String(o.txt||'').slice(0,30);if(x)chatLogLine(String(o.n||'?').slice(0,6),!!o.dev,x,false)}
+  else if(o.a==='achat'){const x=String(o.txt||'').slice(0,30);if(x){chatLogLine(String(o.n||'?').slice(0,6),!!o.dev,x,false);chatMark()}}
 }
 function specSay(t){                                // 어드민이 관전 중에 보내는 채팅: 선수 채팅창에만 나옴
   const now=Date.now();if(now-(NET.spSay||0)<500)return;NET.spSay=now;
@@ -4609,12 +4612,14 @@ chatMenu.innerHTML='<div class="chhd"><span class="chban"></span><button type="b
   +'</div><button type="button" class="ccbtn" data-cc="1">메시지 보내기</button><div class="ccrow" hidden><input class="ccin" type="text" maxlength="30" placeholder="메시지를 입력해주세요." autocomplete="off" enterkeyhint="send"><button type="button" class="ccsend">보내기</button></div>';
 const netIsAdm=()=>{try{return localStorage.getItem('bftAdm')==='1'||!!NET.me.dev}catch(e){return !!NET.me.dev}};   // 어드민 패널을 연 적 있는 사람(또는 제작자)만 직접 메시지
 function netChatClose(){chatMenu.hidden=true}
+const chatMark=()=>{if(chatMenu.hidden)chatBtn.classList.add('unread')};   // 확인 안 한 메시지가 있으면 채팅 버튼에 빨간 점
+setInterval(()=>{if(!NET.match)chatBtn.classList.remove('unread')},1000);
 let netChatSeq=0;const netChatGot=new Set();
 function netChatSend(i){                         // 상대가 받았다고 답할 때까지 0.6초마다 다시 보냄 (최대 5번) — i: 번호 또는 직접 쓴 글
   const id=++netChatSeq+'-'+Math.random().toString(36).slice(2,6);let n=0;const msg=typeof i==='string'?{t:'chat',txt:i,id}:{t:'chat',i,id};
   const go=()=>{if(!NET.conn||NET.chatAck===id||n++>=5)return;netSend(msg);setTimeout(go,600)};go();
 }
-chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){const L=chatMenu.querySelector('.chlog');L.scrollTop=L.scrollHeight;chatMenu.querySelector('.ccbtn').hidden=false;chatMenu.querySelector('.ccrow').hidden=!NET.spec;netChatHead()}});
+chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){chatBtn.classList.remove('unread');const L=chatMenu.querySelector('.chlog');L.scrollTop=L.scrollHeight;chatMenu.querySelector('.ccbtn').hidden=false;chatMenu.querySelector('.ccrow').hidden=!NET.spec;netChatHead()}});
 {const row=chatMenu.querySelector('.ccrow'),inp=row.querySelector('.ccin');
   chatMenu.querySelector('.ccbtn').addEventListener('click',e=>{e.stopPropagation();row.hidden=!row.hidden;if(!row.hidden)inp.focus({preventScroll:true})});
   const sendT=()=>{const t=inp.value.replace(/\s+/g,' ').trim().slice(0,30);if(!t)return;
@@ -4639,7 +4644,7 @@ function netConsBtns(onYes,onNo){const w=document.createElement('span');w.classN
   const done=()=>{document.querySelectorAll('.consb').forEach(x=>x.remove())};y.addEventListener('click',e=>{e.stopPropagation();done();onYes()});n.addEventListener('click',e=>{e.stopPropagation();done();onNo()});w.append(y,n);return w}
 function netConsAsk(){                             // 상대가 비속어 합의를 요청함: 채팅 기록과 상대 말풍선에 동의·거절
   const yes=()=>{NET.cons=true;netSend({t:'cons',a:'ok'});netSysLine('비속어 합의 완료! 이번 판은 서로 비속어를 써도 돼요');netChatHead()},no=()=>{netSend({t:'cons',a:'no'});netSysLine('비속어 합의를 거절했어요')};
-  netSysLine('상대가 비속어 합의를 요청했어요 ',netConsBtns(yes,no));
+  netSysLine('상대가 비속어 합의를 요청했어요 ',netConsBtns(yes,no));chatMark();
   const P=document.querySelector(netOpp()==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());
   const b=document.createElement('div');b.className='chatpop cpop';b.textContent='비속어 합의 ';b.appendChild(netConsBtns(yes,no));P.appendChild(b);setTimeout(()=>b.remove(),8000);
 }
@@ -4649,6 +4654,7 @@ document.addEventListener('click',e=>{if(!e.target.closest('.chcons'))return;e.s
   const P=document.querySelector(NET.mySide==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());const b=document.createElement('div');b.className='chatpop';b.textContent='비속어 합의';P.appendChild(b);setTimeout(()=>b.remove(),2400)},true);
 function netChatShow(sd,i){
   if(!NET.match)return;
+  if(sd!==NET.mySide)chatMark();
   if(NET.spK&&sd===NET.mySide)specOut(typeof i==='string'?{a:'chat',sd,txt:i}:{a:'chat',sd,i});
   {const L=chatMenu.querySelector('.chlog'),info=NET.spec?NET.spec[sd==='left'?'L':'R']:(sd===NET.mySide?NET.me:NET.op),ln=document.createElement('div');   // 채팅 기록
     ln.className='chl'+(sd===NET.mySide?' me':'');ln.innerHTML='<b>'+netEsc(info?info.name:'?')+'</b>'+(info&&info.dev?'<span class="devtxt">제작자</span>':'')+' ';ln.appendChild(document.createTextNode(typeof i==='string'?i:(NET_CHAT[i]||'')));
