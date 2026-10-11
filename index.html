@@ -55,7 +55,7 @@ body{margin:0;overflow-x:hidden;overflow-x:clip;touch-action:pan-y;background:va
 .ball.dummy{background:#d5d8da;border-color:#CD2E3A}
 .ball.dummy .aim i{background:#CD2E3A}
 .pname{color:#2f9e5b;font-weight:500;font-size:calc(min(100vw,560px)*.046 - 1.45px);line-height:1;letter-spacing:-.01em;white-space:nowrap;text-shadow:-.45px 0 #000,.45px 0 #000,0 -.45px #000,0 .45px #000,-.45px -.45px #000,.45px -.45px #000,-.45px .45px #000,.45px .45px #000}
-.pname.sys{color:var(--left)}.hud>div:not(.on) .pname.sys{display:inline-block;transform:translateY(55%)}
+.pname.sys{color:var(--left)}.hud>div:not(.on) .pname.sys{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;margin:0}.p3 .name{color:var(--left)}.p4 .name{justify-content:flex-end;text-align:right;color:var(--right)}.p3 .rm{margin-left:2px}.p4 .rm{margin-right:2px}
 .aim{position:absolute;inset:0;opacity:0}
 .aim i{position:absolute;left:calc(100% + 4px);top:50%;width:36%;height:4px;margin-top:-2px;background:#2f9e5b;border-radius:3px}
 .add,.half,.hp{display:flex;align-items:center;justify-content:center;line-height:1;padding:0 0 calc(var(--shift,.05)*2em)}
@@ -403,7 +403,7 @@ em.usrst{margin-left:auto;font-style:normal;font-weight:800;font-size:0.85em;col
 .dmpop{position:fixed;left:50%;transform:translateX(-50%);top:calc(8px + env(safe-area-inset-top,0px));z-index:62;display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:min(340px,calc(100vw - 24px));padding:9px 12px;background:#fff;border:3px solid var(--ink);color:#111;text-align:left;cursor:pointer}
 .dmpop b{font-size:13px}.dmpop span{font-size:14.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kickov{position:fixed;top:0;left:0;right:0;bottom:0;z-index:95;background:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
-.usrops{flex-wrap:wrap;margin-top:0.2em}.usrwb{min-width:2.4em;padding:0.35em 0.4em!important}.usrwb.on{background:#17e3d6;color:#000}.usrwbl{color:#e3d94a!important}.usrwhy{flex:1 1 8em!important;height:2.3em;font-size:1em}.usrops .admstep{width:3.4em}.usru{flex:none!important;color:#cfd2dc}.usrkicked{display:flex;align-items:center;gap:0.6em;color:#ff5c7a}.usrkicked b{color:#ff5c7a}.usrkicked .admbtn{margin-left:auto}
+.usrops{flex-wrap:wrap;margin-top:0.2em}.usrnp{flex:1 1 8em!important;height:2.3em;font-size:1em}.usrwb{min-width:2.4em;padding:0.35em 0.4em!important}.usrwb.on{background:#17e3d6;color:#000}.usrwbl{color:#e3d94a!important}.usrwhy{flex:1 1 8em!important;height:2.3em;font-size:1em}.usrops .admstep{width:3.4em}.usru{flex:none!important;color:#cfd2dc}.usrkicked{display:flex;align-items:center;gap:0.6em;color:#ff5c7a}.usrkicked b{color:#ff5c7a}.usrkicked .admbtn{margin-left:auto}
 .usrroom{display:flex;align-items:center;gap:0.6em;width:100%;margin:0 0 0.4em;padding:0.55em 0.7em;background:#151515;border:0.1em solid #2c2c2c;border-radius:0.6em;color:#fff;font:inherit;font-size:1.05em;text-align:left;cursor:pointer}.usrroom.on{border-color:#17e3d6;background:rgba(23,227,214,.08)}
 .usrroom i{font-style:normal;font-family:monospace;color:#8b90a0;font-size:0.9em}.usrroom span{margin-left:auto;color:#8b90a0;font-size:0.9em}
 .usrhist{max-height:22em;overflow:auto;overscroll-behavior:contain;padding:0.3em 0.2em;border-top:0.1em solid #2c2c2c}.usrsy{color:#8b90a0!important;text-align:center}.usrsm{color:#8b90a0;font-weight:500}
@@ -419,6 +419,7 @@ em.usrst{margin-left:auto;font-style:normal;font-weight:800;font-size:0.85em;col
 .pollbox.res .pollo button.on{background:transparent;color:#fff;border-color:#ffd400}.pollo button.top em,.pollo button.top small{color:#ffd400}
 .pollmsg{max-width:520px;margin:8px auto 0;min-height:16px;font-size:12.5px;color:#ccc}
 .pollinfo{flex:1;color:#e3d94a}
+.achelp a{color:#1d5cff;font-weight:800;text-decoration:underline}.acbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.acon{color:#1f9d4c;font-weight:800}.acwarn{color:#d32f2f}.prmodal .rin+.rin{margin-top:6px}
 .mtov{position:fixed;top:0;left:0;right:0;bottom:0;z-index:96;background:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
 .mtbar{position:fixed;left:0;right:0;bottom:env(safe-area-inset-bottom,0px);z-index:55;padding:5px 8px;background:#d32f2f;color:#fff;font:700 12px/1.3 "Noto Sans KR",sans-serif;text-align:center;pointer-events:none}
 .dbgerr{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:99;padding:8px 10px;background:#fff;border:2px solid #d32f2f;color:#d32f2f;font:700 12px/1.4 monospace;word-break:break-all;pointer-events:none}.dbgerr[hidden]{display:none}
@@ -464,17 +465,24 @@ body.spec-u .chatbtn{display:none}
 .wcmodal{position:fixed;inset:0;z-index:64;display:flex;align-items:flex-end;justify-content:center;padding:12px;pointer-events:none}.wcmodal[hidden]{display:none}
 .wcbox{pointer-events:auto;width:100%;max-width:420px;height:min(62vh,520px);display:flex;flex-direction:column;gap:6px;margin-bottom:calc(112px + env(safe-area-inset-bottom,0px));max-height:calc(100vh - 140px);background:#fff;border:3px solid var(--ink);padding:10px;font-family:"Noto Sans KR",sans-serif;color:#111}
 .wchd{position:relative;display:flex;align-items:baseline;gap:8px;padding-right:36px}.wchd b{font:400 19px/1.2 "Jua",sans-serif}.wcn{font-size:12px;color:#1f9d4c;font-weight:700}.wcx{position:absolute;top:-4px;right:-4px;width:32px;height:32px;font-size:16px;line-height:1;color:var(--ink);background:transparent;border:2px solid var(--ink);cursor:pointer}
-.wclog{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;border:2px solid var(--ink);padding:6px 8px;font-size:14px;line-height:1.45}
-.wcl{position:relative;padding:3px 44px 3px 0;word-break:break-all}.wcl b{font-weight:800;color:#d32f2f}.wcl.me b{color:#1d5cff}.wcl i{position:absolute;right:0;top:4px;font-style:normal;font-size:10.5px;color:#999}
+.wclog{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain;border:2px solid var(--ink);padding:6px 8px;font-size:14px;line-height:1.45}
+.wcl{position:relative;padding:3px 44px 3px 0;word-break:break-all;overflow-wrap:anywhere;min-width:0;max-width:100%;box-sizing:border-box}.wcl span{word-break:break-all;overflow-wrap:anywhere}.wcpo{max-width:100%}.wcpo .frsm{white-space:normal;height:auto;min-height:28px;max-width:100%;text-align:left;word-break:break-all}.wcl b{font-weight:800;color:#d32f2f}.wcl.me b{color:#1d5cff}.wcl i{position:absolute;right:0;top:4px;font-style:normal;font-size:10.5px;color:#999}
 .wcl.agro{margin:4px 0;padding:6px 44px 6px 8px;background:#111}.wcl.agro span{font-size:21px;font-weight:900;color:#ffd400;line-height:1.3}.wcl.agro b{color:#fff}.wcl.agro i{top:8px;right:6px}
 .wcsys{color:#555;background:#f3f3f3;margin:3px 0;padding:5px 44px 5px 7px}.wcsys b{color:#111}.wcpo{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}.wcpo .frsm{height:28px}.wcend{font-size:12px;color:#888;align-self:center}
 .wcban{font-size:12px;font-weight:700;color:#d32f2f;min-height:0}.wcban:empty{display:none}
 @media (max-height:700px){.wcbox{height:min(56vh,440px)}}
 body.wc-top .wcbtn{bottom:auto;top:calc(3px + env(safe-area-inset-top,0px));right:3px;width:38px;height:38px;padding:7px}body.wc-top .wcbox{margin-bottom:0}
+.wcbtn{touch-action:none}.wcbox{position:relative}.wcbox.cust{position:fixed;margin:0;max-width:none;max-height:none}
+.wchd{cursor:move;touch-action:none;user-select:none;-webkit-user-select:none}.wchd .wcx{cursor:pointer}
+.wcrz{position:absolute;z-index:3;touch-action:none}.wcrz[data-z=n]{top:-8px;left:14px;right:14px;height:14px;cursor:ns-resize}.wcrz[data-z=s]{bottom:-8px;left:14px;right:14px;height:14px;cursor:ns-resize}
+.wcrz[data-z=e]{right:-8px;top:14px;bottom:14px;width:14px;cursor:ew-resize}.wcrz[data-z=w]{left:-8px;top:14px;bottom:14px;width:14px;cursor:ew-resize}
+.wcrz[data-z=ne],.wcrz[data-z=nw],.wcrz[data-z=se],.wcrz[data-z=sw]{width:24px;height:24px}.wcrz[data-z=ne]{top:-10px;right:-10px;cursor:nesw-resize}.wcrz[data-z=nw]{top:-10px;left:-10px;cursor:nwse-resize}.wcrz[data-z=se]{bottom:-10px;right:-10px;cursor:nwse-resize}.wcrz[data-z=sw]{bottom:-10px;left:-10px;cursor:nesw-resize}
+.wcrz[data-z=se]::after{content:'';position:absolute;right:13px;bottom:13px;width:9px;height:9px;border-right:2px solid var(--ink);border-bottom:2px solid var(--ink)}
+body.wc-drag,body.wc-drag *{user-select:none!important;-webkit-user-select:none!important}
 .iawarn{word-break:keep-all;font-size:24px;color:#d32f2f;text-align:center;line-height:1.3}.iabad{margin:12px 0 0;padding:10px 12px;border:3px solid #d32f2f;background:#fff5f5;font-size:15px;line-height:1.55;color:#111}.iabad li{margin-left:18px}.iabad li b{color:#d32f2f}.kickid{margin-top:12px;text-align:center;font-size:15px}.kickid b{font-family:monospace;font-size:18px;letter-spacing:.06em}
 .mdrow{display:flex;width:min(80%,360px);margin-top:8px;border:2px solid var(--ink);background:#fff}
-.mdrow button{flex:1;min-width:0;height:32px;padding:0 0 2px;border:0;border-left:2px solid var(--ink);border-radius:0;background:#fff;color:#111;font-size:clamp(14px,4.2vw,18px);line-height:1;cursor:pointer;white-space:nowrap}
-.mdrow button:first-child{border-left:0}.mdrow button.on{background:#111;color:#fff}.mdrow button:active{opacity:.8}
+.mdrow button{flex:1;min-width:0;height:32px;padding:0 0 2px;border:0;border-left:2px solid var(--ink);border-radius:0;background:#fff;color:#111;font-size:clamp(12.5px,3.7vw,17px);line-height:1;cursor:pointer;white-space:nowrap}
+.mdrow button:first-child{border-left:0}.mdrow .mdmu{flex:0 0 40px;font-size:12px;line-height:1.05;padding:0;color:#555}.mdrow .mdmu.on{background:#1d5cff;color:#fff}.mdrow button.on{background:#111;color:#fff}.mdrow button:active{opacity:.8}
 .mcnt{margin:2px 0 4px;font-size:15px;font-weight:800;color:#111}.mcnt b{font-size:22px}.mcnt[hidden]{display:none}
 .mvs.m4{grid-template-columns:1fr auto 1fr}.mvt{display:flex;flex-direction:column;gap:10px;min-width:0}
 .mvs.m3{grid-template-columns:1fr 1fr;gap:12px 8px}.mvs.m3 .mvp{font-size:14px}
@@ -667,7 +675,7 @@ body.in-net .nick{display:block}
   </div>
   <div class="end-row"><button class="start" type="button">시작하기</button><button class="end" type="button" hidden>나가기</button></div>
   <div class="netrow"><button class="chatbtn" type="button" aria-label="빠른 채팅"><svg class="cbase" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg><svg class="cfill" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg></button><button class="netleave" type="button">나가기</button><a class="netkk" href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener" hidden>오픈채팅</a><div class="chatmenu" hidden></div></div>
-  <div class="onl"><div class="nmrow"><input class="nmin" type="text" maxlength="60" placeholder="이름 정하기" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="이름"><button class="nmok" type="button">확인</button></div><div class="nmmsg" aria-live="polite"></div><button class="chpick" type="button"><i></i><span>캐릭터 선택</span></button><div class="mdrow"><button type="button" data-md="1v1">1대1</button><button type="button" data-md="2v2">2대2</button><button type="button" data-md="ffa">1대1대1대1</button></div><div class="mkrow"><button class="mkbtn" type="button">빠른 매칭</button><button class="rmbtn" type="button">방</button></div></div>
+  <div class="onl"><div class="nmrow"><input class="nmin" type="text" maxlength="60" placeholder="이름 정하기" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="이름"><button class="nmok" type="button">확인</button></div><div class="nmmsg" aria-live="polite"></div><button class="chpick" type="button"><i></i><span>캐릭터 선택</span></button><div class="mdrow"><button type="button" data-md="1v1">1대1</button><button type="button" data-md="2v2">2대2</button><button type="button" data-md="ffa">1대1대1대1</button><button type="button" class="mdmu" data-mu="1">복수<br>선택</button></div><div class="mkrow"><button class="mkbtn" type="button">빠른 매칭</button><button class="rmbtn" type="button">방</button></div></div>
 <div class="pgdots" aria-hidden="true"><i></i><i class="on"></i><i></i></div><div class="onhint">오른쪽으로 밀면 온라인 · 왼쪽으로 밀면 2대2</div>
 </div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">https://open.kakao.com/o/gi4UJORi</a></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><button class="prbtn" id="prbtn" type="button" aria-label="프로필"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.7 18.4c1.2-2.1 3-3.2 5.3-3.2s4.1 1.1 5.3 3.2"/></svg></button><button class="frbtn" id="frbtn" type="button" aria-label="친구"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8.5" r="3.5"/><path d="M3 19.5c.6-3.6 3.2-5.6 6.5-5.6s5.9 2 6.5 5.6"/><path d="M18.5 7.5v6M15.5 10.5h6"/></svg></button><button class="tvbtn" id="tvbtn" type="button" aria-label="경기 관전"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6 2.6L12 5.6l3.4-3"/><rect x="2.6" y="5.6" width="18.8" height="13.2" rx="2.6"/><path d="M8.5 21.4h7"/><text x="12" y="15.5" text-anchor="middle" font-size="7.6" font-weight="900" font-style="italic" font-family="Arial Black,Arial,Helvetica,sans-serif" fill="currentColor" stroke="currentColor" stroke-width=".55" letter-spacing="-.2">VS</text></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div><div class="pidtag" id="pidtag"></div></div>
 <div class="pnmodal" id="pnmodal" hidden><div class="pnpanel" role="dialog" aria-modal="true" aria-label="패치노트"><div class="pntitle">패치노트</div><button class="pnclose" id="pnclose" type="button" aria-label="닫기">✕</button><div id="pnbody"></div></div></div>
@@ -711,7 +719,7 @@ function uiOpen(id){const t=performance.now();if(t-uiOpenT<600)return;uiOpenT=t;
 /* 앱 안 브라우저(카톡·틱톡·인스타 등)로 들어오면 폰 기본 브라우저로 넘김: 앱마다 저장공간이 따로라서 아이디가 새로 생기는 걸 막음 */
 var IAPP=(function(){const ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/i.test(ua)||(/Macintosh/i.test(ua)&&navigator.maxTouchPoints>1),android=/Android/i.test(ua);
   const kakao=/KAKAOTALK/i.test(ua),line=/\bLine\//.test(ua);
-  const on=(ios||android)&&/^https?:$/.test(location.protocol)&&(kakao||line||/musical_ly|Bytedance|trill_|TikTok|Instagram|FBAN|FBAV|FB_IAB|NAVER\(inapp|DaumApps|everytimeApp|BAND\/|Twitter|; wv\)/i.test(ua));
+  const on=(ios||android)&&!/BFTApp\//.test(ua)&&/^https?:$/.test(location.protocol)&&(kakao||line||/musical_ly|Bytedance|trill_|TikTok|Instagram|FBAN|FBAV|FB_IAB|NAVER\(inapp|DaumApps|everytimeApp|BAND\/|Twitter|; wv\)/i.test(ua));
   return {on,ios,android,kakao,line}})();
 var IAPP_STAY=false;try{IAPP_STAY=sessionStorage.getItem('bftStay')==='1'}catch(_){}
 function iappGo(){                                   // 기본 브라우저로 열기 시도 (카톡·라인은 자동으로 되고, 안드로이드는 크롬으로)
@@ -3296,9 +3304,13 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.10.16';
+const PATCH_VERSION='4.10.17';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.10.17',date:'2026-10-12',
+   chars:[],
+   fx:[],
+   sys:[{who:'매칭',lines:['복수 선택을 켜고 1대1 · 2대2 · 1대1대1대1 중 여러 개를 고르면, 고른 모드 중 먼저 잡히는 경기로 매칭돼요']}]},
   {ver:'4.10.16',date:'2026-10-12',
    chars:[],
    fx:[],
@@ -3545,7 +3557,7 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="admsub">공지 기록</div><div class="annlog"></div>'
     +'<div class="admsub">최근 경기</div><div class="admlogs"></div>'
     ;
-  if(k==='srv')return '<div class="admsub">지금 접속</div><div class="srvnow modl"></div>'
+  if(k==='srv')return '<div class="admsub">접속 · 매칭</div><div class="srvnow"></div><div class="admnote">매칭 중 인원은 고른 모드마다 셉니다 (복수 선택이면 모드마다 한 번씩).</div>'
     +'<div class="admsub">동접 기록</div><div class="admccu"></div><div class="admnote">날짜는 한국 시간 기준이고 7일이 지나면 지워집니다. ☆을 누른 날은 지워지지 않습니다.</div>'
     +'<div class="admsub">전체 채팅 기록 <span class="srvwcn"></span></div><div class="admsk"><button type="button" class="admbtn" data-a="srvwc">펼치기</button></div><div class="srvwc usrhist" hidden></div><div class="admnote">이 폰이 켜져 있을 때 오간 전체 채팅과 접속할 때 받은 최근 30개가 모두 남습니다 (최대 3000개).</div>';
   if(k==='char')return '<div class="admsub">자리</div><div class="admsk admtg"><button type="button" class="admsw on" data-slot="auto">자동</button><button type="button" class="admsw" data-slot="left">1P</button><button type="button" class="admsw" data-slot="right">2P</button></div>'
@@ -3809,7 +3821,7 @@ function admFx(c){                               // 지금 걸려 있는 효과 
 }
 function admInfo(box){                           // 메인: 지금 경기 상황
   const esc=admEsc;
-  let h='<div class="admkv"><span>상태</span><b>'+(over?'종료':(admPause&&phase==='run'?'일시정지':ADM_PH[phase]||phase))+'</b><span>경기 시간</span><b>'+now.toFixed(1)+'초</b><span>게임 속도</span><b>×'+admSpd+'</b><span>접속자</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.n+'명':'확인 중'+(typeof PRES!=='undefined'&&PRES.st?' · '+PRES.st:''))+'</b><span>매칭 중</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.q+'명':'-')+'</b><span>경기 중</span><b>'+(typeof PRES!=='undefined'&&PRES.n?PRES.mt+'명':'-')+'</b><span>오늘 최대 동접</span><b>'+(typeof PRES_DAYS!=='undefined'&&PRES_DAYS[ccuDay()]?PRES_DAYS[ccuDay()].n+'명':'-')+'</b></div>';
+  let h='<div class="admkv"><span>상태</span><b>'+(over?'종료':(admPause&&phase==='run'?'일시정지':ADM_PH[phase]||phase))+'</b><span>경기 시간</span><b>'+now.toFixed(1)+'초</b><span>게임 속도</span><b>×'+admSpd+'</b></div>';
   if(!chars.length)h+='<div class="admnone">게임에 추가된 캐릭터가 없습니다.</div>';
   for(const c of chars){
     const g=c.kind==='bk'?(c.g||0)/BK.max:(c.kind==='nu'?(c.nuHits||0)/NU.need:(c.gauge||0)),fxs=admFx(c);
@@ -3922,7 +3934,7 @@ function usrRender(w){
   const match=u=>!q||u.id.includes(q)||u.n.toUpperCase().includes(q);
   let L=Object.values(U).filter(match).sort((a,b)=>a.s[2]-b.s[2]||b.f.length-a.f.length||a.n.localeCompare(b.n,'ko'));
   const total=L.length;L=L.slice(0,100);
-  w.querySelector('.usrcnt').textContent='('+total+'명'+(total>100?' · 100명만 표시':'')+')'+(PRES.n?' · 지금 접속 '+PRES.n+'명':' · 접속 서버 연결 안 됨'+(PRES.st?' ('+PRES.st+')':''));
+  w.querySelector('.usrcnt').textContent='('+total+'명'+(total>100?' · 100명만 표시':'')+')';
   const line=(id,extra)=>{const u=U[id]||{n:'?',s:[offText(id),'off']};return '<div class="modli"><b class="usrn">'+admEsc(u.n)+'</b> <span>'+id+'</span> <em class="usrst '+u.s[1]+'">'+u.s[0]+'</em>'+(extra||'')+'</div>'};
   {const now=Date.now(),B=Object.keys(REG).filter(id=>(+REG[id].kb||0)>now).sort((a,b)=>REG[a].kb-REG[b].kb);   // 블랙리스트: 지금 추방 중인 사람
     w.querySelector('.usrblc').textContent='('+B.length+'명)';
@@ -3941,6 +3953,7 @@ function usrRender(w){
         const ev=usrEd[u.id]||{};
         return '<div class="modl">온라인 전적 <b>'+(rc?rc[0]+'승 '+rc[1]+'패'+(rc[2]?' '+rc[2]+'무':'')+' · 승률 '+(rc[0]+rc[1]?Math.round(rc[0]/(rc[0]+rc[1])*100)+'%':'-'):'기록 없음')+'</b></div>'
           +'<div class="admrow usrops usrwbr"><span class="usru">승률 보정</span>'+[-3,-2,-1,0,1,2,3].map(v=>'<button type="button" class="admbtn usrwb'+(v===wb?' on':'')+'" data-a="usrwb" data-id="'+u.id+'" data-v="'+v+'">'+(v>0?'+'+v:v)+'</button>').join('')+'<span class="usru usrwbl">'+WBL[wb]+'</span></div>'
+          +'<div class="admrow usrops usrpw"><span class="usru">계정 '+(ACX[u.id]?'<b style="color:#2bff5a">있음</b>':'<b>없음</b>')+'</span><input class="modq usrnp" data-rp="'+u.id+'" maxlength="20" placeholder="새 비밀번호 (4~20자)" style="text-transform:none" value="'+admEsc(ev.pw||'')+'"><button type="button" class="admbtn" data-a="usrpw" data-id="'+u.id+'">'+(ACX[u.id]?'비밀번호 초기화':'계정 만들어 주기')+'</button></div>'
           +'<div class="admrow usrops usrper"><span class="usru">전적 고치기</span><input class="admstep" data-pid="'+u.id+'" data-k="w" inputmode="numeric" placeholder="'+(rc?rc[0]:0)+'" value="'+admEsc(ev.w||'')+'"><span class="usru">승</span><input class="admstep" data-pid="'+u.id+'" data-k="l" inputmode="numeric" placeholder="'+(rc?rc[1]:0)+'" value="'+admEsc(ev.l||'')+'"><span class="usru">패</span><input class="admstep" data-pid="'+u.id+'" data-k="d" inputmode="numeric" placeholder="'+(rc?rc[2]:0)+'" value="'+admEsc(ev.d||'')+'"><span class="usru">무</span><button type="button" class="admbtn" data-a="usrpe" data-id="'+u.id+'">적용</button></div>'
           +'<div class="admrow usrops"><button type="button" class="admbtn admsub2" data-a="usrcopy" data-id="'+u.id+'">아이디 복사</button>'
           +(u.id===PID?'':'<input class="admstep" data-kid="'+u.id+'" data-k="h" inputmode="numeric" placeholder="0" value="'+admEsc(kv.h||'')+'"><span class="usru">시간</span><input class="admstep" data-kid="'+u.id+'" data-k="m" inputmode="numeric" placeholder="0" value="'+admEsc(kv.m||'')+'"><span class="usru">분</span><input class="modq usrwhy" data-kid="'+u.id+'" data-k="r" maxlength="60" placeholder="추방 사유 (선택)" style="text-transform:none" value="'+admEsc(kv.r||'')+'"><button type="button" class="admbtn admred" data-a="usrkick" data-id="'+u.id+'">추방</button>')+'</div>'
@@ -3952,7 +3965,7 @@ function usrRender(w){
         +'<div class="admsk" style="margin-top:0.6em"><button type="button" class="admbtn" data-a="usrfr" data-id="'+u.id+'">친구 정보</button><button type="button" class="admbtn" data-a="usrchat" data-id="'+u.id+'">게임 채팅 기록</button></div>'
         +usrFrHTML(u.id,U)+(usrChatData[u.id]?'<div class="modchat">'+usrChatData[u.id]+'</div>':'')+'</div>':'')+'</div>'}).join(''):'<div class="admnone">'+(q?'검색 결과가 없습니다.':'아직 등록된 유저가 없습니다.')+'</div>';
   w.querySelectorAll('.usrhist[data-id]').forEach(e=>{e.scrollTop=e.dataset.id in sk?sk[e.dataset.id]:e.scrollHeight});
-  w.querySelector('.usrlist').oninput=e=>{const i=e.target;if(i.dataset&&i.dataset.pid){i.value=i.value.replace(/[^0-9]/g,'').slice(0,5);(usrEd[i.dataset.pid]||(usrEd[i.dataset.pid]={}))[i.dataset.k]=i.value;return}if(i.dataset&&i.dataset.kid){if(i.dataset.k!=='r')i.value=i.value.replace(/[^0-9]/g,'').slice(0,4);(usrKick[i.dataset.kid]||(usrKick[i.dataset.kid]={}))[i.dataset.k]=i.value}};   // 입력 중인 값은 다시 그려도 남게
+  w.querySelector('.usrlist').oninput=e=>{const i=e.target;if(i.dataset&&i.dataset.rp){(usrEd[i.dataset.rp]||(usrEd[i.dataset.rp]={})).pw=i.value;return}if(i.dataset&&i.dataset.pid){i.value=i.value.replace(/[^0-9]/g,'').slice(0,5);(usrEd[i.dataset.pid]||(usrEd[i.dataset.pid]={}))[i.dataset.k]=i.value;return}if(i.dataset&&i.dataset.kid){if(i.dataset.k!=='r')i.value=i.value.replace(/[^0-9]/g,'').slice(0,4);(usrKick[i.dataset.kid]||(usrKick[i.dataset.kid]={}))[i.dataset.k]=i.value}};   // 입력 중인 값은 다시 그려도 남게
   const P=pairs.filter(e=>match(U[e.a])||match(U[e.b])).sort((a,b)=>b.u-a.u);
   w.querySelector('.usrpairs').innerHTML=P.length?P.slice(0,80).map(e=>'<div class="admlog"><b class="usrn">'+admEsc(usrNm(U,e.a))+'</b> <span>'+e.a+'</span> ↔ <b class="usrn">'+admEsc(usrNm(U,e.b))+'</b> <span>'+e.b+'</span></div>').join('')+(P.length>80?'<div class="admnote">최근 80쌍만 표시 중 ('+P.length+'쌍)</div>':''):'<div class="admnone">친구 관계가 없습니다.</div>';
 }
@@ -4073,6 +4086,10 @@ function admAct(a,b){
   else if(a==='usrcopy'){frCopy(b.dataset.id,b)}
   else if(a==='usrfr'){const id=b.dataset.id;if(usrFr[id]&&usrFr[id].st!=='load'){delete usrFr[id];const w=document.querySelector('.adm');if(w)usrRender(w)}else usrFrLoad(id)}
   else if(a==='usrroom'){usrRoom(b.dataset.id,b.dataset.w)}
+  else if(a==='usrpw'){const id=b.dataset.id,row=b.closest('.usrpw'),pw=((row.querySelector('[data-rp]')||{}).value||'').trim();
+    if(!accPwOk(pw)){b.textContent='4~20자로 써 주세요';setTimeout(()=>{if(b.isConnected)b.textContent=ACX[id]?'비밀번호 초기화':'계정 만들어 주기'},1500);return}
+    if(!window.crypto||!crypto.subtle){netToast('이 브라우저에서는 할 수 없어요');return}
+    b.disabled=true;b.textContent='저장 중...';accReset(id,pw).then(()=>{delete usrEd[id];ACX[id]=Date.now();netToast('새 비밀번호: '+pw+' (유저에게 알려 주세요)');const w=document.querySelector('.adm');if(w)usrRender(w)}).catch(()=>{b.disabled=false;b.textContent='다시 시도'})}
   else if(a==='usrwb'){regWb(b.dataset.id,+b.dataset.v);const w=document.querySelector('.adm');if(w)usrRender(w)}
   else if(a==='usrpe'){const id=b.dataset.id,row=b.closest('.usrper'),rc=id===PID?[PROF.w,PROF.l,PROF.d]:(FRX.rc[id]||[0,0,0]),g=(k,i)=>{const x=(row.querySelector('[data-k="'+k+'"]')||{}).value;return x===''||x==null?rc[i]|0:Math.max(0,parseInt(x,10)||0)};
     regPe(id,g('w',0),g('l',1),g('d',2));delete usrEd[id];b.textContent='적용됨';const w=document.querySelector('.adm');setTimeout(()=>{if(w)usrRender(w)},700)}
@@ -4246,6 +4263,8 @@ const MP_MAX={'1v1':2,'2v2':4,'ffa':4},MP_MIN={'1v1':2,'2v2':4,'ffa':3},MP_NAME=
 const MP_SIDES={'2v2':['left','left2','right','right2'],'ffa':['left','right','left2','right2']};
 const MP_ALL=['left','right','left2','right2'];
 let NET_MODE='1v1';try{const v=localStorage.getItem('bftNetMode');if(MP_MAX[v])NET_MODE=v}catch(e){}
+let NET_MULTI=false,NET_MODES=[NET_MODE];try{NET_MULTI=localStorage.getItem('bftNetMulti')==='1';const v=JSON.parse(localStorage.getItem('bftNetModes')||'null');if(Array.isArray(v)){const L=v.filter(x=>MP_MAX[x]);if(L.length)NET_MODES=L}}catch(e){}
+if(!NET_MULTI)NET_MODES=[NET_MODE];
 const NET_CHAT=['안녕하세요!','줴줴이야','아니','나이스!','엄.','예?'];
 try{NET.me.name=localStorage.getItem('bftNick')||'';NET.me.dev=localStorage.getItem('bftDev')==='1';NET.me.tst=!NET.me.dev&&localStorage.getItem('bftTst')==='1';NET.pick=localStorage.getItem('bftPick')||null}catch(e){}
 const netEsc=t=>String(t).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
@@ -4376,7 +4395,7 @@ function netFail(t){
   netStat(t);m.querySelector('.mretry').hidden=false;m.querySelector('.mcancel').textContent='닫기';
 }
 function netCancel(){
-  NET.searchId++;if(NET.cancelWait){NET.cancelWait();NET.cancelWait=null}
+  NET.searchId++;if(NET.cancelWait){NET.cancelWait();NET.cancelWait=null}if(NET.cw){for(const f of [...NET.cw])try{f()}catch(_){}NET.cw.clear()}NET.mpQs=null;NET.qmodes=null;
   NET.peers.slice().forEach(netKill);NET.conn=null;NET.state='idle';netOvHide();
   if(NET.room&&NET.room.party){if(!NET.pQuiet)partySend({t:'pcancel'});NET.state='room';NET.mp=null;NET.party=null;roomShow('room')}   // 파티: 매칭을 멈추면 둘 다 파티 방으로
   NET.pQuiet=false;
@@ -4415,8 +4434,8 @@ function netJoin(me,id){return new Promise(res=>{
   c.on('close',()=>fin('closed'));c.on('error',()=>fin('fail'));
   to=setTimeout(()=>fin('fail'),10000);
 })}
-function netHostWait(hp,sid){return new Promise(res=>{
-  NET.cancelWait=()=>res('cancel');
+function netHostWait(hp,sid,ctl){return new Promise(res=>{
+  const cf=()=>res('cancel');(NET.cw||(NET.cw=new Set())).add(cf);if(ctl)ctl.cancel=cf;
   hp.on('disconnected',()=>{if(!NET.conn)res('lost')});          // 화면이 꺼지는 등으로 서버 연결이 끊기면 처음부터 다시 찾기
   hp.on('connection',c=>{
     const busy=()=>{const s=()=>{try{c.send({t:'busy'})}catch(_){}setTimeout(()=>{try{c.close()}catch(_){}},400)};if(c.open)s();else c.on('open',s)};
@@ -4428,7 +4447,7 @@ function netHostWait(hp,sid){return new Promise(res=>{
       ok=true;NET.conn=c;NET.host=true;NET.op=netCleanInfo(d);
       const gs=Math.random()<.5?'left':'right';NET.mySide=gs==='left'?'right':'left';NET.seed=(Math.random()*4294967296)|0;   // 1P·2P는 랜덤
       try{c.send(Object.assign({t:'welcome',v:NET_PROTO,side:gs,seed:NET.seed},netInfo()))}catch(_){}
-      NET.cancelWait=null;res('ok');
+      NET.cw.delete(cf);res('ok');
     });
     setTimeout(()=>{if(!ok&&NET.conn!==c){try{c.close()}catch(_){}}},12000);
   });
@@ -4441,8 +4460,9 @@ async function netFind(){
   try{initAudio()}catch(e){}
   if(NET.pick==='random'){const pool=[...document.querySelectorAll('.modal .half[data-name]')].filter(h=>!h.dataset.dummy&&!(h.dataset.lock&&!h.dataset.ok));NET.myCh=(pool[Math.floor(Math.random()*pool.length)]||netHalf('더미')).dataset.name}
   else NET.myCh=NET.pick;
-  if(NET_MODE!=='1v1'){mpFind(NET_MODE);return}       // 2대2 · 1대1대1
-  const sid=++NET.searchId;NET.state='search';NET.t0=performance.now();NET.conn=null;NET.mp=null;
+  if(NET_MULTI&&NET_MODES.length>1){multiFind(NET_MODES);return}   // 여러 모드 같이
+  if(NET_MODE!=='1v1'){mpFind(NET_MODE);return}       // 2대2 · 1대1대1대1
+  const sid=++NET.searchId;NET.state='search';NET.t0=performance.now();NET.conn=null;NET.mp=null;NET.mpQ=null;NET.mpQs=null;NET.qmodes=['1v1'];
   netOvShow();netStat('서버에 연결하는 중');
   const alive=()=>sid===NET.searchId&&NET.state==='search';
   try{await netLib()}catch(e){if(alive())netFail('온라인 기능을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.');return}
@@ -4807,7 +4827,19 @@ function mtGot(d,from){                            // 더 나중에 정한 점�
   if(PRES.hub)for(const c of PRES.conns){if(c!==from)try{if(c.open)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u})}catch(_){}}
   mtCheck();return true}
 function mtSet(on,m){const d={on:!!on,m:String(m||'').replace(/\s+/g,' ').trim().slice(0,80),u:Date.now()};mtGot(d,null);
-  if(!PRES.hub&&PRES.conn&&PRES.conn.open){try{PRES.conn.send(Object.assign({t:'mt'},d))}catch(_){}}cldSoon(500)}
+  if(!PRES.hub&&PRES.conn&&PRES.conn.open){try{PRES.conn.send(Object.assign({t:'mt'},d))}catch(_){}}cldSoon(500);mtLegacy()}
+/* 예전 버전 폰들은 다른 모임 자리에 모여 있어서, 관리자 폰이 그쪽에도 직접 점검 소식을 전함 (업데이트하라고 막기 위해) */
+const MT_OLD_HUBS=['bftball-hub-2'];let mtLgT=0;
+async function mtLegacy(){
+  if(!MT.u)return;try{await netLib()}catch(e){return}
+  for(const id of MT_OLD_HUBS){
+    let p=null;try{p=new Peer(netOpts())}catch(e){continue}
+    const kill=()=>{try{p.destroy()}catch(_){}};const to=setTimeout(kill,9000);
+    p.on('error',()=>{clearTimeout(to);kill()});
+    p.on('open',()=>{let c=null;try{c=p.connect(id,{reliable:true,serialization:'json'})}catch(e){kill();return}
+      c.on('open',()=>{try{c.send({t:'hi',pid:PID,n:NET.me.name||'',reg:{},uv:{}});c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u})}catch(_){}setTimeout(()=>{clearTimeout(to);kill()},2500)});
+      c.on('error',()=>{})})}}
+setInterval(()=>{if(MT.on&&admIs()&&Date.now()-mtLgT>120000&&(PRES.hub||(PRES.conn&&PRES.conn.open))){mtLgT=Date.now();mtLegacy()}},15000);   // 점검 중이면 2분마다 다시 알림 (늦게 들어온 예전 버전 폰도 막힘)
 function mtCheck(){
   const bar=document.querySelector('.mtbar');let el=document.querySelector('.mtov');
   if(MT.on&&admIs()){if(!bar){const b=document.createElement('div');b.className='mtbar';b.textContent='점검 중 · 관리자라서 막히지 않아요';document.body.appendChild(b)}}else if(bar)bar.remove();
@@ -4871,6 +4903,7 @@ function cldPull(d){                                  // 저장소 → 내 폰
   if(d.ccu&&typeof d.ccu==='object'&&!Array.isArray(d.ccu))for(const k in d.ccu){const e=d.ccu[k];if(e&&typeof e==='object'){ccuSet(k,e.n|0,+e.t||0);uvnSet(k,e.v|0)}}
   if(d.reg&&typeof d.reg==='object'&&!Array.isArray(d.reg))regMerge(d.reg);
   if(d.mt&&typeof d.mt==='object')mtGot(d.mt);
+  try{accPull(d)}catch(_){}
   frPull(d);
   if(Array.isArray(d.ann)){const have=new Set(ANN_LOG.map(cldKey));let ch=false;
     for(const x of d.ann.slice(-100)){if(!x||typeof x.m!=='string')continue;const e={t:+x.t||0,m:x.m.slice(0,80),pid:/^[A-Z2-9]{6}$/.test(x.pid)?x.pid:'?',n:String(x.n||'?').slice(0,NMX),id:String(x.id||'').slice(0,12)};
@@ -4892,7 +4925,7 @@ function cldMergeInto(d){                             // 내 폰 → 저장소 (
   if(!Array.isArray(d.ann)){d.ann=[];ch=true}
   {const have=new Set(d.ann.map(cldKey));for(const x of ANN_LOG){if(!have.has(cldKey(x))){d.ann.push(x);have.add(cldKey(x));ch=true}}
    d.ann.sort((a,b)=>(a.t||0)-(b.t||0));if(d.ann.length>15)d.ann=d.ann.slice(-15)}
-  frMerge(d);
+  frMerge(d);try{accMerge(d)}catch(_){}
   return JSON.stringify(d)!==before;
 }
 async function cldSync(push){
@@ -5505,6 +5538,77 @@ function profRec(side){                           // 온라인 경기 결과 기
   if(PROF.k===k){if(PROF.r===r)return;profAdd(PROF.r,PROF.c,-1)}
   profAdd(r,ch,1);PROF.k=k;PROF.r=r;PROF.c=ch;profSave();if(prOpen())prRender();
 }
+/* ---------- 계정: 지금 쓰는 아이디에 비밀번호를 만들면 계정이 됨 → 다른 폰·앱에서 아이디+비밀번호로 로그인 ---------- */
+var ACC=null;try{const v=JSON.parse(localStorage.getItem('bftAcc')||'null');if(v&&v.id===PID&&/^[0-9a-f]{32}$/.test(v.s)&&/^[0-9a-f]{64}$/.test(v.h))ACC=v}catch(e){}
+function accSave(){try{if(ACC)localStorage.setItem('bftAcc',JSON.stringify(ACC));else localStorage.removeItem('bftAcc')}catch(e){}}
+const hexOf=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+async function accHash(pw,salt){                     // 비밀번호는 그대로 저장하지 않고 소금 + 15만 번 섞은 값만 저장
+  const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);
+  const salt8=new Uint8Array(salt.match(/../g).map(h=>parseInt(h,16)));
+  return hexOf(await crypto.subtle.deriveBits({name:'PBKDF2',salt:salt8,iterations:150000,hash:'SHA-256'},k,256))}
+function accProf(){const top={};Object.entries(PROF.ch).sort((a,b)=>b[1].g-a[1].g).slice(0,10).forEach(([n,o])=>top[n]={g:o.g|0,w:o.w|0});
+  return {n:NET.me.name||'',dv:NET.me.dev?1:0,ts:NET.me.tst?1:0,pn:PROF.name||'',pdv:PROF.dev?1:0,pts:PROF.tst?1:0,w:PROF.w|0,l:PROF.l|0,d:PROF.d|0,ch:top,pt:Math.floor(PT.t/60000)}}
+function accMerge(d){                                 // 저장소에 내 계정(비밀번호 확인값 + 프로필) 올림
+  if(Object.keys(ACC_RS).length){if(!d.ac||typeof d.ac!=='object'||Array.isArray(d.ac))d.ac={};for(const id in ACC_RS){const r=ACC_RS[id],o=d.ac[id];if(o&&(+o.u||0)>=r.u)continue;d.ac[id]={s:r.s,h:r.h,u:r.u,p:o&&o.p?o.p:{}}}}   // 관리자 비밀번호 초기화
+  if(!ACC)return;if(!d.ac||typeof d.ac!=='object'||Array.isArray(d.ac))d.ac={};
+  const o=d.ac[PID];if(o&&(+o.u||0)>ACC.u)return;   // 다른 기기에서 비밀번호를 바꿨으면 그쪽이 맞음
+  const p=accProf(),n={s:ACC.s,h:ACC.h,u:ACC.u,p};if(o&&JSON.stringify(o)===JSON.stringify(n))return;d.ac[PID]=n;
+  const ks=Object.keys(d.ac);if(ks.length>3000)ks.sort((a,b)=>(d.ac[a].u||0)-(d.ac[b].u||0)).slice(0,ks.length-3000).forEach(k=>delete d.ac[k])}
+var ACX={},ACC_RS={};   // ACX: 계정 있는 아이디 (관리자용) · ACC_RS: 관리자가 초기화한 비밀번호 (저장소에 올릴 것)
+function accPull(d){if(d.ac&&typeof d.ac==='object'){ACX={};for(const k in d.ac)if(FRID.test(k))ACX[k]=+(d.ac[k]&&d.ac[k].u)||1;for(const k in ACC_RS)if((ACX[k]||0)>=ACC_RS[k].u)delete ACC_RS[k]}
+  accPull2(d)}
+function accPull2(d){const o=d.ac&&d.ac[PID];if(!ACC||!o||!(+o.u>ACC.u)||!/^[0-9a-f]{32}$/.test(o.s)||!/^[0-9a-f]{64}$/.test(o.h))return;ACC={id:PID,s:o.s,h:o.h,u:+o.u};accSave()}
+const accPwOk=pw=>pw.length>=4&&pw.length<=20&&/^[\x21-\x7e]+$/.test(pw);
+async function accReset(id,pw){                        // 관리자: 비밀번호를 까먹은 유저의 비밀번호를 새로 정해 줌 (원래 비밀번호는 아무도 볼 수 없음)
+  const s=hexOf(crypto.getRandomValues(new Uint8Array(16)).buffer),h=await accHash(pw,s),u=Date.now();ACC_RS[id]={s,h,u};
+  if(id===PID){ACC={id:PID,s,h,u};accSave()}await cldFresh();await cldSync(true)}
+async function accMake(pw){const s=hexOf(crypto.getRandomValues(new Uint8Array(16)).buffer),h=await accHash(pw,s);ACC={id:PID,s,h,u:Date.now()};accSave();await cldFresh();cldSoon(200)}
+async function accLogin(id,pw){                       // 다른 아이디로 로그인: 그 계정의 이름·전적을 받고 이 폰을 그 아이디로 바꿈
+  let d;try{d=await cldFetch()}catch(e){return '저장소에 연결할 수 없어요. 잠시 후 다시 해 주세요'}
+  const a=d.ac&&d.ac[id];if(!a||!/^[0-9a-f]{32}$/.test(a.s))return '이 아이디는 아직 계정이 아니에요. 그 아이디를 쓰던 폰에서 먼저 비밀번호를 만들어 주세요';
+  if(await accHash(pw,a.s)!==a.h)return '비밀번호가 틀렸어요';
+  const p=a.p&&typeof a.p==='object'?a.p:{};
+  try{
+    for(const k of ['bftDm','bftGc','bftFr','bftPen','bftPenLog','bftMyChat','bftAdmDm','bftWc'])localStorage.removeItem(k);   // 이 폰에 남은 예전 아이디 기록은 비움
+    document.cookie='bftPen=;max-age=0;path=/';
+    stSet('bftPid',id,true);localStorage.setItem('bftAcc',JSON.stringify({id,s:a.s,h:a.h,u:+a.u||Date.now()}));
+    const nm=String(p.n||'').slice(0,NMX);localStorage.setItem('bftNick',nm);localStorage.setItem('bftDev',p.dv?'1':'0');localStorage.setItem('bftTst',p.ts?'1':'0');
+    const ch={};if(p.ch&&typeof p.ch==='object')for(const n in p.ch){const o=p.ch[n];if(o&&(o.g|0)>0)ch[String(n).slice(0,20)]={g:o.g|0,w:Math.min(o.g|0,o.w|0)}}
+    localStorage.setItem('bftProf',JSON.stringify({name:String(p.pn||'').slice(0,NMX),dev:!!p.pdv,tst:!!p.pts,w:p.w|0,l:p.l|0,d:p.d|0,ch,k:'',r:'',c:''}));
+    localStorage.setItem('bftPt',JSON.stringify({t:Math.max(0,(p.pt|0)*60000),d:{}}));
+  }catch(e){return '이 폰에 저장할 수 없어요'}
+  return ''}
+function accHTML(){
+  const v=PRS.acc;
+  if(v==='make')return '<div class="frsec">회원가입</div><div class="prsm">비밀번호만 정하면 돼요. 아이디는 자동으로 정해져요: <b>'+PID+'</b></div>'
+    +'<input class="rin acp1" type="password" maxlength="20" placeholder="비밀번호 (4~20자)" autocomplete="new-password"><input class="rin acp2" type="password" maxlength="20" placeholder="비밀번호 한 번 더" autocomplete="new-password" style="margin-top:6px">'
+    +'<div class="rmsg acmsg"></div><div class="prsm acwarn">아이디와 비밀번호를 메모장 같은 곳에 꼭 적어 두세요. 다른 사이트에서 쓰는 비밀번호는 쓰지 마세요</div>'+'<div class="prsm achelp">비밀번호를 까먹었으면 <a href="https://open.kakao.com/o/sJsBKORi" target="_blank" rel="noopener">운영자 오픈채팅</a>에서 도움을 요청하세요</div>'+'<div class="rbtns"><button type="button" class="rbtn rgo" data-p="acmake">가입하기</button><button type="button" class="rbtn" data-p="acback">취소</button></div>';
+  if(v==='change')return '<div class="frsec">비밀번호 바꾸기</div><input class="rin acp0" type="password" maxlength="20" placeholder="지금 비밀번호" autocomplete="current-password"><input class="rin acp1" type="password" maxlength="20" placeholder="새 비밀번호 (4~20자)" autocomplete="new-password" style="margin-top:6px"><input class="rin acp2" type="password" maxlength="20" placeholder="새 비밀번호 한 번 더" autocomplete="new-password" style="margin-top:6px">'
+    +'<div class="rmsg acmsg"></div><div class="prsm acwarn">새 비밀번호도 메모장 같은 곳에 적어 두세요</div>'+'<div class="prsm achelp">비밀번호를 까먹었으면 <a href="https://open.kakao.com/o/sJsBKORi" target="_blank" rel="noopener">운영자 오픈채팅</a>에서 도움을 요청하세요</div>'+'<div class="rbtns"><button type="button" class="rbtn rgo" data-p="acchange">바꾸기</button><button type="button" class="rbtn" data-p="acback">취소</button></div>';
+  if(v==='login')return '<div class="frsec">로그인</div><input class="rin acid" maxlength="6" placeholder="아이디 6자리" autocomplete="username" autocapitalize="characters" spellcheck="false"><input class="rin acp1" type="password" maxlength="20" placeholder="비밀번호" autocomplete="current-password" style="margin-top:6px">'
+    +'<div class="rmsg acmsg"></div><div class="prsm">로그인하면 이 폰은 그 아이디가 되고, 이름·친구·전적을 이어서 써요. 1대1 대화 기록은 원래 폰에만 남아요.</div>'+'<div class="prsm achelp">비밀번호를 까먹었으면 <a href="https://open.kakao.com/o/sJsBKORi" target="_blank" rel="noopener">운영자 오픈채팅</a>에서 도움을 요청하세요</div>'+'<div class="rbtns"><button type="button" class="rbtn rgo" data-p="aclogin">로그인</button><button type="button" class="rbtn" data-p="acback">취소</button></div>';
+  return '<div class="frsec">계정</div>'+(ACC?'<div class="prrow"><b>비밀번호</b><span class="acon">설정됨 ✓</span></div><div class="prsm">다른 폰이나 앱에서 아이디 <b>'+PID+'</b>와 비밀번호로 로그인할 수 있어요.</div>'
+      :'<div class="prsm">회원가입하면 앱이나 다른 폰에서 같은 계정으로 이어서 할 수 있어요.</div>')
+    +'<div class="acbtns">'+(ACC?'<button type="button" class="frsm" data-p="acv" data-v="change">비밀번호 바꾸기</button>':'<button type="button" class="frsm ok" data-p="acv" data-v="make">회원가입</button>')+'<button type="button" class="frsm" data-p="acv" data-v="login">'+(ACC?'다른 계정으로 로그인':'로그인')+'</button></div>'}
+async function accAct(a,b){
+  const box=prEl,msg=t=>{const e=box.querySelector('.acmsg');if(e){e.textContent=t;e.className='rmsg acmsg bad'}},val=c=>((box.querySelector(c)||{}).value||'');
+  if(a==='acv'){PRS.acc=b.dataset.v;prRender();const i=box.querySelector('.acid,.acp0,.acp1');if(i)i.focus();return}
+  if(a==='acback'){PRS.acc=null;prRender();return}
+  if(PRS.busy)return;
+  if(!window.crypto||!crypto.subtle){msg('이 브라우저에서는 계정 기능을 쓸 수 없어요');return}
+  PRS.busy=true;b.disabled=true;const done=()=>{PRS.busy=false;if(b.isConnected)b.disabled=false};
+  try{
+    if(a==='acmake'){const p1=val('.acp1'),p2=val('.acp2');if(!accPwOk(p1)){msg('비밀번호는 4~20자 (영어·숫자·기호)로 만들어 주세요');return}if(p1!==p2){msg('두 비밀번호가 달라요');return}
+      msg('가입하는 중...');await accMake(p1);PRS.acc=null;prRender();netToast('회원가입 완료! 아이디 '+PID+' · 비밀번호를 꼭 적어 두세요')}
+    else if(a==='acchange'){const p0=val('.acp0'),p1=val('.acp1'),p2=val('.acp2');if(!ACC)return;msg('확인하는 중...');
+      if(await accHash(p0,ACC.s)!==ACC.h){msg('지금 비밀번호가 틀렸어요');return}if(!accPwOk(p1)){msg('새 비밀번호는 4~20자 (영어·숫자·기호)로 만들어 주세요');return}if(p1!==p2){msg('두 비밀번호가 달라요');return}
+      await accMake(p1);PRS.acc=null;prRender();netToast('비밀번호를 바꿨어요')}
+    else if(a==='aclogin'){const id=val('.acid').toUpperCase().replace(/[^A-Z0-9]/g,''),pw=val('.acp1');
+      if(!FRID.test(id)){msg('아이디 6자리를 입력해 주세요');return}if(!pw){msg('비밀번호를 입력해 주세요');return}
+      if(NET.match||NET.room||NET.state!=='idle'){msg('경기·방·매칭 중에는 로그인할 수 없어요');return}
+      msg('로그인하는 중...');const err=await accLogin(id,pw);if(err){msg(err);return}
+      msg('로그인됐어요! 다시 불러오는 중...');setTimeout(()=>location.reload(),600)}
+  }catch(e){msg('문제가 생겼어요. 다시 해 주세요')}finally{done()}}
 function prSaveName(){                           // 프로필 이름: 온라인 이름과 따로. 제작자 코드는 이름에서 빼고 표시만 바꿈
   const inp=prEl.querySelector('.prnin'),msg=prEl.querySelector('.prmsg'),say=t=>{msg.textContent=t;msg.className='rmsg prmsg bad'};
   const raw=inp.value,dev0=/\[\s*bft48\s*\]/i.test(raw),tst0=/\[\s*tst8\s*\]/i.test(raw),nm=raw.replace(/\[\s*(bft48|tst8)\s*\]/ig,'').replace(/\s+/g,' ').trim();
@@ -5527,7 +5631,8 @@ function prBuild(){
     const a=b.dataset.p;
     if(a==='close')prHide();else if(a==='copy')frCopy(PID,b);else if(a==='fr'){prHide();frShow()}
     else if(a==='edit'){PRS.edit=true;prRender();const i=prEl.querySelector('.prnin');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
-    else if(a==='cancel'){PRS.edit=false;prRender()}else if(a==='save')prSaveName()});
+    else if(a==='cancel'){PRS.edit=false;prRender()}else if(a==='save')prSaveName();
+    else if(/^ac/.test(a))accAct(a,b)});
   m.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('prnin'))prSaveName()});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&prOpen())prHide()});
   return m;
@@ -5543,6 +5648,7 @@ function prRender(){
       :'<div class="prname">'+(PROF.name?netWho({name:PROF.name,dev:PROF.dev,tst:PROF.tst}):'<span class="prnone">이름 없음</span>')+'</div><div class="prcan"><button type="button" class="frsm" data-p="edit">'+(PROF.name?'이름 바꾸기':'이름 정하기')+'</button></div>')
     +'<div class="prsub">온라인 이름 <b>'+(NET.me.name?netEsc(NET.me.name):'없음')+'</b></div>'
     +'<div class="frme">내 아이디 <b>'+PID+'</b><button type="button" class="rcpy" data-p="copy">복사</button></div>'
+    +(PRS.acc?accHTML()+'<div style="display:none">':'')
     +'<div class="frsec">온라인 전적</div>'
     +'<div class="prgrid"><div><b>'+g+'</b><span>판</span></div><div><b>'+PROF.w+'</b><span>승</span></div><div><b>'+PROF.l+'</b><span>패</span></div><div><b>'+rate+'</b><span>승률</span></div></div>'
     +(PROF.d?'<div class="prsm">무승부 '+PROF.d+'판</div>':'')
@@ -5550,10 +5656,11 @@ function prRender(){
     +(top.length?top.map(([n,o])=>'<div class="prrow"><i style="--cc:'+netCol(n)+'"></i><b>'+netEsc(n)+'</b><span>'+o.g+'판 '+o.w+'승</span></div>').join(''):'<div class="rnone">아직 온라인 경기 기록이 없어요.</div>')
     +'<div class="frsec">그 밖에</div>'
     +'<div class="prrow"><b>고른 캐릭터</b><span>'+(pick?(pick==='random'?'랜덤':netEsc(pick)):'없음')+'</span></div>'
-    +'<button type="button" class="prrow prfr" data-p="fr"><b>친구</b><span>'+nf+'명 ›</span></button>';
+    +'<button type="button" class="prrow prfr" data-p="fr"><b>친구</b><span>'+nf+'명 ›</span></button>'
+    +(PRS.acc?'</div>':accHTML());
 }
-function prShow(){PRS.edit=false;prBuild().hidden=false;prRender()}
-function prHide(){PRS.edit=false;if(prEl)prEl.hidden=true}
+function prShow(){PRS.edit=false;PRS.acc=null;prBuild().hidden=false;prRender()}
+function prHide(){PRS.edit=false;PRS.acc=null;if(prEl)prEl.hidden=true}
 setInterval(()=>{if(prOpen()&&document.body.classList.contains('in-net'))prHide()},500);
 setTimeout(frUI,0);
 /* 투표 공지: 관리자가 질문·보기를 보내면 모든 접속자에게 10초 동안 뜨고, 끝나면 결과가 뜸. 표는 모임 자리가 한 사람당 하나로 셈 */
@@ -5669,14 +5776,14 @@ chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMe
     const mc=modCheck(t);
     if(mc.pi){netToast('연락처·링크·아이디는 보낼 수 없어요');return}
     if(mc.bad&&!NET.cons){penWarn(t,mc.word);inp.value='';netChatHead();netToast('비속어가 감지되어 보내지 않았어요 (경고 '+PEN.w+'회'+(penBanned()?' · 채팅 금지 '+penText():'')+')');return}
-    inp.value='';inp.blur();netChatClose();netChatSend(t);netChatShow(NET.mySide,t,netTeamOn());myChatAdd(t)};
+    inp.value='';netChatSend(t);netChatShow(NET.mySide,t,netTeamOn());myChatAdd(t)};
   row.querySelector('.ccsend').addEventListener('click',e=>{e.stopPropagation();sendT()});inp.addEventListener('keydown',e=>{if(e.key==='Enter')sendT()});
   const stay=()=>{window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0};   // 키보드가 올라와도 화면은 그대로
   inp.addEventListener('focus',()=>{stay();setTimeout(stay,80);setTimeout(stay,300)});
   if(window.visualViewport){visualViewport.addEventListener('scroll',()=>{if(document.activeElement===inp)stay()});visualViewport.addEventListener('resize',()=>{if(document.activeElement===inp)stay()})}}
 chatMenu.addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!b)return;e.stopPropagation();const i=+b.dataset.ci;
   if(penBanned()){netToast('채팅 금지 중이에요 ('+penText()+' 남음)');return}
-  netChatClose();netChatSend(i);netChatShow(NET.mySide,i,netTeamOn());myChatAdd(NET_CHAT[i]||'');
+  netChatSend(i);netChatShow(NET.mySide,i,netTeamOn());myChatAdd(NET_CHAT[i]||'');   // 보내도 채팅창은 그대로
 });
 document.addEventListener('pointerdown',e=>{if(!chatMenu.hidden&&!e.target.closest('.chatmenu,.chatbtn'))netChatClose()});
 function netSysLine(t,btns){const L=chatMenu.querySelector('.chlog'),ln=document.createElement('div');ln.className='chl sys';ln.textContent=t;if(btns)ln.appendChild(btns);L.appendChild(ln);while(L.childElementCount>60)L.firstChild.remove();L.scrollTop=L.scrollHeight;return ln}
@@ -6001,7 +6108,7 @@ function partyFind(){                                 // 파티장: 같이 매�
   netOvEl().querySelector('.mtt1').textContent='파티 매칭 중...'}
 function partyWait(){                                 // 파티원: 파티장이 찾는 동안 기다림
   const R=NET.room;if(NET.state!=='room'||NET.match||!R.pm)return;roomHide();
-  const sid=++NET.searchId;NET.party={lead:false,lp:R.pm.pid,sid};NET.state='search';NET.t0=performance.now();NET.conn=null;NET.mp=null;NET.mpQ={md:'2v2',n:1,max:4};
+  const sid=++NET.searchId;NET.party={lead:false,lp:R.pm.pid,sid};NET.state='search';NET.t0=performance.now();NET.conn=null;NET.mp=null;NET.mpQs=null;NET.qmodes=['2v2'];NET.mpQ={md:'2v2',n:1,max:4};
   netOvShow();mpOvTitle();netOvEl().querySelector('.mtt1').textContent='파티 매칭 중...';mpOvCount();netStat('파티장이 상대를 찾는 중');netLib().catch(()=>{})}
 async function partyGo(id){                           // 파티원: 파티장이 있는 매칭 자리로 들어감
   const P=NET.party;if(!P||P.lead||NET.state!=='search'||P.sid!==NET.searchId||!/^bftball-/.test(id))return;
@@ -6141,14 +6248,15 @@ function mpLeftMsg(d){                              // 손님: 누가 경기에�
 const mpSlot=(md,i)=>'bftball-'+NET_PROTO+'-'+md+'-q'+i;
 function mpOvTitle(){const m=netOvEl();m.querySelector('.mtt1').textContent=MP_NAME[NET.mpQ.md]+' 매칭 중...'}
 function mpOvCount(){
-  const Q=NET.mpQ,m=netOvEl();if(!Q)return;const el=m.querySelector('.mcnt');el.hidden=false;el.innerHTML='<b>'+Q.n+'</b> / '+Q.max+'명';
+  const m=netOvEl(),el=m.querySelector('.mcnt'),QL=NET.mpQs?Object.values(NET.mpQs):(NET.mpQ?[NET.mpQ]:[]);if(!QL.length){el.hidden=true;return}
+  const Q=QL.reduce((a,b)=>b.n/b.max>a.n/a.max?b:a);el.hidden=false;el.innerHTML=QL.map(x=>(QL.length>1||(NET.qmodes&&NET.qmodes.length>1)?MP_NAME[x.md]+' ':'')+'<b>'+x.n+'</b> / '+x.max+'명').join(' · ');
   const cv=m.querySelector('canvas'),g=cv.getContext('2d'),S=120,dpr=Math.min(2,devicePixelRatio||1);cv.width=cv.height=S*dpr;g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,S,S);
   const pos=[[34,38],[86,38],[34,84],[86,84]],col=NET.myCh&&NET.myCh!=='random'?netCol(NET.myCh):'#5f6467';
   for(let i=0;i<Q.max;i++){const [x,y]=pos[i];g.lineWidth=2.5;g.strokeStyle='#000';g.beginPath();g.arc(x,y,14,0,6.2832);
     if(i<Q.n){g.fillStyle=i===0?col:'#5f6467';g.setLineDash([]);g.fill();g.stroke()}
     else{g.fillStyle='#fff';g.setLineDash([3,3]);g.fill();g.stroke();g.setLineDash([]);g.fillStyle='#000';g.textAlign='center';g.textBaseline='middle';g.font='900 14px "Noto Sans KR",sans-serif';g.fillText('?',x,y+1)}}}
 async function mpFind(md){
-  const sid=++NET.searchId;NET.state='search';NET.t0=performance.now();NET.conn=null;NET.mp=null;NET.mpQ={md,n:1,max:MP_MAX[md]};
+  const sid=++NET.searchId;NET.state='search';NET.t0=performance.now();NET.conn=null;NET.mp=null;NET.mpQ={md,n:1,max:MP_MAX[md]};NET.mpQs=null;NET.qmodes=[md];
   netOvShow();mpOvTitle();mpOvCount();netStat('서버에 연결하는 중');
   const alive=()=>sid===NET.searchId&&NET.state==='search';
   try{await netLib()}catch(e){if(alive())netFail('온라인 기능을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.');return}
@@ -6182,25 +6290,25 @@ function mpJoin(me,id,md,alive){return new Promise(res=>{
   const PT=NET.party?(NET.party.lead?{pr:NET.party.pp}:{pf:NET.party.lp}):{};   // 파티: 파티장은 자리 2개, 파티원은 맡아 둔 자리로
   c.on('open',()=>{try{c.send(Object.assign({t:'hello',v:NET_PROTO,m:md},netInfo(),PT))}catch(_){fin('fail')}});
   c.on('data',d=>{if(done||!d)return;
-    if(d.t==='mwait'){if(!acc&&PT.pr)partySend({t:'pslot',id});acc=true;clearTimeout(to);NET.mpQ.n=Math.max(1,Math.min(NET.mpQ.max,d.n|0));mpOvCount();netStat(d.w?'곧 시작해요 · '+(d.w|0)+'초 (한 명 더 오면 바로)':'모이는 중... 다 모이면 바로 시작해요')}
+    if(d.t==='mwait'){if(!acc&&PT.pr)partySend({t:'pslot',id});acc=true;clearTimeout(to);{const QQ=(NET.mpQs&&NET.mpQs[md])||NET.mpQ;if(QQ)QQ.n=Math.max(1,Math.min(QQ.max,d.n|0))}mpOvCount();netStat(d.w?'곧 시작해요 · '+(d.w|0)+'초 (한 명 더 오면 바로)':'모이는 중... 다 모이면 바로 시작해요')}
     else if(d.t==='mstart'){const P=mpCleanP(d.P,md);if(!P||!P[d.me]){fin('fail');return}
       NET.conn=c;NET.host=false;NET.mp={mode:md,P,dir:{},hs:P[d.hs]?d.hs:null,conns:[]};NET.mySide=d.me;NET.seed=d.seed|0;fin('start')}
     else if(d.t==='busy')fin('busy')});
   c.on('close',()=>fin(acc?'lost':'closed'));c.on('error',()=>fin('fail'));
   to=setTimeout(()=>fin('fail'),10000);
 })}
-function mpHostWait(hp,sid,md){return new Promise(res=>{
+function mpHostWait(hp,sid,md,ctl){return new Promise(res=>{
   const max=MP_MAX[md],min=MP_MIN[md],Q=[],RV={};let done=false,t3=0;   // RV: 파티원 몫으로 맡아 둔 자리 (아이디 → 맡은 시각)
   if(NET.party&&NET.party.lead&&md==='2v2')RV[NET.party.pp]=Infinity;
   const alive=()=>sid===NET.searchId&&NET.state==='search';
-  const fin=r=>{if(done)return;done=true;clearInterval(iv);NET.cancelWait=null;res(r)};
+  const fin=r=>{if(done)return;done=true;clearInterval(iv);if(NET.cw)NET.cw.delete(cancel);res(r)};
   const cnt=()=>1+Q.length+Object.keys(RV).length;
   const wsec=()=>t3?Math.max(0,15-Math.floor((Date.now()-t3)/1000)):0;
-  const cast=()=>{const n=cnt();NET.mpQ.n=n;mpOvCount();if(n>=min&&n<max&&!Object.keys(RV).length){if(!t3)t3=Date.now()}else t3=0;
+  const cast=()=>{const n=cnt(),QQ=(NET.mpQs&&NET.mpQs[md])||NET.mpQ;if(QQ)QQ.n=n;mpOvCount();if(n>=min&&n<max&&!Object.keys(RV).length){if(!t3)t3=Date.now()}else t3=0;
     for(const c of Q)try{c.send({t:'mwait',n,max,w:wsec()})}catch(_){}};
-  const go=()=>{if(done)return;mpQuickStart(Q,md);fin('ok')};
-  NET.cancelWait=()=>{for(const c of Q.slice())try{c.close()}catch(_){}fin('cancel')};
-  const iv=setInterval(()=>{if(!alive()){if(NET.cancelWait)NET.cancelWait();return}
+  const go=()=>{if(done||NET.conn)return;mpQuickStart(Q,md);fin('ok')};   // 다른 모드에서 먼저 잡혔으면 시작 안 함
+  const cancel=()=>{for(const c of Q.slice())try{c.close()}catch(_){}fin('cancel')};(NET.cw||(NET.cw=new Set())).add(cancel);if(ctl)ctl.cancel=cancel;
+  const iv=setInterval(()=>{if(!alive()){cancel();return}
     const now=Date.now();for(const k in RV)if(RV[k]!==Infinity&&now-RV[k]>20000){delete RV[k];const L=Q.find(x=>x._pp===k);if(L)try{L.close()}catch(_){}}   // 파티원이 20초 안에 안 오면 그 파티는 다시 찾게 함
     if(t3){if(now-t3>15000){go();return}netStat(cnt()+'명이 모였어요! '+wsec()+'초 뒤 시작 (한 명 더 오면 바로)');if(now%2000<500)cast()}
     else netStat(Q.length?'모이는 중... 다 모이면 바로 시작해요':'같이 할 사람을 기다리는 중')},500);
@@ -6253,6 +6361,44 @@ function mpMatched(){
   m.querySelector('.mtt1').textContent='매칭 완료!';m.querySelector('.mdots').hidden=true;m.querySelector('.mfield').hidden=true;m.querySelector('.mtime').hidden=true;m.querySelector('.mstat').hidden=true;m.querySelector('.mcancel').hidden=true;m.querySelector('.mretry').hidden=true;
   const v=m.querySelector('.mvs');v.hidden=false;mpVsHTML(v);
   setTimeout(()=>{if(!NET.match||!NET.mp)return;netOvHide();mpSetup()},1900);
+}
+/* 여러 모드 같이 매칭: 고른 모드마다 자리를 찾아보고, 없으면 모드마다 자리를 열어 두고 먼저 잡히는 경기로 들어감 */
+async function multiFind(modes){
+  const order=['1v1','2v2','ffa'].filter(m=>modes.includes(m));if(!order.length)return;
+  const sid=++NET.searchId;NET.state='search';NET.t0=performance.now();NET.conn=null;NET.mp=null;NET.cw=new Set();NET.qmodes=order.slice();
+  NET.mpQs={};for(const m of order)if(m!=='1v1')NET.mpQs[m]={md:m,n:1,max:MP_MAX[m]};NET.mpQ=null;if(!Object.keys(NET.mpQs).length)NET.mpQs=null;
+  netOvShow();netOvEl().querySelector('.mtt1').textContent=order.map(m=>MP_NAME[m]).join(' · ')+' 매칭 중...';mpOvCount();netStat('서버에 연결하는 중');
+  const alive=()=>sid===NET.searchId&&NET.state==='search';
+  try{await netLib()}catch(e){if(alive())netFail('온라인 기능을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.');return}
+  if(!alive())return;let me=null;
+  const reset=()=>{if(NET.mpQs)for(const k in NET.mpQs)NET.mpQs[k].n=1;mpOvCount()};
+  while(alive()){
+    if(!me||me.destroyed||me.disconnected){if(me)netKill(me);try{me=await netPeer(null)}catch(e){if(alive())netFail('서버에 연결할 수 없어요. 잠시 후 다시 시도해 주세요.');return}}
+    if(!alive())return;
+    reset();netStat('같이 할 사람을 찾는 중');
+    const empty={};
+    for(const m of order)for(let i=0;i<NET_SLOTS;i++){
+      if(m==='1v1'){const r=await netJoin(me,netSlot(i));
+        if(!alive()){if(r==='ok'){try{NET.conn.close()}catch(_){}NET.conn=null}return}
+        if(r==='ok'){NET.qmodes=['1v1'];NET.mpQs=null;netStat('상대 발견! 연결하는 중');netMatched();return}
+        if(r==='empty'&&empty[m]==null)empty[m]=i}
+      else{NET.mpQ=NET.mpQs[m];const r=await mpJoin(me,mpSlot(m,i),m,alive);NET.mpQ=null;
+        if(!alive()){if(r==='start'){try{NET.conn.close()}catch(_){}NET.conn=null;NET.mp=null}return}
+        if(r==='start'){NET.qmodes=[m];NET.mpQs=null;mpMatched();return}
+        if(r==='empty'&&empty[m]==null)empty[m]=i;if(r==='lost')reset()}}
+    const hosts=[];
+    for(const m of order){if(empty[m]==null)continue;let hp=null;try{hp=await netPeer(m==='1v1'?netSlot(empty[m]):mpSlot(m,empty[m]))}catch(e){hp=null}
+      if(!alive()){if(hp)netKill(hp);hosts.forEach(h=>netKill(h.hp));return}if(hp)hosts.push({m,hp,ctl:{}})}
+    if(hosts.length){
+      netStat('같이 할 사람을 기다리는 중');
+      const win=await new Promise(res=>{let left=hosts.length;
+        for(const h of hosts){const p=h.m==='1v1'?netHostWait(h.hp,sid,h.ctl):mpHostWait(h.hp,sid,h.m,h.ctl);p.then(r=>{if(r==='ok')res(h);else if(--left===0)res(null)})}});
+      for(const h of hosts)if(h!==win){try{if(h.ctl.cancel)h.ctl.cancel()}catch(_){}netKill(h.hp)}   // 다른 모드 자리는 닫음
+      if(win&&alive()){netKill(me);NET.qmodes=[win.m];NET.mpQs=null;if(win.m==='1v1')netMatched();else mpMatched();return}
+      if(win){try{if(NET.conn)NET.conn.close()}catch(_){}NET.conn=null;NET.mp=null}
+      if(!alive())return}
+    await new Promise(r=>setTimeout(r,600+Math.random()*900));
+  }
 }
 /* 2대2 · 1대1대1대1 방: 방장이 자리(1P~4P)를 관리하고 바뀔 때마다 모두에게 알려 줌 */
 function mroomInit(R){R.mp=true;R.max=MP_MAX[R.mode];R.mem=Array(R.max).fill(null);R.me=0;R.conns=[];R.cc=mpMakeConn(R.conns);NET.conn=R.cc;NET.host=true;mroomSelf(R)}
@@ -6325,8 +6471,14 @@ function mroomRender(b,R){
   b.querySelector('.rban').textContent=penBanned()?'채팅 금지 · '+penText()+' 남음':'';
   const ni=b.querySelector('.rcin');if(ov)ni.value=ov;if(foc)ni.focus({preventScroll:true})}
 /* 로비: 모드 고르기 */
-function mdPaint(){document.querySelectorAll('.mdrow button').forEach(b=>b.classList.toggle('on',b.dataset.md===NET_MODE))}
-document.querySelector('.mdrow').addEventListener('click',e=>{const b=e.target.closest('[data-md]');if(!b||NET.state!=='idle')return;NET_MODE=b.dataset.md;try{localStorage.setItem('bftNetMode',NET_MODE)}catch(_){}mdPaint()});
+function mdPaint(){document.querySelectorAll('.mdrow [data-md]').forEach(b=>b.classList.toggle('on',NET_MULTI?NET_MODES.includes(b.dataset.md):b.dataset.md===NET_MODE));const mu=document.querySelector('.mdrow .mdmu');if(mu)mu.classList.toggle('on',NET_MULTI)}
+function mdSave(){try{localStorage.setItem('bftNetMode',NET_MODE);localStorage.setItem('bftNetMulti',NET_MULTI?'1':'0');localStorage.setItem('bftNetModes',JSON.stringify(NET_MODES))}catch(_){}}
+document.querySelector('.mdrow').addEventListener('click',e=>{if(NET.state!=='idle')return;
+  if(e.target.closest('[data-mu]')){NET_MULTI=!NET_MULTI;if(!NET_MULTI)NET_MODES=[NET_MODE];mdSave();mdPaint();netToast(NET_MULTI?'복수 선택: 여러 모드를 같이 고를 수 있어요':'복수 선택 꺼짐');return}
+  const b=e.target.closest('[data-md]');if(!b)return;const md=b.dataset.md;
+  if(NET_MULTI){if(NET_MODES.includes(md)){if(NET_MODES.length>1)NET_MODES=NET_MODES.filter(x=>x!==md)}else NET_MODES.push(md);NET_MODES=['1v1','2v2','ffa'].filter(x=>NET_MODES.includes(x));NET_MODE=NET_MODES[0]}   // 고른 것들만 같이 매칭
+  else{NET_MODE=md;NET_MODES=[md]}
+  mdSave();mdPaint()});
 mdPaint();
 /* ---------- 관전 목록 (TV 버튼): 진행 중인 경기 이름만 보여 주고 누구나 관전 · 관전 중 폭죽 응원 ---------- */
 let tvEl=null;const tvOpen=()=>!!(tvEl&&!tvEl.hidden);
@@ -6422,18 +6574,61 @@ let wcEl=null,wcBtn=null;const wcOpen=()=>!!(wcEl&&!wcEl.hidden);
 function wcBuild(){
   wcBtn=document.createElement('button');wcBtn.type='button';wcBtn.className='wcbtn';wcBtn.setAttribute('aria-label','전체 채팅');
   wcBtn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.5 5.5h11a1.5 1.5 0 0 1 1.5 1.5v6a1.5 1.5 0 0 1-1.5 1.5H9l-3.5 3v-3h-2A1.5 1.5 0 0 1 2 13V7a1.5 1.5 0 0 1 1.5-1.5z"/><path d="M16 9h4.5A1.5 1.5 0 0 1 22 10.5v6a1.5 1.5 0 0 1-1.5 1.5h-1.5v3l-3.5-3h-4A1.5 1.5 0 0 1 10 16.5V16"/></svg>';
-  document.body.appendChild(wcBtn);wcBtn.addEventListener('click',e=>{e.stopPropagation();if(wcOpen())wcHide();else wcShow()});
+  document.body.appendChild(wcBtn);wcBtn.addEventListener('click',e=>{e.stopPropagation();if(wcBtn._moved){wcBtn._moved=0;return}if(wcOpen())wcHide();else wcShow()});
   wcEl=document.createElement('div');wcEl.className='wcmodal';wcEl.hidden=true;
   wcEl.innerHTML='<div class="wcbox"><div class="wchd"><b>전체 채팅</b><span class="wcn"></span><button type="button" class="wcx" data-w="close" aria-label="닫기">✕</button></div><div class="wclog"></div><div class="wcban"></div><div class="rrow"><input class="rin wcin" maxlength="70" placeholder="모두에게 보낼 메시지" autocomplete="off" enterkeyhint="send"><button type="button" class="rbtn" data-w="send">보내기</button></div><div class="dmnote">이름만 보여요 · 욕설은 걸러지고 운영자가 볼 수 있어요</div></div>';
-  document.body.appendChild(wcEl);
+  wcEl.querySelector('.wcbox').insertAdjacentHTML('beforeend',['n','s','e','w','ne','nw','se','sw'].map(z=>'<i class="wcrz" data-z="'+z+'"></i>').join(''));
+  document.body.appendChild(wcEl);wcDragInit();
   wcEl.addEventListener('click',e=>{if(e.target===wcEl){wcHide();return}const b=e.target.closest('[data-w],[data-pv]');if(!b)return;
     if(b.dataset.w==='close')wcHide();else if(b.dataset.w==='send')wcSend();
     else if(b.dataset.pv!=null){const cur=pollCur;if(!cur||cur.P.id!==b.dataset.pid||cur.done){netToast('이미 끝난 투표예요');return}const x=cur.el.querySelector('.pollo button[data-v="'+b.dataset.pv+'"]');if(x)x.click();wcRender()}});
   wcEl.querySelector('.wcin').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();wcSend()}});
   document.addEventListener('pointerdown',e=>{if(wcOpen()&&!e.target.closest('.wcmodal,.wcbtn,.upmodal'))wcHide()});
   wcUI()}
-function wcShow(){wcEl.hidden=false;WC.r=Date.now();wcSave();wcUI();const L=wcEl.querySelector('.wclog');L.scrollTop=L.scrollHeight}
+function wcShow(){wcEl.hidden=false;wcBoxFit();WC.r=Date.now();wcSave();wcUI();const L=wcEl.querySelector('.wclog');L.scrollTop=L.scrollHeight}
 function wcHide(){if(wcEl)wcEl.hidden=true;wcUI()}
+// 전체 채팅 버튼 끌어서 옮기기 · 창 머리 끌어서 옮기기 · 가장자리/모서리 끌어서 크기 조절 (기기에 저장)
+const wcLS=(k,v)=>{try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}};
+const wcCl=(v,a,b)=>Math.max(a,Math.min(b,v));
+function wcBtnFit(){const P=wcLS('bftWcPos');if(!P){wcBtn.style.left=wcBtn.style.top=wcBtn.style.right=wcBtn.style.bottom='';return}
+  const w=wcBtn.offsetWidth||46,h=wcBtn.offsetHeight||46,x=wcCl(P.x,0,innerWidth-w),y=wcCl(P.y,0,innerHeight-h);
+  Object.assign(wcBtn.style,{left:x+'px',top:y+'px',right:'auto',bottom:'auto'})}
+function wcBoxFit(){const B=wcEl&&wcEl.querySelector('.wcbox');if(!B)return;const G=wcLS('bftWcBox');
+  if(!G){B.classList.remove('cust');B.style.left=B.style.top=B.style.width=B.style.height='';return}
+  const W=innerWidth,H=innerHeight,w=wcCl(G.w,WC_MIN.w,W-8),h=wcCl(G.h,WC_MIN.h,H-8),x=wcCl(G.x,4,W-w-4),y=wcCl(G.y,4,H-h-4);
+  B.classList.add('cust');Object.assign(B.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'})}
+const WC_MIN={w:240,h:200};
+function wcDragInit(){
+  const B=wcEl.querySelector('.wcbox');
+  // 버튼: 6px 넘게 움직이면 끌기, 아니면 그냥 누르기
+  wcBtn.addEventListener('pointerdown',e=>{if(e.button>0)return;const r=wcBtn.getBoundingClientRect(),sx=e.clientX,sy=e.clientY;let on=false;
+    const mv=ev=>{const dx=ev.clientX-sx,dy=ev.clientY-sy;if(!on&&Math.hypot(dx,dy)<6)return;
+      if(!on){on=true;document.body.classList.add('wc-drag');try{wcBtn.setPointerCapture(e.pointerId)}catch(_){}}
+      const x=wcCl(r.left+dx,0,innerWidth-r.width),y=wcCl(r.top+dy,0,innerHeight-r.height);
+      Object.assign(wcBtn.style,{left:x+'px',top:y+'px',right:'auto',bottom:'auto'})};
+    const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);
+      if(on){document.body.classList.remove('wc-drag');wcBtn._moved=1;setTimeout(()=>{wcBtn._moved=0},400);
+        const q=wcBtn.getBoundingClientRect();wcLS('bftWcPos',{x:Math.round(q.left),y:Math.round(q.top)})}};
+    addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)});
+  // 창: 머리 끌면 이동, 가장자리 끌면 크기
+  const start=(e,z)=>{if(e.button>0)return;e.preventDefault();const r=B.getBoundingClientRect(),sx=e.clientX,sy=e.clientY;
+    B.classList.add('cust');Object.assign(B.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'});
+    document.body.classList.add('wc-drag');
+    const mv=ev=>{const dx=ev.clientX-sx,dy=ev.clientY-sy,W=innerWidth,H=innerHeight;let{left:x,top:y,width:w,height:h}=r;
+      if(z==='m'){x=wcCl(x+dx,4,Math.max(4,W-w-4));y=wcCl(y+dy,4,Math.max(4,H-h-4))}
+      else{if(z.includes('e'))w=wcCl(r.width+dx,WC_MIN.w,W-4-r.left);
+        if(z.includes('s'))h=wcCl(r.height+dy,WC_MIN.h,H-4-r.top);
+        if(z.includes('w')){w=wcCl(r.width-dx,WC_MIN.w,r.right-4);x=r.right-w}
+        if(z.includes('n')){h=wcCl(r.height-dy,WC_MIN.h,r.bottom-4);y=r.bottom-h}}
+      Object.assign(B.style,{left:x+'px',top:y+'px',width:w+'px',height:h+'px'})};
+    const up=()=>{removeEventListener('pointermove',mv);removeEventListener('pointerup',up);removeEventListener('pointercancel',up);document.body.classList.remove('wc-drag');
+      const q=B.getBoundingClientRect();wcLS('bftWcBox',{x:Math.round(q.left),y:Math.round(q.top),w:Math.round(q.width),h:Math.round(q.height)});wcBoxFit()};
+    addEventListener('pointermove',mv);addEventListener('pointerup',up);addEventListener('pointercancel',up)};
+  B.querySelector('.wchd').addEventListener('pointerdown',e=>{if(e.target.closest('.wcx,button,a,.upn'))return;start(e,'m')});
+  B.querySelectorAll('.wcrz').forEach(el=>el.addEventListener('pointerdown',e=>start(e,el.dataset.z)));
+  B.querySelector('.wchd').addEventListener('dblclick',e=>{if(e.target.closest('.wcx'))return;wcLS('bftWcBox',null);wcBoxFit()});   // 머리 두 번 누르면 원래 자리 · 크기
+  addEventListener('resize',()=>{wcBtnFit();if(wcOpen())wcBoxFit()});
+  wcBtnFit();wcBoxFit()}
 function wcLine(x){const tf=new Date(x.t).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
   if(x.k==='ann')return '<div class="wcl wcsys"><b>공지</b> '+netEsc(x.m)+'<i>'+tf+'</i></div>';
   if(x.k==='poll'){const on=pollCur&&pollCur.P.id===x.pid&&!pollCur.done,mine=on?pollCur.mine:-1,lc=on&&pollCur.live;
@@ -6446,11 +6641,12 @@ function wcRender(){if(!wcOpen())return;const L=wcEl.querySelector('.wclog'),h=W
 function wcUI(){if(!wcBtn)return;if(wcOpen()){if(WC.L.some(x=>x.t>WC.r&&x.p!==PID)){WC.r=Date.now();wcSave()}wcRender()}
   wcBtn.classList.toggle('new',!wcOpen()&&WC.L.some(x=>x.t>WC.r&&x.p!==PID))}   // 안 본 채팅이 있으면 빨간 점
 setInterval(()=>{if(wcOpen())wcRender()},1000);
-setInterval(()=>{const top=document.body.classList.contains('in-net')||!!document.querySelector('.rmodal:not([hidden]),.frmodal:not([hidden]),.mmodal:not([hidden]),.modal:not([hidden]),.pnmodal:not([hidden])');document.body.classList.toggle('wc-top',top)},300);   // 경기 중이나 창이 떠 있으면 버튼을 오른쪽 위로 비켜 둠
+setInterval(()=>{const top=document.body.classList.contains('in-net')||!!document.querySelector('.rmodal:not([hidden]),.frmodal:not([hidden]),.mmodal:not([hidden]),.modal:not([hidden]),.pnmodal:not([hidden])');if(document.body.classList.contains('wc-top')!==top){document.body.classList.toggle('wc-top',top);if(wcBtn)wcBtnFit()}},300);   // 경기 중이나 창이 떠 있으면 버튼을 오른쪽 위로 비켜 둠
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wcBuild);else wcBuild();
 function srvWcRender(force){                         // 어드민 서버 탭: 접속자 · 전체 채팅 기록 (펼치고 접기)
   const w=document.querySelector('.adm');if(!w)return;const bx=w.querySelector('.srvwc'),n=w.querySelector('.srvwcn'),nw=w.querySelector('.srvnow');
-  if(n)n.textContent='('+WCLOG.length+'개)';if(nw){const h='지금 접속 <b>'+(PRES.n||0)+'</b>명'+(PRES.hub?' · 이 폰이 모임 자리':'')+(PRES.st?' · '+admEsc(PRES.st):'');if(nw.innerHTML!==h)nw.innerHTML=h}
+  if(n)n.textContent='('+WCLOG.length+'개)';if(nw){const on=!!PRES.n,qm=PRES.qm||{},cn=x=>on?(x|0)+'명':'-';
+    const h='<div class="admkv"><span>지금 접속</span><b>'+(on?PRES.n+'명':'확인 중'+(PRES.st?' · '+admEsc(PRES.st):''))+'</b><span>매칭 중 (전체)</span><b>'+cn(PRES.q)+'</b><span>· 1대1 매칭</span><b>'+cn(qm['1v1'])+'</b><span>· 2대2 매칭</span><b>'+cn(qm['2v2'])+'</b><span>· 1대1대1대1 매칭</span><b>'+cn(qm.ffa)+'</b><span>경기 중</span><b>'+cn(PRES.mt)+'</b><span>오늘 최대 동접</span><b>'+(PRES_DAYS[ccuDay()]?PRES_DAYS[ccuDay()].n+'명':'-')+'</b><span>오늘 방문자</span><b>'+((PRES_UV[ccuDay()]||[]).length)+'명</b><span>모임 자리</span><b>'+(PRES.hub?'이 폰':'다른 폰')+'</b></div>';if(nw.innerHTML!==h)nw.innerHTML=h}
   if(!bx||bx.hidden)return;const sig=WCLOG.length+':'+(WCLOG.length?WCLOG[WCLOG.length-1].i:'');if(!force&&bx._s===sig)return;bx._s=sig;
   const f=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
   bx.innerHTML=WCLOG.length?WCLOG.slice().reverse().map(x=>'<div class="modli'+(x.k!=='u'?' usrsy':'')+'"><span>'+f(x.t)+'</span> '+(x.k==='u'?'<b class="usrn">'+admEsc(x.n)+'</b> <i style="font-style:normal;font-family:monospace;color:#8b90a0">'+x.p+'</i> '+(x.a?'<b style="color:#ffd400">[어그로]</b> ':'')+admEsc(x.m):admEsc(x.k==='ann'?'[공지] '+x.m:x.k==='poll'?'[투표] '+x.q:'[투표 결과] '+x.q+' → '+x.o.map((o,i)=>o+' '+(x.c[i]|0)).join(' / ')))+'</div>').join(''):'<div class="admnone">아직 기록이 없습니다.</div>'}
@@ -6477,21 +6673,23 @@ const uvRecent=()=>{const o={},lim=ccuDay(Date.now()-7*864e5);for(const k in PRE
 function uvPurge(){const lim=ccuDay(Date.now()-7*864e5);let ch=false;for(const k in PRES_UV)if(k<=lim&&!PRES_STAR.has(k)){delete PRES_UV[k];delete uvSet[k];ch=true}if(ch)uvSave();let c2=false;for(const k in UVN)if(k<=lim&&!PRES_STAR.has(k)){delete UVN[k];c2=true}if(c2)try{localStorage.setItem('bftUvN',JSON.stringify(UVN))}catch(e){}}
 function uvCast(add,except){if(!add.length||!PRES.hub)return;for(const c of PRES.conns)if(c!==except)try{if(c.open)c.send({t:'uvadd',a:add})}catch(_){}}
 ccuPurge();setInterval(ccuPurge,60000);setInterval(uvPurge,60000);
-setInterval(()=>{const s=presMy(),n=NET.me.name||'',sg=s+'|'+n;if(sg===PRES.lastS)return;PRES.lastS=sg;if(PRES.hub)presCast();else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'st',s,n})}catch(_){}}},1000);   // 매칭 시작·끝날 때 모임 자리에 바로 알림
+const presQm=()=>NET.state==='search'&&Array.isArray(NET.qmodes)?NET.qmodes.filter(x=>MP_MAX[x]):[];   // 지금 매칭 중인 모드들
+setInterval(()=>{const s=presMy(),n=NET.me.name||'',qm=presQm(),sg=s+'|'+n+'|'+qm.join();if(sg===PRES.lastS)return;PRES.lastS=sg;if(PRES.hub)presCast();else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'st',s,n,qm})}catch(_){}}},1000);   // 매칭 시작·끝날 때 모임 자리에 바로 알림
 function presMax(n){return ccuSet(ccuDay(),n,Date.now())}
 const presMy=()=>NET.spec?'i':(NET.state==='search'?'q':(NET.match?'m':'i'));   // 내 상태: 매칭 중 / 경기 중 / 그 외
 const PRES={q:0,mt:0,st:'온라인 기능 불러오는 중',peer:null,conns:new Set(),hub:false,n:0,gen:0,to:0,last:0,conn:null};   // 15초마다 서로 신호를 주고받고, 40초 동안 소식이 없으면 끊긴 것으로 봄
 const PRES_ID='bftball-hub-4';   // 3.8.13부터 새 모임 자리 (예전 버전 폰이 자리를 맡으면 친구 상태·대화가 전달되지 않아서 분리)
 function presKill(){clearTimeout(PRES.to);PRES.conn=null;if(PRES.peer){try{PRES.peer.destroy()}catch(_){}}PRES.peer=null;PRES.hub=false;PRES.conns.clear()}
 function presLater(ms){const g=PRES.gen;clearTimeout(PRES.to);PRES.to=setTimeout(()=>{if(g===PRES.gen)presTry()},ms==null?1200+Math.random()*2500:ms)}
-function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;if(presMax(PRES.n))cldKick();{const k=ccuDay(),add=[];if(uvAdd(k,PID))add.push([k,PID]);for(const c of PRES.conns)if(c._pid&&uvAdd(k,c._pid))add.push([k,c._pid]);if(add.length){uvSave();uvCast(add);cldKick()}}const all=[presMy(),...[...PRES.conns].map(c=>c._s||'i')];PRES.q=all.filter(x=>x==='q').length;PRES.mt=all.filter(x=>x==='m').length;for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,q:PRES.q,mt:PRES.mt,days:ccuRecent(),pl:presPl(c._fr)})}catch(_){}}frPl(presPl(PRES.selfFr))}
+function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;if(presMax(PRES.n))cldKick();{const k=ccuDay(),add=[];if(uvAdd(k,PID))add.push([k,PID]);for(const c of PRES.conns)if(c._pid&&uvAdd(k,c._pid))add.push([k,c._pid]);if(add.length){uvSave();uvCast(add);cldKick()}}const all=[presMy(),...[...PRES.conns].map(c=>c._s||'i')];PRES.q=all.filter(x=>x==='q').length;PRES.mt=all.filter(x=>x==='m').length;{const qm={'1v1':0,'2v2':0,'ffa':0};for(const L of [presQm().join(),...[...PRES.conns].map(c=>c._s==='q'?(c._qm||'1v1'):'')])for(const x of String(L).split(','))if(x in qm)qm[x]++;PRES.qm=qm}
+  for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,q:PRES.q,mt:PRES.mt,qm:PRES.qm,days:ccuRecent(),pl:presPl(c._fr)})}catch(_){}}frPl(presPl(PRES.selfFr))}
 function presTry(){
   presKill();const g=++PRES.gen;let p;
   try{p=new Peer(PRES_ID,netOpts())}catch(e){presLater(15000);return}
   PRES.peer=p;
   p.on('open',()=>{if(g!==PRES.gen)return;PRES.hub=true;PRES.st='';presCast()});
   p.on('connection',c=>{if(g!==PRES.gen)return;
-    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&['hi','reg','q','qr','ann','room','roomsq','mi','ml','sp','sd','sc','fe','fl','inv','dm','dma','dmc','poll','pv','mt','gm','gma','wc','wch'].includes(d.t)){presHubData(c,d);return}if(d&&(d.t==='st'||d.t==='ping')&&d.s){const nn=typeof d.n==='string'?d.n.slice(0,NMX):(c._n||'');if(d.s!==c._s||nn!==c._n){c._s=d.s;c._n=nn;presCast()}}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
+    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&['hi','reg','q','qr','ann','room','roomsq','mi','ml','sp','sd','sc','fe','fl','inv','dm','dma','dmc','poll','pv','mt','gm','gma','wc','wch'].includes(d.t)){presHubData(c,d);return}if(d&&(d.t==='st'||d.t==='ping')&&d.s){const nn=typeof d.n==='string'?d.n.slice(0,NMX):(c._n||''),qm=Array.isArray(d.qm)?d.qm.filter(x=>MP_MAX[x]).slice(0,3).join():(d.t==='st'?'':(c._qm||''));if(d.s!==c._s||nn!==c._n||qm!==(c._qm||'')){c._s=d.s;c._n=nn;c._qm=qm;presCast()}}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
     const rm=()=>{spDrop(c);if(PRES.conns.delete(c))presCast()};c.on('close',rm);c.on('error',rm)});
   p.on('error',e=>{if(g!==PRES.gen)return;if(e&&e.type==='unavailable-id')presJoin();else if(!PRES.hub){PRES.st='서버 연결 실패 ('+(e&&e.type||'?')+')';presLater()}});
   p.on('disconnected',()=>{if(g===PRES.gen)presLater(800)});
@@ -6504,7 +6702,7 @@ function presJoin(){
   q.on('open',()=>{if(g!==PRES.gen)return;PRES.st='다른 접속자와 연결하는 중';let c;try{c=q.connect(PRES_ID,{reliable:true,serialization:'json'})}catch(e){presLater();return}
     PRES.conn=c;PRES.last=Date.now();
     c.on('open',()=>{miAt=0;try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy(),n:NET.me.name||''});c.send({t:'hi',pid:PID,n:NET.me.name||'',reg:REG,uv:(uvAdd(ccuDay(),PID)&&uvSave(),uvRecent())});const ids=frIds();FRP.sig=ids.join();c.send({t:'fl',ids});if(MT.u)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u});if(WC.L.length)c.send({t:'wch',L:WC.L})}catch(_){FRP.sig=''}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
-    c.on('data',d=>{if(g===PRES.gen&&d&&['reg','q','qr','ann','rooms','roomsall','uv','uvadd','mlr','spr','spq','sd','sc','fe','inv','dm','dma','dmc','poll','pr','mt','gm','gma','wc','wch'].includes(d.t)){presCliData(d);return}if(g===PRES.gen&&d&&d.t==='cnt'){frPl(d.pl&&typeof d.pl==='object'?d.pl:{});PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
+    c.on('data',d=>{if(g===PRES.gen&&d&&['reg','q','qr','ann','rooms','roomsall','uv','uvadd','mlr','spr','spq','sd','sc','fe','inv','dm','dma','dmc','poll','pr','mt','gm','gma','wc','wch'].includes(d.t)){presCliData(d);return}if(g===PRES.gen&&d&&d.t==='cnt'){frPl(d.pl&&typeof d.pl==='object'?d.pl:{});PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.qm=d.qm&&typeof d.qm==='object'?d.qm:null;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
     c.on('close',()=>{if(g===PRES.gen){PRES.n=0;presLater()}});c.on('error',()=>{if(g===PRES.gen){PRES.n=0;presLater()}})});
   q.on('error',e=>{if(g!==PRES.gen)return;PRES.st='연결 다시 시도 중 ('+(e&&e.type||'?')+')';if(e&&e.type==='peer-unavailable')presLater(300+Math.random()*700);else presLater()});
 }
