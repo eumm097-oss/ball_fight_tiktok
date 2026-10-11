@@ -25,7 +25,7 @@ body{margin:0;overflow-x:hidden;overflow-x:clip;touch-action:pan-y;background:va
 .start[hidden],.end[hidden]{display:none}
 .start:active{transform:scale(.96)}
 .start:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
-.hud{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.hud{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:6px}
 .name{font-size:clamp(22px,6.5vw,34px);font-weight:900;margin-bottom:2px;height:28px;display:flex;align-items:center}
 .p2 .name{justify-content:flex-end}
 .add{height:28px;width:100%;padding:0;font-family:inherit;font-weight:400;font-size:clamp(13px,3.9vw,19px);color:#fff;background:#5f6467;border:2px solid var(--ink);border-radius:0;cursor:pointer}
@@ -305,7 +305,7 @@ body.in-net .pidtag,.stage:has(.end:not([hidden])) .pidtag{display:none}
 .pnbtn{position:absolute;right:10px;top:calc(10px + env(safe-area-inset-top,0px));width:38px;height:38px;padding:5px;background:none;border:0;color:#8a8f92;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .pnbtn svg{display:block;width:100%;height:100%}
 .pnbtn:active{color:#444}
-.stage:has(.end:not([hidden])) .vtag,.stage:has(.end:not([hidden])) .pnbtn{display:none}
+.stage:has(.end:not([hidden])) .vtag,.stage:has(.end:not([hidden])) .pnbtn,.stage:has(.end:not([hidden])) .frbtn,.stage:has(.end:not([hidden])) .prbtn{display:none}
 .half.lockd{background:#9a9ea1;position:relative}.half.lockd::after{content:'점검 중';position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;color:#fff;background:#e5484d;padding:1px 6px;border-radius:3px}
 .adm{position:fixed;inset:0;pointer-events:none!important;z-index:40;font-family:"IBM Plex Sans KR","Noto Sans KR",sans-serif}
 .admwin,.admico{position:fixed;pointer-events:auto}
@@ -346,6 +346,62 @@ body.in-net .pidtag,.stage:has(.end:not([hidden])) .pidtag{display:none}
 .modr .admcn i{font-family:monospace;letter-spacing:.05em}.modw{margin-left:auto;color:#ff5c7a;font-weight:800}.modl{font-size:1em;color:#cfd2dc;margin-bottom:0.5em}.modl b{color:#fff}.modwhy,.modchat{margin-top:0.6em;padding:0.5em 0.6em;background:#0d0d0d;border:0.1em solid #2c2c2c;border-radius:0.6em}.modwhy[hidden],.modchat[hidden]{display:none}.modli{font-size:1em;line-height:1.5;color:#e8eaf0;word-break:break-all}.modli span{color:#8b90a0}.modli b{color:#ff5c7a}.modli i{color:#8b90a0;font-style:normal}
 .modq{flex:1;min-width:0;height:2.6em;background:#111;border:0.1em solid #444;border-radius:0.6em;color:#fff;font:inherit;font-size:1.1em;padding:0 0.6em;text-transform:uppercase;outline:none;-webkit-user-select:text;user-select:text}
 
+.frbtn{position:absolute;z-index:4;left:46px;top:calc(10px + env(safe-area-inset-top,0px));width:38px;height:38px;padding:5px;background:none;border:0;color:#8a8f92;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.frbtn svg{display:block;width:100%;height:100%}.frbtn:active{color:#444}
+.frbtn.new::after{content:'';position:absolute;top:6px;right:5px;width:8px;height:8px;border-radius:50%;background:#e03131;border:1.5px solid #fff}
+.frmodal{position:fixed;inset:0;z-index:26;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:12px}.frmodal[hidden]{display:none}
+.frbox{position:relative;width:100%;max-width:380px;height:min(520px,86vh);display:flex;flex-direction:column;background:#fff;border:3px solid var(--ink);padding:16px 14px 12px;color:#111}
+.frx{position:absolute;top:8px;right:8px;width:32px;height:32px;font-size:16px;line-height:1;color:var(--ink);background:transparent;border:2px solid var(--ink);cursor:pointer}
+.frme{flex:none;margin:6px 0 10px;text-align:center;font-size:13px;color:#555}.frme b{font-family:monospace;font-size:15px;color:#111;letter-spacing:.08em;margin-left:4px}
+.fradd{flex:none}.frmsg{flex:none;margin-top:6px}
+.frtabs{display:flex;flex:none;margin-top:4px;border-bottom:2px solid var(--ink)}
+.frtab{position:relative;flex:1;height:34px;border:2px solid var(--ink);border-bottom:0;background:#fff;color:#111;font:700 14px/1 "Noto Sans KR",sans-serif;cursor:pointer}.frtab+.frtab{border-left:0}.frtab.on{background:#111;color:#fff}
+.frdot{position:absolute;top:6px;right:10px;width:8px;height:8px;border-radius:50%;background:#e03131}
+.frlist{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding-top:4px}
+.frsec{font-size:12px;font-weight:800;color:#666;margin:10px 0 2px}
+.fritem{display:flex;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px solid #ddd}
+.frnm{flex:1;min-width:0;display:flex;align-items:baseline;gap:6px}.frnm b{font-size:15px;font-weight:800;word-break:break-all}.frnm i{font:500 11px/1 monospace;font-style:normal;color:#999}
+.frst{flex:none;font-size:12.5px;font-weight:800;color:#999}.frst.on{color:#16a34a}.frst.q{color:#2563eb}.frst.m{color:#c2410c}
+.frsm{flex:none;height:28px;padding:0 9px;border:2px solid var(--ink);border-radius:4px;background:#fff;color:#111;font:700 12.5px/1 "Noto Sans KR",sans-serif;cursor:pointer}.frsm.ok{background:#111;color:#fff}.frsm.ask{background:#d32f2f;border-color:#d32f2f;color:#fff}.frsm:active{transform:scale(.96)}
+.frinv{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));z-index:61;width:min(340px,calc(100vw - 24px));background:#fff;border:3px solid var(--ink);padding:12px;color:#111}
+.frit{font-size:15px;font-weight:800;word-break:break-all}.frisub{font-size:13px;color:#666;margin:3px 0 10px;word-break:break-all}
+.usrhd{display:flex;align-items:center;gap:0.6em;width:100%;background:none;border:0;color:#fff;font:inherit;font-size:1.2em;text-align:left;padding:0;margin-bottom:0.5em;cursor:pointer}.usrhd b{font-weight:700}.usrhd i{font-style:normal;font-size:0.8em;font-weight:700;color:#8b90a0;background:rgba(255,255,255,.07);padding:0.1em 0.5em;border-radius:0.4em;font-family:monospace}
+em.usrst{margin-left:auto;font-style:normal;font-weight:800;font-size:0.85em;color:#6d7180}em.usrst.on{color:#2bff5a}em.usrst.q{color:#4dc3ff}em.usrst.m{color:#ffb02e}
+.modli em.usrst{margin-left:0.6em}.modli b.usrn,.admlog b.usrn{color:#fff}
+.frinv .rbtn{flex:1}
+.frsm:disabled{opacity:.5}
+.prbtn{position:absolute;z-index:4;left:8px;top:calc(10px + env(safe-area-inset-top,0px));width:38px;height:38px;padding:5px;background:none;border:0;color:#8a8f92;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.prbtn svg{display:block;width:100%;height:100%}.prbtn:active{color:#444}
+@media (max-width:380px){.prbtn{width:34px;padding:4px}.frbtn{left:42px;width:34px;padding:4px}}
+.prbox{height:auto;max-height:86vh;overflow:auto;overscroll-behavior:contain}
+.prname{text-align:center;font-size:22px;font-weight:800;margin-top:10px;word-break:break-all}.prname .nwho{align-items:center;max-width:100%}.prname .devcap{font-size:10px}.prnone{color:#999;font-size:16px}
+.prcan{text-align:center;margin-top:6px}.prnrow{margin-top:12px}.prmsg{margin-top:6px;min-height:0}.prmsg:empty{display:none}
+.prsub{text-align:center;font-size:12.5px;color:#888;margin-top:8px}.prsub b{color:#555;font-weight:800}
+.prbox .frme{margin-top:4px}
+.prgrid{display:grid;grid-template-columns:repeat(4,1fr);border:2px solid var(--ink)}.prgrid>div{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0}.prgrid>div+div{border-left:2px solid var(--ink)}.prgrid b{font-size:20px;font-weight:800}.prgrid span{font-size:12px;color:#666}
+.prsm{font-size:12px;color:#888;margin-top:5px}
+.prrow{display:flex;align-items:center;gap:8px;width:100%;padding:9px 2px;border:0;border-bottom:1px solid #ddd;background:none;color:#111;text-align:left;font-size:15px}.prrow b{flex:1;min-width:0;font-weight:800;word-break:break-all}.prrow span{flex:none;font-size:13px;color:#666}.prrow i{flex:none;width:10px;height:10px;border-radius:50%;background:var(--cc);border:1.5px solid var(--ink)}
+.prfr{cursor:pointer}.prfr:active{background:#f1f1f1}
+.iapp{position:fixed;top:0;left:0;right:0;bottom:0;z-index:80;background:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
+.iabox{width:100%;max-width:360px;border:3px solid var(--ink);padding:20px 16px 14px;color:#111}
+.iatt{font-size:21px;text-align:center}.iatx{font-size:15px;line-height:1.6;margin-top:12px;word-break:keep-all}.iatx b{color:#1d5cff}.iasm{font-size:12.5px;color:#777}
+.iabtns{display:flex;gap:8px;margin-top:16px}.iabtns .rbtn{flex:1}
+.iastay{display:block;margin:14px auto 0;background:none;border:0;color:#888;font-size:13px;text-decoration:underline;cursor:pointer}
+.frbox.chat .frme,.frbox.chat .fradd,.frbox.chat .frmsg,.frbox.chat .frtabs{display:none}.dmbar{display:none;flex:none;padding-top:8px}.frbox.chat .dmbar{display:block}
+.dmnote{font-size:11.5px;color:#999;text-align:center;margin-top:5px}
+.dmhd{position:sticky;top:0;z-index:1;padding:2px 0 8px;background:#fff;border-bottom:2px solid var(--ink)}.dmtop{display:flex;align-items:center;gap:8px}.dmtop b{flex:1;min-width:0;font-size:17px;word-break:break-all}
+.dmcbar{display:flex;align-items:center;gap:6px;margin-top:8px;padding:6px 8px;border:2px solid var(--ink);font-size:13px;color:#111}.dmcbar .frsm:first-of-type{margin-left:auto}
+.dmsys{align-self:center;max-width:90%;font-size:12px;color:#777;text-align:center;word-break:keep-all}
+.dmback{flex:none;width:34px;height:32px;border:2px solid var(--ink);border-radius:4px;background:#fff;color:#111;font-size:22px;line-height:1;cursor:pointer;padding:0 0 3px}
+.dmlog{display:flex;flex-direction:column;gap:6px;padding:10px 0 4px}
+.dmday{align-self:center;font-size:11.5px;color:#999;margin:4px 0}
+.dmm{display:flex;flex-direction:column;align-items:flex-start;max-width:78%}.dmm.me{align-self:flex-end;align-items:flex-end}
+.dmb{padding:7px 10px;border:2px solid var(--ink);border-radius:6px;background:#fff;color:#111;font-size:14.5px;line-height:1.4;word-break:break-all;white-space:pre-wrap}.dmm.me .dmb{background:#111;color:#fff}
+.dmm i{font-style:normal;font-size:10.5px;color:#999;margin-top:2px}
+.frchat{cursor:pointer}.frnm i.frdot2{flex:none;align-self:center;width:8px;height:8px;border-radius:50%;background:#e03131}
+.dmpop{position:fixed;left:50%;transform:translateX(-50%);top:calc(8px + env(safe-area-inset-top,0px));z-index:62;display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:min(340px,calc(100vw - 24px));padding:9px 12px;background:#fff;border:3px solid var(--ink);color:#111;text-align:left;cursor:pointer}
+.dmpop b{font-size:13px}.dmpop span{font-size:14.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dbgerr{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:99;padding:8px 10px;background:#fff;border:2px solid #d32f2f;color:#d32f2f;font:700 12px/1.4 monospace;word-break:break-all;pointer-events:none}.dbgerr[hidden]{display:none}
 .p3,.p4{display:none}
 body.scr-2v2 .p3,body.scr-2v2 .p4{display:block}
 body.scr-2v2 .hud{row-gap:16px}
@@ -413,8 +469,9 @@ body.scr-online:not(.in-net) .onl{display:flex}
 .nmin{flex:1;min-width:0;height:38px;border:2px solid var(--ink);border-radius:0;padding:0 10px;font:500 16px/1 "Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111;background:#fff;outline:none;-webkit-user-select:text;user-select:text;-webkit-appearance:none;appearance:none}
 .nmin:focus{box-shadow:inset 0 0 0 1px var(--ink)}
 .nmin::placeholder{color:#9a9fa2}
-.nmrow.dev .nmin{padding-right:54px}
-.nmrow.dev::after{content:'제작자';position:absolute;right:calc(var(--okw,58px) + 14px);top:50%;transform:translateY(-50%);font:900 13px/1 "Noto Sans KR",sans-serif;color:#1d5cff;pointer-events:none}
+.nmrow.dev .nmin,.nmrow.tst .nmin{padding-right:54px}
+.nmrow.dev::after,.nmrow.tst::after{content:'제작자';position:absolute;right:calc(var(--okw,58px) + 14px);top:50%;transform:translateY(-50%);font:900 13px/1 "Noto Sans KR",sans-serif;color:#1d5cff;pointer-events:none}
+.nmrow.tst::after{content:'테스터'}
 .nmok{flex:none;width:58px;height:38px;border:2px solid var(--ink);border-radius:0;background:#111;color:#fff;font:700 15px/1 "Noto Sans KR",sans-serif;cursor:pointer;padding:0}
 .nmok:active,.chpick:active,.mkbtn:active,.netleave:active,.chatbtn:active,.mbtns button:active{transform:scale(.96)}
 .nmmsg{min-height:18px;margin-top:3px;font:700 13px/18px "Noto Sans KR",sans-serif;text-align:center}
@@ -429,7 +486,7 @@ body.scr-online:not(.in-net) .onl{display:flex}
 body.scr-online .onhint,.stage:has(.end:not([hidden])) .onhint{display:none}.pgdots{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);display:flex;gap:7px;pointer-events:none}
 .pgdots i{width:7px;height:7px;border-radius:50%;background:#c8cbcc;transition:background .2s,transform .2s}
 .pgdots i.on{background:#111;transform:scale(1.15)}
-body.in-net .pgdots,body.in-net .pnbtn,body.in-net .vtag,body.in-net .kkbtn,body.in-net .kkpop{display:none}
+body.in-net .pgdots,body.in-net .pnbtn,body.in-net .frbtn,body.in-net .prbtn,body.in-net .vtag,body.in-net .kkbtn,body.in-net .kkpop{display:none}
 .stage:has(.end:not([hidden])) .kkbtn,.stage:has(.end:not([hidden])) .kkpop{display:none}
 .kkbtn{position:absolute;right:52px;top:calc(10px + env(safe-area-inset-top,0px));width:38px;height:38px;padding:6px;background:none;border:0;color:#8a8f92;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .kkbtn svg{display:block;width:100%;height:100%}
@@ -468,7 +525,8 @@ body.in-net .nick{display:block}
 .nme{display:inline-block;font-style:normal;font:800 10px/1 "Noto Sans KR",sans-serif;color:#fff;background:#111;padding:2px 4px 3px;margin:0 2px}
 .nwho{display:inline-flex;flex-direction:column;vertical-align:top}
 .p2 .nwho{align-items:flex-end}
-.nwl{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.nwl{display:inline-flex;align-items:center;gap:3px;white-space:nowrap;flex-wrap:wrap;max-width:100%}.nwn{white-space:normal;word-break:break-all;min-width:0}
+.hud .nwho{max-width:100%}.hud .nwl{flex-wrap:nowrap}.hud .nwn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}   /* 긴 이름(제작자): 경기 화면 이름칸은 한 줄로 줄이고, 다른 곳은 줄을 바꿔서 다 보여 줌 */
 .wrench{width:1.05em;height:1.05em;flex:none;display:inline-block}
 .devtxt{font-size:.78em;font-weight:900;color:#1d5cff;margin-left:1px}
 .ntc{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:20px}
@@ -525,7 +583,7 @@ body.in-net .nick{display:block}
 .mtip b{font-weight:900;color:#111}
 .pnvh i.pnbigt{font-size:13px;font-weight:900;letter-spacing:-.01em;color:#fff;background:#e02424;border:2px solid #111;border-radius:0;padding:3px 8px 4px;transform:rotate(-4deg)}
 /* 일부 버튼만 주아체 */
-.start,.end,.mkbtn,.rmbtn,.win,.nwx,.mretry,.rmodal,.rmodal *,.rchip,.rcpy{font-family:"Jua",sans-serif;font-synthesis:none}
+.start,.end,.mkbtn,.rmbtn,.win,.nwx,.mretry,.rmodal,.rmodal *,.rchip,.rcpy,.frmodal,.frmodal *,.frinv,.frinv *,.iapp,.iapp *,.dmpop,.dmpop *{font-family:"Jua",sans-serif;font-synthesis:none}
 </style>
 </head>
 <body>
@@ -539,9 +597,9 @@ body.in-net .nick{display:block}
   </div>
   <div class="end-row"><button class="start" type="button">시작하기</button><button class="end" type="button" hidden>나가기</button></div>
   <div class="netrow"><button class="chatbtn" type="button" aria-label="빠른 채팅"><svg class="cbase" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg><svg class="cfill" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg></button><button class="netleave" type="button">나가기</button><a class="netkk" href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener" hidden>오픈채팅</a><div class="chatmenu" hidden></div></div>
-  <div class="onl"><div class="nmrow"><input class="nmin" type="text" maxlength="30" placeholder="이름 정하기" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="이름"><button class="nmok" type="button">확인</button></div><div class="nmmsg" aria-live="polite"></div><button class="chpick" type="button"><i></i><span>캐릭터 선택</span></button><div class="mkrow"><button class="mkbtn" type="button">빠른 매칭</button><button class="rmbtn" type="button">방</button></div></div>
+  <div class="onl"><div class="nmrow"><input class="nmin" type="text" maxlength="60" placeholder="이름 정하기" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="이름"><button class="nmok" type="button">확인</button></div><div class="nmmsg" aria-live="polite"></div><button class="chpick" type="button"><i></i><span>캐릭터 선택</span></button><div class="mkrow"><button class="mkbtn" type="button">빠른 매칭</button><button class="rmbtn" type="button">방</button></div></div>
 <div class="pgdots" aria-hidden="true"><i></i><i class="on"></i><i></i></div><div class="onhint">오른쪽으로 밀면 온라인 · 왼쪽으로 밀면 2대2</div>
-</div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">https://open.kakao.com/o/gi4UJORi</a></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div><div class="pidtag" id="pidtag"></div></div>
+</div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">https://open.kakao.com/o/gi4UJORi</a></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><button class="prbtn" id="prbtn" type="button" aria-label="프로필"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.7 18.4c1.2-2.1 3-3.2 5.3-3.2s4.1 1.1 5.3 3.2"/></svg></button><button class="frbtn" id="frbtn" type="button" aria-label="친구"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="8.5" r="3.5"/><path d="M3 19.5c.6-3.6 3.2-5.6 6.5-5.6s5.9 2 6.5 5.6"/><path d="M18.5 7.5v6M15.5 10.5h6"/></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div><div class="pidtag" id="pidtag"></div></div>
 <div class="pnmodal" id="pnmodal" hidden><div class="pnpanel" role="dialog" aria-modal="true" aria-label="패치노트"><div class="pntitle">패치노트</div><button class="pnclose" id="pnclose" type="button" aria-label="닫기">✕</button><div id="pnbody"></div></div></div>
 <div id="audiohint" class="audiohint" hidden>🔇 소리가 멈췄어요. 화면을 한 번 터치해 주세요</div>
 <section class="guide" id="guide" aria-label="도움말"></section>
@@ -561,6 +619,49 @@ body.in-net .nick{display:block}
   </div>
 </div>
 <script>
+/* 관리자 폰에서만: 스크립트 오류를 화면 아래에 잠깐 보여 줌 (버그 찾기용, 일반 유저에게는 안 보임) */
+function dbgErr(m,all){if(!all){try{if(localStorage.getItem('bftAdm')!=='1')return}catch(_){return}}
+  try{let el=document.querySelector('.dbgerr');if(!el){el=document.createElement('div');el.className='dbgerr';document.body.appendChild(el)}
+    el.textContent='오류: '+String(m).slice(0,160);el.hidden=false;clearTimeout(dbgErr.t);dbgErr.t=setTimeout(()=>{el.hidden=true},9000)}catch(_){}}
+window.addEventListener('error',e=>dbgErr((e.message||'?')+(e.lineno?' (줄 '+e.lineno+')':'')));
+var NMX=40;   // 이름을 주고받을 때 최대 길이 (일반은 6글자로 정해지고, 제작자만 40글자까지)
+let uiOpenT=-1e9;
+function uiOpen(id){const t=performance.now();if(t-uiOpenT<600)return;uiOpenT=t;try{if(id==='prbtn')prShow();else frShow()}catch(err){dbgErr((err&&err.message)||err,1)}}
+{let dn=null;                                      // 프로필·친구 버튼: 손을 뗄 때 바로 열고, 클릭으로도 열림 (둘 중 먼저 온 것 한 번만)
+  const btn=e=>e.target&&e.target.closest?e.target.closest('#prbtn,#frbtn'):null;
+  document.addEventListener('pointerdown',e=>{const b=btn(e);dn=b?{id:b.id,x:e.clientX,y:e.clientY}:null},true);
+  document.addEventListener('pointerup',e=>{const b=btn(e),d=dn;dn=null;if(!b||!d||d.id!==b.id||e.pointerType==='mouse')return;if(Math.hypot(e.clientX-d.x,e.clientY-d.y)>14)return;uiOpen(b.id)},true);
+  document.addEventListener('click',e=>{const b=btn(e);if(!b)return;e.stopPropagation();uiOpen(b.id)},true)}
+/* 앱 안 브라우저(카톡·틱톡·인스타 등)로 들어오면 폰 기본 브라우저로 넘김: 앱마다 저장공간이 따로라서 아이디가 새로 생기는 걸 막음 */
+var IAPP=(function(){const ua=navigator.userAgent||'',ios=/iPhone|iPad|iPod/i.test(ua)||(/Macintosh/i.test(ua)&&navigator.maxTouchPoints>1),android=/Android/i.test(ua);
+  const kakao=/KAKAOTALK/i.test(ua),line=/\bLine\//.test(ua);
+  const on=(ios||android)&&/^https?:$/.test(location.protocol)&&(kakao||line||/musical_ly|Bytedance|trill_|TikTok|Instagram|FBAN|FBAV|FB_IAB|NAVER\(inapp|DaumApps|everytimeApp|BAND\/|Twitter|; wv\)/i.test(ua));
+  return {on,ios,android,kakao,line}})();
+var IAPP_STAY=false;try{IAPP_STAY=sessionStorage.getItem('bftStay')==='1'}catch(_){}
+function iappGo(){                                   // 기본 브라우저로 열기 시도 (카톡·라인은 자동으로 되고, 안드로이드는 크롬으로)
+  const url=location.href.replace(/[?&]openExternalBrowser=1/,'');
+  if(IAPP.kakao){location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(url);return true}
+  if(IAPP.line){location.href=url+(url.indexOf('?')<0?'?':'&')+'openExternalBrowser=1';return true}
+  if(IAPP.android){location.href='intent://'+url.replace(/^https?:\/\//,'')+'#Intent;scheme='+location.protocol.replace(':','')+';package=com.android.chrome;end';return true}
+  return false}
+function iappShow(){
+  if(document.querySelector('.iapp'))return;
+  const auto=IAPP.kakao||IAPP.line,el=document.createElement('div');el.className='iapp';
+  el.innerHTML='<div class="iabox"><div class="iatt">브라우저에서 열어 주세요</div>'
+    +'<div class="iatx">'+(auto?'폰 기본 브라우저로 게임을 열었어요. 이 창은 닫아도 돼요.':(IAPP.ios?'오른쪽 위나 아래의 <b>···</b> 버튼을 눌러 <b>Safari로 열기</b>(또는 <b>브라우저에서 열기</b>)를 눌러 주세요.':'아래 버튼을 누르면 크롬으로 열려요. 안 되면 오른쪽 위 <b>⋮</b> 버튼에서 <b>브라우저로 열기</b>를 눌러 주세요.'))+'</div>'
+    +'<div class="iatx iasm">카톡·틱톡 같은 앱 안에서 열면 앱마다 아이디가 따로 생겨서 친구·전적이 이어지지 않아요. 항상 같은 브라우저에서 해 주세요.</div>'
+    +'<div class="iabtns">'+(auto||IAPP.android?'<button type="button" class="rbtn rgo" data-i="go">'+(auto?'다시 열기':'크롬으로 열기')+'</button>':'')+'<button type="button" class="rbtn" data-i="copy">링크 복사</button></div>'
+    +'<button type="button" class="iastay" data-i="stay">그냥 여기서 하기</button></div>';
+  document.body.appendChild(el);
+  el.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;const a=b.dataset.i;
+    if(a==='go')iappGo();
+    else if(a==='copy'){const t=location.href.replace(/[?&]openExternalBrowser=1/,''),done=()=>{b.textContent='복사됨';setTimeout(()=>{if(b.isConnected)b.textContent='링크 복사'},1400)};
+      const fb=()=>{try{const x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;left:-99px;top:0;opacity:0';document.body.appendChild(x);x.select();document.execCommand('copy');x.remove();done()}catch(_){}};
+      try{navigator.clipboard.writeText(t).then(done,fb)}catch(_){fb()}}
+    else if(a==='stay'){IAPP_STAY=true;try{sessionStorage.setItem('bftStay','1')}catch(_){}el.remove();presBoot()}});
+}
+if(IAPP.on&&!IAPP_STAY){const go=()=>{iappShow();if(IAPP.kakao||IAPP.line)setTimeout(iappGo,250)};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()}   // 화면을 먼저 띄운 뒤 넘김
+
 function calcShift(){
   try{
     const c=document.createElement('canvas').getContext('2d');
@@ -2040,7 +2141,7 @@ function castJy(c){                 // 햄버거 25% / 치킨 30% / 야채 25% /
 
 /* ---------- 태권히어로: 아우라 + 주먹 ---------- */
 /* 아우라: 몸 가장자리에서 4m 바깥까지. 상대 몸이 아우라에 닿으면(두 공 사이 간격 4m 이내) 주먹이 나감 */
-const RESIST={cut:.3,cut2:.5,cut3:.7};   // 보호 25% / 보호II 50% / 보호III 70% 감소
+const RESIST={cut:.2,cut2:.5,cut3:.7};   // 보호 20% / 보호II 50% / 보호III 70% 감소
 const NU={spin:60,aura:.06,hit:3,ult:50,gap:.3,need:5,sec:1,ultSec:2.5,p1:.9,col3:8,colCd:HIT_GUARD,cycle:5,offSec:1.5,fade:.4,fxSec:3};
 const nuReach=()=>R+NU.aura+R;
 const BURN={gap:.5,lo:1,hi:5,lo2:5,hi2:10};                                 // 연소: 0.5초마다 1~5 (연소II는 5~10)
@@ -3115,14 +3216,24 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='2.7.12';
+const PATCH_VERSION='3.8.13';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'3.8.13',date:'2026-10-11',
+   chars:[],
+   fx:[],
+   sys:[
+     {who:'친구',lines:['친구 기능 추가 (로비 왼쪽 위 프로필 버튼 옆 사람 모양 버튼)','친구 아이디를 입력해서 친구 요청 보내기','친구 목록·친구 요청 탭 추가','받은 친구 요청 수락·거절, 보낸 요청 취소 가능','친구 요청이 오면 친구 버튼과 친구 요청 탭에 빨간 점 표시','친구 삭제 가능','친구의 현재 이름과 상태(온라인·오프라인·매칭 중·경기 중) 표시','방을 만든 뒤 온라인인 친구를 방에 초대 가능 (방 코드 옆 초대 버튼)','친구와 1대1 대화 추가 (친구 목록에서 대화 버튼)','새 메시지가 오면 화면 위에 알림, 친구 버튼·친구 목록 탭·그 친구 옆에 빨간 점 표시 (대화를 열면 사라짐)','대화 기록은 나갔다 들어와도 남음','친구가 접속해 있지 않을 때 보낸 메시지는 둘 다 접속해 있을 때 전달됨','1대1 대화에도 비속어 필터·경고 적용','1대1 대화에도 비속어 합의 추가 (대화 화면 위 버튼, 서로 동의하면 그 친구와는 비속어 사용 가능, 언제든 해제 가능)']},
+     {who:'프로필',lines:['프로필 버튼 추가 (로비 왼쪽 위)','프로필 이름 정하기 (온라인 이름과 따로)','내 아이디·친구 수 확인','온라인 전적(판·승·패·승률)과 많이 쓴 캐릭터 확인 (이번 업데이트부터 기록)']},
+     {who:'브라우저',lines:['카톡·틱톡 등 앱 안에서 링크를 열면 폰 기본 브라우저로 열리도록 변경 (앱마다 아이디가 따로 생기던 문제)','친구·프로필 버튼이 일부 앱 안 브라우저에서 잘 안 눌리던 문제 수정']}
+   ]},
   {ver:'2.7.12',date:'2026-10-11',
    chars:[
      {who:'백기철 판타지',tag:'buff',lines:['체력 베끼는 아우라 공격 간격 {+0.1초 → 0.09초}']}
    ],
-   fx:[],
+   fx:[
+     {who:'보호',tag:'nerf',lines:['피해 감소 {-30% → 20%}']}
+   ],
    sys:[
      {who:'방',lines:['온라인 방 추가 (빠른 매칭 옆 방 버튼)','방 제목·공개/비공개·비밀번호 설정 (비밀번호는 만들 때만 설정 가능)','공개 방 목록에서 입장하거나 방 코드로 입장','방장이 상대 추방, 공개/비공개 전환 가능','대기실에서 채팅 가능 (빠른 채팅 없음)','방 안에서 캐릭터 선택','방 코드 옆에 복사 버튼 추가','방 창을 접어도 방이 유지되고, 접어 두면 작은 버튼으로 다시 열기·상대 유무 확인','시작 버튼 크기 축소']},
      {who:'채팅',lines:['채팅 입력 시 키보드가 올라와도 화면이 움직이지 않도록 수정']},
@@ -3308,9 +3419,11 @@ document.querySelector('.more').addEventListener('click',()=>{const g=document.g
 
 /* ---------- 관리자 패널 ---------- */
 (function(){                           // 관리자 패널: 위쪽 'created by ball_fight_tiktok' 글자를 0.4초 안에 두 번 톡톡 누르면 열림
-  let lt=0;
+  let lt=0,arm=false;
   document.addEventListener('pointerdown',e=>{const ic=e.target.closest('.credit');if(!ic)return;
-    const t=performance.now();if(t-lt<=400){lt=0;admGate()}else lt=t});
+    const t=performance.now();
+    if(t-lt<=400){lt=0;if(e.pointerType==='touch'){arm=true;setTimeout(()=>{if(arm){arm=false;admGate()}},700)}else admGate()}else lt=t});
+  document.addEventListener('touchend',e=>{if(!arm)return;arm=false;if(e.cancelable)e.preventDefault();admGate()},{passive:false,capture:true});   // 폰: 두 번째 터치에서 손을 뗄 때 열고, 뒤따르는 마우스 이벤트를 막아서 키패드가 바로 닫히지 않게
   document.addEventListener('contextmenu',e=>{if(e.target.closest('.fxic'))e.preventDefault()});
 })();
 function admPage(k){                           // 탭마다 안쪽을 작은 제목(구분)으로 나눔
@@ -3335,6 +3448,10 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="admsub">경고 기록</div><div class="modwarn"></div>'
     +'<div class="admsub">플레이어 검색</div><div class="admrow"><input class="modq" type="text" maxlength="6" placeholder="플레이어 아이디 6자리" autocomplete="off" autocapitalize="characters"><button type="button" class="admbtn" data-a="modfind">검색</button></div><div class="modres"></div>'
     +'<div class="admnote">경고 기록은 접속한 사람들 폰을 타고 모입니다. 채팅 기록은 그 사람이 지금 접속해 있을 때만 불러올 수 있습니다.</div>';
+  if(k==='user')return '<div class="admsub">유저 검색</div><div class="admrow"><input class="modq usrq" type="text" maxlength="12" placeholder="아이디 또는 이름" autocomplete="off" style="text-transform:none"><button type="button" class="admbtn admsub2" data-a="usrref">새로고침</button></div>'
+    +'<div class="admsub">유저 <span class="usrcnt"></span></div><div class="usrlist"></div>'
+    +'<div class="admsub">친구 관계</div><div class="usrpairs"></div>'
+    +'<div class="admnote">이름을 정한 적이 있는 유저만 나옵니다. 유저를 누르면 친구·받은 요청·보낸 요청이 펼쳐집니다. 접속 상태는 실시간, 친구 기록은 1분마다 새로 받아 옵니다.</div>';
   if(k==='set')return '<div class="admsub">소리</div><div class="admsk admtg">'+sw('mute','효과음')+'</div><div class="admrow"><span>음량</span><input type="range" class="admrange" data-a="vol" min="0" max="150" step="5"><b data-o="vol"></b></div>'
     +'<div class="admsub">화면</div><div class="admsk admtg">'+sw('shake','화면 흔들림')+sw('lowfx','효과 줄이기')+sw('hit','히트박스')+'</div>'
     +'<div class="admsub">패널</div><div class="admrow"><span>투명도</span><input type="range" class="admrange" data-a="op" min="30" max="100" step="5"><b data-o="op"></b></div><div class="admsk">'+bt('panelreset','위치·크기 초기화','admsub2')+'</div>';
@@ -3350,15 +3467,17 @@ function admGate(){                              // 어드민 패널: 두 번 �
   const h=t=>{let x=0x811c9dc5;for(const b of new TextEncoder().encode(t)){x^=b;x=Math.imul(x,0x01000193)>>>0}return x};
   const ok=()=>{if(h('bft:'+inp.value)===542645959){ADM_OK=true;close();openAdmin()}else{err.textContent='비밀번호가 틀렸습니다.';inp.value='';inp.focus()}};
   m.querySelector('.pwyes').addEventListener('click',ok);m.querySelector('.pwno').addEventListener('click',close);
-  m.addEventListener('click',e=>{if(e.target===m)close()});inp.addEventListener('keydown',e=>{if(e.key==='Enter')ok();if(e.key==='Escape')close()});
-  setTimeout(()=>inp.focus(),30);
+  const t0=performance.now();   // 열리자마자 들어온 바깥 터치로 닫히지 않게
+  m.addEventListener('pointerdown',e=>{if(e.target===m&&performance.now()-t0<350)e.preventDefault()});
+  m.addEventListener('click',e=>{if(e.target===m&&performance.now()-t0>=350)close()});inp.addEventListener('keydown',e=>{if(e.key==='Enter')ok();if(e.key==='Escape')close()});
+  inp.focus();setTimeout(()=>{if(m.isConnected&&document.activeElement!==inp)inp.focus()},30);
 }
 function openAdmin(){
   try{localStorage.setItem('bftAdm','1')}catch(e){}                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
   let w=document.querySelector('.adm');
   if(w){if(w._expand)w._expand(true);return}
   w=document.createElement('div');w.className='adm';
-  const TABS=[['main','메인'],['char','캐릭터'],['game','게임'],['mod','관리'],['set','설정']];
+  const TABS=[['main','메인'],['char','캐릭터'],['game','게임'],['mod','관리'],['user','유저'],['set','설정']];
   w.innerHTML='<div class="admwin"><div class="admhd"><span class="admdot"></span><span class="admtt">어드민 패널</span><button type="button" class="admmin" aria-label="접기"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button></div>'
     +'<div class="admmain"><div class="admtabs">'+TABS.map((t,k)=>'<button type="button" class="admtab'+(k?'':' on')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'
     +'<div class="admpane">'+TABS.map((t,k)=>'<div class="admpg'+(k?'':' on')+'" data-p="'+t[0]+'"><div class="admh">'+t[1]+'</div>'+admPage(t[0])+'</div>').join('')+'</div></div></div>'
@@ -3439,7 +3558,7 @@ function openAdmin(){
     if(st){const v=parseFloat(st.value.replace(',','.'));if(isFinite(v)&&v>0)admSteps[st.dataset.step]=v;else delete admSteps[st.dataset.step];return}
     const i=e.target.closest('input[data-a]');if(!i)return;const v=+i.value/100;
     if(i.dataset.a==='vol'){admVol=v;admApplyVol()}else if(i.dataset.a==='op')admOp=v;admSave();admSync()});
-  const box=w.querySelector('.admchars'),info=w.querySelector('.adminfo'),logs=w.querySelector('.admlogs'),stb=w.querySelector('.admstats'),odb=w.querySelector('.admodds'),ccub=w.querySelector('.admccu');let sig='',lsig='',ssig='',osig='',csig='',msig='',asig='';
+  const box=w.querySelector('.admchars'),info=w.querySelector('.adminfo'),logs=w.querySelector('.admlogs'),stb=w.querySelector('.admstats'),odb=w.querySelector('.admodds'),ccub=w.querySelector('.admccu');let sig='',lsig='',ssig='',osig='',csig='',msig='',asig='',usig='';
   const refresh=()=>{                       // 게임에 들어온 캐릭터가 바뀌면 목록을 다시 그림
     const ss=chars.map(c=>c.side+c.kind+(c.alive?1:0)+(c.started?1:0)).join('|')+over;
     if(ss!==sig){sig=ss;admRenderChars(box)}
@@ -3450,6 +3569,7 @@ function openAdmin(){
     const c2=JSON.stringify([PRES_DAYS,[...PRES_STAR],Object.keys(PRES_UV).map(k=>PRES_UV[k].length),UVN]);if(c2!==csig){csig=c2;ccub.innerHTML=admCcuHTML()}
     {const a2=ANN_LOG.length+':'+(ANN_LOG.length?ANN_LOG[ANN_LOG.length-1].t:0);if(a2!==asig){asig=a2;const bx=w.querySelector('.annlog');if(bx)bx.innerHTML=ANN_LOG.length?ANN_LOG.slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> <b style="color:#17e3d6">'+admEsc(x.n)+' ('+x.pid+')</b> '+admEsc(x.m)+'</div>').join(''):'<div class="admnone">아직 공지가 없습니다.</div>'}}
     if(w.querySelector('.admpg.on[data-p="mod"]')){const m2=JSON.stringify(REG).length+':'+PEN.u+':'+Math.floor(Date.now()/20000)+':'+(NET.op&&NET.op.pid);if(m2!==msig){msig=m2;modRender(w)}}
+    if(w.querySelector('.admpg.on[data-p="user"]')){const q=w.querySelector('.usrq'),u2=FRP.v+':'+FRX.v+':'+JSON.stringify(FR.e).length+':'+(q?q.value:'')+':'+[...usrOpen].join(',')+':'+NET.me.name+':'+presMy();if(u2!==usig){usig=u2;usrRender(w)}}
     const s2=chars.map(c=>c.side+c.kind).join('|');if(s2!==ssig){ssig=s2;stb.innerHTML=admStatsHTML()}   // 줄은 캐릭터가 바뀔 때만 다시 그림 (꾹 누르는 중·입력 중에 안 끊기게)
     if(!osig){osig='1';odb.innerHTML=admOddsHTML()}
     admVals(w);
@@ -3592,7 +3712,13 @@ function admCcuHTML(){                          // 날짜별 최고 동접 (최�
   return ks.map(k=>{const d=PRES_DAYS[k]||{n:0,t:Date.now()},[y,m,dd]=k.split('-'),st=PRES_STAR.has(k),uv=uvCount(k);
     return '<div class="admlog admccr"><span class="ccd">'+(+m)+'월 '+(+dd)+'일'+(k===ccuDay()?' (오늘)':'')+'</span><b>최고 '+d.n+'명</b><span class="ccu">방문 '+uv+'명</span><span>'+new Date(d.t).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+'</span><button type="button" class="ccstar'+(st?' on':'')+'" data-a="ccstar" data-k="'+k+'" aria-label="기록 살려 두기">'+(st?'★':'☆')+'</button></div>'}).join('');
 }
-const modOpen=new Set(),modChatData={};
+const modOpen=new Set(),modChatData={},usrChatData={};
+function modChatHTML(r){                           // 어드민: 그 사람 폰에 남은 게임 채팅 + 1대1 대화
+  if(!r)return '<div class="admnone">지금 접속 중이 아니라 불러올 수 없습니다.</div>';
+  const f=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  return '<div class="admlbl">게임 채팅</div>'+((r.log||[]).length?r.log.slice().reverse().map(x=>'<div class="modli"><span>'+f(x.t)+'</span> '+admEsc(x.m||'')+(x.to?' <i>→ '+admEsc(x.to)+'</i>':'')+'</div>').join(''):'<div class="admnone">없음</div>')
+    +'<div class="admlbl">1대1 대화</div>'+((r.dm||[]).length?r.dm.slice().reverse().map(x=>'<div class="modli"><span>'+f(x.t)+'</span> <i>'+(x.me?'보냄 → ':'받음 ← ')+admEsc(x.n||'?')+' ('+admEsc(x.w||'?')+')</i> '+admEsc(x.m||'')+'</div>').join(''):'<div class="admnone">없음</div>');
+}
 function modRow(id,e){                           // 경고 명단 한 줄
   const now=Date.now(),m=Math.max(0,Math.ceil(((+e.cu||0)-now)/60000)),g=e.g|0,left=[g>0?g+'판':'',m>0?m+'분':''].filter(Boolean).join(' / ');
   const why=(e.log||[]).slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> <b>['+admEsc(x.r||'?')+']</b> '+admEsc(x.m||'')+'</div>').join('')||'<div class="admnone">기록 없음</div>';
@@ -3610,6 +3736,39 @@ function modRender(w){
   w.querySelector('.modpen').innerHTML=pen.length?pen.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">패널티를 받고 있는 사람이 없습니다.</div>';
   w.querySelector('.modwarn').innerHTML=warn.length?warn.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">경고 기록이 없습니다.</div>';
   w.querySelectorAll('.modchat[data-id]').forEach(el=>{const d=modChatData[el.dataset.id];if(d)el.innerHTML=d});
+}
+const usrOpen=new Set();
+function usrData(){                              // 어드민: 저장소 기록 + 내 폰 기록을 합쳐 유저별로 정리
+  const E={};for(const k in FRX.e)E[k]=FRX.e[k];for(const k in FR.e)if(!E[k]||E[k].u<FR.e[k].u)E[k]=FR.e[k];
+  const U={},get=id=>U[id]||(U[id]={id,f:[],i:[],o:[]});
+  for(const id in FRX.n)get(id);for(const id in REG)get(id);if(NET.me.name)get(PID);
+  const pairs=[];
+  for(const k in E){const e=E[k];if(e.st==='x')continue;const A=get(e.a),B=get(e.b);
+    if(e.st==='f'){A.f.push(e.b);B.f.push(e.a);pairs.push(e)}
+    else if(e.by===e.a){A.o.push(e.b);B.i.push(e.a)}else{B.o.push(e.a);A.i.push(e.b)}}
+  for(const id in U){const u=U[id],x=id===PID?{n:NET.me.name}:(FRX.n[id]||FR.n[id]||(REG[id]?{n:REG[id].n}:null)),p=id===PID?[presMy()]:FRP.pl[id];
+    u.n=(p&&p[1])||(x&&x.n)||'?';u.s=p&&FRST[p[0]]?FRST[p[0]]:['오프라인','off',3]}
+  return {U,pairs};
+}
+const usrNm=(U,id)=>(U[id]?U[id].n:'?');
+function usrRender(w){
+  const q=(w.querySelector('.usrq').value||'').trim().toUpperCase(),{U,pairs}=usrData();
+  const match=u=>!q||u.id.includes(q)||u.n.toUpperCase().includes(q);
+  let L=Object.values(U).filter(match).sort((a,b)=>a.s[2]-b.s[2]||b.f.length-a.f.length||a.n.localeCompare(b.n,'ko'));
+  const total=L.length;L=L.slice(0,100);
+  w.querySelector('.usrcnt').textContent='('+total+'명'+(total>100?' · 100명만 표시':'')+')';
+  const line=(id,extra)=>{const u=U[id]||{n:'?',s:['오프라인','off']};return '<div class="modli"><b class="usrn">'+admEsc(u.n)+'</b> <span>'+id+'</span> <em class="usrst '+u.s[1]+'">'+u.s[0]+'</em>'+(extra||'')+'</div>'};
+  w.querySelector('.usrlist').innerHTML=L.length?L.map(u=>{
+    const open=usrOpen.has(u.id);
+    return '<div class="admch usr"><button type="button" class="usrhd" data-a="usrtog" data-id="'+u.id+'"><b>'+admEsc(u.n)+'</b><i>'+u.id+'</i><em class="usrst '+u.s[1]+'">'+u.s[0]+'</em></button>'
+      +'<div class="modl">친구 <b>'+u.f.length+'</b>명 · 받은 요청 <b>'+u.i.length+'</b> · 보낸 요청 <b>'+u.o.length+'</b></div>'
+      +(open?'<div class="modwhy">'
+        +(u.f.length?'<div class="admlbl">친구</div>'+u.f.map(id=>line(id)).join(''):'<div class="admnone">친구가 없습니다.</div>')
+        +(u.i.length?'<div class="admlbl">받은 요청</div>'+u.i.map(id=>line(id)).join(''):'')
+        +(u.o.length?'<div class="admlbl">보낸 요청</div>'+u.o.map(id=>line(id)).join(''):'')
+        +'<div class="admsk" style="margin-top:0.6em"><button type="button" class="admbtn" data-a="usrchat" data-id="'+u.id+'">채팅·대화 기록 보기</button></div>'+(usrChatData[u.id]?'<div class="modchat">'+usrChatData[u.id]+'</div>':'')+'</div>':'')+'</div>'}).join(''):'<div class="admnone">'+(q?'검색 결과가 없습니다.':'아직 등록된 유저가 없습니다.')+'</div>';
+  const P=pairs.filter(e=>match(U[e.a])||match(U[e.b])).sort((a,b)=>b.u-a.u);
+  w.querySelector('.usrpairs').innerHTML=P.length?P.slice(0,80).map(e=>'<div class="admlog"><b class="usrn">'+admEsc(usrNm(U,e.a))+'</b> <span>'+e.a+'</span> ↔ <b class="usrn">'+admEsc(usrNm(U,e.b))+'</b> <span>'+e.b+'</span></div>').join('')+(P.length>80?'<div class="admnote">최근 80쌍만 표시 중 ('+P.length+'쌍)</div>':''):'<div class="admnone">친구 관계가 없습니다.</div>';
 }
 function admLogHTML(){
   if(!admLog.length)return '<div class="admnone">아직 끝난 경기가 없습니다.</div>';
@@ -3716,13 +3875,16 @@ function admAct(a,b){
   else if(['statreset','hp1','kill','gauge','deb','center'].includes(a)&&c)admCmd({a,side:c.side,k:b.dataset.k});
   else if(a==='tp'&&c)admTp=admTp===c?null:c;
   else if(a==='modwhy'||a==='modchat'){const id=b.dataset.id,box=b.closest('.modr').querySelector(a==='modwhy'?'.modwhy':'.modchat');box.hidden=!box.hidden;const key=(a==='modwhy'?'w':'c')+id;if(box.hidden)modOpen.delete(key);else modOpen.add(key);
-    if(a==='modchat'&&!box.hidden){box.innerHTML='<div class="admnone">불러오는 중...</div>';modQuery(id,r=>{const h=r?(r.log.length?r.log.slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> '+admEsc(x.m||'')+(x.to?' <i>→ '+admEsc(x.to)+'</i>':'')+'</div>').join(''):'<div class="admnone">채팅 기록이 없습니다.</div>'):'<div class="admnone">지금 접속 중이 아니라 불러올 수 없습니다.</div>';modChatData[id]=h;document.querySelectorAll('.modchat[data-id="'+id+'"]').forEach(el=>{el.innerHTML=h})})}}
+    if(a==='modchat'&&!box.hidden){box.innerHTML='<div class="admnone">불러오는 중...</div>';modQuery(id,r=>{const h=modChatHTML(r);modChatData[id]=h;document.querySelectorAll('.modchat[data-id="'+id+'"]').forEach(el=>{el.innerHTML=h})})}}
   else if(a==='modun'||a==='modreset'){const id=b.dataset.id,ua=a==='modreset'?'reset':'unpen';
     if(id===PID){if(ua==='reset'){PEN.w=0;PEN_LOG=[]}else{PEN.cu=0;PEN.g=0}PEN.u=Date.now();penSave();regPublish()}else regAdmin(id,ua);
     const w=document.querySelector('.adm');if(w)modRender(w)}
   else if(a==='modfind'){const w=document.querySelector('.adm'),q=(w.querySelector('.modq').value||'').toUpperCase().replace(/[^A-Z0-9]/g,''),res=w.querySelector('.modres');
     if(!/^[A-Z2-9]{6}$/.test(q)){res.innerHTML='<div class="admnone">아이디 6자리를 입력하세요.</div>';return}
     const e=q===PID?regSelf():REG[q];res.innerHTML=modRow(q,e||{n:'?',w:0,cu:0,g:0,log:[]})+(e?'':'<div class="admnote">경고 기록이 없는 플레이어입니다.</div>')}
+  else if(a==='usrtog'){const id=b.dataset.id;if(usrOpen.has(id))usrOpen.delete(id);else usrOpen.add(id);const w=document.querySelector('.adm');if(w)usrRender(w)}
+  else if(a==='usrref'){cldSync(false)}
+  else if(a==='usrchat'){const id=b.dataset.id;usrChatData[id]='<div class="admnone">불러오는 중...</div>';{const w=document.querySelector('.adm');if(w)usrRender(w)}modQuery(id,r=>{usrChatData[id]=modChatHTML(r);const w=document.querySelector('.adm');if(w)usrRender(w)})}
   else if(a==='spec'){specJoin(b.dataset.k)}
   else if(a==='roomsget'){const box=document.querySelector('.adm .modrooms');box.innerHTML='<div class="admnone">불러오는 중...</div>';roomsAll(L=>{box.innerHTML=!L?'<div class="admnone">불러올 수 없습니다.</div>':(L.length?L.map(r=>'<div class="admch"><div class="admcn"><b>'+admEsc(r.title)+'</b><i>'+r.code+'</i><span class="modw" style="color:'+(r.pub?'#2bff5a':'#e3d94a')+'">'+(r.pub?'공개':'비공개')+'</span></div><div class="modl">방장 <b>'+admEsc(r.host)+'</b> · 인원 <b>'+r.n+'/2</b> · 비밀번호 <b>'+(r.pw?admEsc(r.pw):'없음')+'</b></div></div>').join(''):'<div class="admnone">열려 있는 방이 없습니다.</div>')})}
   else if(a==='annsend'){const i=document.querySelector('.adm .annin'),t=(i.value||'').trim();if(!t)return;annSend(t);i.value=''}
@@ -3862,12 +4024,12 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(!NET.s
 window.addEventListener('pagehide',bhAudioOff);window.addEventListener('blur',bhAudioOff);   // 앱 복귀 시 시간 점프/소리 끊김 방지
 /* ---------- 온라인 매칭 (로비에서 오른쪽으로 넘기면 나오는 화면) ---------- */
 const NET={admQ:[],admHist:[],screen:'lobby',state:'idle',searchId:0,peers:[],conn:null,host:false,match:false,sim:false,anim:false,
-  seed:0,mySide:null,me:{name:'',dev:false},op:null,myCh:null,pick:null,picking:false,
+  seed:0,mySide:null,me:{name:'',dev:false,tst:false},op:null,myCh:null,pick:null,picking:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
-const NET_PROTO='b2711',NET_SLOTS=4,NET_SNAP=30;
+const NET_PROTO='b2712',NET_SLOTS=4,NET_SNAP=30;
 const NET_CHAT=['안녕하세요!','줴줴이야','아니','나이스!','엄.','예?'];
-try{NET.me.name=localStorage.getItem('bftNick')||'';NET.me.dev=localStorage.getItem('bftDev')==='1';NET.pick=localStorage.getItem('bftPick')||null}catch(e){}
+try{NET.me.name=localStorage.getItem('bftNick')||'';NET.me.dev=localStorage.getItem('bftDev')==='1';NET.me.tst=!NET.me.dev&&localStorage.getItem('bftTst')==='1';NET.pick=localStorage.getItem('bftPick')||null}catch(e){}
 const netEsc=t=>String(t).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 const WRENCH='<svg class="wrench" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(45 12 12)"><rect x="10.3" y="9.6" width="3.4" height="13" rx="1.5" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1"/><path d="M7.2 1.6h9.3a.9.9 0 0 1 .9.9v7.4a.9.9 0 0 1-.9.9h-6.3V8.1h3.9V5.3H7.2a.9.9 0 0 1-.9-.9v-1.9a.9.9 0 0 1 .9-.9z" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1" stroke-linejoin="round"/><rect x="7.6" y="7.2" width="6.6" height="2.4" rx=".6" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1"/><path d="M10.6 11.6h2.8M10.6 13.1h2.8" stroke="#0a2f8f" stroke-width=".9" stroke-linecap="round"/></g></svg>';
 const netHalf=n=>[...document.querySelectorAll('.modal .half[data-name]')].find(h=>h.dataset.name===n);
@@ -3876,10 +4038,12 @@ const netCol=n=>{const h=netHalf(n);if(!h)return '#5f6467';return NET_COL[h.data
 const netSlot=i=>'bftball-'+NET_PROTO+'-q'+i;
 const netOpp=()=>NET.mySide==='left'?'right':'left';
 function netSend(o){try{if(NET.conn&&NET.conn.open)NET.conn.send(o)}catch(e){}}
-function netWho(info,cls,me){const chip=me?'<i class="nme">나</i>':'';return '<span class="nwho'+(cls?' '+cls:'')+'"><span class="nwl">'+(me==='r'?chip:'')+'<span class="nwn">'+netEsc(info.name)+'</span>'+(info.dev?'<span class="devtxt">제작자</span>':'')+(me&&me!=='r'?chip:'')+'</span>'+(info.dev?'<span class="devcap">ball_fight_tiktok</span>':'')+'</span>'}
+const roleOf=x=>x&&x.dev?'d':(x&&x.tst?'t':'');   // 제작자 'd' · 테스터 't'
+const rtag=r=>r===true||r==='d'?'<span class="devtxt">제작자</span>':(r==='t'?'<span class="devtxt">테스터</span>':'');
+function netWho(info,cls,me){const chip=me?'<i class="nme">나</i>':'';return '<span class="nwho'+(cls?' '+cls:'')+'"><span class="nwl">'+(me==='r'?chip:'')+'<span class="nwn">'+netEsc(info.name)+'</span>'+rtag(roleOf(info))+(me&&me!=='r'?chip:'')+'</span>'+'</span>'}
 
 /* 화면 넘기기: 로비 ⇄ 온라인 (반쯤 걸친 상태로 멈추지 않고 항상 둘 중 하나) */
-function netCanSwipe(){const pn=document.getElementById('pnmodal');return phase==='idle'&&!NET.match&&NET.state==='idle'&&!NET.anim&&modal.hidden&&(!pn||pn.hidden)&&!document.querySelector('.pwmodal')}
+function netCanSwipe(){const pn=document.getElementById('pnmodal');return phase==='idle'&&!NET.match&&NET.state==='idle'&&!NET.anim&&modal.hidden&&(!pn||pn.hidden)&&!document.querySelector('.pwmodal')&&!document.querySelector('.frmodal:not([hidden])')}
 function netGoScreen(to,dir){
   if(to===NET.screen||NET.anim)return;
   NET.anim=true;const st=document.querySelector('.stage');
@@ -3896,7 +4060,7 @@ function netGoScreen(to,dir){
 function netDots(){const k=['online','lobby','2v2'].indexOf(NET.screen);document.querySelectorAll('.pgdots i').forEach((d,i)=>d.classList.toggle('on',i===k))}
 (function(){let sx=0,sy=0,t0=0,id=null,ok=false;
   document.addEventListener('pointerdown',e=>{if(!e.isPrimary)return;id=e.pointerId;sx=e.clientX;sy=e.clientY;t0=performance.now();
-    ok=!e.target.closest('.modal,.pnmodal,.adm,.mmodal,input,textarea,.chatmenu,.pwmodal,.arena.aiming')},true);
+    ok=!e.target.closest('.modal,.pnmodal,.adm,.mmodal,input,textarea,.chatmenu,.pwmodal,.arena.aiming,.frmodal,.frinv,.rmodal')},true);
   document.addEventListener('pointerup',e=>{if(e.pointerId!==id)return;id=null;if(!ok)return;
     const dx=e.clientX-sx,dy=e.clientY-sy;
     if(Math.abs(dx)<60||Math.abs(dx)<Math.abs(dy)*1.6||performance.now()-t0>800||!netCanSwipe())return;
@@ -3909,15 +4073,16 @@ function netDots(){const k=['online','lobby','2v2'].indexOf(NET.screen);document
 const onlEl=document.querySelector('.onl'),nmIn=onlEl.querySelector('.nmin'),nmMsg=onlEl.querySelector('.nmmsg'),chBtn=onlEl.querySelector('.chpick');
 function netMsg(t,cls){nmMsg.textContent=t;nmMsg.className='nmmsg '+cls;nmMsg.getAnimations().forEach(a=>a.cancel());nmMsg.animate([{opacity:0,transform:'translateY(-3px)'},{opacity:1,transform:'none'}],{duration:180,easing:'ease-out'})}
 function netSaveName(auto){
-  const raw=nmIn.value,dev0=/\[\s*bft48\s*\]/i.test(raw),nm=raw.replace(/\[\s*bft48\s*\]/ig,'').replace(/\s+/g,' ').trim();   // 제작자 코드는 이름에서 빼고 표시만 바꿈
+  const raw=nmIn.value,dev0=/\[\s*bft48\s*\]/i.test(raw),tst0=/\[\s*tst8\s*\]/i.test(raw),nm=raw.replace(/\[\s*(bft48|tst8)\s*\]/ig,'').replace(/\s+/g,' ').trim();   // 제작자·테스터 코드는 이름에서 빼고 표시만 바꿈
   if(!nm){if(!auto||raw)netMsg('이름을 입력해 주세요','bad');return false}
   if(!/^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]+$/.test(nm)){netMsg('숫자·영어·한글·띄어쓰기·!·?·.·~·( )만 쓸 수 있어요','bad');return false}   // 쓸 수 있는 글자
   {const mc=modCheck(nm);if(mc.bad||mc.pi){netMsg('사용할 수 없는 이름이에요','bad');return false}}
   if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(nm)){netMsg('띄어쓰기·기호만으로는 이름을 만들 수 없어요','bad');return false}
-  const dev=dev0||(nm===NET.me.name&&NET.me.dev);   // 코드가 빠진 같은 이름이면 제작자 표시는 그대로
-  if([...nm].length>6){netMsg('이름은 6글자까지 쓸 수 있어요','bad');return false}
-  if(auto&&nm===NET.me.name&&dev===NET.me.dev){if(nmMsg.classList.contains('bad'))nmMsg.textContent='';return true}   // 바뀐 게 없으면 그대로
-  NET.me.name=nm;NET.me.dev=dev;try{localStorage.setItem('bftNick',nm);localStorage.setItem('bftDev',dev?'1':'0')}catch(e){}
+  const dev=dev0||(!tst0&&nm===NET.me.name&&NET.me.dev);   // 코드가 빠진 같은 이름이면 제작자 표시는 그대로
+  const tst=!dev&&(tst0||(nm===NET.me.name&&NET.me.tst));
+  if([...nm].length>(dev?NMX:6)){netMsg(dev?'이름이 너무 길어요':'이름은 6글자까지 쓸 수 있어요','bad');return false}
+  if(auto&&nm===NET.me.name&&dev===NET.me.dev&&tst===NET.me.tst){if(nmMsg.classList.contains('bad'))nmMsg.textContent='';return true}   // 바뀐 게 없으면 그대로
+  NET.me.name=nm;NET.me.dev=dev;NET.me.tst=tst;try{localStorage.setItem('bftNick',nm);localStorage.setItem('bftDev',dev?'1':'0');localStorage.setItem('bftTst',tst?'1':'0')}catch(e){}
   if(!auto){nmIn.value=nm;nmIn.blur()}netPaintOnl();netMsg('이름이 성공적으로 변경되었습니다!','ok');return true;
 }
 onlEl.querySelector('.nmok').addEventListener('click',()=>netSaveName(false));
@@ -3940,7 +4105,7 @@ function netPickClick(e){
 }
 function netPaintOnl(){
   if(document.activeElement!==nmIn)nmIn.value=NET.me.name;
-  onlEl.querySelector('.nmrow').classList.toggle('dev',!!NET.me.dev&&!!NET.me.name);
+  onlEl.querySelector('.nmrow').classList.toggle('dev',!!NET.me.dev&&!!NET.me.name);onlEl.querySelector('.nmrow').classList.toggle('tst',!NET.me.dev&&!!NET.me.tst&&!!NET.me.name);
   const p=NET.pick&&(NET.pick==='random'||netHalf(NET.pick))?NET.pick:null;
   chBtn.querySelector('span').textContent=p?(p==='random'?'랜덤':p):'캐릭터 선택';
   chBtn.classList.toggle('set',!!p);chBtn.style.setProperty('--cc',p&&p!=='random'?netCol(p):'#fff');
@@ -4014,8 +4179,8 @@ function netPeer(id){return new Promise((res,rej)=>{
   p.on('open',()=>{if(done)return;done=true;clearTimeout(to);res(p)});
   p.on('error',e=>{if(done)return;done=true;clearTimeout(to);netKill(p);rej(e||{})});
 })}
-const netInfo=()=>({name:NET.me.name,dev:!!NET.me.dev,ch:NET.myCh,pid:PID});
-function netCleanInfo(d){let n=String(d&&d.name||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').replace(/\s+/g,' ').trim();if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(n)||modCheck(n).bad)n='';return {pid:/^[A-Z2-9]{6}$/.test(d&&d.pid)?d.pid:'',name:[...(n||'???')].slice(0,6).join(''),dev:!!(d&&d.dev),ch:netHalf(d&&d.ch)?d.ch:'더미'}}
+const netInfo=()=>({name:NET.me.name,dev:!!NET.me.dev,tst:!NET.me.dev&&!!NET.me.tst,ch:NET.myCh,pid:PID});
+function netCleanInfo(d){let n=String(d&&d.name||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').replace(/\s+/g,' ').trim();if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(n)||modCheck(n).bad)n='';return {pid:/^[A-Z2-9]{6}$/.test(d&&d.pid)?d.pid:'',name:[...(n||'???')].slice(0,NMX).join(''),dev:!!(d&&d.dev),tst:!(d&&d.dev)&&!!(d&&d.tst),ch:netHalf(d&&d.ch)?d.ch:'더미'}}
 function netJoin(me,id){return new Promise(res=>{
   let done=false,c=null,to=0;
   const fin=r=>{if(done)return;done=true;clearTimeout(to);try{me.off('error',onErr)}catch(_){}if(r!=='ok'&&c){try{c.close()}catch(_){}}res(r)};
@@ -4220,6 +4385,7 @@ function netHostEnd(w){
   else if(NET.shown&&NET.shownW!==w)netVictory(w);
 }
 function netVictory(side){
+  try{profRec(side)}catch(e){}
   const first=!NET.shown;NET.shown=true;NET.shownW=side;
   const w=side?chars.find(c=>c.side===side):null,info=side?(NET.spec?NET.spec[side==='left'?'L':'R']:(side===NET.mySide?NET.me:NET.op)):null;
   if(w&&w.kind==='um'&&!NET.umWin){NET.umWin=true;try{umWinPlay(w)}catch(e){}}
@@ -4349,7 +4515,7 @@ function regMerge(map,from){
   let ch=false;if(!map||typeof map!=='object')return false;
   for(const id in map){if(!/^[A-Z2-9]{6}$/.test(id))continue;const e=map[id];if(!e||typeof e!=='object')continue;
     if(id===PID){if((+e.ub||0)>(PEN.ub||0)){PEN.ub=+e.ub;if(e.ua==='reset'){PEN.w=0;PEN_LOG=[]}else{PEN.cu=0;PEN.g=0}PEN.u=Date.now();penSave();regPublish();try{netToast(e.ua==='reset'?'관리자가 경고를 초기화했어요':'관리자가 채팅 금지를 풀었어요')}catch(_){}}continue}
-    const o=REG[id];if(!o||(+e.u||0)>(+o.u||0)){REG[id]={n:String(e.n||'?').slice(0,6),w:e.w|0,cu:+e.cu||0,g:e.g|0,log:Array.isArray(e.log)?e.log.slice(-10).map(x=>({t:+x.t||0,m:String(x.m||'').slice(0,30),r:String(x.r||'').slice(0,12)})):[],u:+e.u||0,ub:+e.ub||0,ua:e.ua==='reset'?'reset':(e.ua?'unpen':undefined)};regChg.add(id);ch=true}}
+    const o=REG[id];if(!o||(+e.u||0)>(+o.u||0)){REG[id]={n:String(e.n||'?').slice(0,NMX),w:e.w|0,cu:+e.cu||0,g:e.g|0,log:Array.isArray(e.log)?e.log.slice(-10).map(x=>({t:+x.t||0,m:String(x.m||'').slice(0,30),r:String(x.r||'').slice(0,12)})):[],u:+e.u||0,ub:+e.ub||0,ua:e.ua==='reset'?'reset':(e.ua?'unpen':undefined)};regChg.add(id);ch=true}}
   if(ch){regSave();regFlush()}return ch;
 }
 function regFlush(){clearTimeout(regT);regT=setTimeout(()=>{if(!regChg.size)return;const o={};for(const id of regChg)if(REG[id])o[id]=REG[id];regChg.clear();
@@ -4359,7 +4525,7 @@ function regAdmin(id,ua){const e=REG[id];if(!e)return;const now=Date.now();REG[i
 /* 채팅 기록 조회: 어드민 → 모임 자리 → 그 사람 폰 → 다시 어드민 */
 const MODQ={};
 function modQuery(id,cb){const rid=Math.random().toString(36).slice(2,8);MODQ[rid]=cb;setTimeout(()=>{if(MODQ[rid]){delete MODQ[rid];cb(null)}},6000);
-  if(id===PID){delete MODQ[rid];cb({n:NET.me.name,log:MY_CHAT});return}
+  if(id===PID){delete MODQ[rid];cb({n:NET.me.name,log:MY_CHAT,dm:dmRecent()});return}
   if(PRES.hub)presHubData(null,{t:'q',id,rid});else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'q',id,rid})}catch(_){}}}
 const annSeen=new Set();
 function annShow(m){                                // 전체 공지: 위에서 사르르 나타났다가 6초 뒤 사라짐
@@ -4368,15 +4534,15 @@ function annShow(m){                                // 전체 공지: 위에서 
   el.animate([{opacity:0},{opacity:1}],{duration:500,easing:'ease-out',fill:'forwards'});
   setTimeout(()=>{if(!el.isConnected)return;el.animate([{opacity:1},{opacity:0}],{duration:600,easing:'ease-in',fill:'forwards'}).onfinish=()=>el.remove()},4000);   // 나타난 뒤 3.5초 보여 주고 사라짐
 }
-let ANN_LOG=[];try{ANN_LOG=JSON.parse(localStorage.getItem('bftAnnLog')||'[]')||[]}catch(e){}
+let ANN_LOG=[];try{ANN_LOG=(JSON.parse(localStorage.getItem('bftAnnLog')||'[]')||[]).slice(-15)}catch(e){}
 function annGot(d){if(!d||typeof d.m!=='string'||annSeen.has(d.id))return false;annSeen.add(d.id);annShow(d.m);
-  ANN_LOG.push({t:Date.now(),m:String(d.m).slice(0,80),pid:/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:'?',n:String(d.n||'?').slice(0,6),id:String(d.id||'').slice(0,12)});ANN_LOG=ANN_LOG.slice(-50);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}   // 공지 기록: 누가(아이디) 무엇을
+  ANN_LOG.push({t:Date.now(),m:String(d.m).slice(0,80),pid:/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:'?',n:String(d.n||'?').slice(0,NMX),id:String(d.id||'').slice(0,12)});ANN_LOG=ANN_LOG.slice(-15);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}   // 공지 기록 (15개 넘으면 오래된 것부터 지움): 누가(아이디) 무엇을
   return true}
 function annSend(m){const d={t:'ann',m:String(m).slice(0,80),id:Math.random().toString(36).slice(2,10),pid:PID,n:NET.me.name||'?'};annGot(d);cldSoon(1500);
   if(PRES.hub){for(const c of PRES.conns){try{if(c.open)c.send(d)}catch(_){}}}else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(d)}catch(_){}}}
 /* 클라우드 기록: 접속 중이 아니어도 남도록 무료 JSON 저장소(npoint)에 경고·공지 기록을 저장 (채팅 원문은 저장하지 않음) */
 const CLD_URL='https://api.npoint.io/47f3571657f7282501d6';
-var CLD={busy:false,again:false,ok:null,last:0,t:0,adm:false};
+var CLD={busy:false,again:false,ok:null,last:0,t:0,adm:false,fv:-1,fn:''};
 const cldKey=x=>x.id||(x.t+'|'+x.pid+'|'+x.m);
 async function cldFetch(){const r=await fetch(CLD_URL,{cache:'no-store'});if(!r.ok)throw new Error('get');const j=await r.json();return j&&typeof j==='object'&&!Array.isArray(j)?j:{}}
 const cldNeed=()=>PEN.w>0||!!REG[PID];
@@ -4387,13 +4553,14 @@ function cldKick(){if(typeof CLD==='undefined'||!CLD||CLD.t2)return;CLD.t2=setTi
 function cldPull(d){                                  // 저장소 → 내 폰
   if(d.ccu&&typeof d.ccu==='object'&&!Array.isArray(d.ccu))for(const k in d.ccu){const e=d.ccu[k];if(e&&typeof e==='object'){ccuSet(k,e.n|0,+e.t||0);uvnSet(k,e.v|0)}}
   if(d.reg&&typeof d.reg==='object'&&!Array.isArray(d.reg))regMerge(d.reg);
+  frPull(d);
   if(Array.isArray(d.ann)){const have=new Set(ANN_LOG.map(cldKey));let ch=false;
-    for(const x of d.ann.slice(-100)){if(!x||typeof x.m!=='string')continue;const e={t:+x.t||0,m:x.m.slice(0,80),pid:/^[A-Z2-9]{6}$/.test(x.pid)?x.pid:'?',n:String(x.n||'?').slice(0,6),id:String(x.id||'').slice(0,12)};
+    for(const x of d.ann.slice(-100)){if(!x||typeof x.m!=='string')continue;const e={t:+x.t||0,m:x.m.slice(0,80),pid:/^[A-Z2-9]{6}$/.test(x.pid)?x.pid:'?',n:String(x.n||'?').slice(0,NMX),id:String(x.id||'').slice(0,12)};
       if(e.id)annSeen.add(e.id);if(have.has(cldKey(e)))continue;have.add(cldKey(e));ANN_LOG.push(e);ch=true}
-    if(ch){ANN_LOG.sort((a,b)=>a.t-b.t);ANN_LOG=ANN_LOG.slice(-50);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}}}
+    if(ch){ANN_LOG.sort((a,b)=>a.t-b.t);ANN_LOG=ANN_LOG.slice(-15);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}}}
 }
-function cldMergeInto(d){                             // 내 폰 → 저장소 (바뀐 게 있으면 true)
-  let ch=false;
+function cldMergeInto(d){                             // 내 폰 → 저장소 (실제로 바뀐 게 있으면 true: 넣었다가 개수 제한으로 다시 빠지면 바뀐 게 아님)
+  const before=JSON.stringify(d);let ch=false;
   if(!d.reg||typeof d.reg!=='object'||Array.isArray(d.reg)){d.reg={};ch=true}
   const mine=Object.assign({},REG);if(cldNeed())mine[PID]=regSelf();
   for(const id in mine){const e=mine[id],o=d.reg[id];if(!o||(+e.u||0)>(+o.u||0)){d.reg[id]=e;ch=true}}
@@ -4405,8 +4572,9 @@ function cldMergeInto(d){                             // 내 폰 → 저장소 (
    const ks=Object.keys(d.ccu).sort();if(ks.length>40){ks.slice(0,ks.length-40).forEach(k=>delete d.ccu[k]);ch=true}}
   if(!Array.isArray(d.ann)){d.ann=[];ch=true}
   {const have=new Set(d.ann.map(cldKey));for(const x of ANN_LOG){if(!have.has(cldKey(x))){d.ann.push(x);have.add(cldKey(x));ch=true}}
-   d.ann.sort((a,b)=>(a.t||0)-(b.t||0));if(d.ann.length>100)d.ann=d.ann.slice(-100)}
-  return ch;
+   d.ann.sort((a,b)=>(a.t||0)-(b.t||0));if(d.ann.length>15)d.ann=d.ann.slice(-15)}
+  frMerge(d);
+  return JSON.stringify(d)!==before;
 }
 async function cldSync(push){
   if(CLD.busy){if(push)CLD.again=true;return}
@@ -4414,26 +4582,28 @@ async function cldSync(push){
   try{
     for(let i=0;i<3;i++){
       const d=await cldFetch();cldPull(d);
+      if(frInSync(d)){CLD.fv=FRP.ver;CLD.fn=NET.me.name||''}   // 내 친구 기록이 저장소에 다 들어가 있음
       if(!push||!cldMergeInto(d))break;
       const r=await fetch(CLD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
       if(!r.ok)throw new Error('post');
     }
     CLD.ok=true;CLD.last=Date.now();
+    if(CLD.fv===FRP.ver)frDone();
   }catch(e){CLD.ok=false}
-  CLD.busy=false;if(CLD.again){CLD.again=false;cldSoon()}
+  CLD.fv=-1;CLD.busy=false;if(CLD.again){CLD.again=false;cldSoon()}
 }
 function cldSoon(ms){if(typeof CLD==='undefined'||!CLD)return;clearTimeout(CLD.t);CLD.t=setTimeout(()=>cldSync(true),ms||4000)}
-setTimeout(()=>{if(cldNeed())cldSync(true)},3000);    // 경고가 있는 사람은 시작할 때 저장소와 맞춤 (관리자가 푼 패널티도 여기서 받음)
+setTimeout(()=>{cldSync(cldNeed()||frNeedPush())},2500+Math.random()*3000);    // 시작할 때 저장소와 맞춤 (관리자가 푼 패널티, 접속 안 했을 때 온 친구 요청도 여기서 받음)
 setInterval(()=>{const open=!!document.querySelector('.adm');if(open&&(!CLD.adm||Date.now()-CLD.last>60000)){CLD.adm=true;cldSync(true)}if(!open)CLD.adm=false},5000);   // 어드민 패널을 열면 저장소 기록을 가져옴
 /* ---------- 관전 (어드민 전용): 진행 중인 경기 목록 → 관전 버튼 → 같은 씨앗으로 따라 계산하며 지켜봄 ---------- */
 var SPEC={list:null,t:0,joining:null,sig:''};
 var miAt=0;
 const toHub=o=>{if(PRES.hub)presHubData(null,o);else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(o)}catch(_){}}};
 const hubReply=(c,o)=>{if(c){try{if(c.open)c.send(o)}catch(_){}}else presCliData(o)};
-function miMine(){return NET.match&&!NET.spec&&NET.seed!=null?{k:String(NET.seed|0),pid:PID,name:NET.me.name||'?',ch:NET.myCh||'',side:NET.mySide,dev:!!NET.me.dev,sim:!!NET.sim,host:!!NET.host,ov:!!over}:null}
+function miMine(){return NET.match&&!NET.spec&&NET.seed!=null?{k:String(NET.seed|0),pid:PID,name:NET.me.name||'?',ch:NET.myCh||'',side:NET.mySide,dev:!!NET.me.dev,tst:!NET.me.dev&&!!NET.me.tst,sim:!!NET.sim,host:!!NET.host,ov:!!over}:null}
 function miClean(m){if(!m||typeof m!=='object')return null;
   if(!/^-?\d{1,12}$/.test(String(m.k))||!/^[A-Z2-9]{6}$/.test(m.pid))return null;
-  return {k:String(m.k),pid:m.pid,name:[...String(m.name||'?')].slice(0,6).join(''),ch:String(m.ch||'').slice(0,12),side:m.side==='right'?'right':'left',dev:!!m.dev,sim:!!m.sim,host:!!m.host,ov:!!m.ov}}
+  return {k:String(m.k),pid:m.pid,name:[...String(m.name||'?')].slice(0,NMX).join(''),ch:String(m.ch||'').slice(0,12),side:m.side==='right'?'right':'left',dev:!!m.dev,tst:!m.dev&&!!m.tst,sim:!!m.sim,host:!!m.host,ov:!!m.ov}}
 setInterval(()=>{                                   // 내 경기 상태를 모임 자리에 알림 (바뀔 때 + 8초마다)
   const m=miMine(),sig=JSON.stringify(m&&[m.k,m.sim,m.ov,m.host,m.ch]),now=Date.now();
   if(sig===SPEC.mi&&now-miAt<8000)return;SPEC.mi=sig;miAt=now;
@@ -4446,7 +4616,7 @@ function spAll(){const L=[],now=Date.now();                // 모임 자리: 경
 const spMembers=k=>spAll().filter(x=>x.m.k===k);
 function spList(){const g={};
   for(const x of spAll()){const m=x.m;(g[m.k]||(g[m.k]={k:m.k,sim:false,ov:true,p:[]}));const e=g[m.k];
-    if(e.p.some(p=>p.pid===m.pid))continue;e.p.push({pid:m.pid,name:m.name,ch:m.ch,side:m.side,dev:m.dev});if(m.sim)e.sim=true;if(!m.ov)e.ov=false}
+    if(e.p.some(p=>p.pid===m.pid))continue;e.p.push({pid:m.pid,name:m.name,ch:m.ch,side:m.side,dev:m.dev,tst:m.tst});if(m.sim)e.sim=true;if(!m.ov)e.ov=false}
   return Object.values(g).filter(e=>!e.ov).map(e=>{e.p.sort((a,b)=>a.side==='left'?-1:1);delete e.ov;return e}).slice(0,40)}
 function spDrop(who,k){PRES.sp=PRES.sp||{};
   for(const kk of (k?[k]:Object.keys(PRES.sp))){const set=PRES.sp[kk];if(!set)continue;set.delete(who);
@@ -4465,8 +4635,8 @@ function spHub(c,d){                                // 모임 자리가 받은 �
     hubReply(c,{t:'spr',k,ok:1});return}
   if(d.t==='sd'){if(d.o&&typeof d.o==='object')spFan(k,d.o,who);return}
   if(d.t==='sc'){
-    const m={t:'sc',k,txt:String(d.txt||'').slice(0,30),n:String(d.n||'').slice(0,6),dev:!!d.dev};
-    for(const x of spMembers(k))hubReply(x.c,m);spFan(k,{a:'achat',n:m.n,dev:m.dev,txt:m.txt},who)}
+    const m={t:'sc',k,txt:String(d.txt||'').slice(0,30),n:String(d.n||'').slice(0,NMX),dev:!!d.dev,tst:!d.dev&&!!d.tst};
+    for(const x of spMembers(k))hubReply(x.c,m);spFan(k,{a:'achat',n:m.n,dev:m.dev,tst:m.tst,txt:m.txt},who)}
 }
 /* 선수 폰: 관전 요청을 받으면 (방장 쪽이) 경기 정보와 0.25초마다 상태를 보냄 */
 function specOut(o){if(!NET.spK||String(NET.seed|0)!==NET.spK||Date.now()-(NET.spT||0)>20000)return;toHub({t:'sd',k:NET.spK,o})}
@@ -4476,17 +4646,17 @@ function specQ(d){
   NET.spK=d.k;NET.spT=Date.now();
   if(d.full&&NET.host&&NET.sim&&NET.mInfo&&NET.D)specOut(specSetup());
 }
-function specSetup(){const I=NET.mInfo,f=x=>({pid:x.pid||'',name:x.name,dev:!!x.dev,ch:x.ch});
+function specSetup(){const I=NET.mInfo,f=x=>({pid:x.pid||'',name:x.name,dev:!!x.dev,tst:!x.dev&&!!x.tst,ch:x.ch});
   return {a:'setup',seed:NET.seed|0,L:f(I.L),R:f(I.R),D:{left:NET.D.left,right:NET.D.right},step:NET.step,adm:NET.admHist.slice(-200),ov:!!over}}
 function specChatIn(d){                             // 어드민이 보낸 채팅: 채팅창에만 표시 (말풍선·소리 없음)
   if(!NET.match||NET.spec||String(NET.seed|0)!==d.k)return;
   let x=String(d.txt||'').replace(/\s+/g,' ').trim().slice(0,30);if(!x)return;
   const mc=modCheck(x);if(mc.pi||(mc.bad&&!NET.cons))x='***';
-  chatLogLine(String(d.n||'?').slice(0,6),!!d.dev,x,false);chatMark();
+  chatLogLine(String(d.n||'?').slice(0,NMX),roleOf(d),x,false);chatMark();
 }
 function chatLogLine(name,dev,text,me){
   const L=chatMenu.querySelector('.chlog'),ln=document.createElement('div');ln.className='chl'+(me?' me':'');
-  ln.innerHTML='<b>'+netEsc(name)+'</b>'+(dev?'<span class="devtxt">제작자</span>':'')+' ';ln.appendChild(document.createTextNode(text));
+  ln.innerHTML='<b>'+netEsc(name)+'</b>'+rtag(dev)+' ';ln.appendChild(document.createTextNode(text));
   L.appendChild(ln);while(L.childElementCount>60)L.firstChild.remove();L.scrollTop=L.scrollHeight}
 /* 어드민 폰 */
 function specAsk(){SPEC.t=Date.now();toHub({t:'ml'})}
@@ -4494,7 +4664,7 @@ function specRows(){
   const L=SPEC.list;if(!L)return '<div class="admnone">불러오는 중...</div>';
   if(!L.length)return '<div class="admnone">진행 중인 경기가 없습니다.</div>';
   return L.map(e=>{const a=e.p[0]||{},b=e.p[1]||{};
-    const nm=x=>x.name?('<b>'+admEsc(x.name)+'</b>'+(x.dev?' <span class="devtxt">제작자</span>':'')):'<b>?</b>';
+    const nm=x=>x.name?('<b>'+admEsc(x.name)+'</b>'+(roleOf(x)?' '+rtag(roleOf(x)):'')):'<b>?</b>';
     return '<div class="admch"><div class="admcn" style="flex-wrap:wrap">'+nm(a)+'<span style="color:#9aa0b4">vs</span>'+nm(b)+'</div>'
       +'<div class="modl"><i style="font-family:monospace">'+admEsc(a.pid||'?')+'</i> vs <i style="font-family:monospace">'+admEsc(b.pid||'?')+'</i>'+(a.ch||b.ch?' · '+admEsc(a.ch||'?')+' vs '+admEsc(b.ch||'?'):'')+'</div>'
       +'<div class="admsk"><button type="button" class="admbtn" data-a="spec" data-k="'+e.k+'"'+(e.sim?'':' disabled')+'>'+(e.sim?'관전':'곧 시작')+'</button></div></div>'}).join('')}
@@ -4565,12 +4735,12 @@ function specData(o){
   else if(o.a==='chat'){const sd=o.sd==='right'?'right':'left';
     if(typeof o.txt==='string'){const x=o.txt.replace(/\s+/g,' ').trim().slice(0,30);if(x)netChatShow(sd,x)}
     else{const i=o.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(sd,i)}}
-  else if(o.a==='achat'){const x=String(o.txt||'').slice(0,30);if(x){chatLogLine(String(o.n||'?').slice(0,6),!!o.dev,x,false);chatMark()}}
+  else if(o.a==='achat'){const x=String(o.txt||'').slice(0,30);if(x){chatLogLine(String(o.n||'?').slice(0,NMX),roleOf(o),x,false);chatMark()}}
 }
 function specSay(t){                                // 어드민이 관전 중에 보내는 채팅: 선수 채팅창에만 나옴
   const now=Date.now();if(now-(NET.spSay||0)<500)return;NET.spSay=now;
-  toHub({t:'sc',k:NET.spec.k,txt:t,n:NET.me.name||'관리자',dev:!!NET.me.dev});
-  chatLogLine(NET.me.name||'관리자',!!NET.me.dev,t,true);
+  toHub({t:'sc',k:NET.spec.k,txt:t,n:NET.me.name||'관리자',dev:!!NET.me.dev,tst:!NET.me.dev&&!!NET.me.tst});
+  chatLogLine(NET.me.name||'관리자',roleOf(NET.me),t,true);
 }
 function specLeave(){
   const k=NET.spec&&NET.spec.k;if(k)toHub({t:'sp',k,on:0});
@@ -4581,18 +4751,392 @@ function specLeave(){
   document.querySelectorAll('.nick,.chatpop').forEach(e=>e.remove());
   netPaintOnl();
 }
+/* 친구: 아이디로 요청 · 수락/거절 · 삭제 · 접속 상태 · 방 초대. 관계는 기록 저장소에도 저장돼서 상대가 접속해 있지 않아도 요청이 전달됨 */
+const FRID=/^[A-Z2-9]{6}$/;
+const frKey=(x,y)=>x<y?x+y:y+x;
+var FR={e:{},n:{},s:{},reg:'',dirty:false};      // e: 관계(두 아이디를 정렬해 붙인 값 → {a,b,st,by,u}) · n: 아이디 → 이름 · s: 이미 본 요청
+var FRX={e:{},n:{},v:0};                         // 저장소에서 받아 온 전체 기록 (어드민 유저 탭용, 저장 안 함)
+var FRP={pl:{},plS:'',v:0,ver:0,sig:'',tab:'list',ask:'',inv:{},chat:null};
+function frClean(x){if(!x||typeof x!=='object')return null;const a=x.a,b=x.b;if(!FRID.test(a)||!FRID.test(b)||a>=b)return null;
+  if(x.st!=='p'&&x.st!=='f'&&x.st!=='x')return null;if(x.by!==a&&x.by!==b)return null;return {a,b,st:x.st,by:x.by,u:+x.u||0}}
+try{const v=JSON.parse(localStorage.getItem('bftFr')||'null');if(v&&typeof v==='object'){
+  for(const k in (v.e||{})){const e=frClean(v.e[k]);if(e&&(e.a===PID||e.b===PID))FR.e[e.a+e.b]=e}
+  for(const k in (v.n||{})){const x=v.n[k];if(FRID.test(k)&&x&&typeof x.n==='string')FR.n[k]={n:x.n.slice(0,NMX),u:+x.u||0}}
+  for(const k in (v.s||{}))if(FR.e[k])FR.s[k]=+v.s[k]||0;
+  FR.reg=typeof v.reg==='string'?v.reg:'';FR.dirty=!!v.dirty}}catch(e){}
+function frSave(){try{localStorage.setItem('bftFr',JSON.stringify(FR))}catch(e){}}
+function frName(id,n,u){n=String(n||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').trim();if(!n)return false;n=[...n].slice(0,NMX).join('');
+  const o=FR.n[id],t=u==null?Date.now():u;if(o&&(o.u>t||o.n===n))return false;FR.n[id]={n,u:t};return true}
+const frNameOf=id=>(FR.n[id]&&FR.n[id].n)||(FRX.n[id]&&FRX.n[id].n)||'이름 없음';
+const frKnown=id=>!!(FR.n[id]||FRX.n[id]||FRP.pl[id]||FR.e[frKey(PID,id)]);
+function frPut(x){const e=frClean(x);if(!e)return false;const k=e.a+e.b,o=FR.e[k];if(o&&o.u>=e.u)return false;FR.e[k]=e;return true}
+const frWith=id=>FR.e[frKey(PID,id)]||null;
+const frOther=e=>e.a===PID?e.b:e.a;
+const frFriends=()=>Object.values(FR.e).filter(e=>e.st==='f').map(frOther);
+const frIn=()=>Object.values(FR.e).filter(e=>e.st==='p'&&e.by!==PID);
+const frOut=()=>Object.values(FR.e).filter(e=>e.st==='p'&&e.by===PID);
+const frUnseen=()=>frIn().filter(e=>FR.s[e.a+e.b]!==e.u);
+const frNeedPush=()=>FR.dirty||(!!NET.me.name&&FR.reg!==NET.me.name);
+function frInSync(d){                           // 내 친구 기록·이름이 저장소에 다 들어가 있는지 (바꾸지 않고 보기만)
+  const fe=d.fe&&typeof d.fe==='object'&&!Array.isArray(d.fe)?d.fe:{},fu=d.fu&&typeof d.fu==='object'&&!Array.isArray(d.fu)?d.fu:{};
+  for(const k in FR.e){const o=fe[k];if(!o||(+o.u||0)<FR.e[k].u)return false}
+  const nm=NET.me.name;return !nm||!!(fu[PID]&&fu[PID].n===nm)}
+function frDone(){FR.dirty=false;FR.reg=CLD.fn||'';frSave()}
+function frSet(id,st){const a=PID<id?PID:id,b=PID<id?id:PID,o=FR.e[a+b],e={a,b,st,by:PID,u:Math.max(Date.now(),o?o.u+1:0)};
+  FR.e[a+b]=e;FR.dirty=true;FRP.ver++;frSave();toHub({t:'fe',e,n:NET.me.name||''});cldSoon(800);frUI();return e}
+function frNotify(id,t){if(!NET.match)netToast(frNameOf(id)+' 님이 '+t)}
+/* 저장소 ↔ 내 폰 */
+function frPull(d){
+  const fe=d.fe&&typeof d.fe==='object'&&!Array.isArray(d.fe)?d.fe:{},fu=d.fu&&typeof d.fu==='object'&&!Array.isArray(d.fu)?d.fu:{};
+  FRX.e={};FRX.n={};
+  for(const k in fe){const e=frClean(fe[k]);if(e)FRX.e[e.a+e.b]=e}
+  for(const k in fu){const x=fu[k];if(FRID.test(k)&&x&&typeof x.n==='string')FRX.n[k]={n:x.n.slice(0,NMX),u:+x.u||0}}
+  FRX.v++;
+  let ch=false,inc=null,acc=null;
+  for(const k in FRX.e){const e=FRX.e[k];if(e.a!==PID&&e.b!==PID)continue;const had=FR.e[k];
+    if(frPut(e)){ch=true;
+      if(e.st==='p'&&e.by!==PID&&(!had||had.st!=='p'||had.by===PID))inc=frOther(e);
+      else if(e.st==='f'&&had&&had.st==='p'&&had.by===PID)acc=frOther(e)}}
+  for(const id in FRX.n)if(FR.e[frKey(PID,id)]&&frName(id,FRX.n[id].n,FRX.n[id].u))ch=true;
+  if(ch){frSave();frUI()}
+  if(inc)frNotify(inc,'친구 요청을 보냈어요');
+  if(acc)frNotify(acc,'친구 요청을 수락했어요');
+}
+function frMerge(d){
+  let ch=false;
+  if(!d.fe||typeof d.fe!=='object'||Array.isArray(d.fe)){d.fe={};ch=true}
+  if(!d.fu||typeof d.fu!=='object'||Array.isArray(d.fu)){d.fu={};ch=true}
+  for(const k in FR.e){const e=FR.e[k],o=d.fe[k];if(!o||(+o.u||0)<e.u){d.fe[k]={a:e.a,b:e.b,st:e.st,by:e.by,u:e.u};ch=true}}
+  const nm=NET.me.name;if(nm){const o=d.fu[PID];if(!o||o.n!==nm){d.fu[PID]={n:nm,u:Date.now()};ch=true}}
+  {const ks=Object.keys(d.fe);if(ks.length>4000){ks.sort((a,b)=>((d.fe[a].st==='x'?0:1e15)+(d.fe[a].u||0))-((d.fe[b].st==='x'?0:1e15)+(d.fe[b].u||0))).slice(0,ks.length-4000).forEach(k=>delete d.fe[k]);ch=true}}
+  {const ks=Object.keys(d.fu);if(ks.length>4000){ks.sort((a,b)=>(d.fu[a].u||0)-(d.fu[b].u||0)).slice(0,ks.length-4000).forEach(k=>delete d.fu[k]);ch=true}}
+  return ch;
+}
+setInterval(()=>{if(document.hidden||CLD.busy)return;const t=Date.now();
+  if(frNeedPush()&&t-CLD.last>20000)cldSync(true);
+  else if(frOpen()&&t-CLD.last>20000)cldSync(false);
+  else if(t-CLD.last>(PRES.hub||(PRES.conn&&PRES.conn.open)?300000:60000))cldSync(false)},30000);   // 평소 5분, 접속자 연결이 끊겨 있으면 1분마다 저장소 확인
+async function cldFresh(){for(let i=0;i<50&&CLD.busy;i++)await new Promise(r=>setTimeout(r,120));await cldSync(false)}
+/* 접속 상태: 모임 자리가 친구들의 상태를 알려 줌 (내 친구 아이디 목록만 보냄) */
+function frIds(){const s=new Set(frFriends());if(document.querySelector('.adm'))for(const id in FRX.n)s.add(id);return [...s].slice(0,500)}
+function presPl(ids){const o={};if(!ids||!ids.length)return o;
+  for(const id of ids){if(id===PID){o[id]=[presMy(),NET.me.name||''];continue}for(const c of PRES.conns){if(c._pid===id&&c.open){o[id]=[c._s||'i',c._n||''];break}}}return o}
+function frPl(pl){const s=JSON.stringify(pl||{});if(s===FRP.plS)return;FRP.plS=s;const o={};
+  for(const id in pl)if(FRID.test(id)&&Array.isArray(pl[id]))o[id]=[String(pl[id][0]).slice(0,1),String(pl[id][1]||'').slice(0,NMX)];
+  FRP.pl=o;FRP.v++;setTimeout(dmFlush,300);let ch=false;for(const id in o)if(o[id][1]&&FR.e[frKey(PID,id)]&&frName(id,o[id][1]))ch=true;if(ch)frSave();frUI()}
+setInterval(()=>{const ids=frIds(),sig=ids.join();
+  if(PRES.hub){if(PRES.selfSig!==sig){PRES.selfSig=sig;PRES.selfFr=ids;presCast()}}
+  else if(PRES.conn&&PRES.conn.open){if(FRP.sig!==sig){FRP.sig=sig;try{PRES.conn.send({t:'fl',ids})}catch(_){FRP.sig=''}}}},2000);
+function frDeliver(to,o){let n=0;if(to===PID){frGot(o);n++}for(const t of PRES.conns)if(t._pid===to&&t.open)try{t.send(o);n++}catch(_){}return n}
+function frHub(c,d){                              // 모임 자리: 친구 요청·초대를 상대에게 전달
+  const from=c?c._pid:PID;
+  if(d.t==='fl'){const ids=Array.isArray(d.ids)?d.ids.filter(x=>FRID.test(x)).slice(0,500):[];if(c)c._fr=ids;else PRES.selfFr=ids;presCast();return}
+  if(!from)return;
+  const fn=((c?c._n:NET.me.name)||'').slice(0,NMX);
+  if(d.t==='fe'){const e=frClean(d.e);if(!e||(e.a!==from&&e.b!==from))return;frDeliver(e.a===from?e.b:e.a,{t:'fe',e,n:fn})}
+  else if(d.t==='inv'){const to=d.to;if(!FRID.test(to)||to===from)return;const k=['i','y','n','b'].includes(d.k)?d.k:'i';
+    frDeliver(to,{t:'inv',from,fn,k,code:FRID.test(d.code)?d.code:'',title:String(d.title||'').slice(0,16),lock:!!d.lock})}
+  else if(d.t==='dm'){const to=d.to,i=String(d.i||'').slice(0,16),m=String(d.m||'').slice(0,100);if(!FRID.test(to)||to===from||!i||!m)return;frDeliver(to,{t:'dm',from,fn,i,m})}   // 1대1 대화
+  else if(d.t==='dma'){const to=d.to;if(!FRID.test(to)||to===from)return;frDeliver(to,{t:'dma',from,i:String(d.i||'').slice(0,16)})}
+  else if(d.t==='dmc'){const to=d.to,a=['req','ok','no','off'].includes(d.a)?d.a:'';if(!FRID.test(to)||to===from||!a)return;frDeliver(to,{t:'dmc',from,fn,a})}
+}
+function frGot(d){
+  if(d.t==='dm'||d.t==='dma'||d.t==='dmc'){dmGot(d);return}
+  if(d.t==='fe'){
+    const e=frClean(d.e);if(!e||(e.a!==PID&&e.b!==PID))return;const other=frOther(e),had=FR.e[e.a+e.b];
+    if(typeof d.n==='string'&&d.n)frName(other,d.n);
+    if(frPut(e)){frSave();
+      if(e.st==='p'&&e.by!==PID)frNotify(other,'친구 요청을 보냈어요');
+      else if(e.st==='f'&&had&&had.st==='p'&&had.by===PID)frNotify(other,'친구 요청을 수락했어요');
+      frUI()}
+  }else if(d.t==='inv'){
+    const from=d.from;if(!FRID.test(from))return;const e=frWith(from);if(!e||e.st!=='f')return;
+    if(typeof d.fn==='string'&&d.fn)frName(from,d.fn);
+    if(d.k==='i'){
+      if(!FRID.test(d.code))return;
+      if(NET.room||NET.match||NET.spec||NET.state==='search'||NET.picking){toHub({t:'inv',to:from,k:'b'});return}
+      frInvShow({from,n:frNameOf(from),code:d.code,title:d.title||'방',lock:!!d.lock})}
+    else netToast(frNameOf(from)+' 님이 '+({y:'초대를 수락했어요',n:'초대를 거절했어요',b:'지금은 초대를 받을 수 없어요'}[d.k]||''));
+  }
+}
+/* 방 초대 받음 */
+function frInvShow(o){
+  document.querySelectorAll('.frinv').forEach(x=>x.remove());
+  const el=document.createElement('div');el.className='frinv';
+  el.innerHTML='<div class="frit"><b>'+netEsc(o.n)+'</b> 님이 방에 초대했어요</div><div class="frisub">'+netEsc(o.title)+(o.lock?' · 비밀번호 방':'')+'</div><div class="rrow"><button type="button" class="rbtn rgo" data-y="1">수락</button><button type="button" class="rbtn rno" data-n="1">거절</button></div>';
+  document.body.appendChild(el);
+  const t=setTimeout(()=>el.remove(),30000);
+  el.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;clearTimeout(t);el.remove();
+    if(b.dataset.y){
+      if(NET.room||NET.match||NET.state==='search'){netToast('지금은 들어갈 수 없어요');toHub({t:'inv',to:o.from,k:'b'});return}
+      if(!NET.me.name){netMsg('이름부터 정해주세요!','bad');return}
+      toHub({t:'inv',to:o.from,k:'y'});frHide();roomJoin(o.code,'')}
+    else toHub({t:'inv',to:o.from,k:'n'})});
+}
+/* 친구 창 */
+let frEl=null;
+const frOpen=()=>!!(frEl&&!frEl.hidden);
+function frBuild(){
+  if(frEl)return frEl;
+  const m=document.createElement('div');m.className='frmodal';m.hidden=true;
+  m.innerHTML='<div class="frbox"><button type="button" class="frx" data-f="close" aria-label="닫기">✕</button><div class="rtt">친구</div>'
+    +'<div class="frme">내 아이디 <b>'+PID+'</b><button type="button" class="rcpy" data-f="copy">복사</button></div>'
+    +'<div class="rrow fradd"><input class="rin frid" maxlength="6" placeholder="친구 아이디 6자리" autocomplete="off" autocapitalize="characters" spellcheck="false"><button type="button" class="rbtn" data-f="add">추가</button></div><div class="rmsg frmsg"></div>'
+    +'<div class="frtabs"><button type="button" class="frtab on" data-f="tab" data-t="list"></button><button type="button" class="frtab" data-f="tab" data-t="req"></button></div>'
+    +'<div class="frlist"></div>'
+    +'<div class="dmbar"><div class="rrow"><input class="rin dmin" maxlength="100" placeholder="메시지 입력" autocomplete="off" enterkeyhint="send"><button type="button" class="rbtn" data-f="dmsend">보내기</button></div><div class="dmnote">욕설 확인을 위해 운영자가 대화를 볼 수 있어요</div></div></div>';
+  document.body.appendChild(m);frEl=m;
+  m.querySelector('.dmin').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();frAct('dmsend')}});
+  m.addEventListener('click',e=>{if(e.target===m){if(performance.now()-uiOpenT>450)frHide();return}const b=e.target.closest('[data-f]');if(!b||b.disabled)return;frAct(b.dataset.f,b)});
+  const inp=m.querySelector('.frid');
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')frAct('add')});
+  inp.addEventListener('input',()=>{inp.value=inp.value.toUpperCase().replace(/[^A-Z0-9]/g,'')});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&frOpen())frHide()});
+  return m;
+}
+function frShow(){const m=frBuild();m.hidden=false;FRP.ask='';frUI();if(Date.now()-CLD.last>15000)cldSync(false)}
+function frHide(){if(frEl)frEl.hidden=true;FRP.ask='';FRP.chat=null;frUI()}
+const FRST={i:['온라인','on',0],q:['매칭 중','q',1],m:['경기 중','m',2]};
+const frStat=id=>{const p=FRP.pl[id];return p&&FRST[p[0]]?FRST[p[0]]:['오프라인','off',3]};
+function frLive(id){const p=FRP.pl[id];return (p&&p[1])||frNameOf(id)}
+function frRender(){
+  const m=frEl;if(!m||m.hidden)return;
+  const box=m.querySelector('.frlist'),tabs=m.querySelectorAll('.frtab'),fs=frFriends(),inn=frIn(),out=frOut(),un=frUnseen().length,dun=dmUnreadAll();
+  if(FRP.chat&&!dmIsFr(FRP.chat))FRP.chat=null;
+  m.querySelector('.frbox').classList.toggle('chat',!!FRP.chat);
+  if(FRP.chat){dmRender(box);return}
+  tabs[0].innerHTML=netEsc('친구 목록'+(fs.length?' '+fs.length:''))+(dun?'<i class="frdot"></i>':'');
+  tabs[1].innerHTML=netEsc('친구 요청'+(inn.length?' '+inn.length:''))+(un?'<i class="frdot"></i>':'');
+  tabs[0].classList.toggle('on',FRP.tab==='list');tabs[1].classList.toggle('on',FRP.tab==='req');
+  const nm=(id,dot)=>'<div class="frnm"><b>'+netEsc(frLive(id))+'</b>'+(dot?'<i class="frdot2"></i>':'')+'<i>'+id+'</i></div>';
+  let h='';
+  if(FRP.tab==='list'){
+    const rows=fs.map(id=>({id,n:frLive(id),s:frStat(id)})).sort((a,b)=>a.s[2]-b.s[2]||a.n.localeCompare(b.n,'ko'));
+    h=rows.length?rows.map(r=>'<div class="fritem frchat" data-f="chat" data-id="'+r.id+'">'+nm(r.id,dmUnread(r.id))+'<span class="frst '+r.s[1]+'">'+r.s[0]+'</span><button type="button" class="frsm ok" data-f="chat" data-id="'+r.id+'">대화</button><button type="button" class="frsm'+(FRP.ask===r.id?' ask':'')+'" data-f="del" data-id="'+r.id+'">'+(FRP.ask===r.id?'정말 삭제':'삭제')+'</button></div>').join('')
+      :'<div class="rnone">아직 친구가 없어요. 위에 친구 아이디를 입력해서 추가해 보세요.</div>';
+  }else{
+    h='<div class="frsec">받은 요청</div>'+(inn.length?inn.map(e=>{const id=frOther(e);return '<div class="fritem">'+nm(id)+'<button type="button" class="frsm ok" data-f="ok" data-id="'+id+'">수락</button><button type="button" class="frsm" data-f="no" data-id="'+id+'">거절</button></div>'}).join(''):'<div class="rnone">받은 요청이 없어요.</div>');
+    if(out.length)h+='<div class="frsec">보낸 요청</div>'+out.map(e=>{const id=frOther(e);return '<div class="fritem">'+nm(id)+'<span class="frst off">대기 중</span><button type="button" class="frsm" data-f="cancel" data-id="'+id+'">취소</button></div>'}).join('');
+  }
+  if(box._h!==h){box._h=h;box._chat=null;box.innerHTML=h}
+}
+function frUI(){
+  if(frOpen()&&FRP.chat&&dmUnread(FRP.chat)){DM.r[FRP.chat]=Date.now();dmSave()}   // 대화를 보고 있으면 읽음
+  if(frOpen()&&FRP.tab==='req'){let ch=false;for(const e of frIn()){const k=e.a+e.b;if(FR.s[k]!==e.u){FR.s[k]=e.u;ch=true}}if(ch)frSave()}
+  const b=document.getElementById('frbtn');if(b)b.classList.toggle('new',frUnseen().length>0||dmUnreadAll()>0);
+  frRender();
+  if(typeof ROOM!=='undefined'&&ROOM.view==='invite')roomRender();
+}
+function frSay(t,bad){const e=frEl&&frEl.querySelector('.frmsg');if(e){e.textContent=t;e.className='rmsg frmsg'+(bad?' bad':'')}}
+function frCopy(t,b){const done=()=>{b.textContent='복사됨';setTimeout(()=>{if(b.isConnected)b.textContent='복사'},1200)};
+  const fb=()=>{try{const x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;left:-99px;top:0;opacity:0';document.body.appendChild(x);x.select();document.execCommand('copy');x.remove();done()}catch(_){netToast('복사하지 못했어요')}};
+  try{navigator.clipboard.writeText(t).then(done,fb)}catch(_){fb()}}
+async function frAdd(){
+  const inp=frEl.querySelector('.frid'),btn=frEl.querySelector('[data-f="add"]');
+  const id=(inp.value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(!FRID.test(id)){frSay('친구 아이디 6자리를 입력해 주세요',1);return}
+  if(!NET.me.name){frSay('이름부터 정해 주세요',1);return}
+  if(id===PID){frSay('내 아이디예요',1);return}
+  const check=()=>{const o=frWith(id);
+    if(o&&o.st==='f'){frSay('이미 친구예요',1);return true}
+    if(o&&o.st==='p'&&o.by===PID){frSay('이미 요청을 보냈어요',1);return true}
+    if(o&&o.st==='p'){frSet(id,'f');inp.value='';frSay(frNameOf(id)+' 님과 친구가 됐어요');return true}
+    return false};
+  if(check())return;
+  if(!frKnown(id)){
+    btn.disabled=true;frSay('확인하는 중...');
+    await cldFresh();
+    btn.disabled=false;
+    if(check())return;
+    if(!frKnown(id)){frSay(CLD.ok===false?'저장소에 연결할 수 없어요. 잠시 후 다시 해 주세요':'없는 아이디이거나 아직 이름을 정하지 않은 유저예요',1);return}
+  }
+  frSet(id,'p');inp.value='';frSay(frNameOf(id)+' 님에게 친구 요청을 보냈어요');
+}
+function frAct(a,b){
+  const id=b&&b.dataset&&b.dataset.id;
+  if(a==='close')frHide();
+  else if(a==='copy')frCopy(PID,b);
+  else if(a==='tab'){FRP.tab=b.dataset.t;FRP.ask='';frUI();if(FRP.tab==='req'&&Date.now()-CLD.last>10000)cldSync(false)}
+  else if(a==='add')frAdd();
+  else if(a==='chat'&&id)frOpenChat(id);
+  else if(a==='back'){FRP.chat=null;frUI()}
+  else if(a==='dmcreq')dmCons('req');else if(a==='dmcok')dmCons('ok');else if(a==='dmcno')dmCons('no');else if(a==='dmcoff')dmCons('off');
+  else if(a==='dmsend'&&FRP.chat){const i=frEl.querySelector('.dmin');if(dmSend(FRP.chat,i.value))i.value='';frUI();const L=frEl.querySelector('.frlist');L.scrollTop=L.scrollHeight}
+  else if(a==='ok'&&id){const e=frWith(id);if(e&&e.st==='p'&&e.by!==PID){frSet(id,'f');frSay(frNameOf(id)+' 님과 친구가 됐어요')}}
+  else if(a==='no'&&id){const e=frWith(id);if(e&&e.st==='p'&&e.by!==PID)frSet(id,'x')}
+  else if(a==='cancel'&&id){const e=frWith(id);if(e&&e.st==='p'&&e.by===PID)frSet(id,'x')}
+  else if(a==='del'&&id){
+    if(FRP.ask===id){FRP.ask='';const e=frWith(id);if(e&&e.st==='f'){const n=frNameOf(id);frSet(id,'x');frSay(n+' 님을 친구에서 삭제했어요')}}
+    else{FRP.ask=id;frRender();setTimeout(()=>{if(FRP.ask===id){FRP.ask='';frRender()}},3000)}}
+}
+setInterval(()=>{if(frOpen()&&document.body.classList.contains('in-net'))frHide()},500);   // 온라인 경기가 시작되면 닫음
+/* 친구끼리 1대1 대화: 모임 자리를 거쳐 바로 전달 (상대가 접속 중이 아니면 접속했을 때 보냄). 기록은 각자 폰에 남음 */
+var DM={c:{},r:{},cs:{},q:{},qo:{}};   // cs: 비속어 합의한 친구 · q: 받은 합의 요청 · qo: 보낸 합의 요청                               // c: 친구 아이디 → [{i,t,me,m,s}] (s 1: 상대가 받음) · r: 그 친구 대화를 마지막으로 본 시각
+try{const v=JSON.parse(localStorage.getItem('bftDm')||'null');if(v&&typeof v==='object'){
+  for(const k in (v.c||{}))if(FRID.test(k)&&Array.isArray(v.c[k]))DM.c[k]=v.c[k].filter(x=>x&&typeof x.m==='string').slice(-100).map(x=>({i:String(x.i||'').slice(0,16),t:+x.t||0,me:!!x.me,m:x.m.slice(0,100),s:x.s?1:0,sy:x.sy?1:0}));
+  for(const k in (v.r||{}))if(FRID.test(k))DM.r[k]=+v.r[k]||0;
+  for(const f of ['cs','q','qo'])for(const k in (v[f]||{}))if(FRID.test(k)&&v[f][k])DM[f][k]=+v[f][k]||1}}catch(e){}
+function dmSave(){try{localStorage.setItem('bftDm',JSON.stringify(DM))}catch(e){}}
+const dmIsFr=id=>{const e=frWith(id);return !!e&&e.st==='f'};
+const dmUnread=id=>{const L=DM.c[id]||[],r=DM.r[id]||0;let n=0;for(const x of L)if(!x.me&&x.t>r)n++;return n};
+function dmUnreadAll(){let n=0;for(const id in DM.c)if(dmIsFr(id))n+=dmUnread(id);return n}
+function dmAdd(id,x){const L=DM.c[id]||(DM.c[id]=[]);L.push(x);if(L.length>100)L.splice(0,L.length-100);dmSave()}
+function dmSend(id,text){
+  const t=String(text||'').replace(/\s+/g,' ').trim().slice(0,100);if(!t||!dmIsFr(id))return false;
+  if(penBanned()){netToast('채팅 금지 중이에요 ('+penText()+' 남음)');return false}
+  const mc=modCheck(t);
+  if(mc.pi){netToast('연락처·링크·아이디는 보낼 수 없어요');return false}
+  if(mc.bad&&!DM.cs[id]){penWarn(t,mc.word);netToast('비속어가 감지되어 보내지 않았어요 (경고 '+PEN.w+'회'+(penBanned()?' · 채팅 금지 '+penText():'')+')');return true}   // 비속어 합의한 친구에게는 보낼 수 있음
+  const x={i:Date.now().toString(36)+Math.random().toString(36).slice(2,7),t:Date.now(),me:true,m:t,s:0,lt:Date.now()};
+  dmAdd(id,x);toHub({t:'dm',to:id,i:x.i,m:x.m});return true;
+}
+function dmFlush(){                               // 아직 못 받은 내 메시지: 상대가 접속해 있으면 다시 보냄 (받는 쪽은 같은 메시지를 한 번만 저장)
+  if(!PRES.hub&&!(PRES.conn&&PRES.conn.open))return;const now=Date.now();let n=0;
+  for(const id in DM.c){if(!FRP.pl[id]||!dmIsFr(id))continue;for(const x of DM.c[id])if(x.me&&!x.s&&now-(x.lt||0)>8000&&n<30){x.lt=now;n++;toHub({t:'dm',to:id,i:x.i,m:x.m})}}
+}
+setInterval(dmFlush,4000);
+function dmGot(d){
+  if(d.t==='dm'){
+    const from=d.from;if(!FRID.test(from)||!dmIsFr(from))return;
+    const i=String(d.i||'').slice(0,16);let m=String(d.m||'').replace(/\s+/g,' ').trim().slice(0,100);if(!i||!m)return;
+    {const mc=modCheck(m);if(mc.pi||(mc.bad&&!DM.cs[from]))m='***'}
+    toHub({t:'dma',to:from,i});                   // 받았다고 알림
+    const L=DM.c[from]||[];if(L.some(x=>!x.me&&x.i===i))return;
+    if(typeof d.fn==='string'&&d.fn&&frName(from,d.fn))frSave();
+    dmAdd(from,{i,t:Date.now(),me:false,m,s:1});
+    if(frOpen()&&FRP.chat===from){DM.r[from]=Date.now();dmSave()}else dmPop(from,m);
+    frUI();
+  }else if(d.t==='dma'){
+    const x=(DM.c[d.from]||[]).find(x=>x.me&&x.i===d.i);if(x&&!x.s){x.s=1;dmSave();frUI()}
+  }else if(d.t==='dmc'){                          // 비속어 합의: req 요청 · ok 동의 · no 거절 · off 해제
+    const from=d.from;if(!FRID.test(from)||!dmIsFr(from))return;
+    if(typeof d.fn==='string'&&d.fn&&frName(from,d.fn))frSave();
+    if(d.a==='req'){if(DM.cs[from])return;DM.q[from]=Date.now();dmSys(from,false,'상대가 비속어 합의를 요청했어요');if(!(frOpen()&&FRP.chat===from))dmPop(from,'비속어 합의를 요청했어요')}
+    else if(d.a==='ok'){if(!DM.qo[from])return;delete DM.qo[from];delete DM.q[from];DM.cs[from]=Date.now();dmSys(from,false,'비속어 합의 완료! 이 친구와는 비속어를 써도 돼요')}
+    else if(d.a==='no'){if(!DM.qo[from])return;delete DM.qo[from];dmSys(from,false,'상대가 비속어 합의를 거절했어요')}
+    else if(d.a==='off'){if(!DM.cs[from]&&!DM.q[from])return;delete DM.cs[from];delete DM.q[from];dmSys(from,false,'비속어 합의가 해제됐어요')}
+    dmSave();frUI();
+  }
+}
+function dmSys(id,me,m){dmAdd(id,{i:'s'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),t:Date.now(),me,m,s:1,sy:1});if(me&&frOpen()&&FRP.chat===id){DM.r[id]=Date.now();dmSave()}}
+function dmCons(a){                               // 대화 화면의 합의 버튼들
+  const id=FRP.chat;if(!id||!dmIsFr(id))return;
+  const on=PRES.hub||(PRES.conn&&PRES.conn.open);
+  if(a==='req'){if(DM.cs[id]||DM.qo[id])return;if(penBanned()){netToast('채팅 금지 중이에요 ('+penText()+' 남음)');return}
+    if(!on||!FRP.pl[id]){netToast('친구가 접속해 있을 때만 요청할 수 있어요');return}
+    DM.qo[id]=Date.now();toHub({t:'dmc',to:id,a:'req'});dmSys(id,true,'비속어 합의를 요청했어요')}
+  else if(a==='ok'){if(!DM.q[id])return;if(!on||!FRP.pl[id]){netToast('친구가 접속해 있을 때만 동의할 수 있어요');return}
+    delete DM.q[id];delete DM.qo[id];DM.cs[id]=Date.now();toHub({t:'dmc',to:id,a:'ok'});dmSys(id,true,'비속어 합의 완료! 이 친구와는 비속어를 써도 돼요')}
+  else if(a==='no'){if(!DM.q[id])return;delete DM.q[id];toHub({t:'dmc',to:id,a:'no'});dmSys(id,true,'비속어 합의를 거절했어요')}
+  else if(a==='off'){if(!DM.cs[id])return;delete DM.cs[id];toHub({t:'dmc',to:id,a:'off'});dmSys(id,true,'비속어 합의를 해제했어요')}
+  dmSave();frUI();const L=frEl&&frEl.querySelector('.frlist');if(L)L.scrollTop=L.scrollHeight;
+}
+function dmPop(id,m){                             // 위에 잠깐 뜨는 새 메시지 알림 (누르면 그 대화로)
+  document.querySelectorAll('.dmpop').forEach(x=>x.remove());
+  const el=document.createElement('button');el.type='button';el.className='dmpop';
+  el.innerHTML='<b></b><span></span>';el.querySelector('b').textContent=frLive(id);el.querySelector('span').textContent=m;
+  document.body.appendChild(el);
+  const t=setTimeout(()=>el.remove(),4500);
+  el.addEventListener('click',()=>{clearTimeout(t);el.remove();if(document.body.classList.contains('in-net')){netToast('경기가 끝나고 친구 창에서 볼 수 있어요');return}frShow();frOpenChat(id)});
+}
+function dmRecent(){const all=[];for(const id in DM.c)for(const x of DM.c[id])all.push({t:x.t,w:id,n:frNameOf(id),me:x.me,m:x.sy?'['+x.m+']':x.m});return all.sort((a,b)=>a.t-b.t).slice(-80)}   // 어드민 조회용
+function frOpenChat(id){if(!dmIsFr(id))return;FRP.tab='list';FRP.chat=id;FRP.ask='';frUI();const L=frEl&&frEl.querySelector('.frlist');if(L)L.scrollTop=L.scrollHeight}
+function dmRender(box){                           // 대화 화면 (친구 창 안)
+  const id=FRP.chat,L=DM.c[id]||[],s=frStat(id),tf=t=>new Date(t).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+  const cb=DM.cs[id]?'':(DM.qo[id]?'<button type="button" class="frsm" disabled>합의 요청함</button>':(DM.q[id]?'':'<button type="button" class="frsm" data-f="dmcreq">비속어 합의</button>'));
+  let h='<div class="dmhd"><div class="dmtop"><button type="button" class="dmback" data-f="back" aria-label="뒤로">‹</button><b>'+netEsc(frLive(id))+'</b><span class="frst '+s[1]+'">'+s[0]+'</span>'+cb+'</div>'
+    +(DM.cs[id]?'<div class="dmcbar">비속어 합의됨<button type="button" class="frsm" data-f="dmcoff">해제</button></div>':'')
+    +(DM.q[id]&&!DM.cs[id]?'<div class="dmcbar">상대가 비속어 합의를 요청했어요<button type="button" class="frsm ok" data-f="dmcok">동의</button><button type="button" class="frsm" data-f="dmcno">거절</button></div>':'')
+    +'</div><div class="dmlog">';
+  let day='';
+  for(const x of L){const d=new Date(x.t).toLocaleDateString('ko-KR',{month:'long',day:'numeric'});if(d!==day){day=d;h+='<div class="dmday">'+d+'</div>'}
+    h+=x.sy?'<div class="dmsys">'+netEsc(x.m)+'</div>':'<div class="dmm'+(x.me?' me':'')+'"><div class="dmb">'+netEsc(x.m)+'</div><i>'+(x.me&&!x.s?'보내는 중 · ':'')+tf(x.t)+'</i></div>'}
+  h+=(L.length?'':'<div class="rnone">아직 대화가 없어요. 먼저 말을 걸어 보세요.</div>')+'</div>';
+  if(box._h===h)return;
+  const atBot=box.scrollTop+box.clientHeight>=box.scrollHeight-30||!box._h||box._chat!==id;
+  box._h=h;box._chat=id;box.innerHTML=h;if(atBot)box.scrollTop=box.scrollHeight;
+}
+
+{let last=null;setInterval(()=>{const n=NET.me.name||'';if(last!==null&&n&&n!==last)cldSoon(2000);last=n},1000)}   // 이름을 정하거나 바꾸면 바로 저장소에 등록 (친구가 아이디로 찾을 수 있게)
+/* 프로필: 내 이름·아이디·온라인 전적·많이 쓴 캐릭터 (전적은 이 폰에만 저장) */
+var PROF={w:0,l:0,d:0,ch:{},k:'',r:'',c:'',name:'',dev:false,tst:false};
+var PRS={edit:false};
+try{const v=JSON.parse(localStorage.getItem('bftProf')||'null');if(v&&typeof v==='object'){PROF.name=typeof v.name==='string'?[...v.name].slice(0,NMX).join(''):'';PROF.dev=!!v.dev&&!!PROF.name;PROF.tst=!PROF.dev&&!!v.tst&&!!PROF.name;PROF.w=v.w|0;PROF.l=v.l|0;PROF.d=v.d|0;PROF.k=String(v.k||'');PROF.r=String(v.r||'');PROF.c=String(v.c||'');
+  if(v.ch&&typeof v.ch==='object')for(const n in v.ch){const o=v.ch[n];if(o&&(o.g|0)>0)PROF.ch[n]={g:o.g|0,w:Math.min(o.g|0,o.w|0)}}}}catch(e){}
+function profSave(){try{localStorage.setItem('bftProf',JSON.stringify(PROF))}catch(e){}}
+function profAdd(r,ch,d){PROF[r]=Math.max(0,(PROF[r]|0)+d);if(ch){const o=PROF.ch[ch]||(PROF.ch[ch]={g:0,w:0});o.g=Math.max(0,o.g+d);if(r==='w')o.w=Math.max(0,o.w+d);o.w=Math.min(o.w,o.g);if(!o.g)delete PROF.ch[ch]}}
+function profRec(side){                           // 온라인 경기 결과 기록 (결과가 나중에 바로잡히면 앞의 기록을 고침)
+  if(NET.spec||!NET.mySide)return;
+  const k=(NET.seed>>>0)+':'+NET.mySide,r=side==null?'d':(side===NET.mySide?'w':'l');
+  const me=chars.find(c=>c.side===NET.mySide),ch=String((me&&me.name)||NET.myCh||'').slice(0,20);
+  if(PROF.k===k){if(PROF.r===r)return;profAdd(PROF.r,PROF.c,-1)}
+  profAdd(r,ch,1);PROF.k=k;PROF.r=r;PROF.c=ch;profSave();if(prOpen())prRender();
+}
+function prSaveName(){                           // 프로필 이름: 온라인 이름과 따로. 제작자 코드는 이름에서 빼고 표시만 바꿈
+  const inp=prEl.querySelector('.prnin'),msg=prEl.querySelector('.prmsg'),say=t=>{msg.textContent=t;msg.className='rmsg prmsg bad'};
+  const raw=inp.value,dev0=/\[\s*bft48\s*\]/i.test(raw),tst0=/\[\s*tst8\s*\]/i.test(raw),nm=raw.replace(/\[\s*(bft48|tst8)\s*\]/ig,'').replace(/\s+/g,' ').trim();
+  if(!nm){say('이름을 입력해 주세요');return}
+  if(!/^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]+$/.test(nm)){say('숫자·영어·한글·띄어쓰기·!·?·.·~·( )만 쓸 수 있어요');return}
+  if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(nm)){say('띄어쓰기·기호만으로는 이름을 만들 수 없어요');return}
+  const dvc=dev0||(!tst0&&nm===PROF.name&&PROF.dev);
+  if([...nm].length>(dvc?NMX:10)){say(dvc?'이름이 너무 길어요':'이름은 10글자까지 쓸 수 있어요');return}
+  {const mc=modCheck(nm);if(mc.bad||mc.pi){say('사용할 수 없는 이름이에요');return}}
+  const dv=dev0||(!tst0&&nm===PROF.name&&PROF.dev);PROF.tst=!dv&&(tst0||(nm===PROF.name&&PROF.tst));PROF.dev=dv;PROF.name=nm;profSave();PRS.edit=false;prRender();
+}
+let prEl=null;
+const prOpen=()=>!!(prEl&&!prEl.hidden);
+function prBuild(){
+  if(prEl)return prEl;
+  const m=document.createElement('div');m.className='frmodal prmodal';m.hidden=true;
+  m.innerHTML='<div class="frbox prbox"><button type="button" class="frx" data-p="close" aria-label="닫기">✕</button><div class="rtt">프로필</div><div class="prin"></div></div>';
+  document.body.appendChild(m);prEl=m;
+  m.addEventListener('click',e=>{if(e.target===m){if(performance.now()-uiOpenT>450)prHide();return}const b=e.target.closest('[data-p]');if(!b)return;
+    const a=b.dataset.p;
+    if(a==='close')prHide();else if(a==='copy')frCopy(PID,b);else if(a==='fr'){prHide();frShow()}
+    else if(a==='edit'){PRS.edit=true;prRender();const i=prEl.querySelector('.prnin');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
+    else if(a==='cancel'){PRS.edit=false;prRender()}else if(a==='save')prSaveName()});
+  m.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('prnin'))prSaveName()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&prOpen())prHide()});
+  return m;
+}
+function prRender(){
+  if(!prOpen())return;
+  const g=PROF.w+PROF.l+PROF.d,rate=PROF.w+PROF.l?Math.round(PROF.w/(PROF.w+PROF.l)*100)+'%':'-';
+  const top=Object.entries(PROF.ch).sort((a,b)=>b[1].g-a[1].g||b[1].w-a[1].w).slice(0,3);
+  const pick=NET.pick&&(NET.pick==='random'||netHalf(NET.pick))?NET.pick:null;
+  const nf=frFriends().length;
+  prEl.querySelector('.prin').innerHTML=
+    (PRS.edit?'<div class="rrow prnrow"><input class="rin prnin" maxlength="60" placeholder="프로필 이름 (10글자까지)" autocomplete="off" spellcheck="false" value="'+netEsc(PROF.name)+'"><button type="button" class="rbtn" data-p="save">저장</button></div><div class="rmsg prmsg"></div><div class="prcan"><button type="button" class="frsm" data-p="cancel">취소</button></div>'
+      :'<div class="prname">'+(PROF.name?netWho({name:PROF.name,dev:PROF.dev,tst:PROF.tst}):'<span class="prnone">이름 없음</span>')+'</div><div class="prcan"><button type="button" class="frsm" data-p="edit">'+(PROF.name?'이름 바꾸기':'이름 정하기')+'</button></div>')
+    +'<div class="prsub">온라인 이름 <b>'+(NET.me.name?netEsc(NET.me.name):'없음')+'</b></div>'
+    +'<div class="frme">내 아이디 <b>'+PID+'</b><button type="button" class="rcpy" data-p="copy">복사</button></div>'
+    +'<div class="frsec">온라인 전적</div>'
+    +'<div class="prgrid"><div><b>'+g+'</b><span>판</span></div><div><b>'+PROF.w+'</b><span>승</span></div><div><b>'+PROF.l+'</b><span>패</span></div><div><b>'+rate+'</b><span>승률</span></div></div>'
+    +(PROF.d?'<div class="prsm">무승부 '+PROF.d+'판</div>':'')
+    +'<div class="frsec">많이 쓴 캐릭터</div>'
+    +(top.length?top.map(([n,o])=>'<div class="prrow"><i style="--cc:'+netCol(n)+'"></i><b>'+netEsc(n)+'</b><span>'+o.g+'판 '+o.w+'승</span></div>').join(''):'<div class="rnone">아직 온라인 경기 기록이 없어요.</div>')
+    +'<div class="frsec">그 밖에</div>'
+    +'<div class="prrow"><b>고른 캐릭터</b><span>'+(pick?(pick==='random'?'랜덤':netEsc(pick)):'없음')+'</span></div>'
+    +'<button type="button" class="prrow prfr" data-p="fr"><b>친구</b><span>'+nf+'명 ›</span></button>';
+}
+function prShow(){PRS.edit=false;prBuild().hidden=false;prRender()}
+function prHide(){PRS.edit=false;if(prEl)prEl.hidden=true}
+setInterval(()=>{if(prOpen()&&document.body.classList.contains('in-net'))prHide()},500);
+setTimeout(frUI,0);
 function presHubData(c,d){                        // 모임 자리가 받은 메시지
+  if(d.t==='fe'||d.t==='fl'||d.t==='inv'||d.t==='dm'||d.t==='dma'||d.t==='dmc'){frHub(c,d);return}
   if(['mi','ml','sp','sd','sc'].includes(d.t)){spHub(c,d);return}
   if(d.t==='ann'){if(annGot(d))for(const x of PRES.conns){if(x!==c)try{if(x.open)x.send(d)}catch(_){}}return}
   if(d.t==='room'||d.t==='roomsq'){roomHub(c,d);return}
-  if(d.t==='hi'){c._pid=/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:null;regMerge(d.reg);{const k=ccuDay(),add=uvMerge(d.uv);if(c._pid&&uvAdd(k,c._pid)){add.push([k,c._pid]);uvSave()}uvCast(add,c)}try{c.send({t:'reg',e:REG});c.send({t:'rooms',L:ROOM.list||[]});c.send({t:'uv',u:uvRecent()})}catch(_){}}
+  if(d.t==='hi'){c._pid=/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:null;c._n=typeof d.n==='string'?d.n.slice(0,NMX):'';regMerge(d.reg);{const k=ccuDay(),add=uvMerge(d.uv);if(c._pid&&uvAdd(k,c._pid)){add.push([k,c._pid]);uvSave()}uvCast(add,c)}try{c.send({t:'reg',e:REG});c.send({t:'rooms',L:ROOM.list||[]});c.send({t:'uv',u:uvRecent()})}catch(_){}}
   else if(d.t==='reg')regMerge(d.e,c);
-  else if(d.t==='q'){if(d.id===PID){const r={t:'qr',rid:d.rid,id:PID,n:NET.me.name,log:MY_CHAT};if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
+  else if(d.t==='q'){if(d.id===PID){const r={t:'qr',rid:d.rid,id:PID,n:NET.me.name,log:MY_CHAT,dm:dmRecent()};if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
     const tg=[...PRES.conns].find(x=>x._pid===d.id&&x.open);if(!tg){const r={t:'qr',rid:d.rid,id:d.id,none:1};if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
     PRES.qmap=PRES.qmap||{};PRES.qmap[d.rid]=c||'self';try{tg.send({t:'q',id:d.id,rid:d.rid})}catch(_){}}
   else if(d.t==='qr'){const to=PRES.qmap&&PRES.qmap[d.rid];if(!to)return;delete PRES.qmap[d.rid];if(to==='self')presCliData(d);else try{to.send(d)}catch(_){}}
 }
 function presCliData(d){                          // 손님 폰이 받은 메시지
+  if(d.t==='fe'||d.t==='inv'||d.t==='dm'||d.t==='dma'||d.t==='dmc'){frGot(d);return}
   if(d.t==='mlr'){SPEC.list=Array.isArray(d.L)?d.L.slice(0,40):[];return}
   if(d.t==='spr'){if(d.err)specErr(d);return}
   if(d.t==='spq'){specQ(d);return}
@@ -4603,8 +5147,8 @@ function presCliData(d){                          // 손님 폰이 받은 메시
   if(d.t==='ann'){annGot(d);return}
   if(d.t==='rooms'||d.t==='roomsall'){roomCli(d);return}
   if(d.t==='reg')regMerge(d.e);
-  else if(d.t==='q'&&d.id===PID){try{PRES.conn.send({t:'qr',rid:d.rid,id:PID,n:NET.me.name,log:MY_CHAT})}catch(_){}}
-  else if(d.t==='qr'){const cb=MODQ[d.rid];if(cb){delete MODQ[d.rid];cb(d.none?null:{n:String(d.n||'?').slice(0,6),log:Array.isArray(d.log)?d.log.slice(-50):[]})}}
+  else if(d.t==='q'&&d.id===PID){try{PRES.conn.send({t:'qr',rid:d.rid,id:PID,n:NET.me.name,log:MY_CHAT,dm:dmRecent()})}catch(_){}}
+  else if(d.t==='qr'){const cb=MODQ[d.rid];if(cb){delete MODQ[d.rid];cb(d.none?null:{n:String(d.n||'?').slice(0,NMX),log:Array.isArray(d.log)?d.log.slice(-50):[],dm:Array.isArray(d.dm)?d.dm.slice(-80).filter(x=>x&&typeof x.m==='string').map(x=>({t:+x.t||0,w:String(x.w||'?').slice(0,6),n:String(x.n||'?').slice(0,NMX),me:!!x.me,m:x.m.slice(0,100)})):[]})}}
 }
 /* 빠른 채팅 */
 const chatBtn=document.querySelector('.chatbtn'),chatMenu=document.querySelector('.chatmenu');
@@ -4657,7 +5201,7 @@ function netChatShow(sd,i){
   if(sd!==NET.mySide)chatMark();
   if(NET.spK&&sd===NET.mySide)specOut(typeof i==='string'?{a:'chat',sd,txt:i}:{a:'chat',sd,i});
   {const L=chatMenu.querySelector('.chlog'),info=NET.spec?NET.spec[sd==='left'?'L':'R']:(sd===NET.mySide?NET.me:NET.op),ln=document.createElement('div');   // 채팅 기록
-    ln.className='chl'+(sd===NET.mySide?' me':'');ln.innerHTML='<b>'+netEsc(info?info.name:'?')+'</b>'+(info&&info.dev?'<span class="devtxt">제작자</span>':'')+' ';ln.appendChild(document.createTextNode(typeof i==='string'?i:(NET_CHAT[i]||'')));
+    ln.className='chl'+(sd===NET.mySide?' me':'');ln.innerHTML='<b>'+netEsc(info?info.name:'?')+'</b>'+rtag(roleOf(info))+' ';ln.appendChild(document.createTextNode(typeof i==='string'?i:(NET_CHAT[i]||'')));
     L.appendChild(ln);while(L.childElementCount>60)L.firstChild.remove();L.scrollTop=L.scrollHeight}
   const P=document.querySelector(sd==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());
   const b=document.createElement('div');b.className='chatpop';b.textContent=typeof i==='string'?i:(NET_CHAT[i]||'');P.appendChild(b);
@@ -4672,7 +5216,7 @@ function roomEl(){
   let m=document.querySelector('.rmodal');if(m)return m;
   m=document.createElement('div');m.className='rmodal';m.hidden=true;
   m.innerHTML='<div class="rbox"></div>';document.body.appendChild(m);
-  m.addEventListener('click',e=>{if(e.target===m&&ROOM.view==='room'){roomHide();return}const b=e.target.closest('[data-r]');if(!b||b.disabled)return;roomAct(b.dataset.r,b)});
+  m.addEventListener('click',e=>{if(e.target===m&&(ROOM.view==='room'||ROOM.view==='invite')){roomHide();return}const b=e.target.closest('[data-r]');if(!b||b.disabled)return;roomAct(b.dataset.r,b)});
   m.addEventListener('keydown',e=>{if(e.key==='Enter'){const i=e.target.closest('input');if(!i)return;if(i.classList.contains('rcin'))roomAct('chat');else if(i.classList.contains('rcode'))roomAct('join');else if(i.classList.contains('rpw2'))roomAct('pwgo')}});
   return m;
 }
@@ -4685,6 +5229,7 @@ function chipUpd(){
   const show=!!R&&!open&&!NET.match&&!NET.picking&&!document.body.classList.contains('in-net')&&phase==='idle';
   if(!roomChip){if(!show)return;roomChip=document.createElement('button');roomChip.type='button';roomChip.className='rchip';document.body.appendChild(roomChip);roomChip.addEventListener('click',()=>{if(NET.room)roomShow('room')})}
   roomChip.hidden=!show;if(!show)return;
+  {const r=arenaEl.getBoundingClientRect(),l=Math.round(r.left+10)+'px',t=Math.round(r.top+10)+'px';if(roomChip.style.left!==l)roomChip.style.left=l;if(roomChip.style.top!==t)roomChip.style.top=t}   // 왼쪽 위 친구 버튼과 겹치지 않게 맵 안쪽 왼쪽 위에 둠
   const has=!!R.op,h='방 열기<i class="'+(has?'on':'')+'">'+(has?'2/2':'1/2')+'</i>';if(roomChip._h!==h){roomChip._h=h;roomChip.innerHTML=h}
 }
 setInterval(chipUpd,500);
@@ -4711,11 +5256,17 @@ function roomRender(){
     setTimeout(()=>{const i=b.querySelector('.rpw2');if(i)i.focus()},30);
   }else if(v==='busy'){
     b.innerHTML='<div class="rtt">'+netEsc(ROOM.busyT||'연결하는 중...')+'</div><div class="rmsg">'+netEsc(ROOM.busyM||'')+'</div><div class="rbtns"><button type="button" class="rbtn rno" data-r="cancel">취소</button></div>';
+  }else if(v==='invite'&&R){                     // 친구 초대: 온라인인 친구만 초대 버튼
+    const now=Date.now(),sent=id=>now-(FRP.inv[id]||0)<10000;
+    const fs=frFriends().map(id=>({id,n:frLive(id),s:frStat(id)})).sort((a,b)=>a.s[2]-b.s[2]||a.n.localeCompare(b.n,'ko'));
+    b.innerHTML='<div class="rtt">친구 초대</div><div class="rsub">온라인인 친구만 초대할 수 있어요</div><div class="rlist">'
+      +(fs.length?fs.map(f=>'<div class="fritem"><div class="frnm"><b>'+netEsc(f.n)+'</b><i>'+f.id+'</i></div><span class="frst '+f.s[1]+'">'+f.s[0]+'</span>'+(f.s[1]==='on'?'<button type="button" class="frsm'+(sent(f.id)?'" disabled':' ok"')+' data-r="invgo" data-id="'+f.id+'">'+(sent(f.id)?'보냄':'초대')+'</button>':'')+'</div>').join(''):'<div class="rnone">아직 친구가 없어요. 로비 왼쪽 위 친구 버튼에서 추가할 수 있어요</div>')
+      +'</div><div class="rbtns"><button type="button" class="rbtn" data-r="invback">돌아가기</button></div>';
   }else if(v==='room'&&R){
-    const me={name:NET.me.name,dev:NET.me.dev,ch:NET.myCh},op=R.op;
+    const me={name:NET.me.name,dev:NET.me.dev,tst:NET.me.tst,ch:NET.myCh},op=R.op;
     const slot=(info,host,mine)=>'<div class="rslot'+(info?'':' empty')+'">'+(info?'<div class="rsn">'+netWho(info)+(host?'<i class="rhost">방장</i>':'')+'</div><div class="rsc">'+(mine?'<button type="button" class="rchb" data-r="pickch" style="--cc:'+(info.ch?netCol(info.ch):'#fff')+'">'+(info.ch?netEsc(info.ch):'캐릭터 선택')+'</button>':'<span class="rchv" style="--cc:'+(info.ch?netCol(info.ch):'#ccc')+'">'+(info.ch?netEsc(info.ch):'고르는 중')+'</span>')+'</div>'+(R.host&&!mine?'<button type="button" class="rkick" data-r="kick">추방</button>':''):'<div class="rnone">기다리는 중...</div>')+'</div>';
     const meSlot=slot(me,R.host,true),opSlot=slot(op,!R.host,false);
-    b.innerHTML='<div class="rhd"><div class="rtt">'+netEsc(R.title)+'</div><div class="rcd">코드 <b>'+R.code+'</b>'+(R.hasPw?' · 🔒':'')+'<button type="button" class="rcpy" data-r="copy">복사</button></div></div>'
+    b.innerHTML='<div class="rhd"><div class="rtt">'+netEsc(R.title)+'</div><div class="rcd">코드 <b>'+R.code+'</b>'+(R.hasPw?' · 🔒':'')+'<button type="button" class="rcpy" data-r="copy">복사</button>'+(R.host&&!R.op?'<button type="button" class="rcpy" data-r="invite">초대</button>':'')+'</div></div>'
       +'<div class="rrow rpubrow">'+(R.host?'<button type="button" class="rtog'+(R.pub?' on':'')+'" data-r="setpub" data-v="1">공개</button><button type="button" class="rtog'+(R.pub?'':' on')+'" data-r="setpub" data-v="0">비공개</button>':'<span class="rpubv">'+(R.pub?'공개 방':'비공개 방')+'</span>')+'</div>'
       +'<div class="rslots">'+(R.host?meSlot+opSlot:opSlot+meSlot)+'</div>'
       +'<div class="rchat"><div class="rclog"></div><div class="rrow"><input class="rin rcin" maxlength="30" placeholder="메시지를 입력해주세요." autocomplete="off"><button type="button" class="rbtn" data-r="chat">보내기</button></div><div class="rban"></div></div>'
@@ -4724,7 +5275,7 @@ function roomRender(){
     b.querySelector('.rban').textContent=penBanned()?'채팅 금지 · '+penText()+' 남음':'';
   }
 }
-function roomLine(x){const d=document.createElement('div');d.className='chl'+(x.me?' me':'')+(x.sys?' sys':'');if(!x.sys){d.innerHTML='<b>'+netEsc(x.n)+'</b>'+(x.dev?'<span class="devtxt">제작자</span>':'')+' '}d.appendChild(document.createTextNode(x.m));return d}
+function roomLine(x){const d=document.createElement('div');d.className='chl'+(x.me?' me':'')+(x.sys?' sys':'');if(!x.sys){d.innerHTML='<b>'+netEsc(x.n)+'</b>'+rtag(roleOf(x))+' '}d.appendChild(document.createTextNode(x.m));return d}
 function roomLog(x){const R=NET.room;if(!R)return;R.log=R.log||[];R.log.push(x);if(R.log.length>60)R.log.shift();const lg=document.querySelector('.rmodal .rclog');if(lg&&ROOM.view==='room'){lg.appendChild(roomLine(x));while(lg.childElementCount>60)lg.firstChild.remove();lg.scrollTop=lg.scrollHeight}}
 function roomMsg(t){ROOM.msgT=t;const e=document.querySelector('.rmodal .rmsg');if(e){e.textContent=t;e.className='rmsg bad'}}
 /* 방 목록·관리: 접속자 수를 세는 '모임 자리'를 통해 주고받음 */
@@ -4738,7 +5289,7 @@ setInterval(roomsBroadcast,5000);
 function roomsAll(cb){ROOM.allCb=cb;if(PRES.hub)cb(Object.values(PRES.rooms||{}));else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'roomsq'})}catch(_){cb(null)}}else cb(null)}
 function roomHub(c,d){                             // 모임 자리: 방 등록·목록·어드민 조회
   if(d.t==='room'){const r=d.r||{};if(!/^[A-Z2-9]{6}$/.test(r.code))return;PRES.rooms=PRES.rooms||{};
-    if(r.del)delete PRES.rooms[r.code];else PRES.rooms[r.code]={code:r.code,title:String(r.title||'').slice(0,16),pub:!!r.pub,pw:String(r.pw||'').slice(0,8),n:r.n|0,host:String(r.host||'').slice(0,6),ts:Date.now()};roomsBroadcast()}
+    if(r.del)delete PRES.rooms[r.code];else PRES.rooms[r.code]={code:r.code,title:String(r.title||'').slice(0,16),pub:!!r.pub,pw:String(r.pw||'').slice(0,8),n:r.n|0,host:String(r.host||'').slice(0,NMX),ts:Date.now()};roomsBroadcast()}
   else if(d.t==='roomsq'){const L=Object.values(PRES.rooms||{});if(c)try{c.send({t:'roomsall',L})}catch(_){}else if(ROOM.allCb)ROOM.allCb(L)}
 }
 function roomCli(d){if(d.t==='rooms'){ROOM.list=Array.isArray(d.L)?d.L.slice(0,50):[];if(ROOM.view==='menu')roomRender()}else if(d.t==='roomsall'&&ROOM.allCb)ROOM.allCb(Array.isArray(d.L)?d.L:[])}
@@ -4767,8 +5318,8 @@ function roomIncoming(c){
     if(R.pw&&String(d.pw||'')!==R.pw)return no('pw');
     const info=netCleanInfo(d);info.ch=d.ch&&netHalf(d.ch)?d.ch:null;R.op=info;NET.conn=c;NET.host=true;
     c.on('data',netData);c.on('close',()=>{if(NET.conn===c)netClosed()});
-    try{c.send({t:'rok',room:{code:R.code,title:R.title,pub:R.pub,hasPw:!!R.pw},host:Object.assign(netInfo(),{ch:NET.myCh}),log:(R.log||[]).filter(x=>!x.sys).slice(-20).map(x=>({n:x.n,dev:x.dev,m:x.m}))})}catch(_){}
-    roomLog({sys:1,m:info.name+' 님이 들어왔어요'});roomPub();if(ROOM.view==='room')roomRender();
+    try{c.send({t:'rok',room:{code:R.code,title:R.title,pub:R.pub,hasPw:!!R.pw},host:Object.assign(netInfo(),{ch:NET.myCh}),log:(R.log||[]).filter(x=>!x.sys).slice(-20).map(x=>({n:x.n,dev:x.dev,tst:x.tst,m:x.m}))})}catch(_){}
+    roomLog({sys:1,m:info.name+' 님이 들어왔어요'});roomPub();if(ROOM.view==='invite')ROOM.view='room';if(ROOM.view==='room')roomRender();
   });
 }
 /* 손님: 코드로 입장 */
@@ -4791,7 +5342,7 @@ async function roomJoin(code,pw){
     else if(d.t==='rok'){fin(true);NET.conn=c;NET.host=false;NET.myCh=NET.pick&&NET.pick!=='random'?NET.pick:null;
       const h=netCleanInfo(d.host||{});h.ch=d.host&&netHalf(d.host.ch)?d.host.ch:null;
       NET.room={host:false,code,title:String(d.room&&d.room.title||'').slice(0,16),pub:!!(d.room&&d.room.pub),hasPw:!!(d.room&&d.room.hasPw),op:h,log:[]};NET.state='room';
-      (d.log||[]).forEach(x=>roomLog({n:String(x.n||'?').slice(0,6),dev:!!x.dev,m:String(x.m||'').slice(0,30)}));
+      (d.log||[]).forEach(x=>roomLog({n:String(x.n||'?').slice(0,NMX),dev:!!x.dev,tst:!x.dev&&!!x.tst,m:String(x.m||'').slice(0,30)}));
       roomLog({sys:1,m:'방에 들어왔어요'});
       c.on('data',netData);c.on('close',()=>{if(NET.conn===c)netClosed()});
       try{me.disconnect()}catch(_){}
@@ -4801,7 +5352,7 @@ async function roomJoin(code,pw){
 function roomData(d){                              // 방 안에서 주고받는 메시지
   const R=NET.room;if(!R)return;
   if(d.t==='rpick'){if(R.op)R.op.ch=d.ch&&netHalf(d.ch)?d.ch:null;if(ROOM.view==='room')roomRender()}
-  else if(d.t==='rchat'){let x=String(d.txt||'').replace(/\s+/g,' ').trim().slice(0,30);const mc=modCheck(x);if(mc.pi||mc.bad)x='***';if(x&&R.op)roomLog({n:R.op.name,dev:R.op.dev,m:x})}
+  else if(d.t==='rchat'){let x=String(d.txt||'').replace(/\s+/g,' ').trim().slice(0,30);const mc=modCheck(x);if(mc.pi||mc.bad)x='***';if(x&&R.op)roomLog({n:R.op.name,dev:R.op.dev,tst:R.op.tst,m:x})}
   else if(d.t==='rinfo'){R.pub=!!d.pub;roomLog({sys:1,m:R.pub?'공개 방으로 바뀌었어요':'비공개 방으로 바뀌었어요'});if(ROOM.view==='room')roomRender()}
   else if(d.t==='kick'){roomClose('방장에게 추방되었어요')}
   else if(d.t==='rstart'&&!R.host){                // 방장이 시작함
@@ -4863,7 +5414,13 @@ function roomAct(a,b){
     if(penBanned()){netToast('채팅 금지 중이에요 ('+penText()+' 남음)');return}
     const mc=modCheck(t);if(mc.pi){netToast('연락처·링크·아이디는 보낼 수 없어요');return}
     if(mc.bad){penWarn(t,mc.word);i.value='';netToast('비속어가 감지되어 보내지 않았어요 (경고 '+PEN.w+'회'+(penBanned()?' · 채팅 금지 '+penText():'')+')');roomRender();return}
-    i.value='';netSend({t:'rchat',txt:t});myChatAdd(t);roomLog({me:1,n:NET.me.name,dev:NET.me.dev,m:t})}
+    i.value='';netSend({t:'rchat',txt:t});myChatAdd(t);roomLog({me:1,n:NET.me.name,dev:NET.me.dev,tst:NET.me.tst,m:t})}
+  else if(a==='invite'&&R&&R.host){roomShow('invite')}
+  else if(a==='invback'){roomShow(NET.room?'room':'menu')}
+  else if(a==='invgo'&&R&&R.host&&!R.op){const id=b.dataset.id,e=frWith(id);if(!e||e.st!=='f'||Date.now()-(FRP.inv[id]||0)<10000)return;
+    if(!PRES.hub&&!(PRES.conn&&PRES.conn.open)){netToast('아직 서버에 연결 중이에요. 잠시 후 다시 해 주세요');return}
+    if(frStat(id)[1]!=='on'){netToast('온라인인 친구만 초대할 수 있어요');return}
+    FRP.inv[id]=Date.now();toHub({t:'inv',to:id,k:'i',code:R.code,title:R.title,lock:!!R.hasPw});netToast(frLive(id)+' 님을 초대했어요');roomRender();setTimeout(()=>{if(ROOM.view==='invite')roomRender()},10100)}
   else if(a==='start')roomStart();
   else if(a==='leave')roomClose();
 }
@@ -4889,21 +5446,21 @@ const uvRecent=()=>{const o={},lim=ccuDay(Date.now()-7*864e5);for(const k in PRE
 function uvPurge(){const lim=ccuDay(Date.now()-7*864e5);let ch=false;for(const k in PRES_UV)if(k<=lim&&!PRES_STAR.has(k)){delete PRES_UV[k];delete uvSet[k];ch=true}if(ch)uvSave();let c2=false;for(const k in UVN)if(k<=lim&&!PRES_STAR.has(k)){delete UVN[k];c2=true}if(c2)try{localStorage.setItem('bftUvN',JSON.stringify(UVN))}catch(e){}}
 function uvCast(add,except){if(!add.length||!PRES.hub)return;for(const c of PRES.conns)if(c!==except)try{if(c.open)c.send({t:'uvadd',a:add})}catch(_){}}
 ccuPurge();setInterval(ccuPurge,60000);setInterval(uvPurge,60000);
-setInterval(()=>{const s=presMy();if(s===PRES.lastS)return;PRES.lastS=s;if(PRES.hub)presCast();else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'st',s})}catch(_){}}},1000);   // 매칭 시작·끝날 때 모임 자리에 바로 알림
+setInterval(()=>{const s=presMy(),n=NET.me.name||'',sg=s+'|'+n;if(sg===PRES.lastS)return;PRES.lastS=sg;if(PRES.hub)presCast();else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'st',s,n})}catch(_){}}},1000);   // 매칭 시작·끝날 때 모임 자리에 바로 알림
 function presMax(n){return ccuSet(ccuDay(),n,Date.now())}
 const presMy=()=>NET.spec?'i':(NET.state==='search'?'q':(NET.match?'m':'i'));   // 내 상태: 매칭 중 / 경기 중 / 그 외
 const PRES={q:0,mt:0,st:'온라인 기능 불러오는 중',peer:null,conns:new Set(),hub:false,n:0,gen:0,to:0,last:0,conn:null};   // 15초마다 서로 신호를 주고받고, 40초 동안 소식이 없으면 끊긴 것으로 봄
 const PRES_ID='bftball-hub-1';
 function presKill(){clearTimeout(PRES.to);PRES.conn=null;if(PRES.peer){try{PRES.peer.destroy()}catch(_){}}PRES.peer=null;PRES.hub=false;PRES.conns.clear()}
 function presLater(ms){const g=PRES.gen;clearTimeout(PRES.to);PRES.to=setTimeout(()=>{if(g===PRES.gen)presTry()},ms==null?1200+Math.random()*2500:ms)}
-function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;if(presMax(PRES.n))cldKick();{const k=ccuDay(),add=[];if(uvAdd(k,PID))add.push([k,PID]);for(const c of PRES.conns)if(c._pid&&uvAdd(k,c._pid))add.push([k,c._pid]);if(add.length){uvSave();uvCast(add);cldKick()}}const all=[presMy(),...[...PRES.conns].map(c=>c._s||'i')];PRES.q=all.filter(x=>x==='q').length;PRES.mt=all.filter(x=>x==='m').length;for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,q:PRES.q,mt:PRES.mt,days:ccuRecent()})}catch(_){}}}
+function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;if(presMax(PRES.n))cldKick();{const k=ccuDay(),add=[];if(uvAdd(k,PID))add.push([k,PID]);for(const c of PRES.conns)if(c._pid&&uvAdd(k,c._pid))add.push([k,c._pid]);if(add.length){uvSave();uvCast(add);cldKick()}}const all=[presMy(),...[...PRES.conns].map(c=>c._s||'i')];PRES.q=all.filter(x=>x==='q').length;PRES.mt=all.filter(x=>x==='m').length;for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,q:PRES.q,mt:PRES.mt,days:ccuRecent(),pl:presPl(c._fr)})}catch(_){}}frPl(presPl(PRES.selfFr))}
 function presTry(){
   presKill();const g=++PRES.gen;let p;
   try{p=new Peer(PRES_ID,netOpts())}catch(e){presLater(15000);return}
   PRES.peer=p;
   p.on('open',()=>{if(g!==PRES.gen)return;PRES.hub=true;PRES.st='';presCast()});
   p.on('connection',c=>{if(g!==PRES.gen)return;
-    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&['hi','reg','q','qr','ann','room','roomsq','mi','ml','sp','sd','sc'].includes(d.t)){presHubData(c,d);return}if(d&&(d.t==='st'||d.t==='ping')&&d.s&&d.s!==c._s){c._s=d.s;presCast()}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
+    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&['hi','reg','q','qr','ann','room','roomsq','mi','ml','sp','sd','sc','fe','fl','inv','dm','dma','dmc'].includes(d.t)){presHubData(c,d);return}if(d&&(d.t==='st'||d.t==='ping')&&d.s){const nn=typeof d.n==='string'?d.n.slice(0,NMX):(c._n||'');if(d.s!==c._s||nn!==c._n){c._s=d.s;c._n=nn;presCast()}}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
     const rm=()=>{spDrop(c);if(PRES.conns.delete(c))presCast()};c.on('close',rm);c.on('error',rm)});
   p.on('error',e=>{if(g!==PRES.gen)return;if(e&&e.type==='unavailable-id')presJoin();else if(!PRES.hub){PRES.st='서버 연결 실패 ('+(e&&e.type||'?')+')';presLater()}});
   p.on('disconnected',()=>{if(g===PRES.gen)presLater(800)});
@@ -4915,16 +5472,18 @@ function presJoin(){
   PRES.to=setTimeout(()=>{if(g===PRES.gen&&!PRES.n)presLater()},12000);
   q.on('open',()=>{if(g!==PRES.gen)return;PRES.st='다른 접속자와 연결하는 중';let c;try{c=q.connect(PRES_ID,{reliable:true,serialization:'json'})}catch(e){presLater();return}
     PRES.conn=c;PRES.last=Date.now();
-    c.on('open',()=>{miAt=0;try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy()});c.send({t:'hi',pid:PID,reg:REG,uv:(uvAdd(ccuDay(),PID)&&uvSave(),uvRecent())})}catch(_){}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
-    c.on('data',d=>{if(g===PRES.gen&&d&&['reg','q','qr','ann','rooms','roomsall','uv','uvadd','mlr','spr','spq','sd','sc'].includes(d.t)){presCliData(d);return}if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
+    c.on('open',()=>{miAt=0;try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy(),n:NET.me.name||''});c.send({t:'hi',pid:PID,n:NET.me.name||'',reg:REG,uv:(uvAdd(ccuDay(),PID)&&uvSave(),uvRecent())});const ids=frIds();FRP.sig=ids.join();c.send({t:'fl',ids})}catch(_){FRP.sig=''}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
+    c.on('data',d=>{if(g===PRES.gen&&d&&['reg','q','qr','ann','rooms','roomsall','uv','uvadd','mlr','spr','spq','sd','sc','fe','inv','dm','dma','dmc'].includes(d.t)){presCliData(d);return}if(g===PRES.gen&&d&&d.t==='cnt'){frPl(d.pl&&typeof d.pl==='object'?d.pl:{});PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
     c.on('close',()=>{if(g===PRES.gen){PRES.n=0;presLater()}});c.on('error',()=>{if(g===PRES.gen){PRES.n=0;presLater()}})});
   q.on('error',e=>{if(g!==PRES.gen)return;PRES.st='연결 다시 시도 중 ('+(e&&e.type||'?')+')';if(e&&e.type==='peer-unavailable')presLater(300+Math.random()*700);else presLater()});
 }
 setInterval(()=>{const t=Date.now();
   if(PRES.hub){for(const c of [...PRES.conns])if(t-(c._seen||t)>40000){PRES.conns.delete(c);try{c.close()}catch(_){}}presCast()}
-  else if(PRES.conn){try{if(PRES.conn.open)PRES.conn.send({t:'ping',s:presMy()})}catch(_){}if(PRES.n&&t-PRES.last>40000){PRES.n=0;presLater(200)}}
+  else if(PRES.conn){try{if(PRES.conn.open)PRES.conn.send({t:'ping',s:presMy(),n:NET.me.name||''})}catch(_){}if(PRES.n&&t-PRES.last>40000){PRES.n=0;presLater(200)}}
 },15000);
-setTimeout(()=>{netLib().then(()=>{PRES.st='서버에 연결하는 중';presTry()}).catch(()=>{PRES.st='온라인 기능을 불러오지 못함 (인터넷·브라우저 확인)'})},1500);
+let presBooted=false;
+function presBoot(){if(presBooted)return;presBooted=true;netLib().then(()=>{PRES.st='서버에 연결하는 중';presTry()}).catch(()=>{PRES.st='온라인 기능을 불러오지 못함 (인터넷·브라우저 확인)'})}
+if(!IAPP.on||IAPP_STAY)setTimeout(presBoot,1500);   // 앱 안 브라우저는 기본 브라우저로 넘어가므로 연결하지 않음
 
 netPaintOnl();netDots();
 {const t=document.getElementById('pidtag');if(t)t.textContent='내 아이디 '+PID}   // 로비 왼쪽 아래에 내 게임 아이디
