@@ -355,8 +355,8 @@ body.scr-2v2 .hud .hp{height:18px;font-size:12px;line-height:14px}
 body.scr-2v2 .end-row{margin-top:22px}body.scr-2v2 .wrap{transform:translateY(calc(-3vh + 8px))}
 body.scr-2v2 .onhint{display:none}
 .chatpop{white-space:normal!important;max-width:min(72vw,280px);width:max-content;font-size:15px!important;padding:8px 12px 9px!important;line-height:1.35!important;word-break:break-all}
-.ann{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);z-index:60;padding:9px 16px 10px;background:rgba(0,0,0,.6);font:700 15px/1.4 "Jua",sans-serif;color:#fff;text-align:center;word-break:keep-all;pointer-events:none}
-.ann b{font-size:12px;color:#ffd400;margin-right:8px;font-weight:800}
+.ann{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);z-index:60;padding:16px 18px 17px;background:rgba(0,0,0,.82);font:700 19px/1.45 "Jua",sans-serif;color:#fff;text-align:center;word-break:keep-all;pointer-events:none}
+.ann b{font-size:15px;color:#ffd400;margin-right:10px;font-weight:800}
 .mkrow{gap:8px}.mkrow .mkbtn{width:46%}.rmbtn{width:24%;height:38px;font-weight:700;font-size:clamp(15px,4.5vw,21px);font-family:inherit;line-height:1;padding:0 0 calc(var(--shift,.05)*2em);color:#fff;background:#2563eb;border:2px solid var(--ink);border-radius:5px;cursor:pointer}.rmbtn:active{transform:scale(.96)}
 .rmodal{position:fixed;inset:0;z-index:24;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:12px}.rmodal[hidden]{display:none}
 .rbox{width:100%;max-width:380px;max-height:92vh;overflow:auto;background:#fff;border:3px solid var(--ink);padding:16px 14px 14px;font-family:"Jua","Apple SD Gothic Neo",sans-serif;color:#111}
@@ -365,7 +365,11 @@ body.scr-2v2 .onhint{display:none}
 .rnone{font-size:13px;color:#888;padding:6px 0}.rrow{display:flex;gap:6px;align-items:center}
 .rin{flex:1;min-width:0;width:100%;height:36px;border:2px solid var(--ink);border-radius:0;padding:0 9px;font:500 16px/1 "Jua",sans-serif;color:#111;background:#fff;outline:none;-webkit-user-select:text;user-select:text;box-sizing:border-box}
 .rbtn{flex:none;height:36px;padding:0 12px;border:2px solid var(--ink);border-radius:5px;background:#111;color:#fff;font:700 14px/1 "Jua",sans-serif;cursor:pointer}.rbtn:disabled{opacity:.35}.rbtn:active:not(:disabled){transform:scale(.96)}
-.rbtns{display:flex;gap:8px;justify-content:center;margin-top:14px;align-items:center}.rbtns .rbtn{flex:1}.rgo{background:var(--bar)!important}.rno{background:#d32f2f!important}
+.rbtns{display:flex;gap:8px;justify-content:center;margin-top:14px;align-items:center}.rbtns .rbtn{flex:1}
+.rbtns .rbtn.rsm{flex:.6;height:32px;font-size:13px}
+.rcpy{margin-left:6px;height:22px;padding:0 8px;border:1.5px solid var(--ink);border-radius:4px;background:#fff;color:#111;font:700 12px/1 "Jua",sans-serif;cursor:pointer;vertical-align:middle}
+.rchip{position:fixed;left:8px;top:calc(12px + env(safe-area-inset-top,0px));z-index:20;display:flex;align-items:center;gap:6px;height:28px;padding:0 9px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:700 13px/1 "Jua",sans-serif;cursor:pointer;white-space:nowrap}
+.rchip[hidden]{display:none}.rchip i{font-style:normal;color:#888}.rchip i.on{color:#16a34a}.rgo{background:var(--bar)!important}.rno{background:#d32f2f!important}
 .rtog{flex:1;height:32px;border:2px solid var(--ink);background:#fff;color:#111;font:700 14px/1 "Jua",sans-serif;cursor:pointer}.rtog.on{background:#111;color:#fff}
 .rmsg{min-height:18px;margin-top:8px;font-size:13px;font-weight:700;text-align:center;color:#555}.rmsg.bad{color:#d32f2f}
 .rhd{display:flex;flex-direction:column;align-items:center;gap:4px}.rcd{font-size:13px;color:#555}.rcd b{font-family:monospace;font-size:16px;color:#111;letter-spacing:.08em}
@@ -3107,9 +3111,18 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='2.7.11';
+const PATCH_VERSION='2.7.12';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'2.7.12',date:'2026-10-11',
+   chars:[],
+   fx:[],
+   sys:[
+     {who:'방',lines:['온라인 방 추가 (빠른 매칭 옆 방 버튼)','방 제목·공개/비공개·비밀번호 설정 (비밀번호는 만들 때만 설정 가능)','공개 방 목록에서 입장하거나 방 코드로 입장','방장이 상대 추방, 공개/비공개 전환 가능','대기실에서 채팅 가능 (빠른 채팅 없음)','방 안에서 캐릭터 선택','방 코드 옆에 복사 버튼 추가','방 창을 접어도 방이 유지되고, 접어 두면 작은 버튼으로 다시 열기·상대 유무 확인','시작 버튼 크기 축소']},
+     {who:'채팅',lines:['채팅 입력 시 키보드가 올라와도 화면이 움직이지 않도록 수정']},
+     {who:'로비',lines:['로비 왼쪽 아래에 내 아이디 표시']},
+     {who:'글꼴',lines:['게임 전체 글꼴 변경']}
+   ]},
   {ver:'2.7.11',date:'2026-10-11',
    chars:[],
    fx:[],
@@ -4430,12 +4443,22 @@ function roomEl(){
   let m=document.querySelector('.rmodal');if(m)return m;
   m=document.createElement('div');m.className='rmodal';m.hidden=true;
   m.innerHTML='<div class="rbox"></div>';document.body.appendChild(m);
-  m.addEventListener('click',e=>{const b=e.target.closest('[data-r]');if(!b||b.disabled)return;roomAct(b.dataset.r,b)});
+  m.addEventListener('click',e=>{if(e.target===m&&ROOM.view==='room'){roomHide();return}const b=e.target.closest('[data-r]');if(!b||b.disabled)return;roomAct(b.dataset.r,b)});
   m.addEventListener('keydown',e=>{if(e.key==='Enter'){const i=e.target.closest('input');if(!i)return;if(i.classList.contains('rcin'))roomAct('chat');else if(i.classList.contains('rcode'))roomAct('join');else if(i.classList.contains('rpw2'))roomAct('pwgo')}});
   return m;
 }
 function roomShow(view){const m=roomEl();m.hidden=false;ROOM.view=view;roomRender()}
-function roomHide(){const m=document.querySelector('.rmodal');if(m)m.hidden=true;ROOM.view=null}
+function roomHide(){const m=document.querySelector('.rmodal');if(m)m.hidden=true;ROOM.view=null;chipUpd()}
+/* 접어 둔 방: 다시 여는 작은 버튼 + 상대가 있는지만 표시 */
+let roomChip=null;
+function chipUpd(){
+  const R=NET.room,m=document.querySelector('.rmodal'),open=m&&!m.hidden;
+  const show=!!R&&!open&&!NET.match&&!NET.picking&&!document.body.classList.contains('in-net')&&phase==='idle';
+  if(!roomChip){if(!show)return;roomChip=document.createElement('button');roomChip.type='button';roomChip.className='rchip';document.body.appendChild(roomChip);roomChip.addEventListener('click',()=>{if(NET.room)roomShow('room')})}
+  roomChip.hidden=!show;if(!show)return;
+  const has=!!R.op,h='방 열기<i class="'+(has?'on':'')+'">'+(has?'2/2':'1/2')+'</i>';if(roomChip._h!==h){roomChip._h=h;roomChip.innerHTML=h}
+}
+setInterval(chipUpd,500);
 function roomRender(){
   const m=roomEl(),b=m.querySelector('.rbox'),v=ROOM.view,R=NET.room;
   setTimeout(()=>{const e=b.querySelector('.rmsg');if(e&&ROOM.msgT&&!e.textContent){e.textContent=ROOM.msgT;e.className='rmsg bad'}},0);
@@ -4463,11 +4486,11 @@ function roomRender(){
     const me={name:NET.me.name,dev:NET.me.dev,ch:NET.myCh},op=R.op;
     const slot=(info,host,mine)=>'<div class="rslot'+(info?'':' empty')+'">'+(info?'<div class="rsn">'+netWho(info)+(host?'<i class="rhost">방장</i>':'')+'</div><div class="rsc">'+(mine?'<button type="button" class="rchb" data-r="pickch" style="--cc:'+(info.ch?netCol(info.ch):'#fff')+'">'+(info.ch?netEsc(info.ch):'캐릭터 선택')+'</button>':'<span class="rchv" style="--cc:'+(info.ch?netCol(info.ch):'#ccc')+'">'+(info.ch?netEsc(info.ch):'고르는 중')+'</span>')+'</div>'+(R.host&&!mine?'<button type="button" class="rkick" data-r="kick">추방</button>':''):'<div class="rnone">기다리는 중...</div>')+'</div>';
     const meSlot=slot(me,R.host,true),opSlot=slot(op,!R.host,false);
-    b.innerHTML='<div class="rhd"><div class="rtt">'+netEsc(R.title)+'</div><div class="rcd">코드 <b>'+R.code+'</b>'+(R.hasPw?' · 🔒':'')+'</div></div>'
+    b.innerHTML='<div class="rhd"><div class="rtt">'+netEsc(R.title)+'</div><div class="rcd">코드 <b>'+R.code+'</b>'+(R.hasPw?' · 🔒':'')+'<button type="button" class="rcpy" data-r="copy">복사</button></div></div>'
       +'<div class="rrow rpubrow">'+(R.host?'<button type="button" class="rtog'+(R.pub?' on':'')+'" data-r="setpub" data-v="1">공개</button><button type="button" class="rtog'+(R.pub?'':' on')+'" data-r="setpub" data-v="0">비공개</button>':'<span class="rpubv">'+(R.pub?'공개 방':'비공개 방')+'</span>')+'</div>'
       +'<div class="rslots">'+(R.host?meSlot+opSlot:opSlot+meSlot)+'</div>'
       +'<div class="rchat"><div class="rclog"></div><div class="rrow"><input class="rin rcin" maxlength="30" placeholder="메시지를 입력해주세요." autocomplete="off"><button type="button" class="rbtn" data-r="chat">보내기</button></div><div class="rban"></div></div>'
-      +'<div class="rbtns">'+(R.host?'<button type="button" class="rbtn rgo" data-r="start"'+(op&&op.ch&&NET.myCh?'':' disabled')+'>시작</button>':'<div class="rwait">방장이 시작하면 경기가 시작돼요</div>')+'<button type="button" class="rbtn rno" data-r="leave">방 나가기</button></div>';
+      +'<div class="rbtns">'+(R.host?'<button type="button" class="rbtn rgo rsm" data-r="start"'+(op&&op.ch&&NET.myCh?'':' disabled')+'>시작</button>':'<div class="rwait">방장이 시작하면 경기가 시작돼요</div>')+'<button type="button" class="rbtn rsm" data-r="fold">접기</button><button type="button" class="rbtn rno rsm" data-r="leave">나가기</button></div>';
     const lg=b.querySelector('.rclog');(R.log||[]).forEach(x=>lg.appendChild(roomLine(x)));lg.scrollTop=lg.scrollHeight;
     b.querySelector('.rban').textContent=penBanned()?'채팅 금지 · '+penText()+' 남음':'';
   }
@@ -4588,6 +4611,10 @@ function roomPeerGone(){                            // 상대 연결이 끊김
 function roomAct(a,b){
   const m=roomEl(),R=NET.room;ROOM.msgT='';
   if(a==='close'){roomHide()}
+  else if(a==='fold'){roomHide()}
+  else if(a==='copy'&&R){const t=R.code,done=()=>{b.textContent='복사됨';setTimeout(()=>{if(b.isConnected)b.textContent='복사'},1200)};
+    const fb=()=>{try{const x=document.createElement('textarea');x.value=t;x.style.cssText='position:fixed;left:-99px;top:0;opacity:0';document.body.appendChild(x);x.select();document.execCommand('copy');x.remove();done()}catch(_){netToast('복사하지 못했어요')}};
+    try{navigator.clipboard.writeText(t).then(done,fb)}catch(_){fb()}}
   else if(a==='menu'){roomShow('menu')}
   else if(a==='cancel'){ROOM.view=null;if(NET.room)roomClose();else roomShow('menu')}
   else if(a==='new'){if(!NET.me.name){roomHide();netMsg('이름부터 정해주세요!','bad');return}roomShow('new')}
