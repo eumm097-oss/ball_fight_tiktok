@@ -368,6 +368,8 @@ body.scr-2v2 .onhint{display:none}
 .rbtns .rbtn.rsm{flex:.6;height:32px;font-size:13px}
 .rcpy{margin-left:6px;height:22px;padding:0 8px;border:1.5px solid var(--ink);border-radius:4px;background:#fff;color:#111;font:700 12px/1 "Jua",sans-serif;cursor:pointer;vertical-align:middle}
 .rchip{position:fixed;left:8px;top:calc(12px + env(safe-area-inset-top,0px));z-index:20;display:flex;align-items:center;gap:6px;height:28px;padding:0 9px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:700 13px/1 "Jua",sans-serif;cursor:pointer;white-space:nowrap}
+.chatmenu.spec .chq,.chatmenu.spec .chcons,.chatmenu.spec .ccbtn{display:none}
+.specbadge{position:fixed;left:8px;top:calc(12px + env(safe-area-inset-top,0px));z-index:20;display:flex;align-items:center;height:28px;padding:0 10px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:700 13px/1 "Jua",sans-serif}.specbadge[hidden]{display:none}
 .rchip[hidden]{display:none}.rchip i{font-style:normal;color:#888}.rchip i.on{color:#16a34a}.rgo{background:var(--bar)!important}.rno{background:#d32f2f!important}
 .rtog{flex:1;height:32px;border:2px solid var(--ink);background:#fff;color:#111;font:700 14px/1 "Noto Sans KR",sans-serif;cursor:pointer}.rtog.on{background:#111;color:#fff}
 .rmsg{min-height:18px;margin-top:8px;font-size:13px;font-weight:700;text-align:center;color:#555}.rmsg.bad{color:#d32f2f}
@@ -3312,6 +3314,7 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
   const sw=(a,lb)=>'<button type="button" class="admsw" data-a="'+a+'">'+lb+' <span></span></button>';
   const bt=(a,lb,cl,ex)=>'<button type="button" class="admbtn'+(cl?' '+cl:'')+'" data-a="'+a+'"'+(ex||'')+'>'+lb+'</button>';
   if(k==='main')return '<div class="admsub">경기 정보</div><div class="adminfo"></div>'
+    +'<div class="admsub">진행 중인 경기</div><div class="admmt"></div><div class="admnote">관전 버튼을 눌러야 관전이 시작됩니다. 관전 중에 보낸 채팅은 선수들 채팅창에만 나오고 말풍선은 뜨지 않습니다.</div>'
     +'<div class="admsub">빠른 조작</div><div class="admsk">'+bt('restart','다시 시작')+bt('skip','카운트다운 건너뛰기')+bt('pause','일시정지')+bt('end','게임 종료','admred')+'</div>'
     +'<div class="admsub">게임 속도</div><div class="admsk admtg">'+[.5,1,2,4].map(v=>'<button type="button" class="admsw" data-a="spd" data-v="'+v+'">×'+v+'</button>').join('')+'</div>'+admPmRow('spd','직접 설정','data-a="spdpm"')
     +'<div class="admsub">전체 공지</div><div class="admrow"><input class="annin modq" type="text" maxlength="80" placeholder="모든 접속자에게 보낼 공지" autocomplete="off" style="text-transform:none"><button type="button" class="admbtn" data-a="annsend">보내기</button></div>'
@@ -3439,9 +3442,9 @@ function openAdmin(){
     if(ss!==sig){sig=ss;admRenderChars(box)}
     admSwSync(box);
     if(w.classList.contains('min'))return;
-    if(w.querySelector('.admpg.on[data-p="main"]'))admInfo(info);   // 보고 있는 탭만 갱신
+    if(w.querySelector('.admpg.on[data-p="main"]')){admInfo(info);specPoll(w)}   // 보고 있는 탭만 갱신
     const l2=admLog.length+':'+(admLog[0]?admLog[0].t:'');if(l2!==lsig){lsig=l2;logs.innerHTML=admLogHTML()}
-    const c2=JSON.stringify([PRES_DAYS,[...PRES_STAR],Object.keys(PRES_UV).map(k=>PRES_UV[k].length)]);if(c2!==csig){csig=c2;ccub.innerHTML=admCcuHTML()}
+    const c2=JSON.stringify([PRES_DAYS,[...PRES_STAR],Object.keys(PRES_UV).map(k=>PRES_UV[k].length),UVN]);if(c2!==csig){csig=c2;ccub.innerHTML=admCcuHTML()}
     {const a2=ANN_LOG.length+':'+(ANN_LOG.length?ANN_LOG[ANN_LOG.length-1].t:0);if(a2!==asig){asig=a2;const bx=w.querySelector('.annlog');if(bx)bx.innerHTML=ANN_LOG.length?ANN_LOG.slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> <b style="color:#17e3d6">'+admEsc(x.n)+' ('+x.pid+')</b> '+admEsc(x.m)+'</div>').join(''):'<div class="admnone">아직 공지가 없습니다.</div>'}}
     if(w.querySelector('.admpg.on[data-p="mod"]')){const m2=JSON.stringify(REG).length+':'+PEN.u+':'+Math.floor(Date.now()/20000)+':'+(NET.op&&NET.op.pid);if(m2!==msig){msig=m2;modRender(w)}}
     const s2=chars.map(c=>c.side+c.kind).join('|');if(s2!==ssig){ssig=s2;stb.innerHTML=admStatsHTML()}   // 줄은 캐릭터가 바뀔 때만 다시 그림 (꾹 누르는 중·입력 중에 안 끊기게)
@@ -3581,9 +3584,9 @@ function admInfo(box){                           // 메인: 지금 경기 상황
   if(box._h!==h){box._h=h;box.innerHTML=h}   // 바뀐 게 있을 때만 다시 그림
 }
 function admCcuHTML(){                          // 날짜별 최고 동접 (최근 날짜가 위)
-  const ks=[...new Set([...Object.keys(PRES_DAYS),...Object.keys(PRES_UV)])].sort().reverse();
+  const ks=[...new Set([...Object.keys(PRES_DAYS),...Object.keys(PRES_UV),...Object.keys(UVN)])].sort().reverse();
   if(!ks.length)return '<div class="admnone">아직 기록이 없습니다.</div>';
-  return ks.map(k=>{const d=PRES_DAYS[k]||{n:0,t:Date.now()},[y,m,dd]=k.split('-'),st=PRES_STAR.has(k),uv=(PRES_UV[k]||[]).length;
+  return ks.map(k=>{const d=PRES_DAYS[k]||{n:0,t:Date.now()},[y,m,dd]=k.split('-'),st=PRES_STAR.has(k),uv=uvCount(k);
     return '<div class="admlog admccr"><span class="ccd">'+(+m)+'월 '+(+dd)+'일'+(k===ccuDay()?' (오늘)':'')+'</span><b>최고 '+d.n+'명</b><span class="ccu">방문 '+uv+'명</span><span>'+new Date(d.t).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+'</span><button type="button" class="ccstar'+(st?' on':'')+'" data-a="ccstar" data-k="'+k+'" aria-label="기록 살려 두기">'+(st?'★':'☆')+'</button></div>'}).join('');
 }
 const modOpen=new Set(),modChatData={};
@@ -3668,7 +3671,8 @@ function admSkip(){                              // 카운트다운 건너뛰고
 }
 /* 어드민 조작을 명령으로 만들어서 실행 — 온라인 경기 중이면 상대 폰에도 보내서 두 폰이 같은 순간(같은 계산 단계)에 똑같이 실행 */
 function admCmd(m){
-  if(NET.match&&NET.conn){m.k2=NET.sim?NET.step+24:-1;netSend({t:'adm',c:m});if(m.k2<0)admExec(m);else NET.admQ.push(m)}
+  if(NET.spec){netToast('관전 중에는 쓸 수 없어요');return}
+  if(NET.match&&NET.conn){m.k2=NET.sim?NET.step+24:-1;NET.admHist.push(Object.assign({},m));netSend({t:'adm',c:m});if(m.k2<0)admExec(m);else NET.admQ.push(m)}
   else admExec(m);
 }
 function admExec(m){
@@ -3716,6 +3720,7 @@ function admAct(a,b){
   else if(a==='modfind'){const w=document.querySelector('.adm'),q=(w.querySelector('.modq').value||'').toUpperCase().replace(/[^A-Z0-9]/g,''),res=w.querySelector('.modres');
     if(!/^[A-Z2-9]{6}$/.test(q)){res.innerHTML='<div class="admnone">아이디 6자리를 입력하세요.</div>';return}
     const e=q===PID?regSelf():REG[q];res.innerHTML=modRow(q,e||{n:'?',w:0,cu:0,g:0,log:[]})+(e?'':'<div class="admnote">경고 기록이 없는 플레이어입니다.</div>')}
+  else if(a==='spec'){specJoin(b.dataset.k)}
   else if(a==='roomsget'){const box=document.querySelector('.adm .modrooms');box.innerHTML='<div class="admnone">불러오는 중...</div>';roomsAll(L=>{box.innerHTML=!L?'<div class="admnone">불러올 수 없습니다.</div>':(L.length?L.map(r=>'<div class="admch"><div class="admcn"><b>'+admEsc(r.title)+'</b><i>'+r.code+'</i><span class="modw" style="color:'+(r.pub?'#2bff5a':'#e3d94a')+'">'+(r.pub?'공개':'비공개')+'</span></div><div class="modl">방장 <b>'+admEsc(r.host)+'</b> · 인원 <b>'+r.n+'/2</b> · 비밀번호 <b>'+(r.pw?admEsc(r.pw):'없음')+'</b></div></div>').join(''):'<div class="admnone">열려 있는 방이 없습니다.</div>')})}
   else if(a==='annsend'){const i=document.querySelector('.adm .annin'),t=(i.value||'').trim();if(!t)return;annSend(t);i.value=''}
   else if(a==='ccstar'){const k=b.dataset.k;if(PRES_STAR.has(k))PRES_STAR.delete(k);else PRES_STAR.add(k);ccuSave();ccuPurge()}
@@ -3853,7 +3858,7 @@ function bhAudioOff(){bhs.forEach(b=>{if(!b.sndEnd)bhHumSet(b,false)});bhSprayUp
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(!NET.sim)last=performance.now();initAudio()}else{bhAudioOff();audioHint()}});
 window.addEventListener('pagehide',bhAudioOff);window.addEventListener('blur',bhAudioOff);   // 앱 복귀 시 시간 점프/소리 끊김 방지
 /* ---------- 온라인 매칭 (로비에서 오른쪽으로 넘기면 나오는 화면) ---------- */
-const NET={admQ:[],screen:'lobby',state:'idle',searchId:0,peers:[],conn:null,host:false,match:false,sim:false,anim:false,
+const NET={admQ:[],admHist:[],screen:'lobby',state:'idle',searchId:0,peers:[],conn:null,host:false,match:false,sim:false,anim:false,
   seed:0,mySide:null,me:{name:'',dev:false},op:null,myCh:null,pick:null,picking:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
@@ -4097,7 +4102,8 @@ function netSetup(){
   resetGame();document.querySelector('.netkk').hidden=true;chatMenu.querySelector('.chlog').innerHTML='';
   document.body.classList.add('in-net');
   rngSeed(NET.seed);
-  Object.assign(NET,{cons:false,admQ:[],step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false});NET.hist.clear();
+  Object.assign(NET,{cons:false,admQ:[],step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false,admHist:[],spK:null});NET.hist.clear();
+  {const me=netInfo(),op=NET.op||{};NET.mInfo={L:Object.assign({},NET.mySide==='left'?me:op),R:Object.assign({},NET.mySide==='left'?op:me)}}
   const L=NET.mySide==='left'?NET.me:NET.op,Rt=NET.mySide==='left'?NET.op:NET.me,lc=NET.mySide==='left'?NET.myCh:NET.op.ch,rc=NET.mySide==='left'?NET.op.ch:NET.myCh;
   addCharAt('left',netHalf(lc)||netHalf('더미'),false);addCharAt('right',netHalf(rc)||netHalf('더미'),false);
   netNick('left',L,NET.mySide==='left');netNick('right',Rt,NET.mySide==='right');
@@ -4139,7 +4145,7 @@ function netTryGo(){
 function netGo(L,R,sl,sr){                            // 3·2·1: 정한 사람은 방향 공개, 안 정한 사람은 화살표가 빙빙 돌다가 멈춤
   if(NET.goGot||NET.sim)return;NET.goGot=true;
   NET.aiming=false;NET.aimEnded=true;arenaEl.classList.remove('aiming');
-  const D={left:+L||0,right:+R||0},S={left:!!sl,right:!!sr};
+  const D={left:+L||0,right:+R||0},S={left:!!sl,right:!!sr};NET.D=D;
   used.length=0;
   for(const sd of ['left','right']){const c=chars.find(o=>o.side===sd);if(!c)continue;const a=c.ball.querySelector('.aim');
     if(S[sd]){a.style.opacity=1;a.style.transform='rotate('+D[sd]+'deg)'}else{a.style.transform='';spin(c.ball)}}
@@ -4158,7 +4164,7 @@ function netAfterStep(){
   NET.step++;
   if(NET.step%NET_SNAP===0){
     const cs=chars.map(c=>[c.x,c.y,c.vx,c.vy,c.hp]);
-    if(NET.host)netSend({t:'s',k:NET.step,c:cs,r:rngS});
+    if(NET.host){netSend({t:'s',k:NET.step,c:cs,r:rngS});specOut({a:'s',k:NET.step,c:cs,r:rngS})}
     else{NET.hist.set(NET.step,{c:cs,r:rngS,n:rngN});if(NET.hist.size>48)NET.hist.delete(NET.hist.keys().next().value)}
   }
   if(NET.admQ.length){const due=NET.admQ.filter(m=>m.k2<=NET.step);if(due.length){NET.admQ=NET.admQ.filter(m=>m.k2>NET.step);due.forEach(admExec)}}   // 어드민 명령: 정해 둔 단계에서 실행
@@ -4185,7 +4191,7 @@ function netData(d){
   else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);if(typeof d.txt==='string'){let x=d.txt.replace(/\s+/g,' ').trim().slice(0,30);const mc=modCheck(x);if(mc.pi||(mc.bad&&!NET.cons))x='***';if(x)netChatShow(netOpp(),x)}else{const i=d.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(netOpp(),i)}}
   else if(d.t==='cack'){NET.chatAck=d.id}
   else if(d.t==='cons'){if(d.a==='req'&&!NET.cons)netConsAsk();else if(d.a==='ok'){NET.cons=true;netSysLine('비속어 합의 완료! 이번 판은 서로 비속어를 써도 돼요')}else if(d.a==='no')netSysLine('상대가 비속어 합의를 거절했어요')}
-  else if(d.t==='adm'&&d.c&&typeof d.c==='object'){const m=d.c;if(!NET.sim||m.k2<0||m.k2<=NET.step)admExec(m);else NET.admQ.push(m)}
+  else if(d.t==='adm'&&d.c&&typeof d.c==='object'){const m=d.c;NET.admHist.push(Object.assign({},m));if(!NET.sim||m.k2<0||m.k2<=NET.step)admExec(m);else NET.admQ.push(m)}
   else if(d.t==='bye')netClosed();
 }
 function netClosed(){
@@ -4196,7 +4202,7 @@ function netClosed(){
   if(!NET.sim){later(()=>{if(NET.match&&!NET.sim)netLeave()},1600);return}
   NET.host=true;                                   // 남은 경기는 내 폰 계산대로 끝까지
 }
-function netOnOver(){try{penGameDone()}catch(e){}const w=chars.find(o=>o.alive);NET.localW=w?w.side:null;if(NET.host)netSend({t:'end',w:NET.localW})}
+function netOnOver(){if(!NET.spec){try{penGameDone()}catch(e){}}const w=chars.find(o=>o.alive);NET.localW=w?w.side:null;if(NET.host){netSend({t:'end',w:NET.localW});specOut({a:'end',w:NET.localW})}}
 function netVictoryMaybe(){
   if(NET.host||!NET.conn){netVictory(NET.endW!==undefined?NET.endW:NET.localW);return}
   if(NET.endW!==undefined){netVictory(NET.endW);return}
@@ -4212,7 +4218,7 @@ function netHostEnd(w){
 }
 function netVictory(side){
   const first=!NET.shown;NET.shown=true;NET.shownW=side;
-  const w=side?chars.find(c=>c.side===side):null,info=side?(side===NET.mySide?NET.me:NET.op):null;
+  const w=side?chars.find(c=>c.side===side):null,info=side?(NET.spec?NET.spec[side==='left'?'L':'R']:(side===NET.mySide?NET.me:NET.op)):null;
   if(w&&w.kind==='um'&&!NET.umWin){NET.umWin=true;try{umWinPlay(w)}catch(e){}}
   count.innerHTML=info?'<span class="wt nwin">'+netWho(info,'big')+'<span class="nwx">승리!</span></span>':'<span class="wt nwin"><span class="nwx">무승부</span></span>';
   count.classList.add('win');
@@ -4225,7 +4231,7 @@ function netVictory(side){
     crown.animate([{transform:'translate(-50%,-100%) translateY(-18px) scale(.5)',opacity:0},{transform:'translate(-50%,-100%) translateY(2px) scale(1.1)',opacity:1,offset:.7},{transform:'translate(-50%,-100%) scale(1)',opacity:1}],{duration:350,easing:'ease-out',fill:'forwards'});
   }
   if(first){netConfetti();netFanfare()}
-  document.querySelector('.netkk').hidden=false;          // 경기가 끝나면 나가기 옆에 오픈채팅
+  document.querySelector('.netkk').hidden=!!NET.spec;          // 경기가 끝나면 나가기 옆에 오픈채팅
 }
 function netConfetti(){                              // 위에서 종이 조각이 흩날리며 떨어짐
   try{
@@ -4254,6 +4260,7 @@ function netToast(t){
   el.animate([{opacity:0,transform:'translate(-50%,-6px)'},{opacity:1,transform:'translate(-50%,0)',offset:.1},{opacity:1,transform:'translate(-50%,0)',offset:.85},{opacity:0,transform:'translate(-50%,0)'}],{duration:2400,fill:'forwards'}).onfinish=()=>el.remove();
 }
 function netLeave(){
+  if(NET.spec){specLeave();return}
   if(NET.room){roomBack();return}
   netSend({t:'bye'});const c=NET.conn;NET.conn=null;
   setTimeout(()=>{try{if(c)c.close()}catch(_){}NET.peers.slice().forEach(netKill)},150);
@@ -4370,7 +4377,12 @@ var CLD={busy:false,again:false,ok:null,last:0,t:0,adm:false};
 const cldKey=x=>x.id||(x.t+'|'+x.pid+'|'+x.m);
 async function cldFetch(){const r=await fetch(CLD_URL,{cache:'no-store'});if(!r.ok)throw new Error('get');const j=await r.json();return j&&typeof j==='object'&&!Array.isArray(j)?j:{}}
 const cldNeed=()=>PEN.w>0||!!REG[PID];
+var UVN={};try{UVN=JSON.parse(localStorage.getItem('bftUvN')||'{}')||{}}catch(e){}   // 저장소에서 받아 온 날짜별 방문자 수 (접속자 명단 대신 숫자만)
+function uvnSet(k,v){if(!/^\d{4}-\d\d-\d\d$/.test(k)||!(v>0))return false;const lim=ccuDay(Date.now()-7*864e5);if(k<=lim&&!PRES_STAR.has(k))return false;if((UVN[k]||0)>=v)return false;UVN[k]=v|0;try{localStorage.setItem('bftUvN',JSON.stringify(UVN))}catch(e){}return true}
+const uvCount=k=>Math.max((PRES_UV[k]||[]).length,UVN[k]||0);
+function cldKick(){if(typeof CLD==='undefined'||!CLD||CLD.t2)return;CLD.t2=setTimeout(()=>{CLD.t2=0;cldSync(true)},30000)}   // 동접·방문자 기록은 바뀌어도 30초에 한 번만 올림
 function cldPull(d){                                  // 저장소 → 내 폰
+  if(d.ccu&&typeof d.ccu==='object'&&!Array.isArray(d.ccu))for(const k in d.ccu){const e=d.ccu[k];if(e&&typeof e==='object'){ccuSet(k,e.n|0,+e.t||0);uvnSet(k,e.v|0)}}
   if(d.reg&&typeof d.reg==='object'&&!Array.isArray(d.reg))regMerge(d.reg);
   if(Array.isArray(d.ann)){const have=new Set(ANN_LOG.map(cldKey));let ch=false;
     for(const x of d.ann.slice(-100)){if(!x||typeof x.m!=='string')continue;const e={t:+x.t||0,m:x.m.slice(0,80),pid:/^[A-Z2-9]{6}$/.test(x.pid)?x.pid:'?',n:String(x.n||'?').slice(0,6),id:String(x.id||'').slice(0,12)};
@@ -4383,6 +4395,11 @@ function cldMergeInto(d){                             // 내 폰 → 저장소 (
   const mine=Object.assign({},REG);if(cldNeed())mine[PID]=regSelf();
   for(const id in mine){const e=mine[id],o=d.reg[id];if(!o||(+e.u||0)>(+o.u||0)){d.reg[id]=e;ch=true}}
   {const ks=Object.keys(d.reg);if(ks.length>150){ks.sort((a,b)=>(d.reg[a].u||0)-(d.reg[b].u||0)).slice(0,ks.length-150).forEach(k=>delete d.reg[k]);ch=true}}
+  if(!d.ccu||typeof d.ccu!=='object'||Array.isArray(d.ccu)){d.ccu={};ch=true}
+  {const lim=ccuDay(Date.now()-7*864e5),days=new Set([...Object.keys(PRES_DAYS),...Object.keys(PRES_UV),...Object.keys(UVN)]);
+   for(const k of days){if(k<=lim&&!PRES_STAR.has(k))continue;const n=(PRES_DAYS[k]&&PRES_DAYS[k].n)|0,v=uvCount(k),o=d.ccu[k]||{n:0,v:0,t:0};
+     if(n>(o.n|0)||v>(o.v|0)){d.ccu[k]={n:Math.max(n,o.n|0),v:Math.max(v,o.v|0),t:n>(o.n|0)?(PRES_DAYS[k].t||Date.now()):(o.t||0)};ch=true}}
+   const ks=Object.keys(d.ccu).sort();if(ks.length>40){ks.slice(0,ks.length-40).forEach(k=>delete d.ccu[k]);ch=true}}
   if(!Array.isArray(d.ann)){d.ann=[];ch=true}
   {const have=new Set(d.ann.map(cldKey));for(const x of ANN_LOG){if(!have.has(cldKey(x))){d.ann.push(x);have.add(cldKey(x));ch=true}}
    d.ann.sort((a,b)=>(a.t||0)-(b.t||0));if(d.ann.length>100)d.ann=d.ann.slice(-100)}
@@ -4405,7 +4422,164 @@ async function cldSync(push){
 function cldSoon(ms){if(typeof CLD==='undefined'||!CLD)return;clearTimeout(CLD.t);CLD.t=setTimeout(()=>cldSync(true),ms||4000)}
 setTimeout(()=>{if(cldNeed())cldSync(true)},3000);    // 경고가 있는 사람은 시작할 때 저장소와 맞춤 (관리자가 푼 패널티도 여기서 받음)
 setInterval(()=>{const open=!!document.querySelector('.adm');if(open&&(!CLD.adm||Date.now()-CLD.last>60000)){CLD.adm=true;cldSync(true)}if(!open)CLD.adm=false},5000);   // 어드민 패널을 열면 저장소 기록을 가져옴
+/* ---------- 관전 (어드민 전용): 진행 중인 경기 목록 → 관전 버튼 → 같은 씨앗으로 따라 계산하며 지켜봄 ---------- */
+var SPEC={list:null,t:0,joining:null,sig:''};
+var miAt=0;
+const toHub=o=>{if(PRES.hub)presHubData(null,o);else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(o)}catch(_){}}};
+const hubReply=(c,o)=>{if(c){try{if(c.open)c.send(o)}catch(_){}}else presCliData(o)};
+function miMine(){return NET.match&&!NET.spec&&NET.seed!=null?{k:String(NET.seed|0),pid:PID,name:NET.me.name||'?',ch:NET.myCh||'',side:NET.mySide,dev:!!NET.me.dev,sim:!!NET.sim,host:!!NET.host,ov:!!over}:null}
+function miClean(m){if(!m||typeof m!=='object')return null;
+  if(!/^-?\d{1,12}$/.test(String(m.k))||!/^[A-Z2-9]{6}$/.test(m.pid))return null;
+  return {k:String(m.k),pid:m.pid,name:[...String(m.name||'?')].slice(0,6).join(''),ch:String(m.ch||'').slice(0,12),side:m.side==='right'?'right':'left',dev:!!m.dev,sim:!!m.sim,host:!!m.host,ov:!!m.ov}}
+setInterval(()=>{                                   // 내 경기 상태를 모임 자리에 알림 (바뀔 때 + 8초마다)
+  const m=miMine(),sig=JSON.stringify(m&&[m.k,m.sim,m.ov,m.host,m.ch]),now=Date.now();
+  if(sig===SPEC.mi&&now-miAt<8000)return;SPEC.mi=sig;miAt=now;
+  if(PRES.hub)return;
+  if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'mi',m})}catch(_){}}
+},1000);
+function spAll(){const L=[],now=Date.now();                // 모임 자리: 경기 중인 사람들 (자기 포함)
+  for(const c of PRES.conns){if(c._mi&&now-(c._miT||0)<30000)L.push({c,m:c._mi})}
+  const me=miMine();if(me)L.push({c:null,m:me});return L}
+const spMembers=k=>spAll().filter(x=>x.m.k===k);
+function spList(){const g={};
+  for(const x of spAll()){const m=x.m;(g[m.k]||(g[m.k]={k:m.k,sim:false,ov:true,p:[]}));const e=g[m.k];
+    if(e.p.some(p=>p.pid===m.pid))continue;e.p.push({pid:m.pid,name:m.name,ch:m.ch,side:m.side,dev:m.dev});if(m.sim)e.sim=true;if(!m.ov)e.ov=false}
+  return Object.values(g).filter(e=>!e.ov).map(e=>{e.p.sort((a,b)=>a.side==='left'?-1:1);delete e.ov;return e}).slice(0,40)}
+function spDrop(who,k){PRES.sp=PRES.sp||{};
+  for(const kk of (k?[k]:Object.keys(PRES.sp))){const set=PRES.sp[kk];if(!set)continue;set.delete(who);
+    if(!set.size){delete PRES.sp[kk];for(const x of spMembers(kk))hubReply(x.c,{t:'spq',k:kk,on:0})}}}
+function spFan(k,o,from){const set=(PRES.sp||{})[k];if(!set)return;for(const w of set)if(w!==from)hubReply(w==='self'?null:w,{t:'sd',k,o})}
+function spHub(c,d){                                // 모임 자리가 받은 관전 관련 메시지
+  const who=c||'self',k=String(d.k||'');
+  if(d.t==='mi'){if(c){c._mi=d.m?miClean(d.m):null;c._miT=Date.now()}return}
+  if(d.t==='ml'){hubReply(c,{t:'mlr',L:spList()});return}
+  if(d.t==='sp'){
+    if(!d.on){spDrop(who,k);return}
+    const mem=spMembers(k);
+    if(!mem.length){hubReply(c,{t:'spr',k,err:'gone'});return}
+    PRES.sp=PRES.sp||{};const set=PRES.sp[k]||(PRES.sp[k]=new Set()),isNew=!set.has(who);set.add(who);
+    for(const x of mem)hubReply(x.c,{t:'spq',k,on:1,full:(isNew||d.need)?1:0});
+    hubReply(c,{t:'spr',k,ok:1});return}
+  if(d.t==='sd'){if(d.o&&typeof d.o==='object')spFan(k,d.o,who);return}
+  if(d.t==='sc'){
+    const m={t:'sc',k,txt:String(d.txt||'').slice(0,30),n:String(d.n||'').slice(0,6),dev:!!d.dev};
+    for(const x of spMembers(k))hubReply(x.c,m);spFan(k,{a:'achat',n:m.n,dev:m.dev,txt:m.txt},who)}
+}
+/* 선수 폰: 관전 요청을 받으면 (방장 쪽이) 경기 정보와 0.25초마다 상태를 보냄 */
+function specOut(o){if(!NET.spK||String(NET.seed|0)!==NET.spK||Date.now()-(NET.spT||0)>20000)return;toHub({t:'sd',k:NET.spK,o})}
+function specQ(d){
+  if(!NET.match||NET.spec||String(NET.seed|0)!==d.k)return;
+  if(!d.on){NET.spK=null;return}
+  NET.spK=d.k;NET.spT=Date.now();
+  if(d.full&&NET.host&&NET.sim&&NET.mInfo&&NET.D)specOut(specSetup());
+}
+function specSetup(){const I=NET.mInfo,f=x=>({pid:x.pid||'',name:x.name,dev:!!x.dev,ch:x.ch});
+  return {a:'setup',seed:NET.seed|0,L:f(I.L),R:f(I.R),D:{left:NET.D.left,right:NET.D.right},step:NET.step,adm:NET.admHist.slice(-200),ov:!!over}}
+function specChatIn(d){                             // 어드민이 보낸 채팅: 채팅창에만 표시 (말풍선·소리 없음)
+  if(!NET.match||NET.spec||String(NET.seed|0)!==d.k)return;
+  let x=String(d.txt||'').replace(/\s+/g,' ').trim().slice(0,30);if(!x)return;
+  const mc=modCheck(x);if(mc.pi||(mc.bad&&!NET.cons))x='***';
+  chatLogLine(String(d.n||'?').slice(0,6),!!d.dev,x,false);
+}
+function chatLogLine(name,dev,text,me){
+  const L=chatMenu.querySelector('.chlog'),ln=document.createElement('div');ln.className='chl'+(me?' me':'');
+  ln.innerHTML='<b>'+netEsc(name)+'</b>'+(dev?'<span class="devtxt">제작자</span>':'')+' ';ln.appendChild(document.createTextNode(text));
+  L.appendChild(ln);while(L.childElementCount>60)L.firstChild.remove();L.scrollTop=L.scrollHeight}
+/* 어드민 폰 */
+function specAsk(){SPEC.t=Date.now();toHub({t:'ml'})}
+function specRows(){
+  const L=SPEC.list;if(!L)return '<div class="admnone">불러오는 중...</div>';
+  if(!L.length)return '<div class="admnone">진행 중인 경기가 없습니다.</div>';
+  return L.map(e=>{const a=e.p[0]||{},b=e.p[1]||{};
+    const nm=x=>x.name?('<b>'+admEsc(x.name)+'</b>'+(x.dev?' <span class="devtxt">제작자</span>':'')):'<b>?</b>';
+    return '<div class="admch"><div class="admcn" style="flex-wrap:wrap">'+nm(a)+'<span style="color:#9aa0b4">vs</span>'+nm(b)+'</div>'
+      +'<div class="modl"><i style="font-family:monospace">'+admEsc(a.pid||'?')+'</i> vs <i style="font-family:monospace">'+admEsc(b.pid||'?')+'</i>'+(a.ch||b.ch?' · '+admEsc(a.ch||'?')+' vs '+admEsc(b.ch||'?'):'')+'</div>'
+      +'<div class="admsk"><button type="button" class="admbtn" data-a="spec" data-k="'+e.k+'"'+(e.sim?'':' disabled')+'>'+(e.sim?'관전':'곧 시작')+'</button></div></div>'}).join('')}
+function specPoll(w){                               // 어드민 메인 탭이 보이는 동안 4초마다 목록 갱신
+  if(Date.now()-SPEC.t>4000)specAsk();
+  const box=w.querySelector('.admmt');if(!box)return;
+  const sig=JSON.stringify(SPEC.list)+':'+(NET.spec?1:0);if(sig!==SPEC.sig||box._s!==sig){SPEC.sig=sig;box._s=sig;box.innerHTML=specRows()}}
+const specCan=()=>NET.state==='idle'&&!NET.match&&!NET.room&&phase==='idle'&&!NET.spec&&!SPEC.joining;
+function specJoin(k){
+  if(!specCan()){netToast('경기 중이거나 방에 있을 땐 관전할 수 없어요');return}
+  const it=(SPEC.list||[]).find(x=>x.k===k);if(!it||!it.sim){netToast('아직 시작 전이거나 이미 끝난 경기예요');return}
+  try{initAudio()}catch(e){}
+  SPEC.joining=k;SPEC.jt=Date.now();toHub({t:'sp',k,on:1,need:1});netToast('관전 연결 중...');
+}
+setInterval(()=>{                                   // 연결 확인: 모임 자리가 바뀌어도 다시 등록
+  const k=NET.spec?NET.spec.k:SPEC.joining;if(!k)return;
+  if(SPEC.joining&&Date.now()-SPEC.jt>9000){SPEC.joining=null;toHub({t:'sp',k,on:0});netToast('관전을 시작하지 못했어요. 경기가 끝났거나 연결이 불안정해요');return}
+  toHub({t:'sp',k,on:1,need:!NET.sim});
+},4000);
+function specErr(d){if(SPEC.joining===d.k){SPEC.joining=null;netToast('이미 끝났거나 찾을 수 없는 경기예요')}}
+function specStart(o){
+  if(!SPEC.joining||NET.spec)return;
+  if(o.ov){const k0=SPEC.joining;SPEC.joining=null;toHub({t:'sp',k:k0,on:0});netToast('이미 끝난 경기예요');return}
+  const k=SPEC.joining;if(String(o.seed|0)!==k){return}
+  const cl=x=>netCleanInfo(x||{});const L=cl(o.L),R=cl(o.R);
+  const D={left:+(o.D&&o.D.left)||0,right:+(o.D&&o.D.right)||0};
+  const step=Math.max(0,Math.min(2e6,o.step|0));
+  SPEC.joining=null;
+  NET.spec={k,L,R};NET.state='spec';NET.match=true;NET.seed=o.seed|0;
+  resetGame();chatMenu.querySelector('.chlog').innerHTML='';document.querySelector('.netkk').hidden=true;
+  document.body.classList.add('in-net');
+  rngSeed(NET.seed);
+  Object.assign(NET,{cons:false,admQ:[],step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:true,goSent:true,goGot:true,umWin:false,host:false,conn:null,mySide:null,op:null,aiming:false,spFFrun:false,spTarget:0,admHist:[]});NET.hist.clear();
+  addCharAt('left',netHalf(L.ch)||netHalf('더미'),false);addCharAt('right',netHalf(R.ch)||netHalf('더미'),false);
+  netNick('left',L,false);netNick('right',R,false);
+  phase='run';btn.hidden=true;endBtn.hidden=true;used.length=0;
+  for(const m of (Array.isArray(o.adm)?o.adm:[]).slice(0,200)){if(!m||typeof m!=='object')continue;if((+m.k2)<0)admExec(m);else NET.admQ.push(Object.assign({},m,{k2:+m.k2||0}))}
+  NET.sim=true;NET.step=0;NET.acc=0;
+  for(const sd of ['left','right']){const c=chars.find(x=>x.side===sd);if(c)launch(c.ball,D[sd])}
+  chatMenu.classList.add('spec');document.querySelector('.netleave').textContent='관전 종료';
+  let bd=document.querySelector('.specbadge');if(!bd){bd=document.createElement('div');bd.className='specbadge';document.body.appendChild(bd)}bd.textContent='관전 중';bd.hidden=false;
+  specFF(step+6);
+  const aw=document.querySelector('.adm');if(aw&&!aw.classList.contains('min')){const mb=aw.querySelector('.admmin');if(mb)mb.click()}   // 어드민 창은 접어서 경기가 보이게
+  toHub({t:'ml'});
+}
+function specFF(target){                            // 지금까지 진행된 만큼 빠르게 따라잡기 (화면은 마지막에 한 번만)
+  NET.spTarget=Math.max(NET.spTarget||0,target);
+  if(NET.spFFrun)return;NET.spFFrun=true;
+  const vol=v=>{try{if(master&&actx)(master.gain.cancelScheduledValues(actx.currentTime),master.gain.setValueAtTime(v,actx.currentTime))}catch(e){}};
+  vol(0);
+  const run=()=>{
+    if(!NET.spec||!NET.sim){NET.spFFrun=false;return}
+    const t0=performance.now();
+    while(NET.step<NET.spTarget&&!over&&performance.now()-t0<10){simDraw=false;simStep(FIX);if(!over)netAfterStep()}
+    simDraw=true;
+    if(NET.step<NET.spTarget&&!over)setTimeout(run,0);
+    else{NET.spFFrun=false;if(!over)vol(1.15)}
+  };run();
+}
+function specData(o){
+  if(!o||typeof o!=='object')return;
+  if(o.a==='setup'){specStart(o);return}
+  if(!NET.spec)return;
+  if(o.a==='s'){
+    if(NET.sim&&!over&&Array.isArray(o.c)&&o.c.length<=4&&o.c.every(a=>Array.isArray(a)&&a.length===5&&a.every(Number.isFinite))&&Number.isFinite(o.k)&&Number.isFinite(o.r)){
+      NET.pend.push({k:o.k|0,c:o.c,r:o.r|0});if(o.k-NET.step>45)specFF(o.k-12)}}
+  else if(o.a==='end'){if(NET.sim)netHostEnd(o.w)}
+  else if(o.a==='chat'){const sd=o.sd==='right'?'right':'left';
+    if(typeof o.txt==='string'){const x=o.txt.replace(/\s+/g,' ').trim().slice(0,30);if(x)netChatShow(sd,x)}
+    else{const i=o.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(sd,i)}}
+  else if(o.a==='achat'){const x=String(o.txt||'').slice(0,30);if(x)chatLogLine(String(o.n||'?').slice(0,6),!!o.dev,x,false)}
+}
+function specSay(t){                                // 어드민이 관전 중에 보내는 채팅: 선수 채팅창에만 나옴
+  const now=Date.now();if(now-(NET.spSay||0)<500)return;NET.spSay=now;
+  toHub({t:'sc',k:NET.spec.k,txt:t,n:NET.me.name||'관리자',dev:!!NET.me.dev});
+  chatLogLine(NET.me.name||'관리자',!!NET.me.dev,t,true);
+}
+function specLeave(){
+  const k=NET.spec&&NET.spec.k;if(k)toHub({t:'sp',k,on:0});
+  NET.spec=null;NET.match=false;NET.sim=false;NET.state='idle';NET.aiming=false;NET.spFFrun=false;SPEC.joining=null;
+  arenaEl.classList.remove('aiming');netChatClose();chatMenu.classList.remove('spec');document.querySelector('.netleave').textContent='나가기';
+  const bd=document.querySelector('.specbadge');if(bd)bd.hidden=true;
+  resetGame();document.body.classList.remove('in-net');document.querySelector('.netkk').hidden=true;
+  document.querySelectorAll('.nick,.chatpop').forEach(e=>e.remove());
+  netPaintOnl();
+}
 function presHubData(c,d){                        // 모임 자리가 받은 메시지
+  if(['mi','ml','sp','sd','sc'].includes(d.t)){spHub(c,d);return}
   if(d.t==='ann'){if(annGot(d))for(const x of PRES.conns){if(x!==c)try{if(x.open)x.send(d)}catch(_){}}return}
   if(d.t==='room'||d.t==='roomsq'){roomHub(c,d);return}
   if(d.t==='hi'){c._pid=/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:null;regMerge(d.reg);{const k=ccuDay(),add=uvMerge(d.uv);if(c._pid&&uvAdd(k,c._pid)){add.push([k,c._pid]);uvSave()}uvCast(add,c)}try{c.send({t:'reg',e:REG});c.send({t:'rooms',L:ROOM.list||[]});c.send({t:'uv',u:uvRecent()})}catch(_){}}
@@ -4416,6 +4590,11 @@ function presHubData(c,d){                        // 모임 자리가 받은 메
   else if(d.t==='qr'){const to=PRES.qmap&&PRES.qmap[d.rid];if(!to)return;delete PRES.qmap[d.rid];if(to==='self')presCliData(d);else try{to.send(d)}catch(_){}}
 }
 function presCliData(d){                          // 손님 폰이 받은 메시지
+  if(d.t==='mlr'){SPEC.list=Array.isArray(d.L)?d.L.slice(0,40):[];return}
+  if(d.t==='spr'){if(d.err)specErr(d);return}
+  if(d.t==='spq'){specQ(d);return}
+  if(d.t==='sd'){if((NET.spec&&d.k===NET.spec.k)||SPEC.joining===d.k)specData(d.o);return}
+  if(d.t==='sc'){specChatIn(d);return}
   if(d.t==='uv'){uvMerge(d.u);return}
   if(d.t==='uvadd'){if(Array.isArray(d.a)){const o={};for(const x of d.a)if(Array.isArray(x)){(o[x[0]]||(o[x[0]]=[])).push(x[1])}uvMerge(o)}return}
   if(d.t==='ann'){annGot(d);return}
@@ -4435,10 +4614,11 @@ function netChatSend(i){                         // 상대가 받았다고 답�
   const id=++netChatSeq+'-'+Math.random().toString(36).slice(2,6);let n=0;const msg=typeof i==='string'?{t:'chat',txt:i,id}:{t:'chat',i,id};
   const go=()=>{if(!NET.conn||NET.chatAck===id||n++>=5)return;netSend(msg);setTimeout(go,600)};go();
 }
-chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){const L=chatMenu.querySelector('.chlog');L.scrollTop=L.scrollHeight;chatMenu.querySelector('.ccbtn').hidden=false;chatMenu.querySelector('.ccrow').hidden=true;netChatHead()}});
+chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){const L=chatMenu.querySelector('.chlog');L.scrollTop=L.scrollHeight;chatMenu.querySelector('.ccbtn').hidden=false;chatMenu.querySelector('.ccrow').hidden=!NET.spec;netChatHead()}});
 {const row=chatMenu.querySelector('.ccrow'),inp=row.querySelector('.ccin');
   chatMenu.querySelector('.ccbtn').addEventListener('click',e=>{e.stopPropagation();row.hidden=!row.hidden;if(!row.hidden)inp.focus({preventScroll:true})});
   const sendT=()=>{const t=inp.value.replace(/\s+/g,' ').trim().slice(0,30);if(!t)return;
+    if(NET.spec){specSay(t);inp.value='';return}
     if(penBanned()){netToast('채팅 금지 중이에요 ('+penText()+' 남음)');return}
     const mc=modCheck(t);
     if(mc.pi){netToast('연락처·링크·아이디는 보낼 수 없어요');return}
@@ -4469,7 +4649,8 @@ document.addEventListener('click',e=>{if(!e.target.closest('.chcons'))return;e.s
   const P=document.querySelector(NET.mySide==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());const b=document.createElement('div');b.className='chatpop';b.textContent='비속어 합의';P.appendChild(b);setTimeout(()=>b.remove(),2400)},true);
 function netChatShow(sd,i){
   if(!NET.match)return;
-  {const L=chatMenu.querySelector('.chlog'),info=sd===NET.mySide?NET.me:NET.op,ln=document.createElement('div');   // 채팅 기록
+  if(NET.spK&&sd===NET.mySide)specOut(typeof i==='string'?{a:'chat',sd,txt:i}:{a:'chat',sd,i});
+  {const L=chatMenu.querySelector('.chlog'),info=NET.spec?NET.spec[sd==='left'?'L':'R']:(sd===NET.mySide?NET.me:NET.op),ln=document.createElement('div');   // 채팅 기록
     ln.className='chl'+(sd===NET.mySide?' me':'');ln.innerHTML='<b>'+netEsc(info?info.name:'?')+'</b>'+(info&&info.dev?'<span class="devtxt">제작자</span>':'')+' ';ln.appendChild(document.createTextNode(typeof i==='string'?i:(NET_CHAT[i]||'')));
     L.appendChild(ln);while(L.childElementCount>60)L.firstChild.remove();L.scrollTop=L.scrollHeight}
   const P=document.querySelector(sd==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());
@@ -4699,25 +4880,25 @@ function uvSave(){try{localStorage.setItem('bftUv',JSON.stringify(PRES_UV))}catc
 function uvAdd(k,pid){if(!/^\d{4}-\d\d-\d\d$/.test(k)||!/^[A-Z2-9]{6}$/.test(pid))return false;const lim=ccuDay(Date.now()-7*864e5);if(k<=lim&&!PRES_STAR.has(k))return false;const z=uvSet[k]||(uvSet[k]=new Set());if(z.has(pid))return false;z.add(pid);(PRES_UV[k]||(PRES_UV[k]=[])).push(pid);return true}
 function uvMerge(o){const add=[];if(o&&typeof o==='object')for(const k in o)if(Array.isArray(o[k]))for(const p of o[k].slice(0,20000))if(uvAdd(k,p))add.push([k,p]);if(add.length)uvSave();return add}
 const uvRecent=()=>{const o={},lim=ccuDay(Date.now()-7*864e5);for(const k in PRES_UV)if(k>lim||PRES_STAR.has(k))o[k]=PRES_UV[k];return o};
-function uvPurge(){const lim=ccuDay(Date.now()-7*864e5);let ch=false;for(const k in PRES_UV)if(k<=lim&&!PRES_STAR.has(k)){delete PRES_UV[k];delete uvSet[k];ch=true}if(ch)uvSave()}
+function uvPurge(){const lim=ccuDay(Date.now()-7*864e5);let ch=false;for(const k in PRES_UV)if(k<=lim&&!PRES_STAR.has(k)){delete PRES_UV[k];delete uvSet[k];ch=true}if(ch)uvSave();let c2=false;for(const k in UVN)if(k<=lim&&!PRES_STAR.has(k)){delete UVN[k];c2=true}if(c2)try{localStorage.setItem('bftUvN',JSON.stringify(UVN))}catch(e){}}
 function uvCast(add,except){if(!add.length||!PRES.hub)return;for(const c of PRES.conns)if(c!==except)try{if(c.open)c.send({t:'uvadd',a:add})}catch(_){}}
 ccuPurge();setInterval(ccuPurge,60000);setInterval(uvPurge,60000);
 setInterval(()=>{const s=presMy();if(s===PRES.lastS)return;PRES.lastS=s;if(PRES.hub)presCast();else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'st',s})}catch(_){}}},1000);   // 매칭 시작·끝날 때 모임 자리에 바로 알림
 function presMax(n){return ccuSet(ccuDay(),n,Date.now())}
-const presMy=()=>NET.state==='search'?'q':(NET.match?'m':'i');   // 내 상태: 매칭 중 / 경기 중 / 그 외
+const presMy=()=>NET.spec?'i':(NET.state==='search'?'q':(NET.match?'m':'i'));   // 내 상태: 매칭 중 / 경기 중 / 그 외
 const PRES={q:0,mt:0,st:'온라인 기능 불러오는 중',peer:null,conns:new Set(),hub:false,n:0,gen:0,to:0,last:0,conn:null};   // 15초마다 서로 신호를 주고받고, 40초 동안 소식이 없으면 끊긴 것으로 봄
 const PRES_ID='bftball-hub-1';
 function presKill(){clearTimeout(PRES.to);PRES.conn=null;if(PRES.peer){try{PRES.peer.destroy()}catch(_){}}PRES.peer=null;PRES.hub=false;PRES.conns.clear()}
 function presLater(ms){const g=PRES.gen;clearTimeout(PRES.to);PRES.to=setTimeout(()=>{if(g===PRES.gen)presTry()},ms==null?1200+Math.random()*2500:ms)}
-function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;presMax(PRES.n);{const k=ccuDay(),add=[];if(uvAdd(k,PID))add.push([k,PID]);for(const c of PRES.conns)if(c._pid&&uvAdd(k,c._pid))add.push([k,c._pid]);if(add.length){uvSave();uvCast(add)}}const all=[presMy(),...[...PRES.conns].map(c=>c._s||'i')];PRES.q=all.filter(x=>x==='q').length;PRES.mt=all.filter(x=>x==='m').length;for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,q:PRES.q,mt:PRES.mt,days:ccuRecent()})}catch(_){}}}
+function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;if(presMax(PRES.n))cldKick();{const k=ccuDay(),add=[];if(uvAdd(k,PID))add.push([k,PID]);for(const c of PRES.conns)if(c._pid&&uvAdd(k,c._pid))add.push([k,c._pid]);if(add.length){uvSave();uvCast(add);cldKick()}}const all=[presMy(),...[...PRES.conns].map(c=>c._s||'i')];PRES.q=all.filter(x=>x==='q').length;PRES.mt=all.filter(x=>x==='m').length;for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,q:PRES.q,mt:PRES.mt,days:ccuRecent()})}catch(_){}}}
 function presTry(){
   presKill();const g=++PRES.gen;let p;
   try{p=new Peer(PRES_ID,netOpts())}catch(e){presLater(15000);return}
   PRES.peer=p;
   p.on('open',()=>{if(g!==PRES.gen)return;PRES.hub=true;PRES.st='';presCast()});
   p.on('connection',c=>{if(g!==PRES.gen)return;
-    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&['hi','reg','q','qr','ann','room','roomsq'].includes(d.t)){presHubData(c,d);return}if(d&&(d.t==='st'||d.t==='ping')&&d.s&&d.s!==c._s){c._s=d.s;presCast()}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
-    const rm=()=>{if(PRES.conns.delete(c))presCast()};c.on('close',rm);c.on('error',rm)});
+    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&['hi','reg','q','qr','ann','room','roomsq','mi','ml','sp','sd','sc'].includes(d.t)){presHubData(c,d);return}if(d&&(d.t==='st'||d.t==='ping')&&d.s&&d.s!==c._s){c._s=d.s;presCast()}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
+    const rm=()=>{spDrop(c);if(PRES.conns.delete(c))presCast()};c.on('close',rm);c.on('error',rm)});
   p.on('error',e=>{if(g!==PRES.gen)return;if(e&&e.type==='unavailable-id')presJoin();else if(!PRES.hub){PRES.st='서버 연결 실패 ('+(e&&e.type||'?')+')';presLater()}});
   p.on('disconnected',()=>{if(g===PRES.gen)presLater(800)});
 }
@@ -4728,8 +4909,8 @@ function presJoin(){
   PRES.to=setTimeout(()=>{if(g===PRES.gen&&!PRES.n)presLater()},12000);
   q.on('open',()=>{if(g!==PRES.gen)return;PRES.st='다른 접속자와 연결하는 중';let c;try{c=q.connect(PRES_ID,{reliable:true,serialization:'json'})}catch(e){presLater();return}
     PRES.conn=c;PRES.last=Date.now();
-    c.on('open',()=>{try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy()});c.send({t:'hi',pid:PID,reg:REG,uv:(uvAdd(ccuDay(),PID)&&uvSave(),uvRecent())})}catch(_){}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
-    c.on('data',d=>{if(g===PRES.gen&&d&&['reg','q','qr','ann','rooms','roomsall','uv','uvadd'].includes(d.t)){presCliData(d);return}if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
+    c.on('open',()=>{miAt=0;try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy()});c.send({t:'hi',pid:PID,reg:REG,uv:(uvAdd(ccuDay(),PID)&&uvSave(),uvRecent())})}catch(_){}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
+    c.on('data',d=>{if(g===PRES.gen&&d&&['reg','q','qr','ann','rooms','roomsall','uv','uvadd','mlr','spr','spq','sd','sc'].includes(d.t)){presCliData(d);return}if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
     c.on('close',()=>{if(g===PRES.gen){PRES.n=0;presLater()}});c.on('error',()=>{if(g===PRES.gen){PRES.n=0;presLater()}})});
   q.on('error',e=>{if(g!==PRES.gen)return;PRES.st='연결 다시 시도 중 ('+(e&&e.type||'?')+')';if(e&&e.type==='peer-unavailable')presLater(300+Math.random()*700);else presLater()});
 }
