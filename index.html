@@ -336,6 +336,12 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .netkk{flex:none;display:flex;align-items:center;height:38px;padding:0 10px;font:700 14px/1 "Noto Sans KR",sans-serif;color:#191919;background:#fee500;border:2px solid var(--ink);border-radius:5px;text-decoration:none}.netkk[hidden]{display:none}
 .gkk{margin:28px 0 0;padding:12px 14px;border:2px solid #111;font-size:14px;line-height:1.6;color:#333;word-break:keep-all}.gkk a{color:#1d5cff;font-weight:800;white-space:nowrap}
 .pnkk{display:block;margin:-4px 0 16px;font-size:13px;font-weight:700;color:#1d5cff;text-decoration:underline}
+.chhd{display:flex;align-items:center;gap:6px;min-height:26px}.chban{flex:1;font:700 12.5px/1.2 "Noto Sans KR",sans-serif;color:#d32f2f;text-align:left}.chatmenu .chcons{flex:none;height:26px;padding:0 8px;font-size:12px;color:#111}.chatmenu .chcons:disabled{opacity:.45}
+.chatmenu.banned .chq button,.chatmenu.banned .ccbtn{opacity:.4}
+.chl.sys{color:#555;font-weight:700}.consb{display:inline-flex;gap:4px;margin-left:4px;vertical-align:middle}.consb button{height:24px!important;padding:0 8px;font:800 12px/1 "Noto Sans KR",sans-serif;border:2px solid var(--ink);background:#fff;color:#111;cursor:pointer}.consb .cy{background:#2fc455;color:#fff}.consb .cn{background:#d32f2f;color:#fff}
+.chatpop.cpop{pointer-events:auto;white-space:nowrap}
+.modr .admcn i{font-family:monospace;letter-spacing:.05em}.modw{margin-left:auto;color:#ff5c7a;font-weight:800}.modl{font-size:1em;color:#cfd2dc;margin-bottom:0.5em}.modl b{color:#fff}.modwhy,.modchat{margin-top:0.6em;padding:0.5em 0.6em;background:#0d0d0d;border:0.1em solid #2c2c2c;border-radius:0.6em}.modwhy[hidden],.modchat[hidden]{display:none}.modli{font-size:1em;line-height:1.5;color:#e8eaf0;word-break:break-all}.modli span{color:#8b90a0}.modli b{color:#ff5c7a}.modli i{color:#8b90a0;font-style:normal}
+.modq{flex:1;min-width:0;height:2.6em;background:#111;border:0.1em solid #444;border-radius:0.6em;color:#fff;font:inherit;font-size:1.1em;padding:0 0.6em;text-transform:uppercase;outline:none;-webkit-user-select:text;user-select:text}
 .admhitcv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
 
 .fxic[data-fx]{-webkit-touch-callout:none;touch-action:manipulation}.pwmodal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.pwbox{width:100%;max-width:300px;background:var(--bg,#fff);border:3px solid var(--ink,#111);padding:18px;font-family:inherit}.pwt{font-size:18px;font-weight:700;margin-bottom:6px}.pwd{font-size:13px;color:#555;margin-bottom:12px}.pwin{width:100%;box-sizing:border-box;height:40px;font-size:18px;padding:0 10px;border:2px solid var(--ink,#111);border-radius:0;font-family:inherit;letter-spacing:.2em}.pwin:focus{outline:none;border-color:#111}.pwerr{min-height:18px;font-size:12px;color:#e5484d;margin:6px 0 4px}.pwbtns{display:flex;gap:8px}.pwbtns button{flex:1;height:38px;font-family:inherit;font-size:15px;font-weight:700;border:2px solid var(--ink,#111);border-radius:0;cursor:pointer}.pwno{background:#fff;color:#111}.pwyes{background:#111;color:#fff}.pnmodal{position:fixed;inset:0;overscroll-behavior:contain;touch-action:pan-y;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:12}
@@ -3031,9 +3037,19 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='1.5.8';
+const PATCH_VERSION='1.6.9';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'1.6.9',date:'2026-10-11',
+   chars:[],
+   fx:[],
+   sys:[
+     {who:'채팅',lines:['모든 플레이어가 자유 채팅(메시지 보내기)을 쓸 수 있도록 변경','채팅창에 채팅 기록 추가','빠른 채팅 문구 변경 (안돼! 삭제, 아니 위치 변경)']},
+     {who:'비속어 필터',lines:['비속어 필터 추가 (띄어쓰기·숫자·기호로 바꿔 쓴 비속어도 감지)','비속어가 감지된 메시지는 보내지지 않고 경고 1회','전화번호·링크·아이디 등 개인정보는 보낼 수 없도록 변경','비속어가 들어간 이름은 사용할 수 없도록 변경']},
+     {who:'경고',lines:['경고 1~3회: 2판 채팅 금지','경고 4~5회: 10분 채팅 금지','경고 6~7회: 30분 채팅 금지','경고 8회 이후: (경고 수 - 7)판 + 30분 채팅 금지','채팅 금지 판 수는 끝까지 진행한 판만 줄어듦 (중간에 나간 판은 제외)']},
+     {who:'비속어 합의',lines:['채팅창 오른쪽 위 비속어 합의 버튼 추가','상대가 동의하면 그 판 동안은 서로 비속어를 써도 경고를 받지 않음']},
+     {who:'히든',lines:['히든 기능 업데이트']}
+   ]},
   {ver:'1.5.8',date:'2026-10-11',big:true,
    chars:[],
    fx:[],
@@ -3192,7 +3208,7 @@ document.querySelector('.more').addEventListener('click',()=>{const g=document.g
 (function(){                           // 관리자 패널: 위쪽 'created by ball_fight_tiktok' 글자를 0.4초 안에 두 번 톡톡 누르면 열림
   let lt=0;
   document.addEventListener('pointerdown',e=>{const ic=e.target.closest('.credit');if(!ic)return;
-    const t=performance.now();if(t-lt<=400){lt=0;openAdmin()}else lt=t});
+    const t=performance.now();if(t-lt<=400){lt=0;admGate()}else lt=t});
   document.addEventListener('contextmenu',e=>{if(e.target.closest('.fxic'))e.preventDefault()});
 })();
 function admPage(k){                           // 탭마다 안쪽을 작은 제목(구분)으로 나눔
@@ -3208,17 +3224,35 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="admsub">능력치</div><div class="admstats"></div><div class="admnote">지금 게임에 있는 캐릭터에만 바로 적용됩니다.</div>'
     +'<div class="admsub">스킬 확률</div><div class="admodds"></div><div class="admnote">새로고침하면 원래 확률로 돌아갑니다.</div>';
   if(k==='game')return '<div class="admsub">캐릭터</div><div class="admchars"></div>';
+  if(k==='mod')return '<div class="admsub">내 정보</div><div class="admkv modme"></div>'
+    +'<div class="admsub">패널티 중</div><div class="modpen"></div>'
+    +'<div class="admsub">경고 기록</div><div class="modwarn"></div>'
+    +'<div class="admsub">플레이어 검색</div><div class="admrow"><input class="modq" type="text" maxlength="6" placeholder="플레이어 아이디 6자리" autocomplete="off" autocapitalize="characters"><button type="button" class="admbtn" data-a="modfind">검색</button></div><div class="modres"></div>'
+    +'<div class="admnote">경고 기록은 접속한 사람들 폰을 타고 모입니다. 채팅 기록은 그 사람이 지금 접속해 있을 때만 불러올 수 있습니다.</div>';
   if(k==='set')return '<div class="admsub">소리</div><div class="admsk admtg">'+sw('mute','효과음')+'</div><div class="admrow"><span>음량</span><input type="range" class="admrange" data-a="vol" min="0" max="150" step="5"><b data-o="vol"></b></div>'
     +'<div class="admsub">화면</div><div class="admsk admtg">'+sw('shake','화면 흔들림')+sw('lowfx','효과 줄이기')+sw('hit','히트박스')+'</div>'
     +'<div class="admsub">패널</div><div class="admrow"><span>투명도</span><input type="range" class="admrange" data-a="op" min="30" max="100" step="5"><b data-o="op"></b></div><div class="admsk">'+bt('panelreset','위치·크기 초기화','admsub2')+'</div>';
   return '';
+}
+let ADM_OK=false;
+function admGate(){                              // 어드민 패널: 두 번 터치한 다음 비밀번호(2차)
+  if(ADM_OK||document.querySelector('.adm')){openAdmin();return}
+  if(document.querySelector('.pwmodal'))return;
+  const m=document.createElement('div');m.className='pwmodal';
+  m.innerHTML='<div class="pwbox"><div class="pwt">비밀번호</div><input class="pwin" type="password" inputmode="numeric" autocomplete="off"><div class="pwerr"></div><div class="pwbtns"><button type="button" class="pwno">취소</button><button type="button" class="pwyes">확인</button></div></div>';
+  document.body.appendChild(m);const inp=m.querySelector('.pwin'),err=m.querySelector('.pwerr'),close=()=>m.remove();
+  const h=t=>{let x=0x811c9dc5;for(const b of new TextEncoder().encode(t)){x^=b;x=Math.imul(x,0x01000193)>>>0}return x};
+  const ok=()=>{if(h('bft:'+inp.value)===542645959){ADM_OK=true;close();openAdmin()}else{err.textContent='비밀번호가 틀렸습니다.';inp.value='';inp.focus()}};
+  m.querySelector('.pwyes').addEventListener('click',ok);m.querySelector('.pwno').addEventListener('click',close);
+  m.addEventListener('click',e=>{if(e.target===m)close()});inp.addEventListener('keydown',e=>{if(e.key==='Enter')ok();if(e.key==='Escape')close()});
+  setTimeout(()=>inp.focus(),30);
 }
 function openAdmin(){
   try{localStorage.setItem('bftAdm','1')}catch(e){}                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
   let w=document.querySelector('.adm');
   if(w){if(w._expand)w._expand(true);return}
   w=document.createElement('div');w.className='adm';
-  const TABS=[['main','메인'],['char','캐릭터'],['game','게임'],['set','설정']];
+  const TABS=[['main','메인'],['char','캐릭터'],['game','게임'],['mod','관리'],['set','설정']];
   w.innerHTML='<div class="admwin"><div class="admhd"><span class="admdot"></span><span class="admtt">어드민 패널</span><button type="button" class="admmin" aria-label="접기"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button></div>'
     +'<div class="admmain"><div class="admtabs">'+TABS.map((t,k)=>'<button type="button" class="admtab'+(k?'':' on')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'
     +'<div class="admpane">'+TABS.map((t,k)=>'<div class="admpg'+(k?'':' on')+'" data-p="'+t[0]+'"><div class="admh">'+t[1]+'</div>'+admPage(t[0])+'</div>').join('')+'</div></div></div>'
@@ -3299,7 +3333,7 @@ function openAdmin(){
     if(st){const v=parseFloat(st.value.replace(',','.'));if(isFinite(v)&&v>0)admSteps[st.dataset.step]=v;else delete admSteps[st.dataset.step];return}
     const i=e.target.closest('input[data-a]');if(!i)return;const v=+i.value/100;
     if(i.dataset.a==='vol'){admVol=v;admApplyVol()}else if(i.dataset.a==='op')admOp=v;admSave();admSync()});
-  const box=w.querySelector('.admchars'),info=w.querySelector('.adminfo'),logs=w.querySelector('.admlogs'),stb=w.querySelector('.admstats'),odb=w.querySelector('.admodds'),ccub=w.querySelector('.admccu');let sig='',lsig='',ssig='',osig='',csig='';
+  const box=w.querySelector('.admchars'),info=w.querySelector('.adminfo'),logs=w.querySelector('.admlogs'),stb=w.querySelector('.admstats'),odb=w.querySelector('.admodds'),ccub=w.querySelector('.admccu');let sig='',lsig='',ssig='',osig='',csig='',msig='';
   const refresh=()=>{                       // 게임에 들어온 캐릭터가 바뀌면 목록을 다시 그림
     const ss=chars.map(c=>c.side+c.kind+(c.alive?1:0)+(c.started?1:0)).join('|')+over;
     if(ss!==sig){sig=ss;admRenderChars(box)}
@@ -3308,6 +3342,7 @@ function openAdmin(){
     if(w.querySelector('.admpg.on[data-p="main"]'))admInfo(info);   // 보고 있는 탭만 갱신
     const l2=admLog.length+':'+(admLog[0]?admLog[0].t:'');if(l2!==lsig){lsig=l2;logs.innerHTML=admLogHTML()}
     const c2=JSON.stringify([PRES_DAYS,[...PRES_STAR]]);if(c2!==csig){csig=c2;ccub.innerHTML=admCcuHTML()}
+    if(w.querySelector('.admpg.on[data-p="mod"]')){const m2=JSON.stringify(REG).length+':'+PEN.u+':'+Math.floor(Date.now()/20000)+':'+(NET.op&&NET.op.pid);if(m2!==msig){msig=m2;modRender(w)}}
     const s2=chars.map(c=>c.side+c.kind).join('|');if(s2!==ssig){ssig=s2;stb.innerHTML=admStatsHTML()}   // 줄은 캐릭터가 바뀔 때만 다시 그림 (꾹 누르는 중·입력 중에 안 끊기게)
     if(!osig){osig='1';odb.innerHTML=admOddsHTML()}
     admVals(w);
@@ -3450,6 +3485,25 @@ function admCcuHTML(){                          // 날짜별 최고 동접 (최�
   return ks.map(k=>{const d=PRES_DAYS[k],[y,m,dd]=k.split('-'),st=PRES_STAR.has(k);
     return '<div class="admlog admccr"><span class="ccd">'+(+m)+'월 '+(+dd)+'일'+(k===ccuDay()?' (오늘)':'')+'</span><b>최고 '+d.n+'명</b><span>'+new Date(d.t).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})+'</span><button type="button" class="ccstar'+(st?' on':'')+'" data-a="ccstar" data-k="'+k+'" aria-label="기록 살려 두기">'+(st?'★':'☆')+'</button></div>'}).join('');
 }
+const modOpen=new Set(),modChatData={};
+function modRow(id,e){                           // 경고 명단 한 줄
+  const now=Date.now(),m=Math.max(0,Math.ceil(((+e.cu||0)-now)/60000)),g=e.g|0,left=[g>0?g+'판':'',m>0?m+'분':''].filter(Boolean).join(' / ');
+  const why=(e.log||[]).slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> <b>['+admEsc(x.r||'?')+']</b> '+admEsc(x.m||'')+'</div>').join('')||'<div class="admnone">기록 없음</div>';
+  return '<div class="admch modr"><div class="admcn"><b>'+admEsc(e.n||'?')+'</b><i>'+id+'</i><span class="modw">경고 '+(e.w|0)+'회</span></div>'
+    +'<div class="modl">남은 패널티: <b>'+(left||'없음')+'</b></div>'
+    +'<div class="admsk"><button type="button" class="admbtn admsub2" data-a="modwhy" data-id="'+id+'">사유 보기</button><button type="button" class="admbtn admheal" data-a="modun" data-id="'+id+'">패널티 풀기</button><button type="button" class="admbtn admred" data-a="modreset" data-id="'+id+'">경고 초기화</button><button type="button" class="admbtn" data-a="modchat" data-id="'+id+'">채팅 기록</button></div>'
+    +'<div class="modwhy"'+(modOpen.has('w'+id)?'':' hidden')+'>'+why+'</div><div class="modchat" data-id="'+id+'"'+(modOpen.has('c'+id)?'':' hidden')+'></div></div>';
+}
+function modRender(w){
+  const all=Object.assign({},REG);if(PEN.w>0)all[PID]=regSelf();
+  const now=Date.now(),rem=e=>Math.max(0,(+e.cu||0)-now);
+  const pen=Object.keys(all).filter(id=>rem(all[id])>0||(all[id].g|0)>0).sort((a,b)=>rem(all[b])-rem(all[a])||(all[b].g|0)-(all[a].g|0));
+  const warn=Object.keys(all).filter(id=>(all[id].w|0)>0).sort((a,b)=>(all[b].w|0)-(all[a].w|0)).slice(0,60);
+  const me=w.querySelector('.modme');me.innerHTML='<span>내 아이디</span><b>'+PID+'</b><span>지금 상대</span><b>'+(NET.match&&NET.op?admEsc(NET.op.name)+' ('+(NET.op.pid||'?')+')':'-')+'</b>';
+  w.querySelector('.modpen').innerHTML=pen.length?pen.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">패널티를 받고 있는 사람이 없습니다.</div>';
+  w.querySelector('.modwarn').innerHTML=warn.length?warn.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">경고 기록이 없습니다.</div>';
+  w.querySelectorAll('.modchat[data-id]').forEach(el=>{const d=modChatData[el.dataset.id];if(d)el.innerHTML=d});
+}
 function admLogHTML(){
   if(!admLog.length)return '<div class="admnone">아직 끝난 경기가 없습니다.</div>';
   return admLog.map((g,i)=>'<div class="admlog"><i>'+(i+1)+'</i>'+(g.w?'<b style="color:'+g.wc+'">'+admEsc(g.w)+'</b> 승리 <span>vs '+admEsc(g.l)+' · 남은 체력 '+g.hp+' · '+g.t.toFixed(1)+'초</span>':'<b>무승부</b>')+'</div>').join('');
@@ -3553,6 +3607,14 @@ function admAct(a,b){
   else if(a==='oddsreset')admCmd({a,g:b.dataset.g});
   else if(['statreset','hp1','kill','gauge','deb','center'].includes(a)&&c)admCmd({a,side:c.side,k:b.dataset.k});
   else if(a==='tp'&&c)admTp=admTp===c?null:c;
+  else if(a==='modwhy'||a==='modchat'){const id=b.dataset.id,box=b.closest('.modr').querySelector(a==='modwhy'?'.modwhy':'.modchat');box.hidden=!box.hidden;const key=(a==='modwhy'?'w':'c')+id;if(box.hidden)modOpen.delete(key);else modOpen.add(key);
+    if(a==='modchat'&&!box.hidden){box.innerHTML='<div class="admnone">불러오는 중...</div>';modQuery(id,r=>{const h=r?(r.log.length?r.log.slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> '+admEsc(x.m||'')+(x.to?' <i>→ '+admEsc(x.to)+'</i>':'')+'</div>').join(''):'<div class="admnone">채팅 기록이 없습니다.</div>'):'<div class="admnone">지금 접속 중이 아니라 불러올 수 없습니다.</div>';modChatData[id]=h;document.querySelectorAll('.modchat[data-id="'+id+'"]').forEach(el=>{el.innerHTML=h})})}}
+  else if(a==='modun'||a==='modreset'){const id=b.dataset.id,ua=a==='modreset'?'reset':'unpen';
+    if(id===PID){PEN.cu=0;PEN.g=0;if(ua==='reset'){PEN.w=0;PEN_LOG=[]}PEN.u=Date.now();penSave();regPublish()}else regAdmin(id,ua);
+    const w=document.querySelector('.adm');if(w)modRender(w)}
+  else if(a==='modfind'){const w=document.querySelector('.adm'),q=(w.querySelector('.modq').value||'').toUpperCase().replace(/[^A-Z0-9]/g,''),res=w.querySelector('.modres');
+    if(!/^[A-Z2-9]{6}$/.test(q)){res.innerHTML='<div class="admnone">아이디 6자리를 입력하세요.</div>';return}
+    const e=q===PID?regSelf():REG[q];res.innerHTML=modRow(q,e||{n:'?',w:0,cu:0,g:0,log:[]})+(e?'':'<div class="admnote">경고 기록이 없는 플레이어입니다.</div>')}
   else if(a==='ccstar'){const k=b.dataset.k;if(PRES_STAR.has(k))PRES_STAR.delete(k);else PRES_STAR.add(k);ccuSave();ccuPurge()}
   else if(a==='mute'){admMute=!admMute;admApplyVol();admSave()}
   else if(a==='shake'){admNoShake=!admNoShake;admSave()}
@@ -3690,7 +3752,7 @@ const NET={admQ:[],screen:'lobby',state:'idle',searchId:0,peers:[],conn:null,hos
   seed:0,mySide:null,me:{name:'',dev:false},op:null,myCh:null,pick:null,picking:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
-const NET_PROTO='b158',NET_SLOTS=4,NET_SNAP=30;
+const NET_PROTO='b169',NET_SLOTS=4,NET_SNAP=30;
 const NET_CHAT=['안녕하세요!','GG!','아니','나이스!','엄.','예?'];
 try{NET.me.name=localStorage.getItem('bftNick')||'';NET.me.dev=localStorage.getItem('bftDev')==='1';NET.pick=localStorage.getItem('bftPick')||null}catch(e){}
 const netEsc=t=>String(t).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
@@ -3736,6 +3798,7 @@ function netSaveName(auto){
   const raw=nmIn.value,dev0=/\[\s*bft48\s*\]/i.test(raw),nm=raw.replace(/\[\s*bft48\s*\]/ig,'').replace(/\s+/g,' ').trim();   // 제작자 코드는 이름에서 빼고 표시만 바꿈
   if(!nm){if(!auto||raw)netMsg('이름을 입력해 주세요','bad');return false}
   if(!/^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]+$/.test(nm)){netMsg('숫자·영어·한글·띄어쓰기·!·?·.·~·( )만 쓸 수 있어요','bad');return false}   // 쓸 수 있는 글자
+  {const mc=modCheck(nm);if(mc.bad||mc.pi){netMsg('사용할 수 없는 이름이에요','bad');return false}}
   if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(nm)){netMsg('띄어쓰기·기호만으로는 이름을 만들 수 없어요','bad');return false}
   const dev=dev0||(nm===NET.me.name&&NET.me.dev);   // 코드가 빠진 같은 이름이면 제작자 표시는 그대로
   if([...nm].length>6){netMsg('이름은 6글자까지 쓸 수 있어요','bad');return false}
@@ -3833,8 +3896,8 @@ function netPeer(id){return new Promise((res,rej)=>{
   p.on('open',()=>{if(done)return;done=true;clearTimeout(to);res(p)});
   p.on('error',e=>{if(done)return;done=true;clearTimeout(to);netKill(p);rej(e||{})});
 })}
-const netInfo=()=>({name:NET.me.name,dev:!!NET.me.dev,ch:NET.myCh});
-function netCleanInfo(d){let n=String(d&&d.name||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').replace(/\s+/g,' ').trim();if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(n))n='';return {name:[...(n||'???')].slice(0,6).join(''),dev:!!(d&&d.dev),ch:netHalf(d&&d.ch)?d.ch:'더미'}}
+const netInfo=()=>({name:NET.me.name,dev:!!NET.me.dev,ch:NET.myCh,pid:PID});
+function netCleanInfo(d){let n=String(d&&d.name||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').replace(/\s+/g,' ').trim();if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(n)||modCheck(n).bad)n='';return {pid:/^[A-Z2-9]{6}$/.test(d&&d.pid)?d.pid:'',name:[...(n||'???')].slice(0,6).join(''),dev:!!(d&&d.dev),ch:netHalf(d&&d.ch)?d.ch:'더미'}}
 function netJoin(me,id){return new Promise(res=>{
   let done=false,c=null,to=0;
   const fin=r=>{if(done)return;done=true;clearTimeout(to);try{me.off('error',onErr)}catch(_){}if(r!=='ok'&&c){try{c.close()}catch(_){}}res(r)};
@@ -3924,7 +3987,7 @@ function netSetup(){
   resetGame();document.querySelector('.netkk').hidden=true;chatMenu.querySelector('.chlog').innerHTML='';
   document.body.classList.add('in-net');
   rngSeed(NET.seed);
-  Object.assign(NET,{admQ:[],step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false});NET.hist.clear();
+  Object.assign(NET,{cons:false,admQ:[],step:0,acc:0,pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,myDir:null,opDir:null,aimEnded:false,goSent:false,umWin:false});NET.hist.clear();
   const L=NET.mySide==='left'?NET.me:NET.op,Rt=NET.mySide==='left'?NET.op:NET.me,lc=NET.mySide==='left'?NET.myCh:NET.op.ch,rc=NET.mySide==='left'?NET.op.ch:NET.myCh;
   addCharAt('left',netHalf(lc)||netHalf('더미'),false);addCharAt('right',netHalf(rc)||netHalf('더미'),false);
   netNick('left',L,NET.mySide==='left');netNick('right',Rt,NET.mySide==='right');
@@ -4007,8 +4070,9 @@ function netData(d){
   else if(d.t==='go'){if(!NET.host)netGo(d.L,d.R,d.sl,d.sr)}
   else if(d.t==='s'){if(!NET.host&&NET.sim&&!over&&Array.isArray(d.c)){NET.pend.push(d);if(d.k-NET.step>45)NET.acc+=(d.k-NET.step-15)*FIX}}
   else if(d.t==='end'){if(!NET.host)netHostEnd(d.w)}
-  else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);if(typeof d.txt==='string'){const x=d.txt.replace(/\s+/g,' ').trim().slice(0,30);if(x)netChatShow(netOpp(),x)}else{const i=d.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(netOpp(),i)}}
+  else if(d.t==='chat'){if(d.id)netSend({t:'cack',id:d.id});if(d.id&&netChatGot.has(d.id))return;if(d.id)netChatGot.add(d.id);if(typeof d.txt==='string'){let x=d.txt.replace(/\s+/g,' ').trim().slice(0,30);const mc=modCheck(x);if(mc.pi||(mc.bad&&!NET.cons))x='***';if(x)netChatShow(netOpp(),x)}else{const i=d.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(netOpp(),i)}}
   else if(d.t==='cack'){NET.chatAck=d.id}
+  else if(d.t==='cons'){if(d.a==='req'&&!NET.cons)netConsAsk();else if(d.a==='ok'){NET.cons=true;netSysLine('비속어 합의 완료! 이번 판은 서로 비속어를 써도 돼요')}else if(d.a==='no')netSysLine('상대가 비속어 합의를 거절했어요')}
   else if(d.t==='adm'&&d.c&&typeof d.c==='object'){const m=d.c;if(!NET.sim||m.k2<0||m.k2<=NET.step)admExec(m);else NET.admQ.push(m)}
   else if(d.t==='bye')netClosed();
 }
@@ -4019,7 +4083,7 @@ function netClosed(){
   if(!NET.sim){later(()=>{if(NET.match&&!NET.sim)netLeave()},1600);return}
   NET.host=true;                                   // 남은 경기는 내 폰 계산대로 끝까지
 }
-function netOnOver(){const w=chars.find(o=>o.alive);NET.localW=w?w.side:null;if(NET.host)netSend({t:'end',w:NET.localW})}
+function netOnOver(){try{penGameDone()}catch(e){}const w=chars.find(o=>o.alive);NET.localW=w?w.side:null;if(NET.host)netSend({t:'end',w:NET.localW})}
 function netVictoryMaybe(){
   if(NET.host||!NET.conn){netVictory(NET.endW!==undefined?NET.endW:NET.localW);return}
   if(NET.endW!==undefined){netVictory(NET.endW);return}
@@ -4072,6 +4136,7 @@ function netFanfare(){                               // 승리 효과음 (게임
 }
 function netBeep(fs,len){try{if(!actx)return;resumeAudio();const t=actx.currentTime+.02;fs.forEach((f,i)=>netTone(f,t+i*len,len*1.6,'square',.06))}catch(e){}}
 function netToast(t){
+  document.querySelectorAll('.ntoast').forEach(x=>x.remove());   // 한 번에 하나만
   const el=document.createElement('div');el.className='ntoast';el.textContent=t;document.querySelector('.wrap').appendChild(el);
   el.animate([{opacity:0,transform:'translate(-50%,-6px)'},{opacity:1,transform:'translate(-50%,0)',offset:.1},{opacity:1,transform:'translate(-50%,0)',offset:.85},{opacity:0,transform:'translate(-50%,0)'}],{duration:2400,fill:'forwards'}).onfinish=()=>el.remove();
 }
@@ -4085,9 +4150,109 @@ function netLeave(){
 }
 document.querySelector('.netleave').addEventListener('click',netLeave);
 
+/* ---------- 채팅 관리: 비속어 필터 · 경고/패널티 · 경고 명단 · 비속어 합의 ---------- */
+const MOD_EXC=['시바견','시바이누','시발점','새끼손가락','새끼발가락','새끼줄','세기말'];
+const MOD_KO=[/[시씨쉬쒸쓰씌싀슈ㅅㅆ][발빨팔바빠파벌뻘펄불뿔]/,/씹(새|창|할|년|놈|련)/,/십[할알]/,
+  /[새쌔섀쎄세][끼]/,/[새쌔섀][키퀴꺄]/,/세퀴|색기|색끼|쌕끼|새꺄|쌔꺄/,/(개|걔|이|저)(새기|세기)/,
+  /[병븅빙벙뱅뷩]([신쉰싄씬]|딱|띤)/,/등신/,
+  /[좆좃좇졷]/,/조까|ㅈ까|ㅈ같|존같|조같/,/존나|졸라|존내|존니|조낸|즌나|쥰나/,
+  /[지즤쥐][랄럴]|질알/,
+  /(미친|미췬|미틴|미칀|ㅁㅊ)(놈|년|새|개|련|넘)/,
+  /느금|느개비|느그애미|니미|니애미|니애비|니엄마|애미|애비|에미|에비|엠창|엠생|앰창|니기미/,
+  /썅|쌍놈|쌍년|개년|또라이|똘아이|돌아이|찐따|애자|호구새|닥쳐|닥처|꺼져|꺼저|엿먹|엿같|걸레년|염병/,
+  /섹스|쎅스|쌕스|섹드립|야동|보지(?![마말않못도는])|자지(?![마말않못도는])|꼴려|꼴리|딸딸이|딸치/,
+  /자살해|자살하라|뒤질래|죽어버려|목매/,
+  /한남|한녀|김치녀|김치남|틀딱|맘충|급식충|일베|메갈|흑형/,
+  /ㅅㅂ|ㅆㅂ|ㅂㅅ|ㅄ|ㅅㄲ|ㅈㄴ|ㅈㄹ|ㄲㅈ|ㄷㅊ|ㄴㄱㅁ|ㄴㄱㅂ|ㅆㄹㄱ/];
+const MOD_EN=/fuck|fuk|fck|fxck|phuck|fuc|shit|sht|bitch|biatch|ashole|dick|pusy|cunt|slut|whore|niga|niger|faget|fag|motherfucker|wtf|stfu|gtfo|porn|sex|s3x/;
+const MOD_MIX=[/c[발빨팔]/,/18(놈|년|새)/,/보g|자g/];
+function modCompose(s){                         // 낱자(ㅅ ㅣ ㅂ ㅏ ㄹ)를 글자로 합침: /\ㅣ바ㄹ → 시발
+  const CH='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ',JU='ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ',JO=' ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ';
+  const a=[...s],o=[];
+  for(let i=0;i<a.length;i++){
+    const c=a[i],ci=CH.indexOf(c),nx=a[i+1],vi=nx!=null?JU.indexOf(nx):-1;
+    if(ci>=0&&vi>=0){o.push(String.fromCharCode(0xAC00+(ci*21+vi)*28));i++;continue}
+    const ji=JO.indexOf(c),last=o[o.length-1];
+    if(ji>0&&ci>=0&&last&&last>='가'&&last<='힣'&&(last.charCodeAt(0)-0xAC00)%28===0&&!(nx!=null&&JU.indexOf(nx)>=0)&&(nx==null||!(nx>='가'&&nx<='힣'))){o[o.length-1]=String.fromCharCode(last.charCodeAt(0)+ji);continue}
+    o.push(c);
+  }
+  // 늘여 쓴 것 줄이기: 씨이이발 → 씨발
+  const r=[];for(const c of o){const p=r[r.length-1];if(p&&c>='가'&&c<='힣'&&p>='가'&&p<='힣'){const cc=c.charCodeAt(0)-0xAC00,pc=p.charCodeAt(0)-0xAC00;if(Math.floor(cc/588)===11&&cc%28===0&&pc%28===0&&Math.floor(cc%588/28)===Math.floor(pc%588/28))continue}r.push(c)}
+  return r.join('');
+}
+function modCheck(text){                         // {bad, pi, word}
+  const raw=String(text||''),low=raw.toLowerCase();
+  const pi=/\d[\d\s\-.]{6,}\d/.test(raw)||/(https?:|www\.|\.com|\.kr|\.net|\.gg|\.io|\.me|open\.kakao|discord\.gg|instagram)/.test(low)||/(카톡|카카오톡|인스타|insta|디코|디스코드|discord|페메|라인)\s*(아이디|id|주소|친추|추가)/i.test(raw)||/(아이디|\bid\b)\s*(알려|뭐|좀|줘)/i.test(raw);
+  let ko=low.replace(/\/\\/g,'ㅅ').replace(/[|1!l]/g,'ㅣ').replace(/[o0]/g,'ㅇ').replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g,'');
+  ko=modCompose(ko).replace(/[ㅏ-ㅣ]/g,'');for(const e of MOD_EXC)ko=ko.split(e).join('');
+  const mix=low.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-z0-9]/g,'');
+  const en=low.replace(/1|!/g,'i').replace(/3/g,'e').replace(/0/g,'o').replace(/\$/g,'s').replace(/@/g,'a').replace(/\*/g,'u').replace(/[^a-z]/g,'').replace(/(.)\1+/g,'$1');
+  let word='';
+  for(const r of MOD_KO){const m=ko.match(r);if(m){word=m[0];break}}
+  if(!word){const m=en.match(MOD_EN);if(m)word=m[0]}
+  if(!word)for(const r of MOD_MIX){const m=mix.match(r);if(m){word=m[0];break}}
+  return {bad:!!word,pi,word};
+}
+/* 내 기기 아이디 · 경고/패널티 (폰 저장공간 두 곳에 같이 적어서 하나 지워도 남게) */
+function stGet(k){let v=null;try{v=localStorage.getItem(k)}catch(e){}if(v==null){const m=document.cookie.match(new RegExp('(?:^|; )'+k+'=([^;]*)'));if(m)try{v=decodeURIComponent(m[1])}catch(e){}}return v}
+function stSet(k,v,ck){try{localStorage.setItem(k,v)}catch(e){}if(ck)try{document.cookie=k+'='+encodeURIComponent(v)+';max-age=31536000;path=/;SameSite=Lax'}catch(e){}}
+let PID=stGet('bftPid');if(!/^[A-Z2-9]{6}$/.test(PID||'')){PID='';const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';for(let i=0;i<6;i++)PID+=A[Math.floor(Math.random()*A.length)]}stSet('bftPid',PID,true);
+let PEN={w:0,cu:0,g:0,ub:0,u:0};try{const v=JSON.parse(stGet('bftPen')||'null');if(v&&typeof v==='object')PEN=Object.assign(PEN,v)}catch(e){}
+let PEN_LOG=[];try{PEN_LOG=JSON.parse(localStorage.getItem('bftPenLog')||'[]')||[]}catch(e){}
+let MY_CHAT=[];try{MY_CHAT=JSON.parse(localStorage.getItem('bftMyChat')||'[]')||[]}catch(e){}
+function penSave(){stSet('bftPen',JSON.stringify(PEN),true);try{localStorage.setItem('bftPenLog',JSON.stringify(PEN_LOG.slice(-30)))}catch(e){}}
+const penLeft=()=>({m:Math.max(0,Math.ceil((PEN.cu-Date.now())/60000)),g:PEN.g|0});
+const penBanned=()=>PEN.cu>Date.now()||PEN.g>0;
+const penText=()=>{const l=penLeft(),p=[];if(l.g>0)p.push(l.g+'판');if(l.m>0)p.push(l.m+'분');return p.join(' / ')};
+function penWarn(msg,word){                      // 경고 1회 + 단계별 패널티
+  PEN.w++;const w=PEN.w,now=Date.now();
+  if(w<=3)PEN.g=Math.max(PEN.g,2);
+  else if(w<=5)PEN.cu=Math.max(PEN.cu,now+10*60000);
+  else if(w<=7)PEN.cu=Math.max(PEN.cu,now+30*60000);
+  else{PEN.g=Math.max(PEN.g,w-7);PEN.cu=Math.max(PEN.cu,now+30*60000)}
+  PEN_LOG.push({t:now,m:String(msg).slice(0,30),r:word});PEN.u=now;penSave();regPublish();
+}
+function penGameDone(){if(PEN.g>0){PEN.g--;PEN.u=Date.now();penSave();regPublish()}}   // 끝까지 한 판마다 1판씩 줄어듦
+function myChatAdd(m){MY_CHAT.push({t:Date.now(),m:String(m).slice(0,30),to:NET.op?NET.op.name:''});MY_CHAT=MY_CHAT.slice(-50);try{localStorage.setItem('bftMyChat',JSON.stringify(MY_CHAT))}catch(e){}}
+/* 경고 명단: 경고가 있는 기기만 접속자들 폰을 타고 퍼짐 (어드민 패널에서 봄) */
+let REG={};try{REG=JSON.parse(localStorage.getItem('bftReg')||'{}')||{}}catch(e){}
+const regChg=new Set();let regT=0;
+function regSave(){const ks=Object.keys(REG);if(ks.length>300){ks.sort((a,b)=>(REG[a].u||0)-(REG[b].u||0)).slice(0,ks.length-300).forEach(k=>delete REG[k])}
+  const old=Date.now()-14*864e5;for(const k in REG){const e=REG[k];if((e.u||0)<old&&!((e.cu||0)>Date.now()||(e.g|0)>0))delete REG[k]}
+  try{localStorage.setItem('bftReg',JSON.stringify(REG))}catch(e){}}
+function regSelf(){return {n:NET.me.name||'?',w:PEN.w,cu:PEN.cu,g:PEN.g,log:PEN_LOG.slice(-10),u:PEN.u,ub:PEN.ub}}
+function regMerge(map,from){
+  let ch=false;if(!map||typeof map!=='object')return false;
+  for(const id in map){if(!/^[A-Z2-9]{6}$/.test(id))continue;const e=map[id];if(!e||typeof e!=='object')continue;
+    if(id===PID){if((+e.ub||0)>(PEN.ub||0)){PEN.ub=+e.ub;PEN.cu=0;PEN.g=0;if(e.ua==='reset'){PEN.w=0;PEN_LOG=[]}PEN.u=Date.now();penSave();regPublish();try{netToast(e.ua==='reset'?'관리자가 경고를 초기화했어요':'관리자가 채팅 금지를 풀었어요')}catch(_){}}continue}
+    const o=REG[id];if(!o||(+e.u||0)>(+o.u||0)){REG[id]={n:String(e.n||'?').slice(0,6),w:e.w|0,cu:+e.cu||0,g:e.g|0,log:Array.isArray(e.log)?e.log.slice(-10).map(x=>({t:+x.t||0,m:String(x.m||'').slice(0,30),r:String(x.r||'').slice(0,12)})):[],u:+e.u||0,ub:+e.ub||0,ua:e.ua==='reset'?'reset':(e.ua?'unpen':undefined)};regChg.add(id);ch=true}}
+  if(ch){regSave();regFlush()}return ch;
+}
+function regFlush(){clearTimeout(regT);regT=setTimeout(()=>{if(!regChg.size)return;const o={};for(const id of regChg)if(REG[id])o[id]=REG[id];regChg.clear();
+  if(PRES.hub){for(const c of PRES.conns){try{if(c.open)c.send({t:'reg',e:o})}catch(_){}}}else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'reg',e:o})}catch(_){}}},1500)}   // 모아서 1.5초에 한 번만 보냄
+function regPublish(){if(PEN.w>0||REG[PID]){REG[PID]=regSelf();regChg.add(PID);regSave();regFlush()}}
+function regAdmin(id,ua){const e=REG[id];if(!e)return;const now=Date.now();REG[id]=Object.assign({},e,{cu:0,g:0,u:now,ub:now,ua},ua==='reset'?{w:0,log:[]}:{});regChg.add(id);regSave();regFlush()}   // 어드민: 바로 풀기 / 경고 초기화
+/* 채팅 기록 조회: 어드민 → 모임 자리 → 그 사람 폰 → 다시 어드민 */
+const MODQ={};
+function modQuery(id,cb){const rid=Math.random().toString(36).slice(2,8);MODQ[rid]=cb;setTimeout(()=>{if(MODQ[rid]){delete MODQ[rid];cb(null)}},6000);
+  if(id===PID){delete MODQ[rid];cb({n:NET.me.name,log:MY_CHAT});return}
+  if(PRES.hub)presHubData(null,{t:'q',id,rid});else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'q',id,rid})}catch(_){}}}
+function presHubData(c,d){                        // 모임 자리가 받은 메시지
+  if(d.t==='hi'){c._pid=/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:null;regMerge(d.reg);try{c.send({t:'reg',e:REG})}catch(_){}}
+  else if(d.t==='reg')regMerge(d.e,c);
+  else if(d.t==='q'){if(d.id===PID){const r={t:'qr',rid:d.rid,id:PID,n:NET.me.name,log:MY_CHAT};if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
+    const tg=[...PRES.conns].find(x=>x._pid===d.id&&x.open);if(!tg){const r={t:'qr',rid:d.rid,id:d.id,none:1};if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
+    PRES.qmap=PRES.qmap||{};PRES.qmap[d.rid]=c||'self';try{tg.send({t:'q',id:d.id,rid:d.rid})}catch(_){}}
+  else if(d.t==='qr'){const to=PRES.qmap&&PRES.qmap[d.rid];if(!to)return;delete PRES.qmap[d.rid];if(to==='self')presCliData(d);else try{to.send(d)}catch(_){}}
+}
+function presCliData(d){                          // 손님 폰이 받은 메시지
+  if(d.t==='reg')regMerge(d.e);
+  else if(d.t==='q'&&d.id===PID){try{PRES.conn.send({t:'qr',rid:d.rid,id:PID,n:NET.me.name,log:MY_CHAT})}catch(_){}}
+  else if(d.t==='qr'){const cb=MODQ[d.rid];if(cb){delete MODQ[d.rid];cb(d.none?null:{n:String(d.n||'?').slice(0,6),log:Array.isArray(d.log)?d.log.slice(-50):[]})}}
+}
 /* 빠른 채팅 */
 const chatBtn=document.querySelector('.chatbtn'),chatMenu=document.querySelector('.chatmenu');
-chatMenu.innerHTML='<div class="chlog"></div><div class="chq">'+NET_CHAT.map((t,i)=>'<button type="button" data-ci="'+i+'">'+netEsc(t)+'</button>').join('')
+chatMenu.innerHTML='<div class="chhd"><span class="chban"></span><button type="button" class="chcons">비속어 합의</button></div><div class="chlog"></div><div class="chq">'+NET_CHAT.map((t,i)=>'<button type="button" data-ci="'+i+'">'+netEsc(t)+'</button>').join('')
   +'</div><button type="button" class="ccbtn" data-cc="1">메시지 보내기</button><div class="ccrow" hidden><input class="ccin" type="text" maxlength="30" placeholder="메시지를 입력해주세요." autocomplete="off" enterkeyhint="send"><button type="button" class="ccsend">보내기</button></div>';
 const netIsAdm=()=>{try{return localStorage.getItem('bftAdm')==='1'||!!NET.me.dev}catch(e){return !!NET.me.dev}};   // 어드민 패널을 연 적 있는 사람(또는 제작자)만 직접 메시지
 function netChatClose(){chatMenu.hidden=true}
@@ -4096,15 +4261,35 @@ function netChatSend(i){                         // 상대가 받았다고 답�
   const id=++netChatSeq+'-'+Math.random().toString(36).slice(2,6);let n=0;const msg=typeof i==='string'?{t:'chat',txt:i,id}:{t:'chat',i,id};
   const go=()=>{if(!NET.conn||NET.chatAck===id||n++>=5)return;netSend(msg);setTimeout(go,600)};go();
 }
-chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){const L=chatMenu.querySelector('.chlog');L.scrollTop=L.scrollHeight;chatMenu.querySelector('.ccbtn').hidden=!netIsAdm();chatMenu.querySelector('.ccrow').hidden=true}});
+chatBtn.addEventListener('click',e=>{e.stopPropagation();chatMenu.hidden=!chatMenu.hidden;if(!chatMenu.hidden){const L=chatMenu.querySelector('.chlog');L.scrollTop=L.scrollHeight;chatMenu.querySelector('.ccbtn').hidden=false;chatMenu.querySelector('.ccrow').hidden=true;netChatHead()}});
 {const row=chatMenu.querySelector('.ccrow'),inp=row.querySelector('.ccin');
   chatMenu.querySelector('.ccbtn').addEventListener('click',e=>{e.stopPropagation();row.hidden=!row.hidden;if(!row.hidden)inp.focus()});
-  const sendT=()=>{const t=inp.value.replace(/\s+/g,' ').trim().slice(0,30);if(!t)return;inp.value='';inp.blur();netChatClose();netChatSend(t);netChatShow(NET.mySide,t)};
+  const sendT=()=>{const t=inp.value.replace(/\s+/g,' ').trim().slice(0,30);if(!t)return;
+    if(penBanned()){netToast('채팅 금지 중이에요 ('+penText()+' 남음)');return}
+    const mc=modCheck(t);
+    if(mc.pi){netToast('연락처·링크·아이디는 보낼 수 없어요');return}
+    if(mc.bad&&!NET.cons){penWarn(t,mc.word);inp.value='';netChatHead();netToast('비속어가 감지되어 보내지 않았어요 (경고 '+PEN.w+'회'+(penBanned()?' · 채팅 금지 '+penText():'')+')');return}
+    inp.value='';inp.blur();netChatClose();netChatSend(t);netChatShow(NET.mySide,t);myChatAdd(t)};
   row.querySelector('.ccsend').addEventListener('click',e=>{e.stopPropagation();sendT()});inp.addEventListener('keydown',e=>{if(e.key==='Enter')sendT()})}
 chatMenu.addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!b)return;e.stopPropagation();const i=+b.dataset.ci;
-  netChatClose();netChatSend(i);netChatShow(NET.mySide,i);
+  if(penBanned()){netToast('채팅 금지 중이에요 ('+penText()+' 남음)');return}
+  netChatClose();netChatSend(i);netChatShow(NET.mySide,i);myChatAdd(NET_CHAT[i]||'');
 });
 document.addEventListener('pointerdown',e=>{if(!chatMenu.hidden&&!e.target.closest('.chatmenu,.chatbtn'))netChatClose()});
+function netSysLine(t,btns){const L=chatMenu.querySelector('.chlog'),ln=document.createElement('div');ln.className='chl sys';ln.textContent=t;if(btns)ln.appendChild(btns);L.appendChild(ln);while(L.childElementCount>60)L.firstChild.remove();L.scrollTop=L.scrollHeight;return ln}
+function netChatHead(){const b=chatMenu.querySelector('.chban'),c=chatMenu.querySelector('.chcons');b.textContent=penBanned()?'채팅 금지 · '+penText()+' 남음':(NET.cons?'비속어 합의됨':'');c.disabled=!!NET.cons;chatMenu.classList.toggle('banned',penBanned())}
+function netConsBtns(onYes,onNo){const w=document.createElement('span');w.className='consb';const y=document.createElement('button'),n=document.createElement('button');y.type=n.type='button';y.textContent='동의';n.textContent='거절';y.className='cy';n.className='cn';
+  const done=()=>{document.querySelectorAll('.consb').forEach(x=>x.remove())};y.addEventListener('click',e=>{e.stopPropagation();done();onYes()});n.addEventListener('click',e=>{e.stopPropagation();done();onNo()});w.append(y,n);return w}
+function netConsAsk(){                             // 상대가 비속어 합의를 요청함: 채팅 기록과 상대 말풍선에 동의·거절
+  const yes=()=>{NET.cons=true;netSend({t:'cons',a:'ok'});netSysLine('비속어 합의 완료! 이번 판은 서로 비속어를 써도 돼요');netChatHead()},no=()=>{netSend({t:'cons',a:'no'});netSysLine('비속어 합의를 거절했어요')};
+  netSysLine('상대가 비속어 합의를 요청했어요 ',netConsBtns(yes,no));
+  const P=document.querySelector(netOpp()==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());
+  const b=document.createElement('div');b.className='chatpop cpop';b.textContent='비속어 합의 ';b.appendChild(netConsBtns(yes,no));P.appendChild(b);setTimeout(()=>b.remove(),8000);
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.chcons'))return;e.stopPropagation();
+  if(NET.cons||!NET.match)return;if(penBanned()){netToast('채팅 금지 중이에요 ('+penText()+' 남음)');return}
+  netSend({t:'cons',a:'req'});netSysLine('비속어 합의를 요청했어요');
+  const P=document.querySelector(NET.mySide==='left'?'.p1':'.p2');P.querySelectorAll('.chatpop').forEach(x=>x.remove());const b=document.createElement('div');b.className='chatpop';b.textContent='비속어 합의';P.appendChild(b);setTimeout(()=>b.remove(),2400)},true);
 function netChatShow(sd,i){
   if(!NET.match)return;
   {const L=chatMenu.querySelector('.chlog'),info=sd===NET.mySide?NET.me:NET.op,ln=document.createElement('div');   // 채팅 기록
@@ -4142,7 +4327,7 @@ function presTry(){
   PRES.peer=p;
   p.on('open',()=>{if(g!==PRES.gen)return;PRES.hub=true;PRES.st='';presCast()});
   p.on('connection',c=>{if(g!==PRES.gen)return;
-    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&(d.t==='st'||d.t==='ping')&&d.s&&d.s!==c._s){c._s=d.s;presCast()}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
+    c.on('open',()=>{c._seen=Date.now();PRES.conns.add(c);presCast()});c.on('data',d=>{c._seen=Date.now();if(d&&['hi','reg','q','qr'].includes(d.t)){presHubData(c,d);return}if(d&&(d.t==='st'||d.t==='ping')&&d.s&&d.s!==c._s){c._s=d.s;presCast()}if(d&&d.t==='max'&&ccuMerge(d.days))presCast()});
     const rm=()=>{if(PRES.conns.delete(c))presCast()};c.on('close',rm);c.on('error',rm)});
   p.on('error',e=>{if(g!==PRES.gen)return;if(e&&e.type==='unavailable-id')presJoin();else if(!PRES.hub){PRES.st='서버 연결 실패 ('+(e&&e.type||'?')+')';presLater()}});
   p.on('disconnected',()=>{if(g===PRES.gen)presLater(800)});
@@ -4154,8 +4339,8 @@ function presJoin(){
   PRES.to=setTimeout(()=>{if(g===PRES.gen&&!PRES.n)presLater()},12000);
   q.on('open',()=>{if(g!==PRES.gen)return;PRES.st='다른 접속자와 연결하는 중';let c;try{c=q.connect(PRES_ID,{reliable:true,serialization:'json'})}catch(e){presLater();return}
     PRES.conn=c;PRES.last=Date.now();
-    c.on('open',()=>{try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy()})}catch(_){}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
-    c.on('data',d=>{if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
+    c.on('open',()=>{try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy()});c.send({t:'hi',pid:PID,reg:REG})}catch(_){}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
+    c.on('data',d=>{if(g===PRES.gen&&d&&['reg','q','qr'].includes(d.t)){presCliData(d);return}if(g===PRES.gen&&d&&d.t==='cnt'){PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
     c.on('close',()=>{if(g===PRES.gen){PRES.n=0;presLater()}});c.on('error',()=>{if(g===PRES.gen){PRES.n=0;presLater()}})});
   q.on('error',e=>{if(g!==PRES.gen)return;PRES.st='연결 다시 시도 중 ('+(e&&e.type||'?')+')';if(e&&e.type==='peer-unavailable')presLater(300+Math.random()*700);else presLater()});
 }
