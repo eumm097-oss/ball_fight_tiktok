@@ -403,6 +403,9 @@ em.usrst{margin-left:auto;font-style:normal;font-weight:800;font-size:0.85em;col
 .dmpop b{font-size:13px}.dmpop span{font-size:14.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kickov{position:fixed;top:0;left:0;right:0;bottom:0;z-index:95;background:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
 .usrops{flex-wrap:wrap;margin-top:0.2em}.usrops .admstep{width:3.4em}.usru{flex:none!important;color:#cfd2dc}.usrkicked{display:flex;align-items:center;gap:0.6em;color:#ff5c7a}.usrkicked b{color:#ff5c7a}.usrkicked .admbtn{margin-left:auto}
+.usrroom{display:flex;align-items:center;gap:0.6em;width:100%;margin:0 0 0.4em;padding:0.55em 0.7em;background:#151515;border:0.1em solid #2c2c2c;border-radius:0.6em;color:#fff;font:inherit;font-size:1.05em;text-align:left;cursor:pointer}.usrroom.on{border-color:#17e3d6;background:rgba(23,227,214,.08)}
+.usrroom i{font-style:normal;font-family:monospace;color:#8b90a0;font-size:0.9em}.usrroom span{margin-left:auto;color:#8b90a0;font-size:0.9em}
+.usrhist{max-height:22em;overflow:auto;overscroll-behavior:contain;padding:0.3em 0.2em;border-top:0.1em solid #2c2c2c}.usrsy{color:#8b90a0!important;text-align:center}.usrsm{color:#8b90a0;font-weight:500}
 .dbgerr{position:fixed;left:8px;right:8px;bottom:calc(8px + env(safe-area-inset-bottom,0px));z-index:99;padding:8px 10px;background:#fff;border:2px solid #d32f2f;color:#d32f2f;font:700 12px/1.4 monospace;word-break:break-all;pointer-events:none}.dbgerr[hidden]{display:none}
 .p3,.p4{display:none}
 body.scr-2v2 .p3,body.scr-2v2 .p4{display:block}
@@ -3571,7 +3574,7 @@ function openAdmin(){
     const c2=JSON.stringify([PRES_DAYS,[...PRES_STAR],Object.keys(PRES_UV).map(k=>PRES_UV[k].length),UVN]);if(c2!==csig){csig=c2;ccub.innerHTML=admCcuHTML()}
     {const a2=ANN_LOG.length+':'+(ANN_LOG.length?ANN_LOG[ANN_LOG.length-1].t:0);if(a2!==asig){asig=a2;const bx=w.querySelector('.annlog');if(bx)bx.innerHTML=ANN_LOG.length?ANN_LOG.slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> <b style="color:#17e3d6">'+admEsc(x.n)+' ('+x.pid+')</b> '+admEsc(x.m)+'</div>').join(''):'<div class="admnone">아직 공지가 없습니다.</div>'}}
     if(w.querySelector('.admpg.on[data-p="mod"]')){const m2=JSON.stringify(REG).length+':'+PEN.u+':'+Math.floor(Date.now()/20000)+':'+(NET.op&&NET.op.pid);if(m2!==msig){msig=m2;modRender(w)}}
-    if(w.querySelector('.admpg.on[data-p="user"]')){const q=w.querySelector('.usrq'),u2=FRP.v+':'+FRX.v+':'+JSON.stringify(FR.e).length+':'+(q?q.value:'')+':'+[...usrOpen].join(',')+':'+NET.me.name+':'+presMy()+':'+Math.floor(Date.now()/20000)+':'+JSON.stringify(REG).length;const ae=document.activeElement;if(u2!==usig&&!(ae&&ae.closest&&ae.closest('.usrlist'))){usig=u2;usrRender(w)}}   // 칸에 입력하는 동안은 다시 그리지 않음
+    if(w.querySelector('.admpg.on[data-p="user"]')){const q=w.querySelector('.usrq'),u2=FRP.v+':'+FRX.v+':'+JSON.stringify(FR.e).length+':'+(q?q.value:'')+':'+[...usrOpen].join(',')+':'+NET.me.name+':'+presMy()+':'+Math.floor(Date.now()/20000)+':'+JSON.stringify(REG).length+':'+PRES.n;const ae=document.activeElement;if(u2!==usig&&!(ae&&ae.closest&&ae.closest('.usrlist'))){usig=u2;usrRender(w)}}   // 칸에 입력하는 동안은 다시 그리지 않음
     const s2=chars.map(c=>c.side+c.kind).join('|');if(s2!==ssig){ssig=s2;stb.innerHTML=admStatsHTML()}   // 줄은 캐릭터가 바뀔 때만 다시 그림 (꾹 누르는 중·입력 중에 안 끊기게)
     if(!osig){osig='1';odb.innerHTML=admOddsHTML()}
     admVals(w);
@@ -3739,7 +3742,35 @@ function modRender(w){
   w.querySelector('.modwarn').innerHTML=warn.length?warn.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">경고 기록이 없습니다.</div>';
   w.querySelectorAll('.modchat[data-id]').forEach(el=>{const d=modChatData[el.dataset.id];if(d)el.innerHTML=d});
 }
-const usrOpen=new Set(),usrKick={};
+const usrOpen=new Set(),usrKick={},usrFr={};   // usrFr[아이디]: 친구 정보(대화방 목록·고른 방·기록)
+function usrFrHTML(id,U){
+  const F=usrFr[id];if(!F)return '';
+  const nmOf=w=>(F.nm&&F.nm[w])||usrNm(U,w),f=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  if(F.st==='load')return '<div class="modchat"><div class="admnone">불러오는 중...</div></div>';
+  let h='<div class="modchat usrfr"><div class="admlbl">대화방 '+F.rooms.length+'개'+(F.src==='friend'?' <span class="usrsm">(이 사람이 접속해 있지 않아서 친구 쪽 기록으로 불러와요)</span>':'')+'</div>';
+  h+=F.rooms.length?F.rooms.map(r=>'<button type="button" class="usrroom'+(F.sel===r.w?' on':'')+'" data-a="usrroom" data-id="'+id+'" data-w="'+r.w+'"><b>'+admEsc(nmOf(r.w))+'</b><i>'+r.w+'</i><span>'+(r.c==null?'눌러서 불러오기':(r.c?r.c+'개 · '+f(r.t):'대화 없음'))+'</span></button>').join(''):'<div class="admnone">친구가 없습니다.</div>';
+  if(F.sel){const w=F.sel,L=F.data[w];
+    h+='<div class="admlbl">'+admEsc(usrNm(U,id))+' ↔ '+admEsc(nmOf(w))+' 대화 기록</div>';
+    if(L==='load')h+='<div class="admnone">불러오는 중...</div>';
+    else if(L==='off')h+='<div class="admnone">두 사람 모두 지금 접속해 있지 않아서 불러올 수 없습니다.</div>';
+    else if(!L||!L.length)h+='<div class="admnone">대화 기록이 없습니다.</div>';
+    else h+='<div class="usrhist" data-id="'+id+'">'+L.map(x=>x.sy?'<div class="modli usrsy">'+f(x.t)+' · '+admEsc(x.m)+'</div>':'<div class="modli"><span>'+f(x.t)+'</span> <b class="usrn">'+admEsc(x.a===id?usrNm(U,id):nmOf(w))+'</b> '+admEsc(x.m)+'</div>').join('')+'</div>'}
+  return h+'</div>'}
+function usrFrLoad(id){                             // 그 사람 폰에서 친구별 1대1 대화를 모두 가져옴 (접속 중이 아니면 친구 목록만)
+  const w=document.querySelector('.adm');usrFr[id]={st:'load'};if(w)usrRender(w);
+  modQuery(id,r=>{
+    const {U}=usrData(),u=U[id];
+    if(r&&r.dmc){const rooms=Object.keys(r.dmc).map(k=>{const L=r.dmc[k];return {w:k,c:L.filter(x=>!x.sy).length,t:L.length?L[L.length-1].t:0}}).sort((a,b)=>b.t-a.t||a.w.localeCompare(b.w));
+      const data={};for(const k in r.dmc)data[k]=r.dmc[k].map(x=>Object.assign({a:x.me?id:k},x));
+      usrFr[id]={st:'ok',src:'self',rooms,data,nm:r.nm,sel:null}}
+    else usrFr[id]={st:'ok',src:'friend',rooms:(u?u.f:[]).map(k=>({w:k,c:null,t:0})),data:{},nm:{},sel:null};
+    const w2=document.querySelector('.adm');if(w2)usrRender(w2)},{k:'dm'})}
+function usrRoom(id,k){                             // 대화방 하나 열기 (친구 쪽에서만 가져올 수 있으면 친구에게 물어봄)
+  const F=usrFr[id];if(!F)return;F.sel=F.sel===k?null:k;const w=document.querySelector('.adm');
+  if(F.sel&&F.src==='friend'&&!Array.isArray(F.data[k])){F.data[k]='load';
+    modQuery(k,r=>{const L=r&&r.dmc&&r.dmc[id];F.data[k]=L?L.map(x=>Object.assign({a:x.me?k:id},x)):'off';const R=F.rooms.find(x=>x.w===k);if(R&&Array.isArray(F.data[k])){R.c=F.data[k].filter(x=>!x.sy).length;R.t=L.length?L[L.length-1].t:0}
+      const w2=document.querySelector('.adm');if(w2)usrRender(w2)},{k:'dm',w:id})}
+  if(w)usrRender(w)}
 function usrData(){                              // 어드민: 저장소 기록 + 내 폰 기록을 합쳐 유저별로 정리
   const E={};for(const k in FRX.e)E[k]=FRX.e[k];for(const k in FR.e)if(!E[k]||E[k].u<FR.e[k].u)E[k]=FR.e[k];
   const U={},get=id=>U[id]||(U[id]={id,f:[],i:[],o:[]});
@@ -3758,8 +3789,9 @@ function usrRender(w){
   const match=u=>!q||u.id.includes(q)||u.n.toUpperCase().includes(q);
   let L=Object.values(U).filter(match).sort((a,b)=>a.s[2]-b.s[2]||b.f.length-a.f.length||a.n.localeCompare(b.n,'ko'));
   const total=L.length;L=L.slice(0,100);
-  w.querySelector('.usrcnt').textContent='('+total+'명'+(total>100?' · 100명만 표시':'')+')';
+  w.querySelector('.usrcnt').textContent='('+total+'명'+(total>100?' · 100명만 표시':'')+')'+(PRES.n?' · 지금 접속 '+PRES.n+'명':' · 접속 서버 연결 안 됨'+(PRES.st?' ('+PRES.st+')':''));
   const line=(id,extra)=>{const u=U[id]||{n:'?',s:['오프라인','off']};return '<div class="modli"><b class="usrn">'+admEsc(u.n)+'</b> <span>'+id+'</span> <em class="usrst '+u.s[1]+'">'+u.s[0]+'</em>'+(extra||'')+'</div>'};
+  const sk={};w.querySelectorAll('.usrhist[data-id]').forEach(e=>{sk[e.dataset.id]=e.scrollTop});
   w.querySelector('.usrlist').innerHTML=L.length?L.map(u=>{
     const open=usrOpen.has(u.id);
     return '<div class="admch usr"><button type="button" class="usrhd" data-a="usrtog" data-id="'+u.id+'"><b>'+admEsc(u.n)+'</b><i>'+u.id+'</i><em class="usrst '+u.s[1]+'">'+u.s[0]+'</em></button>'
@@ -3772,7 +3804,9 @@ function usrRender(w){
         +(u.f.length?'<div class="admlbl">친구</div>'+u.f.map(id=>line(id)).join(''):'<div class="admnone">친구가 없습니다.</div>')
         +(u.i.length?'<div class="admlbl">받은 요청</div>'+u.i.map(id=>line(id)).join(''):'')
         +(u.o.length?'<div class="admlbl">보낸 요청</div>'+u.o.map(id=>line(id)).join(''):'')
-        +'<div class="admsk" style="margin-top:0.6em"><button type="button" class="admbtn" data-a="usrchat" data-id="'+u.id+'">채팅·대화 기록 보기</button></div>'+(usrChatData[u.id]?'<div class="modchat">'+usrChatData[u.id]+'</div>':'')+'</div>':'')+'</div>'}).join(''):'<div class="admnone">'+(q?'검색 결과가 없습니다.':'아직 등록된 유저가 없습니다.')+'</div>';
+        +'<div class="admsk" style="margin-top:0.6em"><button type="button" class="admbtn" data-a="usrfr" data-id="'+u.id+'">친구 정보</button><button type="button" class="admbtn" data-a="usrchat" data-id="'+u.id+'">게임 채팅 기록</button></div>'
+        +usrFrHTML(u.id,U)+(usrChatData[u.id]?'<div class="modchat">'+usrChatData[u.id]+'</div>':'')+'</div>':'')+'</div>'}).join(''):'<div class="admnone">'+(q?'검색 결과가 없습니다.':'아직 등록된 유저가 없습니다.')+'</div>';
+  w.querySelectorAll('.usrhist[data-id]').forEach(e=>{e.scrollTop=e.dataset.id in sk?sk[e.dataset.id]:e.scrollHeight});
   w.querySelector('.usrlist').oninput=e=>{const i=e.target;if(i.dataset&&i.dataset.kid){i.value=i.value.replace(/[^0-9]/g,'').slice(0,4);(usrKick[i.dataset.kid]||(usrKick[i.dataset.kid]={}))[i.dataset.k]=i.value}};   // 입력 중인 값은 다시 그려도 남게
   const P=pairs.filter(e=>match(U[e.a])||match(U[e.b])).sort((a,b)=>b.u-a.u);
   w.querySelector('.usrpairs').innerHTML=P.length?P.slice(0,80).map(e=>'<div class="admlog"><b class="usrn">'+admEsc(usrNm(U,e.a))+'</b> <span>'+e.a+'</span> ↔ <b class="usrn">'+admEsc(usrNm(U,e.b))+'</b> <span>'+e.b+'</span></div>').join('')+(P.length>80?'<div class="admnote">최근 80쌍만 표시 중 ('+P.length+'쌍)</div>':''):'<div class="admnone">친구 관계가 없습니다.</div>';
@@ -3892,6 +3926,8 @@ function admAct(a,b){
   else if(a==='usrtog'){const id=b.dataset.id;if(usrOpen.has(id))usrOpen.delete(id);else usrOpen.add(id);const w=document.querySelector('.adm');if(w)usrRender(w)}
   else if(a==='usrref'){cldSync(false)}
   else if(a==='usrcopy'){frCopy(b.dataset.id,b)}
+  else if(a==='usrfr'){const id=b.dataset.id;if(usrFr[id]&&usrFr[id].st!=='load'){delete usrFr[id];const w=document.querySelector('.adm');if(w)usrRender(w)}else usrFrLoad(id)}
+  else if(a==='usrroom'){usrRoom(b.dataset.id,b.dataset.w)}
   else if(a==='usrkick'||a==='usrunkick'){const id=b.dataset.id,w=document.querySelector('.adm');
     if(a==='usrunkick'){regKick(id,0)}
     else{const row=b.closest('.usrops'),v=k=>Math.max(0,parseInt((row.querySelector('[data-k="'+k+'"]')||{}).value||'0',10)||0),min=v('h')*60+v('m');
@@ -4561,9 +4597,22 @@ function regPublish(){if(PEN.w>0||REG[PID]){REG[PID]=regSelf();regChg.add(PID);r
 function regAdmin(id,ua){const e=REG[id];if(!e)return;const now=Date.now();REG[id]=Object.assign({},e,{u:now,ub:now,ua},ua==='reset'?{w:0,log:[]}:{cu:0,g:0});regChg.add(id);regSave();regFlush();cldSoon(1500)}   // 어드민: 바로 풀기 / 경고 초기화
 /* 채팅 기록 조회: 어드민 → 모임 자리 → 그 사람 폰 → 다시 어드민 */
 const MODQ={};
-function modQuery(id,cb){const rid=Math.random().toString(36).slice(2,8);MODQ[rid]=cb;setTimeout(()=>{if(MODQ[rid]){delete MODQ[rid];cb(null)}},6000);
-  if(id===PID){delete MODQ[rid];cb({n:NET.me.name,log:MY_CHAT,dm:dmRecent()});return}
-  if(PRES.hub)presHubData(null,{t:'q',id,rid});else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'q',id,rid})}catch(_){}}}
+function modQuery(id,cb,opt){const rid=Math.random().toString(36).slice(2,8),k=opt&&opt.k==='dm'?'dm':undefined,w=opt&&/^[A-Z2-9]{6}$/.test(opt.w)?opt.w:undefined;MODQ[rid]=cb;setTimeout(()=>{if(MODQ[rid]){delete MODQ[rid];cb(null)}},8000);
+  if(id===PID){delete MODQ[rid];cb(modParse(modAnswer({rid,k,w})));return}
+  const q={t:'q',id,rid,k,w};if(PRES.hub)presHubData(null,q);else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(q)}catch(_){}}}
+function modAnswer(d){                             // 어드민이 물어본 내 기록 (게임 채팅 · 1대1 대화)
+  const r={t:'qr',rid:d.rid,id:PID,n:NET.me.name};
+  if(d.k==='dm'){const w=/^[A-Z2-9]{6}$/.test(d.w)?d.w:null,o={},nm={};
+    for(const id in DM.c){if(w&&id!==w)continue;o[id]=DM.c[id].slice(-100).map(x=>({t:x.t,me:x.me?1:0,m:x.m,sy:x.sy?1:0}));nm[id]=frNameOf(id)}
+    for(const id of frFriends())if((!w||id===w)&&!o[id]){o[id]=[];nm[id]=frNameOf(id)}
+    r.dmc=o;r.nm=nm}
+  else{r.log=MY_CHAT;r.dm=dmRecent()}
+  return r}
+function modParse(d){if(!d||d.none)return null;
+  const o={n:String(d.n||'?').slice(0,NMX),log:Array.isArray(d.log)?d.log.slice(-50):[],dm:Array.isArray(d.dm)?d.dm.slice(-80).filter(x=>x&&typeof x.m==='string').map(x=>({t:+x.t||0,w:String(x.w||'?').slice(0,6),n:String(x.n||'?').slice(0,NMX),me:!!x.me,m:x.m.slice(0,100)})):[]};
+  if(d.dmc&&typeof d.dmc==='object'){o.dmc={};o.nm={};let k=0;
+    for(const w in d.dmc){if(!/^[A-Z2-9]{6}$/.test(w)||!Array.isArray(d.dmc[w])||k++>60)continue;o.dmc[w]=d.dmc[w].slice(-100).filter(x=>x&&typeof x.m==='string').map(x=>({t:+x.t||0,me:!!x.me,m:x.m.slice(0,100),sy:!!x.sy}));o.nm[w]=String((d.nm&&d.nm[w])||'?').slice(0,NMX)}}
+  return o}
 const annSeen=new Set();
 function annShow(m){                                // 전체 공지: 위에서 사르르 나타났다가 6초 뒤 사라짐
   document.querySelectorAll('.ann').forEach(x=>x.remove());
@@ -4855,7 +4904,7 @@ setInterval(()=>{if(document.hidden||CLD.busy)return;const t=Date.now();
   else if(t-CLD.last>(PRES.hub||(PRES.conn&&PRES.conn.open)?300000:60000))cldSync(false)},30000);   // 평소 5분, 접속자 연결이 끊겨 있으면 1분마다 저장소 확인
 async function cldFresh(){for(let i=0;i<50&&CLD.busy;i++)await new Promise(r=>setTimeout(r,120));await cldSync(false)}
 /* 접속 상태: 모임 자리가 친구들의 상태를 알려 줌 (내 친구 아이디 목록만 보냄) */
-function frIds(){const s=new Set(frFriends());if(document.querySelector('.adm'))for(const id in FRX.n)s.add(id);return [...s].slice(0,500)}
+function frIds(){const s=new Set(frFriends());if(document.querySelector('.adm')){for(const id in FRX.n)s.add(id);for(const id in REG)s.add(id)}return [...s].slice(0,500)}
 function presPl(ids){const o={};if(!ids||!ids.length)return o;
   for(const id of ids){if(id===PID){o[id]=[presMy(),NET.me.name||''];continue}for(const c of PRES.conns){if(c._pid===id&&c.open){o[id]=[c._s||'i',c._n||''];break}}}return o}
 function frPl(pl){const s=JSON.stringify(pl||{});if(s===FRP.plS)return;FRP.plS=s;const o={};
@@ -5167,9 +5216,9 @@ function presHubData(c,d){                        // 모임 자리가 받은 메
   if(d.t==='room'||d.t==='roomsq'){roomHub(c,d);return}
   if(d.t==='hi'){c._pid=/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:null;c._n=typeof d.n==='string'?d.n.slice(0,NMX):'';regMerge(d.reg);{const k=ccuDay(),add=uvMerge(d.uv);if(c._pid&&uvAdd(k,c._pid)){add.push([k,c._pid]);uvSave()}uvCast(add,c)}try{c.send({t:'reg',e:REG});c.send({t:'rooms',L:ROOM.list||[]});c.send({t:'uv',u:uvRecent()})}catch(_){}}
   else if(d.t==='reg')regMerge(d.e,c);
-  else if(d.t==='q'){if(d.id===PID){const r={t:'qr',rid:d.rid,id:PID,n:NET.me.name,log:MY_CHAT,dm:dmRecent()};if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
+  else if(d.t==='q'){if(d.id===PID){const r=modAnswer(d);if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
     const tg=[...PRES.conns].find(x=>x._pid===d.id&&x.open);if(!tg){const r={t:'qr',rid:d.rid,id:d.id,none:1};if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
-    PRES.qmap=PRES.qmap||{};PRES.qmap[d.rid]=c||'self';try{tg.send({t:'q',id:d.id,rid:d.rid})}catch(_){}}
+    PRES.qmap=PRES.qmap||{};PRES.qmap[d.rid]=c||'self';try{tg.send({t:'q',id:d.id,rid:d.rid,k:d.k==='dm'?'dm':undefined,w:/^[A-Z2-9]{6}$/.test(d.w)?d.w:undefined})}catch(_){}}
   else if(d.t==='qr'){const to=PRES.qmap&&PRES.qmap[d.rid];if(!to)return;delete PRES.qmap[d.rid];if(to==='self')presCliData(d);else try{to.send(d)}catch(_){}}
 }
 function presCliData(d){                          // 손님 폰이 받은 메시지
@@ -5184,8 +5233,8 @@ function presCliData(d){                          // 손님 폰이 받은 메시
   if(d.t==='ann'){annGot(d);return}
   if(d.t==='rooms'||d.t==='roomsall'){roomCli(d);return}
   if(d.t==='reg')regMerge(d.e);
-  else if(d.t==='q'&&d.id===PID){try{PRES.conn.send({t:'qr',rid:d.rid,id:PID,n:NET.me.name,log:MY_CHAT,dm:dmRecent()})}catch(_){}}
-  else if(d.t==='qr'){const cb=MODQ[d.rid];if(cb){delete MODQ[d.rid];cb(d.none?null:{n:String(d.n||'?').slice(0,NMX),log:Array.isArray(d.log)?d.log.slice(-50):[],dm:Array.isArray(d.dm)?d.dm.slice(-80).filter(x=>x&&typeof x.m==='string').map(x=>({t:+x.t||0,w:String(x.w||'?').slice(0,6),n:String(x.n||'?').slice(0,NMX),me:!!x.me,m:x.m.slice(0,100)})):[]})}}
+  else if(d.t==='q'&&d.id===PID){try{PRES.conn.send(modAnswer(d))}catch(_){}}
+  else if(d.t==='qr'){const cb=MODQ[d.rid];if(cb){delete MODQ[d.rid];cb(modParse(d))}}
 }
 /* 빠른 채팅 */
 const chatBtn=document.querySelector('.chatbtn'),chatMenu=document.querySelector('.chatmenu');
@@ -5487,7 +5536,7 @@ setInterval(()=>{const s=presMy(),n=NET.me.name||'',sg=s+'|'+n;if(sg===PRES.last
 function presMax(n){return ccuSet(ccuDay(),n,Date.now())}
 const presMy=()=>NET.spec?'i':(NET.state==='search'?'q':(NET.match?'m':'i'));   // 내 상태: 매칭 중 / 경기 중 / 그 외
 const PRES={q:0,mt:0,st:'온라인 기능 불러오는 중',peer:null,conns:new Set(),hub:false,n:0,gen:0,to:0,last:0,conn:null};   // 15초마다 서로 신호를 주고받고, 40초 동안 소식이 없으면 끊긴 것으로 봄
-const PRES_ID='bftball-hub-1';
+const PRES_ID='bftball-hub-2';   // 3.8.13부터 새 모임 자리 (예전 버전 폰이 자리를 맡으면 친구 상태·대화가 전달되지 않아서 분리)
 function presKill(){clearTimeout(PRES.to);PRES.conn=null;if(PRES.peer){try{PRES.peer.destroy()}catch(_){}}PRES.peer=null;PRES.hub=false;PRES.conns.clear()}
 function presLater(ms){const g=PRES.gen;clearTimeout(PRES.to);PRES.to=setTimeout(()=>{if(g===PRES.gen)presTry()},ms==null?1200+Math.random()*2500:ms)}
 function presCast(){if(!PRES.hub)return;PRES.n=PRES.conns.size+1;if(presMax(PRES.n))cldKick();{const k=ccuDay(),add=[];if(uvAdd(k,PID))add.push([k,PID]);for(const c of PRES.conns)if(c._pid&&uvAdd(k,c._pid))add.push([k,c._pid]);if(add.length){uvSave();uvCast(add);cldKick()}}const all=[presMy(),...[...PRES.conns].map(c=>c._s||'i')];PRES.q=all.filter(x=>x==='q').length;PRES.mt=all.filter(x=>x==='m').length;for(const c of PRES.conns){try{if(c.open)c.send({t:'cnt',n:PRES.n,q:PRES.q,mt:PRES.mt,days:ccuRecent(),pl:presPl(c._fr)})}catch(_){}}frPl(presPl(PRES.selfFr))}
