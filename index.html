@@ -1563,8 +1563,8 @@ function dropTag(c,kind){           // 머리 위 글자 한 개를 바로 치�
   const i=c.tags.findIndex(t=>t.kind===kind);if(i>=0){c.tags[i].el.remove();c.tags.splice(i,1)}
 }
 const KD={cd1:15,cd2:6};   // 김동희세계관: 위 게이지 15초 · 아래 게이지 6초 (스킬은 아직 없음: 다 차면 비우고 다시 참)
-const MK={cd:2.4,r:.045,hp:4,psnHit:13,sp:.55,amt:16,max:14,heal:.5,                      // 목박사: 2초마다 세포(50%) 또는 바이러스(50%) 소환 · 작은 공처럼 벽에 튕기며 계속 돌아다님
-  nipP:.7,nipDmg:46,poxLo:35,poxHi:50,poxSec:3.5,poxR:.18,poxKb:.7,fluPsn:5,covPsn:2.5,    // 바이러스: 니파 70% 확률 40 · 천연두 3.5초 뒤 자폭(부딪힘II 0.55초) · 스페인 독감 독 5초 · 코로나 독 2.5초
+const MK={cd:2.4,r:.045,hp:4,psnHit:15,sp:.55,amt:20,max:14,heal:.5,                      // 목박사: 2초마다 세포(50%) 또는 바이러스(50%) 소환 · 작은 공처럼 벽에 튕기며 계속 돌아다님
+  nipP:.7,nipDmg:50,poxLo:35,poxHi:50,poxSec:2.5,poxR:.18,poxKb:.7,fluPsn:5,covPsn:2.5,    // 바이러스: 니파 70% 확률 40 · 천연두 3.5초 뒤 자폭(부딪힘II 0.55초) · 스페인 독감 독 5초 · 코로나 독 2.5초
   macDmg:35,macSlow:1.6,macHeal:20,nkHeal:30,nkPro:2,tHeal:10};                   // 세포: 대식세포 베기 30 + 슬로우 1.6초 / 회복 20 · NK세포 회복 30 · T세포 회복 10
 const MK_IMG={mac:'c0',tc:'c1',nk:'c2',nip:'v0',pox:'v1',flu:'v2',cov:'v3'};
 const PSN={gap:1,dmg:8};                                                   // 독: 1초마다 8 데미지 (공격력 버프로 늘지 않음)
@@ -1763,7 +1763,9 @@ function cellBounce(o,c){                              // 세포 ↔ 공: 공끼
   const l=Math.hypot(o.vx,o.vy)||1;o.vx/=l;o.vy/=l;o.sp=MK.sp;
   if(o.x<MK.r){o.x=MK.r;o.vx=Math.abs(o.vx)}else if(o.x>1-MK.r){o.x=1-MK.r;o.vx=-Math.abs(o.vx)}
   if(o.y<MK.r){o.y=MK.r;o.vy=Math.abs(o.vy)}else if(o.y>1-MK.r){o.y=1-MK.r;o.vy=-Math.abs(o.vy)}
-  if(Math.hypot(o.x-c.x,o.y-c.y)<R+MK.r-.004){o.pass=now+.3;o.passBall=c}   // 벽과 공 사이에 끼면 떨지 않고 잠깐 통과
+  {const need=R+MK.r;let dx=c.x-o.x,dy=c.y-o.y,d=Math.hypot(dx,dy);           // 세포가 벽에 붙어 더 못 밀리면 남은 만큼 공이 밀려남 (통과하지 않게)
+   if(d<need-.004&&!isStill(c)){if(d<1e-9){dx=-nx;dy=-ny;d=1}c.x=Math.min(1-RW,Math.max(RW,o.x+dx/d*need));c.y=Math.min(1-RW,Math.max(RW,o.y+dy/d*need))}
+   if(Math.hypot(o.x-c.x,o.y-c.y)<need-.004){o.pass=now+.3;o.passBall=c}}   // 공도 벽에 끼어 정말 못 비키면(구석) 떨지 않고 잠깐 통과
   if(now-(o._sq==null?-9:o._sq)>.15){o._sq=now;sndMkBoing()}}   // 튕길 때 뽁
 function cellPlace(o,W,H){const x=Math.round(o.x*W*10)/10,y=Math.round(o.y*H*10)/10;if(o._x===x&&o._y===y)return;o._x=x;o._y=y;const tf='translate('+x+'px,'+y+'px) translate(-50%,-50%)';o.el.style.transform=tf;if(o.rg)o.rg.style.transform=tf}   // 위치는 transform으로만 (화면 다시 계산 없음)
 function cellsCollide(){                               // 세포·세균끼리 부딪히면 공처럼 서로 튕김 (같은 무게, 겹치지 않게)
@@ -3601,7 +3603,7 @@ const PATCH_VERSION='4.11.22';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'4.11.22',date:'2026-10-15',hot:true,
-   chars:[{who:'목박사',tag:'buff',lines:['세포·바이러스 데미지 전체 {+5} 상승','대식세포 베기 {+30 → 35}','니파 {+11 → 16} (70% 확률 {+41 → 46})','천연두 자폭 {+11 → 35~50 랜덤}','천연두 자폭 범위 {+15m → 18m}','천연두 자폭 부딪힘II {+0.55초 → 0.7초}','천연두가 공격에 맞아 사라지면 {+그 자리에서 자폭}','스페인 독감 · 코로나 오미크론 {+8 → 13}','NK세포: 목박사에게 닿으면 {+보호 2초} 추가','세포·바이러스 체력 {+3 → 4} (4번 맞아야 사라짐)']}],
+   chars:[{who:'목박사',tag:'buff',lines:['세포·바이러스 데미지 전체 {+5} 상승','대식세포 베기 {+30 → 35}','니파 {+11 → 20} (70% 확률 {+41 → 50})','천연두 자폭 {+11 → 35~50 랜덤}','천연두 자폭 범위 {+15m → 18m}','천연두 자폭 부딪힘II {+0.55초 → 0.7초}','천연두가 공격에 맞아 사라지면 {+그 자리에서 자폭}','스페인 독감 · 코로나 오미크론 {+8 → 15}','천연두 자폭까지 걸리는 시간 {+3.5초 → 2.5초}','NK세포: 목박사에게 닿으면 {+보호 2초} 추가','세포·바이러스 체력 {+3 → 4} (4번 맞아야 사라짐)']}],
    fx:[],
    sys:[]},
   {ver:'4.11.21',date:'2026-10-15',
