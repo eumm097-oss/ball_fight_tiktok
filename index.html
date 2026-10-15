@@ -76,7 +76,7 @@ body{margin:0;overflow-x:hidden;overflow-x:clip;touch-action:pan-y;background:va
 .hud>div{position:relative}
 .hud .rail{background:transparent;position:relative;overflow:visible}
 .rb{position:absolute;left:0;right:0;top:50%;height:7px;border:1px solid var(--ink);box-sizing:border-box;transform:translateY(-50%);background:var(--rail);overflow:visible;transition:background .2s}
-.rb .fill{position:absolute;inset:0;width:auto;height:auto;background:#2f9e5b;transform-origin:left center;transform:scaleX(0)}.rb .fill.mk{background:#111}.mkcell{position:absolute;left:0;top:0;width:11%;aspect-ratio:1/1;transform:translate(-50%,-50%);will-change:transform;z-index:2;pointer-events:none}.mkcell>.tm{z-index:1;bottom:-2%;font-size:calc(var(--W)*.015)}.mkcell>i:first-child{position:absolute;inset:-3px;border-radius:50%;border:3px solid #111;background:#fff center/cover no-repeat}.mkcell.c0>i:first-child{background-image:var(--img-cell0)}.mkcell.c1>i:first-child{background-image:var(--img-cell1)}.mkcell.c2>i:first-child{background-image:var(--img-cell2)}.mkcell.v0>i:first-child{background-image:var(--img-vir0)}.mkcell.v1>i:first-child{background-image:var(--img-vir1)}.mkcell.v2>i:first-child{background-image:var(--img-vir2)}.mkcell.v3>i:first-child{background-image:var(--img-vir3)}.mkcell.hl>i:first-child{border-color:#2fc455}.mkcell.at>i:first-child{border-color:#e03131}@keyframes mkspin{to{rotate:360deg}}.mkcell.pox>i:first-child{animation:mkblink .5s steps(1) infinite}.mkcell.pox.fast>i:first-child{animation:mkswell .32s ease-in-out infinite,mkblink .16s steps(1) infinite}@keyframes mkswell{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}@keyframes mkblink{50%{border-color:#fff;opacity:.45}}.mkpoxr{position:absolute;left:0;top:0;border-radius:50%;border:2px dashed #e03131;background:rgba(224,49,49,.08);pointer-events:none;z-index:1;box-sizing:border-box;animation:mkpoxr .32s ease-in-out infinite}@keyframes mkpoxr{50%{opacity:.4}}.mkboom{position:absolute;border-radius:50%;background:rgba(224,49,49,.3);border:3px solid #e03131;pointer-events:none;z-index:3;box-sizing:border-box}.mkflash{position:absolute;border-radius:50%;background:#fff;pointer-events:none;z-index:3}.mkring{position:absolute;border-radius:50%;border-style:solid;pointer-events:none;z-index:3;box-sizing:border-box}.mkdot{position:absolute;border-radius:50%;pointer-events:none;z-index:4}.mkbub{position:absolute;border-radius:50%;border:1.5px solid #111;pointer-events:none;z-index:4;box-sizing:border-box}.mktrail{position:absolute;height:7px;background:#2fc455;border:2px solid #111;border-radius:4px;transform-origin:0 50%;pointer-events:none;z-index:3;box-sizing:border-box}.mkslash{position:absolute;left:0;top:0;pointer-events:none;z-index:5;transform-origin:0 50%;border-radius:50%;border:1.5px solid #38bdf8;box-sizing:border-box;background:linear-gradient(90deg,rgba(125,211,252,0) 0%,#7dd3fc 35%,#ffffff 75%,#e0f7ff 100%)}.mkslash.thin{border-width:1px;background:linear-gradient(90deg,rgba(255,255,255,0) 0%,#bae6fd 40%,#ffffff 100%)}.wt .wol{text-shadow:2.00px 0.00px 0 #111,1.85px 0.77px 0 #111,1.41px 1.41px 0 #111,0.77px 1.85px 0 #111,0.00px 2.00px 0 #111,-0.77px 1.85px 0 #111,-1.41px 1.41px 0 #111,-1.85px 0.77px 0 #111,-2.00px 0.00px 0 #111,-1.85px -0.77px 0 #111,-1.41px -1.41px 0 #111,-0.77px -1.85px 0 #111,-0.00px -2.00px 0 #111,0.77px -1.85px 0 #111,1.41px -1.41px 0 #111,1.85px -0.77px 0 #111}.hp.psn{--bar:#1f8a3a}.slowring{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:3px solid #60a5fa;box-shadow:0 0 10px 3px rgba(59,130,246,.65),inset 0 0 6px 1px rgba(59,130,246,.5);pointer-events:none;z-index:3;box-sizing:border-box;animation:slowglow 1s ease-in-out infinite}.slowring.ii{border-color:#1d4ed8;border-width:4px;box-shadow:0 0 14px 5px rgba(29,78,216,.75),inset 0 0 8px 2px rgba(29,78,216,.55)}@keyframes slowglow{0%,100%{opacity:.75}50%{opacity:1}}.psnaura{transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;opacity:.8}.psnaura i{position:absolute;border-radius:50%;transform:translate(-50%,-50%);opacity:0;animation:bpart 1.4s ease-in-out infinite}.psnaura i.p{background:#8e3fd1}.psnaura i.g{background:#62b34a}.rb .fill.kd1{background:#b81f28}.rb .fill.kd2{background:#9de4f7}
+.rb .fill{position:absolute;inset:0;width:auto;height:auto;background:#2f9e5b;transform-origin:left center;transform:scaleX(0)}.rb .fill.mk{background:#111}.mkcell{position:absolute;left:0;top:0;width:9%;aspect-ratio:1/1;transform:translate(-50%,-50%);will-change:transform;z-index:2;pointer-events:none}.mkhp{position:absolute;left:12%;right:12%;top:calc(100% + 4px);height:3px;background:#e9ecef;border:1px solid #111;border-radius:0;box-sizing:content-box;overflow:hidden}.mkhp>i{position:absolute;inset:0;background:#2fc455;transform-origin:left center;transition:transform .15s}.mkcell>.tm{z-index:1;bottom:-2%;font-size:calc(var(--W)*.015)}.mkcell>i:first-child{position:absolute;inset:-3px;border-radius:50%;border:3px solid #111;background:#fff center/cover no-repeat}.mkcell.c0>i:first-child{background-image:var(--img-cell0)}.mkcell.c1>i:first-child{background-image:var(--img-cell1)}.mkcell.c2>i:first-child{background-image:var(--img-cell2)}.mkcell.v0>i:first-child{background-image:var(--img-vir0)}.mkcell.v1>i:first-child{background-image:var(--img-vir1)}.mkcell.v2>i:first-child{background-image:var(--img-vir2)}.mkcell.v3>i:first-child{background-image:var(--img-vir3)}.mkcell.hl>i:first-child{border-color:#2fc455}.mkcell.at>i:first-child{border-color:#e03131}@keyframes mkspin{to{rotate:360deg}}.mkcell.pox>i:first-child{animation:mkblink .5s steps(1) infinite}.mkcell.pox.fast>i:first-child{animation:mkswell .32s ease-in-out infinite,mkblink .16s steps(1) infinite}@keyframes mkswell{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}@keyframes mkblink{50%{border-color:#fff;opacity:.45}}.mkpoxr{position:absolute;left:0;top:0;border-radius:50%;border:2px dashed #e03131;background:rgba(224,49,49,.08);pointer-events:none;z-index:1;box-sizing:border-box;animation:mkpoxr .32s ease-in-out infinite}@keyframes mkpoxr{50%{opacity:.4}}.mkboom{position:absolute;border-radius:50%;background:rgba(224,49,49,.3);border:3px solid #e03131;pointer-events:none;z-index:3;box-sizing:border-box}.mkflash{position:absolute;border-radius:50%;background:#fff;pointer-events:none;z-index:3}.mkring{position:absolute;border-radius:50%;border-style:solid;pointer-events:none;z-index:3;box-sizing:border-box}.mkdot{position:absolute;border-radius:50%;pointer-events:none;z-index:4}.mkbub{position:absolute;border-radius:50%;border:1.5px solid #111;pointer-events:none;z-index:4;box-sizing:border-box}.mktrail{position:absolute;height:7px;background:#2fc455;border:2px solid #111;border-radius:4px;transform-origin:0 50%;pointer-events:none;z-index:3;box-sizing:border-box}.mkslash{position:absolute;left:0;top:0;pointer-events:none;z-index:5;transform-origin:0 50%;border-radius:50%;border:1.5px solid #38bdf8;box-sizing:border-box;background:linear-gradient(90deg,rgba(125,211,252,0) 0%,#7dd3fc 35%,#ffffff 75%,#e0f7ff 100%)}.mkslash.thin{border-width:1px;background:linear-gradient(90deg,rgba(255,255,255,0) 0%,#bae6fd 40%,#ffffff 100%)}.wt .wol{text-shadow:2.00px 0.00px 0 #111,1.85px 0.77px 0 #111,1.41px 1.41px 0 #111,0.77px 1.85px 0 #111,0.00px 2.00px 0 #111,-0.77px 1.85px 0 #111,-1.41px 1.41px 0 #111,-1.85px 0.77px 0 #111,-2.00px 0.00px 0 #111,-1.85px -0.77px 0 #111,-1.41px -1.41px 0 #111,-0.77px -1.85px 0 #111,-0.00px -2.00px 0 #111,0.77px -1.85px 0 #111,1.41px -1.41px 0 #111,1.85px -0.77px 0 #111}.hp.psn{--bar:#1f8a3a}.slowring{position:absolute;transform:translate(-50%,-50%);border-radius:50%;border:2px solid rgba(96,165,250,.85);box-shadow:0 0 4px 1px rgba(59,130,246,.35);pointer-events:none;z-index:3;box-sizing:border-box;animation:slowglow 1.4s ease-in-out infinite}.slowring.ii{border-color:rgba(29,78,216,.85);border-width:2.5px;box-shadow:0 0 5px 1px rgba(29,78,216,.4)}@keyframes slowglow{0%,100%{opacity:.6}50%{opacity:.9}}.psnaura{transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;opacity:.8}.psnaura i{position:absolute;border-radius:50%;transform:translate(-50%,-50%);opacity:0;animation:bpart 1.4s ease-in-out infinite}.psnaura i.p{background:#8e3fd1}.psnaura i.g{background:#62b34a}.rb .fill.kd1{background:#b81f28}.rb .fill.kd2{background:#9de4f7}
 .rail.boost .rb{background:#26354f;box-shadow:0 0 0 1px #3b82f6,0 0 10px 3px rgba(59,130,246,.75);animation:bpulse .5s ease-in-out infinite alternate}
 @keyframes bpulse{to{box-shadow:0 0 0 1px #60a5fa,0 0 16px 6px rgba(59,130,246,.95)}}
 .num{display:none;position:absolute;top:50%;transform:translateY(-50%);color:#fff;font-size:9px;font-weight:700;line-height:1;z-index:1;text-shadow:0 0 2px #000,0 0 2px #000}
@@ -1563,8 +1563,8 @@ function dropTag(c,kind){           // 머리 위 글자 한 개를 바로 치�
   const i=c.tags.findIndex(t=>t.kind===kind);if(i>=0){c.tags[i].el.remove();c.tags.splice(i,1)}
 }
 const KD={cd1:15,cd2:6};   // 김동희세계관: 위 게이지 15초 · 아래 게이지 6초 (스킬은 아직 없음: 다 차면 비우고 다시 참)
-const MK={cd:2,r:.055,sp:.55,amt:10,max:14,heal:.5,                      // 목박사: 2초마다 세포(50%) 또는 바이러스(50%) 소환 · 작은 공처럼 벽에 튕기며 계속 돌아다님
-  nipP:.7,nipDmg:40,poxSec:3.5,poxR:.15,poxKb:.55,fluPsn:5,covPsn:2.5,    // 바이러스: 니파 70% 확률 40 · 천연두 3.5초 뒤 자폭(부딪힘II 0.55초) · 스페인 독감 독 5초 · 코로나 독 2.5초
+const MK={cd:2.4,r:.045,hp:3,psnHit:8,sp:.55,amt:11,max:14,heal:.5,                      // 목박사: 2초마다 세포(50%) 또는 바이러스(50%) 소환 · 작은 공처럼 벽에 튕기며 계속 돌아다님
+  nipP:.7,nipDmg:41,poxSec:3.5,poxR:.15,poxKb:.55,fluPsn:5,covPsn:2.5,    // 바이러스: 니파 70% 확률 40 · 천연두 3.5초 뒤 자폭(부딪힘II 0.55초) · 스페인 독감 독 5초 · 코로나 독 2.5초
   macDmg:30,macSlow:1.6,macHeal:20,nkHeal:30,tHeal:10};                   // 세포: 대식세포 베기 30 + 슬로우 1.6초 / 회복 20 · NK세포 회복 30 · T세포 회복 10
 const MK_IMG={mac:'c0',tc:'c1',nk:'c2',nip:'v0',pox:'v1',flu:'v2',cov:'v3'};
 const PSN={gap:1,dmg:8};                                                   // 독: 1초마다 8 데미지 (공격력 버프로 늘지 않음)
@@ -1621,8 +1621,8 @@ function mkSpawn(c){
   if(c.silenceUntil>now){burstAt(c.x*aW(),c.y*aH(),'#9aa0a6',.5,4);return}   // 스킬 실패
   const hl=grand()<MK.heal,a=Math.atan2(-c.vy,-c.vx)+(grand()-.5)*Math.PI,pr=grand(),   // 가는 방향의 반대쪽 좌우 90°씩(총 180°) 안에서 나와서 그 방향으로 출발
     t=hl?(pr<.3?'mac':pr<.5?'nk':'tc'):(pr<.25?'nip':pr<.55?'pox':pr<.75?'flu':'cov'),   // 세포: 대식 30 · NK 20 · T 50 / 바이러스: 니파 25 · 천연두 30 · 스페인 독감 20 · 코로나 25
-    el=mk('mkcell '+(hl?'hl ':'at ')+MK_IMG[t]+(t==='pox'?' pox':''),'<i></i>');
-  const o={owner:c,hl,t,x:Math.min(1-MK.r,Math.max(MK.r,c.x+Math.cos(a)*(R+MK.r+.005))),y:Math.min(1-MK.r,Math.max(MK.r,c.y+Math.sin(a)*(R+MK.r+.005))),vx:Math.cos(a),vy:Math.sin(a),sp:MK.sp,el,born:now};
+    el=mk('mkcell '+(hl?'hl ':'at ')+MK_IMG[t]+(t==='pox'?' pox':''),'<i></i><b class="mkhp"><i></i></b>');
+  const o={hp:MK.hp,owner:c,hl,t,x:Math.min(1-MK.r,Math.max(MK.r,c.x+Math.cos(a)*(R+MK.r+.005))),y:Math.min(1-MK.r,Math.max(MK.r,c.y+Math.sin(a)*(R+MK.r+.005))),vx:Math.cos(a),vy:Math.sin(a),sp:MK.sp,el,born:now};
   {const tm=c.ball&&c.ball.querySelector('.tm');if(tm&&chars.filter(x=>x.kind==='mk').length>1){const b=document.createElement('i');b.className=tm.className;b.textContent=tm.textContent;el.appendChild(b)}}   // 미러전 등 목박사가 여럿이면 세포에도 1P·2P 표시
   cellPlace(o,aW(),aH());
   mkCells.push(o);{const mine=mkCells.filter(x=>x.owner===c);if(mine.length>MK.max)mkPopOut(mine[0])}   // 목박사마다 최대 개수: 넘으면 그 목박사의 제일 오래된 세포부터 사라짐 (미러전·2대2에서 서로 영향 없음)
@@ -1631,9 +1631,14 @@ function mkSpawn(c){
     mkRing(cx,cy,hl?'#2fc455':'#e03131',W*.03,W*.16,380,3);
     mkDots(cx,cy,hl?['#2fc455','#a2ffb7']:['#e03131','#7a0d12'],6,W*.06,W*.018,380)}catch(_){}
   sndMkSpawn(hl)}
-function cellKnock(o,dx,dy,sp,col){                     // 세포·바이러스가 상대 공격(우주의 반응·태극 아우라·밥상·각목·파동)에 맞으면 튕겨 날아감 (사라지지는 않음)
+function cellKnock(o,dx,dy,sp,col){                     // 세포·바이러스가 상대 공격(태극 아우라·밥상·각목·파동)에 맞으면 튕겨 날아가고 체력 1 깎임
   const l=Math.hypot(dx,dy)||1;o.vx=dx/l;o.vy=dy/l;o.sp=Math.max(o.sp||MK.sp,sp);
-  try{const W=aW(),H=aH();burstAt(o.x*W,o.y*H,col||'#ffffff',.45,5);(o.el.firstChild||o.el).animate([{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:180,easing:'ease-out'})}catch(_){}}
+  try{const W=aW(),H=aH();burstAt(o.x*W,o.y*H,col||'#ffffff',.45,5);(o.el.firstChild||o.el).animate([{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:180,easing:'ease-out'})}catch(_){}
+  cellHurt(o)}
+function cellHurt(o){                                   // 세포·바이러스 체력 3: 공격에 맞을 때마다 데미지와 상관없이 1씩 (부딪히는 건 피해 없음)
+  if(!mkCells.includes(o))return;o.hp=(o.hp==null?MK.hp:o.hp)-1;
+  try{const f=o.el.querySelector('.mkhp>i');if(f)f.style.transform='scaleX('+Math.max(0,o.hp/MK.hp)+')'}catch(_){}
+  if(o.hp<=0){try{sndMkBoing()}catch(_){}mkPopOut(o)}}
 function mkCellGone(o){mkCells=mkCells.filter(x=>x!==o);o.el.remove();if(o.rg){o.rg.remove();o.rg=null}}
 function mkPoxWarn(o){                                  // 천연두: 터지기 1초 전부터 터지는 범위를 점선으로 보여줌
   o.fast=1;o.el.classList.add('fast');sndMkWarn();
@@ -1679,7 +1684,9 @@ function stepCells(h){
     else if(o.t==='pox'){const age=now-o.born;if(age>=MK.poxSec){mkPox(o);continue}if(!o.fast&&age>=MK.poxSec-1)mkPoxWarn(o)}   // 천연두: 깜빡이다가 마지막 1초는 빠르게 + 범위 표시, 3.5초에 자폭
     for(const b of bhs){if(b.phase<1||ally(b.owner,o.owner))continue;                // 상대의 우주의 반응에 세포도 끌려감
       const dx=b.x-o.x,dy=b.y-o.y,d=Math.hypot(dx,dy);if(d<.004)continue;
-      const g=1/(1+Math.pow(d/BH.pullD0,4)),far=BH.pullFar*Math.max(0,1-d/1.5),v=(BH.pull*g+far)*b.k;o.x+=dx/d*v*h;o.y+=dy/d*v*h}
+      const g=1/(1+Math.pow(d/BH.pullD0,4)),far=BH.pullFar*Math.max(0,1-d/1.5),v=(BH.pull*g+far)*b.k;o.x+=dx/d*v*h;o.y+=dy/d*v*h
+      if(d<BH.size/2*b.k+MK.r&&now>=(o.bhCd||0)){o.bhCd=now+.5;try{burstAt(o.x*aW(),o.y*aH(),'#c084fc',.4,4)}catch(_){}cellHurt(o)}}   // 우주의 반응에 닿아 있으면 0.5초마다 체력 1
+    if(!mkCells.includes(o))continue;
     if(o.sp>MK.sp)o.sp=Math.max(MK.sp,o.sp-h*.8);else o.sp=MK.sp;   // 튕겨서 빨라진 속도는 천천히 원래대로
     o.x+=o.vx*o.sp*h;o.y+=o.vy*o.sp*h;
     if(o.x<MK.r){o.x=MK.r;o.vx=Math.abs(o.vx)}else if(o.x>1-MK.r){o.x=1-MK.r;o.vx=-Math.abs(o.vx)}
@@ -1697,7 +1704,7 @@ function stepCells(h){
       if(hit(own))cellBounce(o,own);                                     // 바이러스는 목박사에게 튕김
       const t=foe();if(!t)continue;
       if(o.t==='pox'){cellBounce(o,t);continue}                          // 천연두는 상대에 닿아도 터지지 않고 튕김 (시간이 되면 자폭)
-      const d=o.t==='nip'&&grand()<MK.nipP?MK.nipDmg:MK.amt;               // 니파: 70% 확률로 40, 아니면 기본 10
+      const d=o.t==='nip'?(grand()<MK.nipP?MK.nipDmg:MK.amt):(o.t==='flu'||o.t==='cov')?MK.psnHit:MK.amt;   // 니파: 70% 확률로 40, 아니면 10 · 스페인 독감·코로나: 7
       mkVirusFx(o,t,d===MK.nipDmg);
       hurt(t,(d+atk(own))*frail(own));
       if(t.alive&&(o.t==='flu'||o.t==='cov'))applyPoison(t,o.t==='flu'?MK.fluPsn:MK.covPsn);   // 스페인 독감 독 5초 · 코로나 독 2.5초
@@ -3514,12 +3521,12 @@ const INFO=[
    skills:[{n:'위 게이지',p:KD.cd1+'초마다',d:'게이지가 '+KD.cd1+'초마다 다 찬다. 스킬은 준비 중이다.'},
      {n:'아래 게이지',p:KD.cd2+'초마다',d:'게이지가 '+KD.cd2+'초마다 다 찬다. 스킬은 준비 중이다.'}]},
   {kind:'mk',cls:'mk',name:'목박사',color:'#9ca3af',tag:'세포와 바이러스를 소환하는 공',chips:['HP '+STATS.mk.max,'이동속도 '+STATS.mk.speed,'소환 쿨타임 '+MK.cd+'초'],
-   skills:[{n:'세포·바이러스 소환',p:MK.cd+'초마다',d:MK.cd+'초마다 목박사가 가는 방향의 반대쪽(좌우 합쳐 180°)에서 세포 또는 바이러스를 하나 소환한다(각각 '+Math.round(MK.heal*100)+'%). 소환된 것은 작은 공처럼 필드를 돌아다니며 벽과 서로에게 튕긴다. 필드에는 최대 '+MK.max+'개까지 있고, 넘으면 가장 오래된 것부터 사라진다. 목박사가 쓰러지면 모두 사라진다. 상대의 우주의 반응·태극 아우라·밥상·각목·템버린 파동에 맞으면 밀려나거나 끌려가지만 사라지지는 않는다.'},
+   skills:[{n:'세포·바이러스 소환',p:MK.cd+'초마다',d:MK.cd+'초마다 목박사가 가는 방향의 반대쪽(좌우 합쳐 180°)에서 세포 또는 바이러스를 하나 소환한다(각각 '+Math.round(MK.heal*100)+'%). 소환된 것은 작은 공처럼 필드를 돌아다니며 벽과 서로에게 튕긴다. 필드에는 최대 '+MK.max+'개까지 있고, 넘으면 가장 오래된 것부터 사라진다. 목박사가 쓰러지면 모두 사라진다. 세포·바이러스는 체력이 '+MK.hp+'이다. 상대의 우주의 반응·태극 아우라·밥상·각목·템버린 파동에 맞으면 밀려나거나 끌려가고, 데미지와 상관없이 체력이 1씩 깎여 '+MK.hp+'번 맞으면 사라진다(부딪히는 것만으로는 깎이지 않는다).'},
      {n:'바이러스',p:Math.round((1-MK.heal)*100)+'%',d:'상대에게 닿으면 효과를 주고 사라진다. 목박사에게는 튕긴다.',
       subs:[{c:'#7a0d12',n:'니파',p:'25%',d:Math.round(MK.nipP*100)+'% 확률로 '+MK.nipDmg+' 데미지, 아니면 '+MK.amt+' 데미지를 준다.'},
         {c:'#e03131',n:'천연두',p:'30%',d:'깜빡이다가 '+MK.poxSec+'초 뒤 자폭한다(상대에게 닿으면 튕긴다). 자폭에 맞은 상대는 '+MK.amt+' 데미지를 입고 부딪힘II에 '+MK.poxKb+'초 동안 걸린다.'},
-        {c:'#8e3fd1',n:'스페인 독감',p:'20%',d:MK.amt+' 데미지를 주고 독을 '+MK.fluPsn+'초 동안 건다.'},
-        {c:'#a855f7',n:'코로나 오미크론',p:'25%',d:MK.amt+' 데미지를 주고 독을 '+MK.covPsn+'초 동안 건다.'}]},
+        {c:'#8e3fd1',n:'스페인 독감',p:'20%',d:MK.psnHit+' 데미지를 주고 독을 '+MK.fluPsn+'초 동안 건다.'},
+        {c:'#a855f7',n:'코로나 오미크론',p:'25%',d:MK.psnHit+' 데미지를 주고 독을 '+MK.covPsn+'초 동안 건다.'}]},
      {n:'세포',p:Math.round(MK.heal*100)+'%',d:'목박사에게 닿으면 체력을 회복시키고 사라진다.',
       subs:[{c:'#2f9e5b',n:'대식세포',p:'30%',d:'상대에게 닿는 순간 칼로 베며 돌진해 '+MK.macDmg+' 데미지와 슬로우('+MK.macSlow+'초)를 주고 사라진다. 목박사에게 닿으면 '+MK.macHeal+' 회복.'},
         {c:'#2fc455',n:'NK세포',p:'20%',d:'목박사에게 닿으면 '+MK.nkHeal+' 회복. 상대에게는 튕긴다.'},
@@ -3588,9 +3595,13 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.11.20';
+const PATCH_VERSION='4.11.21';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.11.21',date:'2026-10-15',
+   chars:[{who:'목박사',tag:'nerf',lines:['세포·바이러스 {-체력 3} 추가','상대 공격에 맞으면 데미지와 상관없이 {-체력 1}씩 깎이고, {-3번 맞으면 사라짐}','스페인 독감 데미지 {-10 → 8}','코로나 오미크론 데미지 {-10 → 8}','니파 데미지 {+10 → 11} (70% 확률 {+40 → 41})','천연두 자폭 데미지 {+10 → 11}','소환 쿨타임 {-2초 → 2.4초}']}],
+   fx:[],
+   sys:[]},
   {ver:'4.11.20',date:'2026-10-14',
    chars:[{who:'숏타민',tag:'nerf',lines:['각목 데미지 {-19 → 18}']}],
    fx:[{who:'독',tag:'new',lines:['신규 상태효과: 1초마다 8 데미지']},{who:'슬로우',tag:'vis',lines:['슬로우에 걸리면 공 둘레에 {*파란 테두리 빛}이 남 (슬로우II는 더 진하게)']}],
