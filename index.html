@@ -1564,7 +1564,7 @@ function dropTag(c,kind){           // 머리 위 글자 한 개를 바로 치�
 }
 const KD={cd1:15,cd2:6};   // 김동희세계관: 위 게이지 15초 · 아래 게이지 6초 (스킬은 아직 없음: 다 차면 비우고 다시 참)
 const MK={cd:2.4,r:.045,hp:4,psnHit:13,sp:.55,amt:16,max:14,heal:.5,                      // 목박사: 2초마다 세포(50%) 또는 바이러스(50%) 소환 · 작은 공처럼 벽에 튕기며 계속 돌아다님
-  nipP:.7,nipDmg:46,poxLo:35,poxHi:50,poxSec:3.5,poxR:.15,poxKb:.7,fluPsn:5,covPsn:2.5,    // 바이러스: 니파 70% 확률 40 · 천연두 3.5초 뒤 자폭(부딪힘II 0.55초) · 스페인 독감 독 5초 · 코로나 독 2.5초
+  nipP:.7,nipDmg:46,poxLo:35,poxHi:50,poxSec:3.5,poxR:.18,poxKb:.7,fluPsn:5,covPsn:2.5,    // 바이러스: 니파 70% 확률 40 · 천연두 3.5초 뒤 자폭(부딪힘II 0.55초) · 스페인 독감 독 5초 · 코로나 독 2.5초
   macDmg:35,macSlow:1.6,macHeal:20,nkHeal:30,nkPro:2,tHeal:10};                   // 세포: 대식세포 베기 30 + 슬로우 1.6초 / 회복 20 · NK세포 회복 30 · T세포 회복 10
 const MK_IMG={mac:'c0',tc:'c1',nk:'c2',nip:'v0',pox:'v1',flu:'v2',cov:'v3'};
 const PSN={gap:1,dmg:8};                                                   // 독: 1초마다 8 데미지 (공격력 버프로 늘지 않음)
@@ -1638,7 +1638,7 @@ function cellKnock(o,dx,dy,sp,col){                     // 세포·바이러스�
 function cellHurt(o){                                   // 세포·바이러스 체력 3: 공격에 맞을 때마다 데미지와 상관없이 1씩 (부딪히는 건 피해 없음)
   if(!mkCells.includes(o))return;o.hp=(o.hp==null?MK.hp:o.hp)-1;
   try{const f=o.el.querySelector('.mkhp>i');if(f)f.style.transform='scaleX('+Math.max(0,o.hp/MK.hp)+')'}catch(_){}
-  if(o.hp<=0){try{sndMkBoing()}catch(_){}mkPopOut(o)}}
+  if(o.hp<=0){if(o.t==='pox'){mkPox(o);return}try{sndMkBoing()}catch(_){}mkPopOut(o)}}   // 천연두는 맞아서 사라질 때 그 자리에서 자폭
 function mkCellGone(o){mkCells=mkCells.filter(x=>x!==o);o.el.remove();if(o.rg){o.rg.remove();o.rg=null}}
 function mkPoxWarn(o){                                  // 천연두: 터지기 1초 전부터 터지는 범위를 점선으로 보여줌
   o.fast=1;o.el.classList.add('fast');sndMkWarn();
@@ -3526,7 +3526,7 @@ const INFO=[
    skills:[{n:'세포·바이러스 소환',p:MK.cd+'초마다',d:MK.cd+'초마다 목박사가 가는 방향의 반대쪽(좌우 합쳐 180°)에서 세포 또는 바이러스를 하나 소환한다(각각 '+Math.round(MK.heal*100)+'%). 소환된 것은 작은 공처럼 필드를 돌아다니며 벽과 서로에게 튕긴다. 필드에는 최대 '+MK.max+'개까지 있고, 넘으면 가장 오래된 것부터 사라진다. 목박사가 쓰러지면 모두 사라진다. 세포·바이러스는 체력이 '+MK.hp+'이다. 상대의 우주의 반응·태극 아우라·밥상·각목·템버린 파동에 맞으면 밀려나거나 끌려가고, 데미지와 상관없이 체력이 1씩 깎여 '+MK.hp+'번 맞으면 사라진다(부딪히는 것만으로는 깎이지 않는다).'},
      {n:'바이러스',p:Math.round((1-MK.heal)*100)+'%',d:'상대에게 닿으면 효과를 주고 사라진다. 목박사에게는 튕긴다.',
       subs:[{c:'#7a0d12',n:'니파',p:'25%',d:Math.round(MK.nipP*100)+'% 확률로 '+MK.nipDmg+' 데미지, 아니면 '+MK.amt+' 데미지를 준다.'},
-        {c:'#e03131',n:'천연두',p:'30%',d:'깜빡이다가 '+MK.poxSec+'초 뒤 자폭한다(상대에게 닿으면 튕긴다). 자폭에 맞은 상대는 '+MK.poxLo+'~'+MK.poxHi+' 데미지를 입고 부딪힘II에 '+MK.poxKb+'초 동안 걸린다.'},
+        {c:'#e03131',n:'천연두',p:'30%',d:'깜빡이다가 '+MK.poxSec+'초 뒤 자폭한다(상대에게 닿으면 튕긴다). 공격에 맞아 체력이 다 닳아도 그 자리에서 자폭한다. 자폭에 맞은 상대는 '+MK.poxLo+'~'+MK.poxHi+' 데미지를 입고 부딪힘II에 '+MK.poxKb+'초 동안 걸린다.'},
         {c:'#8e3fd1',n:'스페인 독감',p:'20%',d:MK.psnHit+' 데미지를 주고 독을 '+MK.fluPsn+'초 동안 건다.'},
         {c:'#a855f7',n:'코로나 오미크론',p:'25%',d:MK.psnHit+' 데미지를 주고 독을 '+MK.covPsn+'초 동안 건다.'}]},
      {n:'세포',p:Math.round(MK.heal*100)+'%',d:'목박사에게 닿으면 체력을 회복시키고 사라진다.',
@@ -3601,7 +3601,7 @@ const PATCH_VERSION='4.11.22';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'4.11.22',date:'2026-10-15',hot:true,
-   chars:[{who:'목박사',tag:'buff',lines:['세포·바이러스 데미지 전체 {+5} 상승','대식세포 베기 {+30 → 35}','니파 {+11 → 16} (70% 확률 {+41 → 46})','천연두 자폭 {+11 → 35~50 랜덤}','천연두 자폭 부딪힘II {+0.55초 → 0.7초}','스페인 독감 · 코로나 오미크론 {+8 → 13}','NK세포: 목박사에게 닿으면 {+보호 2초} 추가','세포·바이러스 체력 {+3 → 4} (4번 맞아야 사라짐)']}],
+   chars:[{who:'목박사',tag:'buff',lines:['세포·바이러스 데미지 전체 {+5} 상승','대식세포 베기 {+30 → 35}','니파 {+11 → 16} (70% 확률 {+41 → 46})','천연두 자폭 {+11 → 35~50 랜덤}','천연두 자폭 범위 {+15m → 18m}','천연두 자폭 부딪힘II {+0.55초 → 0.7초}','천연두가 공격에 맞아 사라지면 {+그 자리에서 자폭}','스페인 독감 · 코로나 오미크론 {+8 → 13}','NK세포: 목박사에게 닿으면 {+보호 2초} 추가','세포·바이러스 체력 {+3 → 4} (4번 맞아야 사라짐)']}],
    fx:[],
    sys:[]},
   {ver:'4.11.21',date:'2026-10-15',
