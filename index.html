@@ -1617,10 +1617,10 @@ function mkPopOut(o){                                                           
   mkCells=mkCells.filter(x=>x!==o);if(o.rg){o.rg.remove();o.rg=null}const el=o.el;
   try{(el.firstChild||el).animate([{transform:'scale(1)',opacity:1},{transform:'scale(1.25)',opacity:.8,offset:.4},{transform:'scale(0)',opacity:0}],{duration:220,easing:'ease-in',fill:'forwards'}).onfinish=()=>el.remove()}catch(_){el.remove()}
   try{const W=aW(),H=aH();mkDots(o.x*W,o.y*H,o.hl?['#2fc455','#a2ffb7']:['#e03131','#7a0d12'],4,W*.04,W*.014,300)}catch(_){}}
-function mkSpawn(c){
-  if(c.silenceUntil>now){burstAt(c.x*aW(),c.y*aH(),'#9aa0a6',.5,4);return}   // 스킬 실패
-  const hl=grand()<MK.heal,a=Math.atan2(-c.vy,-c.vx)+(grand()-.5)*Math.PI,pr=grand(),   // 가는 방향의 반대쪽 좌우 90°씩(총 180°) 안에서 나와서 그 방향으로 출발
-    t=hl?(pr<.3?'mac':pr<.5?'nk':'tc'):(pr<.25?'nip':pr<.55?'pox':pr<.75?'flu':'cov'),   // 세포: 대식 30 · NK 20 · T 50 / 바이러스: 니파 25 · 천연두 30 · 스페인 독감 20 · 코로나 25
+function mkSpawn(c,force){                              // force: 관리자가 고른 세포·바이러스 (mac nk tc nip pox flu cov)
+  if(!force&&c.silenceUntil>now){burstAt(c.x*aW(),c.y*aH(),'#9aa0a6',.5,4);return}   // 스킬 실패
+  const hl0=grand()<MK.heal,a=Math.atan2(-c.vy,-c.vx)+(grand()-.5)*Math.PI,pr=grand(),hl=force?['mac','nk','tc'].includes(force):hl0,   // 가는 방향의 반대쪽 좌우 90°씩(총 180°) 안에서 나와서 그 방향으로 출발
+    t=force||(hl?(pr<.3?'mac':pr<.5?'nk':'tc'):(pr<.25?'nip':pr<.55?'pox':pr<.75?'flu':'cov')),   // 세포: 대식 30 · NK 20 · T 50 / 바이러스: 니파 25 · 천연두 30 · 스페인 독감 20 · 코로나 25
     el=mk('mkcell '+(hl?'hl ':'at ')+MK_IMG[t]+(t==='pox'?' pox':''),'<i></i><b class="mkhp"><i></i></b>');
   const o={hp:MK.hp,owner:c,hl,t,x:Math.min(1-MK.r,Math.max(MK.r,c.x+Math.cos(a)*(R+MK.r+.005))),y:Math.min(1-MK.r,Math.max(MK.r,c.y+Math.sin(a)*(R+MK.r+.005))),vx:Math.cos(a),vy:Math.sin(a),sp:MK.sp,el,born:now};
   {const tm=c.ball&&c.ball.querySelector('.tm');if(tm&&chars.filter(x=>x.kind==='mk').length>1){const b=document.createElement('i');b.className=tm.className;b.textContent=tm.textContent;el.appendChild(b)}}   // 미러전 등 목박사가 여럿이면 세포에도 1P·2P 표시
@@ -4019,6 +4019,7 @@ const ADM_SK={                              // 관리자: 캐릭터별 바로 �
   bk:[['베끼기 게이지 채우기',c=>{c.g=BK.max}],['디버프 걸기',c=>{bkDebuff(c,bkPick())}]],
   st:[['행운키링 소환',c=>stSpawnKey(c,true)],['회피 +1',c=>{c.stG=Math.floor((c.stG||0)+1e-9)+1}]],
   um:[['엄....edit',c=>admUm(c)]],
+  mk:[['대식세포',c=>mkSpawn(c,'mac')],['NK세포',c=>mkSpawn(c,'nk')],['T세포',c=>mkSpawn(c,'tc')],['니파',c=>mkSpawn(c,'nip')],['천연두',c=>mkSpawn(c,'pox')],['스페인 독감',c=>mkSpawn(c,'flu')],['코로나',c=>mkSpawn(c,'cov')]],
   dummy:[]
 };
 const admT=c=>{const t=foe(c);return t&&t.alive?t:null};
@@ -5185,7 +5186,7 @@ function mtGot(d,from){                            // 더 나중에 정한 점�
   MT={on:!!d.on,m:String(d.m||'').slice(0,80),u};try{localStorage.setItem('bftMt',JSON.stringify(MT))}catch(e){}
   if(PRES.hub)for(const c of PRES.conns){if(c!==from)try{if(c.open)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u})}catch(_){}}
   mtCheck();return true}
-function mtSet(on,m){const d={on:!!on,m:String(m||'').replace(/\s+/g,' ').trim().slice(0,80),u:Date.now()};mtGot(d,null);
+function mtSet(on,m){const d={on:!!on,m:String(m||'').replace(/\s+/g,' ').trim().slice(0,80),u:Math.max(Date.now(),(MT.u||0)+1)};mtGot(d,null);   // 기기 시계가 달라도 항상 '더 나중' 상태로 퍼지게
   if(!PRES.hub&&PRES.conn&&PRES.conn.open){try{PRES.conn.send(Object.assign({t:'mt'},d))}catch(_){}}cldSoon(500);mtLegacy()}
 /* 예전 버전 폰들은 다른 모임 자리에 모여 있어서, 관리자 폰이 그쪽에도 직접 점검 소식을 전함 (업데이트하라고 막기 위해) */
 const MT_OLD_HUBS=['bftball-hub-2'];let mtLgT=0;
@@ -5213,6 +5214,7 @@ function mtCheck(){
   const t=MT.m||MT_DEF;if(el.querySelector('.mtx').textContent!==t)el.querySelector('.mtx').textContent=t;
 }
 setTimeout(mtCheck,0);setInterval(mtCheck,2000);
+let mtPollT=0;setInterval(()=>{if(MT.on&&!admIs()&&Date.now()-mtPollT>20000&&typeof CLD!=='undefined'&&CLD&&!CLD.busy){mtPollT=Date.now();cldSync(false)}},5000);   // 점검 화면에 막혀 있으면 20초마다 저장소를 다시 읽어서, 점검이 풀리면 바로 풀림
 function regPublish(){if(PEN.w>0||REG[PID]){REG[PID]=regSelf();regChg.add(PID);regSave();regFlush();cldSoon()}}
 function regAdmin(id,ua){const e=REG[id];if(!e)return;const now=Date.now();REG[id]=Object.assign({},e,{u:now,ub:now,ua},ua==='reset'?{w:0,log:[]}:{cu:0,g:0});regChg.add(id);regSave();regFlush();cldSoon(1500)}   // 어드민: 바로 풀기 / 경고 초기화
 /* 채팅 기록 조회: 어드민 → 모임 자리 → 그 사람 폰 → 다시 어드민 */
