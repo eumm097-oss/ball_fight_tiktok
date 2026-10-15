@@ -4243,8 +4243,8 @@ const usrNm=(U,id)=>(U[id]?U[id].n:'?');
 function usrRender(w){
   const q=(w.querySelector('.usrq').value||'').trim().toUpperCase(),{U,pairs}=usrData();
   const match=u=>!q||u.id.includes(q)||u.n.toUpperCase().includes(q);
-  let L=Object.values(U).filter(match).sort((a,b)=>a.s[2]-b.s[2]||b.f.length-a.f.length||a.n.localeCompare(b.n,'ko'));
-  const total=L.length,onN=L.filter(u=>u.s[1]!=='off').length;   // 전부 보여 줌 (접속 중인 사람이 맨 위)
+  const off=u=>u.s[1]==='off'?1:0;let L=Object.values(U).filter(match).sort((a,b)=>off(a)-off(b)||(off(a)?0:a.s[2]-b.s[2])||(b.ls||0)-(a.ls||0)||a.n.localeCompare(b.n,'ko'));   // 접속 중인 사람 먼저, 그다음은 마지막 접속이 최근인 순서
+  const total=L.length,onN=L.filter(u=>u.s[1]!=='off').length;   // 전부 보여 줌 (접속 중 → 마지막 접속 최근 순)
   w.querySelector('.usrcnt').textContent='('+total+'명 · 접속 중 '+onN+'명)';
   const line=(id,extra)=>{const u=U[id]||{n:'?',s:[offText(id),'off']};return '<div class="modli"><b class="usrn">'+admEsc(u.n)+'</b> <span>'+id+'</span> <em class="usrst '+u.s[1]+'">'+u.s[0]+'</em>'+(extra||'')+'</div>'};
   {const bi=w.querySelector('.blq'),bq=(bi&&bi.value||'').trim().toUpperCase(),bm=(id,n)=>!bq||id.includes(bq)||String(n||'').toUpperCase().includes(bq);
