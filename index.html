@@ -713,7 +713,7 @@ body.in-net .nick{display:block}
       <button class="half" type="button" data-name="숏타민" data-cls="st" data-kind="st">숏타민</button>
       <button class="half" type="button" data-name="백기철 판타지" data-cls="bk" data-kind="bk">백기철 판타지</button>
       <button class="half" type="button" data-name="엄....edit" data-cls="um" data-kind="um">엄....edit</button>
-      <button class="half lockd" type="button" data-name="김동희세계관" data-cls="kd" data-kind="kd" data-lock="h:waba8p">김동희세계관</button>
+      <button class="half" type="button" data-name="김동희세계관" data-cls="kd" data-kind="kd">김동희세계관</button>
       <button class="half" type="button" data-name="목박사" data-cls="mk" data-kind="mk">목박사</button>
     </div>
   </div>
@@ -1240,7 +1240,7 @@ function makeChar(sd,o,ball){
     }
   }
   if(c.kind==='mk'){const f=document.createElement('i');f.className='fill mk';c.rb.append(f);c.mkF=f}   // 목박사: 게이지 1줄 2초 (다 차면 세포 소환)
-  if(c.kind==='kd'){                                                  // 김동희세계관: 게이지 2줄 (스킬은 아직 없음)
+  if(c.kind==='kd'){                                                  // 김동희세계관: 게이지 2줄 (위 공허참 · 아래 소닉피어스)
     c.P.style.setProperty('--tall','-7px');const f1=document.createElement('i');f1.className='fill kd1';c.rb.append(f1);
     const cell=addBar(c,'bkcells','');const f2=document.createElement('i');f2.className='fill kd2';cell.appendChild(f2);c.kdF=[f1,f2];kdWarm()}
   if(c.kind==='kk'){                                                  // 머리 위에 처음부터 회색(불 꺼진) 신비마트 글자를 계속 띄움
@@ -4750,7 +4750,7 @@ const NET={admQ:[],admHist:[],screen:'lobby',state:'idle',searchId:0,peers:[],co
   seed:0,mySide:null,me:{name:'',dev:false,tst:false},op:null,myCh:null,pick:null,picking:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
-const NET_PROTO='b4916',NET_SLOTS=4,NET_SNAP=30;
+const NET_PROTO='b4917',NET_SLOTS=4,NET_SNAP=30;
 /* 온라인 모드: 1대1 · 2대2 · 1대1대1. 자리 순서 = 캐릭터를 놓는 순서 (모든 폰이 같아야 계산이 같음) */
 const MP_MAX={'1v1':2,'2v2':4,'ffa':4},MP_MIN={'1v1':2,'2v2':4,'ffa':3},MP_NAME={'1v1':'1대1','2v2':'2대2','ffa':'1대1대1대1'};
 const MP_SIDES={'2v2':['left','left2','right','right2'],'ffa':['left','right','left2','right2']};
