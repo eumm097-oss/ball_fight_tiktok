@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="color-scheme" content="light">
+<meta name="color-scheme" content="light"><meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=overlays-content">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Sans+KR:wght@400;500;700&family=Jua&display=swap">
 <title>볼 파이트 틱톡</title>
@@ -5358,7 +5358,7 @@ function kickCheck(){                              // 추방 중이면 화면 �
 setInterval(kickCheck,1000);
 /* 점검: 관리자가 켜면 관리자를 뺀 모든 접속자 화면을 막고 새로고침 안내. 끄면 막혀 있던 사람은 자동으로 새로고침 (지금 접속 안 한 사람도 들어올 때 저장소에서 받아 막힘) */
 const MT_DEF='업데이트 중이에요. 잠시 후 새로고침해서 다시 들어와 주세요.';
-var MT={on:false,m:'',u:0};try{const v=JSON.parse(localStorage.getItem('bftMt')||'null');if(v&&typeof v==='object')MT={on:!!v.on,m:String(v.m||'').slice(0,80),u:+v.u||0}}catch(e){}
+var MT={on:false,m:'',u:0};try{localStorage.removeItem('bftMt')}catch(e){}   // 예전에 저장된 점검 상태는 믿지 않음 (저장소에서 새로 받음)
 let mtShown=false;
 function mtGot(d,from){                            // 더 나중에 정한 점검 상태만 받음 (모임 자리면 모두에게 전달)
   if(!d||typeof d!=='object')return false;const u=+d.u||0;if(u<=MT.u)return false;
@@ -7475,6 +7475,16 @@ document.addEventListener('dragstart',e=>e.preventDefault());
 document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
 // 두 번 톡톡 확대는 touch-action(pan-y·manipulation)으로 막음 — 빠른 연속 터치는 막지 않음 (어드민 패널을 열어 둔 채 게임을 눌러도 바로 눌리게)
 document.addEventListener('contextmenu',e=>{if(e.target.closest('img,canvas,.ball,svg'))e.preventDefault()});
+
+/* 옛 버전(캐시) 자동 갱신: 접속할 때 최신 파일의 버전을 확인하고 다르면 한 번만 새로고침 */
+(function(){try{
+  if(location.protocol==='file:')return;
+  fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
+    const m=/const PATCH_VERSION='([^']+)'/.exec(t);if(!m||m[1]===PATCH_VERSION)return;
+    let k='bftVerTry';try{if(sessionStorage.getItem(k)===m[1])return;sessionStorage.setItem(k,m[1])}catch(e){return}
+    location.replace(location.pathname+'?v='+m[1]+location.hash);
+  }).catch(()=>{});
+}catch(e){}})();
 </script>
 </body>
 </html>
