@@ -2504,7 +2504,7 @@ const UM_WIN_AUD='SUQzBAAAAAACIVRYWFgAAAASAAADbWFqb3JfYnJhbmQAaXNvbQBUWFhYAAAAEw
 const UMP=[
   {fr:UM_FR,aud:UM_AUD,fps:30,w:450,h:497,size:0.562,imgs:null,buf:null,dec:false},
   {fr:UM2_FR,aud:UM2_AUD,fps:30,w:510,h:306,size:.9,alpha:.92,fade:true,imgs:null,buf:null,dec:false}];
-const UM2={sec:3.05,beats:[.2,.9,1.6,2.3],sx:276/340,sy:199/204,dmg:20,fall:1.5,dmgMin:8,tam:45,tamR:.07,wall:.2,knock:.3,kLv:1,dur:.6,maxR:1.45,thick:.012,shake:14};   // 박자 = 템버린이 바닥에 닿는 시각(초) / sx,sy = 그 지점(영상 안 비율)
+const UM2={sec:3.05,beats:[.2,.9,1.6,2.3],sx:276/340,sy:199/204,dmg:18,fall:1.5,dmgMin:6,tam:43,tamR:.07,wall:.2,knock:.3,kLv:1,dur:.6,maxR:1.45,thick:.012,shake:14};   // 박자 = 템버린이 바닥에 닿는 시각(초) / sx,sy = 그 지점(영상 안 비율)
 let umClip=null,umP2=null,umRings=[],umCasts=[],umAllPl=[];   // 엄....edit 두 명(미러전)도 각자 따로 재생·판정
 const umPlOf=c=>{if(!c.umPl){c.umPl=[{},{}];umAllPl.push(...c.umPl)}return c.umPl};
 function umB64(b){const s=atob(b),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
@@ -3689,8 +3689,8 @@ const INFO=[
    skills:[{n:'엄....edit',p:STATS.um.cooldown+'초마다',d:'맵 한가운데에 영상이 '+UM.sec+'초 동안 재생된다. 영상이 끝나면 바로 그 순간 상대가 있는 자리에 템버린을 내려찍는다(상대가 벽에서 '+Math.round(UM2.wall*100)+'m 안에 있으면 벽에서 '+Math.round(UM2.wall*100)+'m 떨어진 곳에 찍는다). 템버린이 내려찍히는 박자마다(0.7초 간격으로 총 '+UM2.beats.length+'번) 그 자리에 직접 맞으면 '+UM2.tam+' 데미지를 입고, 그 자리에서 파동이 퍼진다. 파동에 닿으면 '+UM2.dmg+' 데미지를 입는데, 찍힌 자리에서 10m 멀어질 때마다 '+UM2.fall+'씩 약해진다(최소 '+UM2.dmgMin+'). 맞으면 파동 바깥쪽으로 '+UM2.knock+'초 동안 부딪힘에 걸린다(파동 하나에 한 번).'},
      {n:'편집 중',p:'패시브',d:'항상 보호를 가지고 있어서 받는 피해가 '+Math.round(RESIST.cut*100)+'% 줄어든다.'},
      {n:'쫀득한 박자',p:'패시브',d:'슬로우와 슬로우II에 걸리지 않는다.'}]},
-  {kind:'mk',cls:'mk',name:'목박사',color:'#9ca3af',tag:'세포와 바이러스를 소환하는 공',chips:['HP '+STATS.mk.max,'이동속도 '+STATS.mk.speed,'소환 쿨타임 '+MK.cd+'초'],
-   skills:[{n:'세포·바이러스 소환',p:MK.cd+'초마다',d:MK.cd+'초마다 목박사가 가는 방향의 반대쪽(좌우 합쳐 180°)에서 세포 또는 바이러스를 하나 소환한다(각각 '+Math.round(MK.heal*100)+'%). 소환된 것은 작은 공처럼 필드를 돌아다니며 벽과 서로에게 튕긴다. 필드에는 최대 '+MK.max+'개까지 있고, 넘으면 가장 오래된 것부터 사라진다. 목박사가 쓰러지면 모두 사라진다. 세포·바이러스는 체력이 '+MK.hp+'이다. 상대의 우주의 반응·태극 아우라·밥상·각목·템버린 파동·공허참에 맞으면 밀려나거나 끌려가고(소닉피어스는 밀리지 않음), 데미지와 상관없이 체력이 1씩 깎여 '+MK.hp+'번 맞으면 사라진다(부딪히는 것만으로는 깎이지 않는다).'},
+  {kind:'mk',cls:'mk',name:'목박사',color:'#9ca3af',tag:'3초룰 시리즈 박사님',chips:['HP '+STATS.mk.max,'이동속도 '+STATS.mk.speed,'소환 쿨타임 '+MK.cd+'초'],
+   skills:[{n:'3초룰',p:MK.cd+'초마다',d:MK.cd+'초마다 목박사가 가는 방향의 반대쪽(좌우 합쳐 180°)에서 세포 또는 바이러스를 하나 소환한다(각각 '+Math.round(MK.heal*100)+'%). 소환된 것은 작은 공처럼 필드를 돌아다니며 벽과 서로에게 튕긴다. 필드에는 최대 '+MK.max+'개까지 있고, 넘으면 가장 오래된 것부터 사라진다. 목박사가 쓰러지면 모두 사라진다. 세포·바이러스는 체력이 '+MK.hp+'이다. 상대의 우주의 반응·태극 아우라·밥상·각목·템버린 파동·공허참에 맞으면 밀려나거나 끌려가고(소닉피어스는 밀리지 않음), 데미지와 상관없이 체력이 1씩 깎여 '+MK.hp+'번 맞으면 사라진다(부딪히는 것만으로는 깎이지 않는다).'},
      {n:'바이러스',p:Math.round((1-MK.heal)*100)+'%',d:'상대에게 닿으면 효과를 주고 사라진다. 목박사에게는 튕긴다.',
       subs:[{c:'#7a0d12',n:'니파',p:'25%',d:Math.round(MK.nipP*100)+'% 확률로 '+MK.nipDmg+' 데미지, 아니면 '+MK.amt+' 데미지를 주고, 무조건 빈약함을 '+MK.nipFrail+'초 동안 건다.'},
         {c:'#e03131',n:'천연두',p:'30%',d:'깜빡이다가 '+MK.poxSec+'초 뒤 자폭한다(상대에게 닿으면 튕긴다). 공격에 맞아 체력이 다 닳아도 그 자리에서 자폭한다. 자폭에 맞은 상대는 '+MK.poxLo+'~'+MK.poxHi+' 데미지를 입고 부딪힘II에 '+MK.poxKb+'초 동안 걸린다.'},
@@ -3700,7 +3700,7 @@ const INFO=[
       subs:[{c:'#2f9e5b',n:'대식세포',p:'30%',d:'상대에게 닿는 순간 칼로 베며 돌진해 '+MK.macDmg+' 데미지와 슬로우('+MK.macSlow+'초)를 주고 사라진다. 목박사에게 닿으면 '+MK.macHeal+' 회복.'},
         {c:'#2fc455',n:'NK세포',p:'20%',d:'목박사에게 닿으면 '+MK.nkHeal+' 회복하고 '+MK.nkPro+'초 동안 보호를 얻는다. 상대에게는 튕긴다.'},
         {c:'#62b34a',n:'T세포',p:'50%',d:'목박사에게 닿으면 '+MK.tHeal+' 회복. 상대에게는 튕긴다.'}]}]},
-  {kind:'kd',cls:'kd',name:'김동희세계관',color:'#1cb5c9',tag:'자신만의 세계관을 가진 공',chips:['HP '+STATS.kd.max,'이동속도 '+STATS.kd.speed],
+  {kind:'kd',cls:'kd',name:'김동희세계관',color:'#1cb5c9',tag:'환장RPG 스킬을 쓰는 공',chips:['HP '+STATS.kd.max,'이동속도 '+STATS.kd.speed],
    skills:[{n:'공허참',p:KD.cd1+'초마다',d:'위 게이지가 다 차면 그 자리에 멈춰 서서 '+KDS.hold+'초 동안 보라 연기 아우라를 피워 올리며 힘을 모은 뒤, 몸 둘레에 자홍빛 초승달 검기를 '+(Math.round(KDS.wind*100)/100)+'초 동안 그렸다가 가장 가까운 상대 쪽으로 빠르게 날린다(검기를 날릴 때까지는 움직이지 않는다). 초승달의 보이는 부분에 닿은 상대는 '+KDS.dmg+' 데미지를 입고 날아가던 쪽으로 부딪힘III('+KDS.kb+'초)에 걸린다. 날리는 순간 방향이 정해지고 곧게 날아가서 피할 수 있고, 벽에 닿으면 그대로 날아가 사라진다. 날아가다 중간에 상대 목박사의 세포·바이러스에 맞으면 막혀서 사라지고, 그 세포·바이러스는 체력이 1 깎인다.'},
      {n:'소닉피어스',p:KD.cd2+'초마다',d:'아래 게이지가 다 차면 '+KDB.dur+'초 동안 몸이 무지개빛으로 번쩍이며 검을 꺼내 가장 가까운 대상(상대 목박사의 세포·바이러스 포함) 쪽을 계속 바라보며 효과음에 맞춰 '+(Math.round((KD_BEAT[1]-KD_BEAT[0])*100)/100)+'초마다 모두 '+KD_BEAT.length+'번 빠르게 찌른다. 검 끝이 닿으면 한 번에 '+KDB.lo+'~'+KDB.hi+' 랜덤 데미지(다 최대로 맞으면 '+KDB.max+')와 슬로우II('+KDB.slow+'초)를 입히고, 세포·바이러스는 밀리지 않고 체력이 1 깎인다. 멈춰 있는 동안은 찌르지 않는다.'}]}
 ];
@@ -3767,9 +3767,13 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.11.25';
+const PATCH_VERSION='4.11.26';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.11.26',date:'2026-10-19',
+   chars:[{who:'엄....edit',tag:'nerf',lines:['템버린 직접 데미지 {-45 → 43}','파동 데미지 {-20 → 18}','파동 최소 데미지 {-8 → 6}']}],
+   fx:[],
+   sys:[]},
   {ver:'4.11.25',date:'2026-10-18',
    chars:[{who:'백기철 판타지',tag:'nerf',lines:['체력 베끼는 아우라 사거리 {-24m → 22m}']}],
    fx:[],
@@ -3791,7 +3795,7 @@ const PATCH_NOTES=[
   {ver:'4.11.20',date:'2026-10-14',
    chars:[{who:'숏타민',tag:'nerf',lines:['각목 데미지 {-19 → 18}']}],
    fx:[{who:'독',tag:'new',lines:['신규 상태효과: 1초마다 8 데미지']},{who:'슬로우',tag:'vis',lines:['슬로우에 걸리면 공 둘레에 {*파란 테두리 빛}이 남 (슬로우II는 더 진하게)']}],
-   sys:[{who:'이름',lines:['온라인 이름 최대 길이 {+6글자 → 10글자}']},{who:'도움말',lines:['김동희세계관 · 목박사 도움말 추가']}]},
+   sys:[{who:'이름',lines:['온라인 이름 최대 길이 {+6글자 → 10글자}']}]},
   {ver:'4.11.19',date:'2026-10-13',
    chars:[{who:'숏타민',tag:'buff',lines:['각목 데미지 {+18 → 19}','각목 부딪힘 시간 {+1.35초 → 1.5초}','요력면역 확률 {+60% → 65%}','각목 사거리 {+24m → 25m}','각목 속도 {+초당 210° → 250°}']}],
    fx:[],
@@ -4769,7 +4773,7 @@ const NET={admQ:[],admHist:[],screen:'lobby',state:'idle',searchId:0,peers:[],co
   seed:0,mySide:null,me:{name:'',dev:false,tst:false},op:null,myCh:null,pick:null,picking:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
-const NET_PROTO='b4926',NET_SLOTS=4,NET_SNAP=30;
+const NET_PROTO='b4927',NET_SLOTS=4,NET_SNAP=30;
 /* 온라인 모드: 1대1 · 2대2 · 1대1대1. 자리 순서 = 캐릭터를 놓는 순서 (모든 폰이 같아야 계산이 같음) */
 const MP_MAX={'1v1':2,'2v2':4,'ffa':4},MP_MIN={'1v1':2,'2v2':4,'ffa':3},MP_NAME={'1v1':'1대1','2v2':'2대2','ffa':'1대1대1대1'};
 const MP_SIDES={'2v2':['left','left2','right','right2'],'ffa':['left','right','left2','right2']};
