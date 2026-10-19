@@ -1869,7 +1869,7 @@ function stepCells(h){
       mkVirusFx(o,t,d===MK.nipDmg);
       hurt(t,(d+atk(own))*frail(own));
       if(t.alive&&(o.t==='flu'||o.t==='cov'))applyPoison(t,o.t==='flu'?MK.fluPsn:MK.covPsn);
-      if(t.alive&&o.t==='nip'&&!debImmune(t))t.frailUntil=Math.max(t.frailUntil||0,now+MK.nipFrail);   // 니파: 맞으면 무조건 빈약함 3초   // 스페인 독감 독 5초 · 코로나 독 2.5초
+      if(t.alive&&o.t==='nip'&&!debImmune(t))t.frailUntil=Math.max(t.frailUntil||0,now+MK.nipFrail);   // 니파: 맞으면 무조건 나약함 3초   // 스페인 독감 독 5초 · 코로나 독 2.5초
     }
   }}
 function applyPoison(t,sec){                            // 독: 이미 걸려 있으면 겹치지 않고 더 긴 시간으로 (0.5초 틱 간격은 그대로 이어감)
@@ -2170,7 +2170,7 @@ function addSpeedBuff(c,mul,sec){
 /* 힘: 내가 입히는 직접 공격·스킬 데미지 +10 (10초). 겹치지 않고 다시 얻으면 시간만 갱신.
    부딪힘 같은 디버프 상태효과가 주는 데미지(벽 충돌)는 힘으로 늘어나지 않음 */
 const atk=c=>(c&&c.strUntil>now)?JY.strAtk:0;
-const FRAIL={cut:.2};                 // 빈약함: 자신이 주는 데미지 20% 감소
+const FRAIL={cut:.2};                 // 나약함: 자신이 주는 데미지 20% 감소
 const frail=c=>(c&&((c.frailPerm&&!lostPas(c))||c.frailUntil>now))?1-FRAIL.cut:1;
 function addStrength(c){
   const fresh=!(c.strUntil>now);
@@ -3554,7 +3554,7 @@ function bkFlash(c,k){               // 한 칸이 다 찰 때마다 그 칸에 
   }catch(e){}
 }
 const BK_DEB=[['slow',14],['frail',12],['burn',12],['seal',9],['slow2',6],['burn2',5]];
-const BK_DEBN={slow:'슬로우',slow2:'슬로우II',burn:'연소',burn2:'연소II',frail:'빈약함',seal:'봉인'};   // 센 디버프일수록 확률이 낮음
+const BK_DEBN={slow:'슬로우',slow2:'슬로우II',burn:'연소',burn2:'연소II',frail:'나약함',seal:'봉인'};   // 센 디버프일수록 확률이 낮음
 const BK_DEBC={slow:'#8fcdf5',slow2:'#4aa8ec',frail:'#9ca3af',burn:'#f36b2c',burn2:'#ff4a12',seal:'#8b5cf6'};   // 디버프 게이지 색
 function bkPick(){let r=grand()*BK_DEB.reduce((a,x)=>a+x[1],0);for(const [n,w] of BK_DEB){if(r<w)return n;r-=w}return BK_DEB[0][0]}
 function bkDebuff(b,k){                // 숏타민은 여기서 한 번만 굴리고, 안쪽 적용 함수에서는 다시 굴리지 않음
@@ -3692,7 +3692,7 @@ const INFO=[
   {kind:'mk',cls:'mk',name:'목박사',color:'#9ca3af',tag:'3초룰 시리즈 박사님',chips:['HP '+STATS.mk.max,'이동속도 '+STATS.mk.speed,'소환 쿨타임 '+MK.cd+'초'],
    skills:[{n:'3초룰',p:MK.cd+'초마다',d:MK.cd+'초마다 목박사가 가는 방향의 반대쪽(좌우 합쳐 180°)에서 세포 또는 바이러스를 하나 소환한다(각각 '+Math.round(MK.heal*100)+'%). 소환된 것은 작은 공처럼 필드를 돌아다니며 벽과 서로에게 튕긴다. 필드에는 최대 '+MK.max+'개까지 있고, 넘으면 가장 오래된 것부터 사라진다. 목박사가 쓰러지면 모두 사라진다. 세포·바이러스는 체력이 '+MK.hp+'이다. 상대의 우주의 반응·태극 아우라·밥상·각목·템버린 파동·공허참에 맞으면 밀려나거나 끌려가고(소닉피어스는 밀리지 않음), 데미지와 상관없이 체력이 1씩 깎여 '+MK.hp+'번 맞으면 사라진다(부딪히는 것만으로는 깎이지 않는다).'},
      {n:'바이러스',p:Math.round((1-MK.heal)*100)+'%',d:'상대에게 닿으면 효과를 주고 사라진다. 목박사에게는 튕긴다.',
-      subs:[{c:'#7a0d12',n:'니파',p:'25%',d:Math.round(MK.nipP*100)+'% 확률로 '+MK.nipDmg+' 데미지, 아니면 '+MK.amt+' 데미지를 주고, 무조건 빈약함을 '+MK.nipFrail+'초 동안 건다.'},
+      subs:[{c:'#7a0d12',n:'니파',p:'25%',d:Math.round(MK.nipP*100)+'% 확률로 '+MK.nipDmg+' 데미지, 아니면 '+MK.amt+' 데미지를 주고, 무조건 나약함을 '+MK.nipFrail+'초 동안 건다.'},
         {c:'#e03131',n:'천연두',p:'30%',d:'깜빡이다가 '+MK.poxSec+'초 뒤 자폭한다(상대에게 닿으면 튕긴다). 공격에 맞아 체력이 다 닳아도 그 자리에서 자폭한다. 자폭에 맞은 상대는 '+MK.poxLo+'~'+MK.poxHi+' 데미지를 입고 부딪힘II에 '+MK.poxKb+'초 동안 걸린다.'},
         {c:'#8e3fd1',n:'스페인 독감',p:'20%',d:MK.psnHit+' 데미지를 주고 독을 '+MK.fluPsn+'초 동안 건다.'},
         {c:'#a855f7',n:'코로나 오미크론',p:'25%',d:MK.psnHit+' 데미지를 주고 독을 '+MK.covPsn+'초 동안 건다.'}]},
@@ -3716,7 +3716,7 @@ function renderFx(){                 // 상태효과 정리 (수치는 게임에
     {e:'🩸',n:'출혈',c:'#b3001b',tag:'디버프',chips:[],d:'부활한 뒤로 '+BLEED.gap+'초에 한 번씩 체력이 '+BLEED.dmg+'씩 깎인다. 시간이 지나도 풀리지 않는다. 정지 중에는 시간도 같이 멈춘다. 출혈로도 쓰러질 수 있고, 그땐 다시 부활하지 않는다.',src:'낭만박상환의 부활(한 번 부활한 뒤 계속)'},
     {e:'🩸',n:'출혈II',c:'#8a0016',tag:'디버프',chips:[],d:'출혈과 같지만 '+BLEED2.gap+'초에 한 번씩 체력이 '+BLEED2.dmg+'씩 깎인다.',src:'현재 얻을 수 있는 캐릭터가 없다'},
     {e:'🦠',n:'독',c:'#8e3fd1',tag:'디버프',chips:[],d:'독에 걸린 동안 '+PSN.gap+'초마다 '+PSN.dmg+' 데미지를 입는다. 공격력 버프로 늘지 않는다. 이미 독에 걸려 있을 때 또 걸리면 겹치지 않고 더 긴 시간으로 갱신된다.',src:'목박사의 스페인 독감('+MK.fluPsn+'초) · 코로나 오미크론('+MK.covPsn+'초)'},
-    {e:'🥀',n:'빈약함',c:'#6b7280',tag:'디버프',chips:[],d:'자신이 주는 데미지가 '+Math.round(FRAIL.cut*100)+'% 줄어든다(꼼짝마, 체력별로 데미지, 밥상, 포크, 우주의 반응, 주먹 등). 연소·출혈 같은 디버프가 주는 데미지는 줄어들지 않는다.',src:'백기철 판타지의 디버프('+BK.debSec+'초) · 목박사의 니파('+MK.nipFrail+'초)'},
+    {e:'🥀',n:'나약함',c:'#6b7280',tag:'디버프',chips:[],d:'자신이 주는 데미지가 '+Math.round(FRAIL.cut*100)+'% 줄어든다(꼼짝마, 체력별로 데미지, 밥상, 포크, 우주의 반응, 주먹 등). 연소·출혈 같은 디버프가 주는 데미지는 줄어들지 않는다.',src:'백기철 판타지의 디버프('+BK.debSec+'초) · 목박사의 니파('+MK.nipFrail+'초)'},
     {e:'🛡️',n:'보호',c:'#3b82f6',tag:'버프',chips:[],d:'받는 피해가 '+Math.round(RESIST.cut*100)+'% 줄어든다. 연소·출혈 같은 지속 피해와 벽 충돌 데미지에도 똑같이 적용된다.',src:'태권히어로(항상) · 엄....edit(항상) · 목박사의 NK세포('+MK.nkPro+'초)'},
     {e:'🛡️',n:'보호II',c:'#2563eb',tag:'버프',chips:[],d:'받는 피해가 '+Math.round(RESIST.cut2*100)+'% 줄어든다. 그 밖의 규칙은 보호와 같다. 이미 다른 보호가 있어도 가장 센 쪽 하나만 적용된다. 신비마트로 얻으면 '+MART.buffSec+'초 동안 유지된다.',src:'마·트를 모았을 때(김켈리, '+MART.buffSec+'초)'},
     {e:'🛡️',n:'보호III',c:'#1d4ed8',tag:'버프',chips:[],d:'받는 피해가 '+Math.round(RESIST.cut3*100)+'% 줄어든다. 그 밖의 규칙은 보호와 같다. 이미 다른 보호가 있어도 가장 센 쪽 하나만 적용된다.',src:'현재 얻을 수 있는 캐릭터가 없다'},
@@ -3785,7 +3785,7 @@ const PATCH_NOTES=[
    fx:[],
    sys:[]},
   {ver:'4.11.22',date:'2026-10-15',hot:true,
-   chars:[{who:'목박사',tag:'buff',lines:['세포·바이러스 데미지 전체 {+5} 상승','대식세포 베기 {+30 → 35}','니파 {+11 → 20} (70% 확률 {+41 → 50})','니파에 맞으면 {+무조건 빈약함 3초}','천연두 자폭 {+11 → 35~50 랜덤}','천연두 자폭 범위 {+15m → 18m}','천연두 자폭 부딪힘II {+0.55초 → 0.7초}','천연두가 공격에 맞아 사라지면 {+그 자리에서 자폭}','스페인 독감 · 코로나 오미크론 {+8 → 15}','천연두 자폭까지 걸리는 시간 {+3.5초 → 2.5초}','NK세포: 목박사에게 닿으면 {+보호 2초} 추가','세포·바이러스 체력 {+3 → 4} (4번 맞아야 사라짐)']},{who:'백기철 판타지',tag:'nerf',lines:['체력 베끼는 아우라 초당 데미지 {-약 11 → 약 10}','체력 베끼는 아우라 회복 확률 {-60% → 50%}']},{who:'어둠속성 김켈리',tag:'nerf',lines:['우주의 반응 초당 데미지 {-2~26 → 1~25}']}],
+   chars:[{who:'목박사',tag:'buff',lines:['세포·바이러스 데미지 전체 {+5} 상승','대식세포 베기 {+30 → 35}','니파 {+11 → 20} (70% 확률 {+41 → 50})','니파에 맞으면 {+무조건 나약함 3초}','천연두 자폭 {+11 → 35~50 랜덤}','천연두 자폭 범위 {+15m → 18m}','천연두 자폭 부딪힘II {+0.55초 → 0.7초}','천연두가 공격에 맞아 사라지면 {+그 자리에서 자폭}','스페인 독감 · 코로나 오미크론 {+8 → 15}','천연두 자폭까지 걸리는 시간 {+3.5초 → 2.5초}','NK세포: 목박사에게 닿으면 {+보호 2초} 추가','세포·바이러스 체력 {+3 → 4} (4번 맞아야 사라짐)']},{who:'백기철 판타지',tag:'nerf',lines:['체력 베끼는 아우라 초당 데미지 {-약 11 → 약 10}','체력 베끼는 아우라 회복 확률 {-60% → 50%}']},{who:'어둠속성 김켈리',tag:'nerf',lines:['우주의 반응 초당 데미지 {-2~26 → 1~25}']}],
    fx:[],
    sys:[]},
   {ver:'4.11.21',date:'2026-10-15',
@@ -3901,7 +3901,7 @@ const PATCH_NOTES=[
      {who:'제리얌',tag:'adj',lines:['스킬 쿨타임 {-5초 → 5.5초}','이런 반찬 안 먹찬 시전 중 부딪힘에 걸리면 {-시전 중지}','포크 마지막 타 부딪힘 {-삭제}','포크 마지막 타 추가 데미지 {+10 → 20}']},
      {who:'백기철 판타지',tag:'adj',lines:[
        '디버프 걸기: 걸 디버프가 {~게이지가 차기 시작할 때 정해지고 게이지 색으로 표시}',
-       '디버프 확률: 슬로우 {~20.9% → 24.1%}, 빈약함 {~17.9% → 20.7%}, 연소 {~17.9% → 20.7%}, 슬로우II {~9% → 10.3%}, 연소II {~7.5% → 8.6%}',
+       '디버프 확률: 슬로우 {~20.9% → 24.1%}, 나약함 {~17.9% → 20.7%}, 연소 {~17.9% → 20.7%}, 슬로우II {~9% → 10.3%}, 연소II {~7.5% → 8.6%}',
        '디버프 확률: 패시브 상실 13.4%, 스킬 실패 13.4% → {~봉인 15.5%}',
        '버프 베끼기: 보호 {-베끼지 못하도록} 변경']}
    ],
@@ -3979,7 +3979,7 @@ const PATCH_NOTES=[
    fx:[
      {who:'출혈',tag:'adj',lines:['출혈 데미지 {-10 → 5}','출혈 간격 {-5초 → 10초}']},
      {who:'출혈II',tag:'new',lines:['신규 상태효과 추가']},
-     {who:'빈약함',tag:'new',lines:['신규 상태효과 추가']},
+     {who:'나약함',tag:'new',lines:['신규 상태효과 추가']},
      {who:'패시브 상실',tag:'adj',lines:[
        '패시브 상실 중에도 낭만박상환의 부활은 {-사라지지 않도록} 변경']}
    ],
@@ -4306,13 +4306,13 @@ function admLogPush(){                         // 게임이 끝날 때마다 결
   if(admLog.length>10)admLog.length=10;
 }
 const ADM_PH={idle:'대기',count:'카운트다운',freeze:'조준',run:'진행 중'};
-const ADM_DEB=[['slow','슬로우'],['slow2','슬로우II'],['burn','연소'],['burn2','연소II'],['poison','독'],['frail','빈약함'],['seal','봉인'],['knock','부딪힘']];
+const ADM_DEB=[['slow','슬로우'],['slow2','슬로우II'],['burn','연소'],['burn2','연소II'],['poison','독'],['frail','나약함'],['seal','봉인'],['knock','부딪힘']];
 function admFx(c){                               // 지금 걸려 있는 효과 목록
   const L=[],r=(u)=>Math.max(0,u-now).toFixed(1)+'초';
   if(c.slowUntil>now)L.push((c.slowMul<=SLOW.mul2?'슬로우II ':'슬로우 ')+r(c.slowUntil));
   if(c.burnUntil>now)L.push((c.burnLvl>=2?'연소II ':'연소 ')+r(c.burnUntil));
   if(c.psnUntil>now)L.push('독 '+r(c.psnUntil));
-  if(c.frailUntil>now)L.push('빈약함 '+r(c.frailUntil));
+  if(c.frailUntil>now)L.push('나약함 '+r(c.frailUntil));
   if(c.noPasUntil>now&&c.silenceUntil>now)L.push('봉인 '+r(Math.min(c.noPasUntil,c.silenceUntil)));
   else{if(c.noPasUntil>now)L.push('패시브 상실 '+r(c.noPasUntil));if(c.silenceUntil>now)L.push('스킬 실패 '+r(c.silenceUntil))}
   if(c.kbUntil>now)L.push('부딪힘 '+r(c.kbUntil));
@@ -4484,7 +4484,7 @@ function admLogHTML(){
 const ADM_STEP={max:10,speed:.05,cd:.5,nm:2.5,kk:2.5,bk:1,spd:.25};      // + − 한 번에 바뀌는 기본 단위
 const admSteps={};                                                 // 직접 입력한 단위 (줄마다 따로)
 const admStepOf=key=>{const v=admSteps[key];if(isFinite(v)&&v>0)return v;const p=key.split(':');return p[0]==='spd'?ADM_STEP.spd:p[0]==='stat'?ADM_STEP[p[2]]:ADM_STEP[p[1]]};
-const BKN={slow:'슬로우',frail:'빈약함',burn:'연소',seal:'봉인',slow2:'슬로우II',burn2:'연소II'};
+const BKN={slow:'슬로우',frail:'나약함',burn:'연소',seal:'봉인',slow2:'슬로우II',burn2:'연소II'};
 function admPmRow(key,lb,attrs){                  // 이름 | − 값 + | 단위 입력칸
   return '<div class="admrow"><span>'+lb+'</span><button type="button" class="admbtn admpm" '+attrs+' data-d="-1">−</button><b data-val="'+key+'"></b><button type="button" class="admbtn admpm" '+attrs+' data-d="1">+</button>'
     +'<input type="text" class="admstep" inputmode="decimal" data-step="'+key+'" placeholder="'+(+admStepOf(key).toFixed(3))+'" value="'+(admSteps[key]?admSteps[key]:'')+'" aria-label="단위" autocomplete="off"></div>';
