@@ -105,7 +105,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .dmg{transform:translate(-50%,-100%);color:#e02424;font-weight:700;font-size:calc(var(--W)*.028);line-height:1;white-space:nowrap}
 .ball.jy{background:#fff var(--img-jy) center/cover no-repeat;border-color:#d9561f}
 .ball.kd{background:#fff var(--img-kd) center/cover no-repeat;border-color:#138a99}.ball.kd .aim i{background:#1cb5c9}.pname.kd{color:#5fe0f0}.av.kd{background:#fff var(--img-kd) center/cover no-repeat}
-.ball.mk{background:#fff var(--img-mk) center/cover no-repeat;border-color:#fff;outline:1.5px solid #111}.ball.mk .aim i{background:#fff;outline:1px solid #111}.pname.mk{color:#fff;text-shadow:-1px 0 #000,1px 0 #000,0 -1px #000,0 1px #000,-1px -1px #000,1px -1px #000,-1px 1px #000,1px 1px #000}.av.mk{background:#fff var(--img-mk) center/cover no-repeat}
+.ball.mk{background:#fff var(--img-mk) center/cover no-repeat;border-color:#fff;box-shadow:0 0 0 1.5px #111}.ball.mk .aim i{background:#fff;box-shadow:0 0 0 1px #111}.pname.mk{color:#fff;text-shadow:-1px 0 #000,1px 0 #000,0 -1px #000,0 1px #000,-1px -1px #000,1px -1px #000,-1px 1px #000,1px 1px #000}.av.mk{background:#fff var(--img-mk) center/cover no-repeat}
 .ball.jy .aim i{background:#f26b35}
 .pname.jy{color:#f26b35}
 .ball.t1{box-shadow:0 0 0 3px #3b82f6}
@@ -338,7 +338,9 @@ body.in-net .pidtag,.stage:has(.end:not([hidden])) .pidtag{display:none}
 .admlog{font-size:1em;padding:0.4em 0;border-bottom:0.1em solid #222}.admlog i{color:#8b90a0;font-style:normal;margin-right:0.5em}.admlog span{color:#8b90a0}
 .admrange{flex:2;min-width:0;accent-color:#ff3dbd}.admsw.on[data-a="spd"]{color:#fff}
 .admccr{display:flex;align-items:center;gap:0.6em}.admccr .ccd{color:#fff;min-width:6.5em}.admccr b{flex:1}
-.admccr .ccu{color:#fff}.ccstar{border:0;background:none;color:#8b90a0;font-size:1.4em;line-height:1;padding:0 0.2em;cursor:pointer;font-family:inherit}.ccstar.on{color:#f7c531}
+.admccr .ccu{color:#fff}
+.admwin .modq.pollq,.admwin .modq.pollo{display:block;max-width:none;margin:0;font-size:1.1em;font-weight:400;line-height:normal;word-break:normal;gap:0}
+.ccstar{border:0;background:none;color:#8b90a0;font-size:1.4em;line-height:1;padding:0 0.2em;cursor:pointer;font-family:inherit}.ccstar.on{color:#f7c531}
 .netkk{flex:none;display:flex;align-items:center;height:38px;padding:0 10px;font:700 14px/1 "Noto Sans KR",sans-serif;color:#191919;background:#fee500;border:2px solid var(--ink);border-radius:5px;text-decoration:none}.netkk[hidden]{display:none}
 .gkk{margin:28px 0 0;padding:12px 14px;border:2px solid #111;font-size:14px;line-height:1.6;color:#333;word-break:keep-all}.gkk a{color:#1d5cff;font-weight:800;white-space:nowrap}
 .pnkk{display:block;margin:-4px 0 16px;font-size:13px;font-weight:700;color:#1d5cff;text-decoration:underline}
@@ -806,6 +808,11 @@ if(document.fonts){document.fonts.load('400 20px "Noto Sans KR"').then(calcShift
 const arenaEl=document.querySelector('.arena');
 let _aw=0,_ah=0;const aW=()=>_aw||(_aw=arenaEl.clientWidth),aH=()=>_ah||(_ah=arenaEl.clientHeight);   // 경기장 크기는 크기가 바뀔 때만 다시 읽음
 const CAN_TR=(()=>{try{return CSS.supports('translate','1px 1px')}catch(e){return false}})();
+function posTr(el,x,y){                              // 따라다니는 것들 위치: 화면 다시 그리기 없이 translate로 옮김 (지원 안 하는 폰은 예전 방식)
+  if(!CAN_TR){el.style.left=x+'px';el.style.top=y+'px';return}
+  if(!el._tr){el._tr=1;el.style.left='0';el.style.top='0';el.style.willChange='transform,translate'}
+  const v=x.toFixed(2)+'px '+y.toFixed(2)+'px';if(el._tv!==v){el._tv=v;el.style.translate=v}
+}
 function placeBall(c){                              // 공 위치: 화면 배치를 다시 계산하지 않는 translate로 옮김 (지원 안 하는 폰은 예전 방식)
   const b=c.ball;if(!b)return;
   if(CAN_TR){if(!b._tr){b._tr=1;b.style.left='0';b.style.top='0'}b.style.translate=(c.x*aW()).toFixed(2)+'px '+(c.y*aH()).toFixed(2)+'px'}
@@ -2231,7 +2238,7 @@ function stepProjs(h){              // 밥상: 벽에서 계속 튕기고, 던�
   }
 }
 function renderProjs(dt,W,H){
-  for(const p of projs){if(!objStop)p.spin+=720*dt;p.el.style.left=p.x*W+'px';p.el.style.top=p.y*H+'px';p.el.style.transform='translate(-50%,-50%) rotate('+p.spin+'deg)'}
+  for(const p of projs){if(!objStop)p.spin+=720*dt;if(!simDraw)continue;posTr(p.el,p.x*W,p.y*H);p.el.style.transform='translate(-50%,-50%) rotate('+p.spin.toFixed(1)+'deg)'}   // 온라인에서 한 프레임에 여러 번 계산할 때는 마지막에만 그림
 }
 function tableHit(p,t){
   removeProj(p);
@@ -2346,9 +2353,10 @@ function stTick(dt){
       rodHit(c,a0);
     }
     const L=ROD.len*W*Math.max(.001,c.rodK),rw=ROD.len*W*ROD.wr,cx=c.x*W,cy=c.y*H,r=c.rodEl;
-    r.style.width=rw+'px';r.style.height=L+'px';r.style.left=(cx-rw/2)+'px';r.style.top=(cy-L)+'px';if(c._rw!==W){c._rw=W;c._rp=(.14*aW())/2||.07*W}r.style.clipPath='inset(0 0 '+c._rp+'px 0)';   // 내 공 안쪽 부분은 잘라서 공 위에 얹어도 어색하지 않게
-    const g2=c.rodRing;g2.style.width=g2.style.height=(2*L)+'px';g2.style.left=(cx-L)+'px';g2.style.top=(cy-L)+'px';g2.style.opacity=inbh?0:c.rodK;
-    r.style.transform='rotate('+c.rodAng.toFixed(2)+'deg)';r.style.opacity=inbh?0:Math.min(1,c.rodK*1.6);
+    if(c._rL!==L||c._rww!==rw){c._rL=L;c._rww=rw;r.style.width=rw+'px';r.style.height=L+'px';c.rodRing.style.width=c.rodRing.style.height=(2*L)+'px'}   // 크기는 바뀔 때만
+    posTr(r,cx-rw/2,cy-L);if(c._rw!==W){c._rw=W;c._rp=(.14*aW())/2||.07*W;r.style.clipPath='inset(0 0 '+c._rp+'px 0)'}   // 내 공 안쪽 부분은 잘라서 공 위에 얹어도 어색하지 않게
+    const g2=c.rodRing;posTr(g2,cx-L,cy-L);{const o=String(inbh?0:c.rodK);if(g2._op!==o){g2._op=o;g2.style.opacity=o}}
+    r.style.transform='rotate('+c.rodAng.toFixed(2)+'deg)';{const o=String(inbh?0:Math.min(1,c.rodK*1.6));if(r._op!==o){r._op=o;r.style.opacity=o}}
     // 열쇠고리: 회피 칸이 1개 이상일 때 공 가장자리에 매달려 흔들림
     const k=c.keyEl,kh=.095*W,kw=kh*KEY_AR,rad=c._rp||((.14*aW()))/2;
     const pxn=cx+rad*.62,pyn=cy+rad*.78;
@@ -2794,8 +2802,9 @@ function nuTick(dt){
     if(n.kind!=='nu'||!n.alive||!n.started||n.frozen>0)continue;       // 정지 중에는 아우라 시간도, 주먹도 정지
     n.nuClock=(n.nuClock||0)+dt;
     n.tgAng=(n.tgAng==null?TG_DEG:n.tgAng)-NU.spin*dt;                  // 태극 아우라가 반시계방향으로 계속 돎 (정지 중엔 같이 정지)
-    if(!n.tgGs)n.tgGs=n.aura?[...n.aura.el.querySelectorAll('.tgrot')]:[];
-    {const tr='rotate('+n.tgAng.toFixed(2)+')';for(const g of n.tgGs)g.setAttribute('transform',tr)}
+    if(!n.tgGs)n.tgGs=n.aura?[...n.aura.el.querySelectorAll('.tgrot')].map(g=>CAN_TR?g.ownerSVGElement:g).filter(Boolean):[];
+    if(CAN_TR){const tr=(n.tgAng-TG_DEG).toFixed(2)+'deg';for(const g of n.tgGs)g.style.rotate=tr}
+    else{const tr='rotate('+n.tgAng.toFixed(2)+')';for(const g of n.tgGs)g.setAttribute('transform',tr)}   // 태극(+둥근 테두리)을 svg째로 돌림: 다시 그리지 않고 회전만
     const ph=n.nuClock%NU.cycle,gone=n.nuClock>=NU.cycle&&ph<NU.offSec;   // 5초마다 1초 동안 아우라 없음(주먹도 없음)
     const lost=lostPas(n);
     const hide=lost||(gone&&ph<NU.offSec-NU.fade);                                // 처음 0.4초 줄어들며 사라지고, 마지막 0.4초는 다시 넓어지며 돌아옴
@@ -3000,18 +3009,18 @@ function simStep(dt){
       if(n!==c._n){c._n=n;c.num.textContent=n}
       if(c.btime>=2.75){c.gauge=1;c.status.textContent='';c.mode='chain';c.chainT=now;c.num.textContent='5';sched(.5,()=>runChain(c))}
     }
-    c.fill.style.transform='scaleX('+c.gauge+')';
+    if(simDraw)c.fill.style.transform='scaleX('+c.gauge+')';
   }
 
   const W=aW(),H=aH();
-  renderProjs(dt,W,H);renderCells(W,H);if(simDraw)renderKd(W,H);
+  renderProjs(dt,W,H);if(simDraw){renderCells(W,H);renderKd(W,H)}
   if(!simDraw)return true;
   const sz=(el,o)=>{if(!o._sz||now-o._szT>.5){o._sz=[el.offsetWidth,el.offsetHeight];o._szT=now}return o._sz};   // 크기는 0.5초에 한 번만 잼 (매 프레임 재면 화면이 끊김)
   for(const f of follows){
     if(f.upd)f.upd();
     let x=f.obj.x*W,y=(f.obj.y+f.dy)*H;
     if(f.clamp){const s=sz(f.el,f),hw=s[0]/2,h=s[1];x=Math.min(W-hw-2,Math.max(hw+2,x));y=Math.max(h+2,y)}
-    f.el.style.left=x+'px';f.el.style.top=y+'px';
+    posTr(f.el,x,y);
   }
   for(const c of chars){               // 머리 위 스킬 글자: 1.75초 따라다니다 페이드 아웃
     c.tags=c.tags.filter(tg=>{if(now-tg.t0>=1.75){tg.el.remove();return false}return true});
@@ -3021,7 +3030,7 @@ function simStep(dt){
       const ts=sz(tg.el,tg),age=now-tg.t0,hw=ts[0]/2,h=ts[1];
       tg.el.style.opacity=age<1.4?1:Math.max(0,1-(age-1.4)/.35);
       const x=c.x*W,y=yy;
-      tg.el.style.left=x+'px';tg.el.style.top=y+'px';
+      posTr(tg.el,x,y);
       yy=y-h-2;
     });
   }
@@ -4035,6 +4044,11 @@ document.querySelector('.more').addEventListener('click',()=>{const g=document.g
     if(t-lt<=400){lt=0;if(e.pointerType==='touch'){arm=true;setTimeout(()=>{if(arm){arm=false;admGate()}},700)}else admGate()}else lt=t});
   document.addEventListener('touchend',e=>{if(!arm)return;arm=false;if(e.cancelable)e.preventDefault();admGate()},{passive:false,capture:true});   // 폰: 두 번째 터치에서 손을 뗄 때 열고, 뒤따르는 마우스 이벤트를 막아서 키패드가 바로 닫히지 않게
   document.addEventListener('contextmenu',e=>{if(e.target.closest('.fxic'))e.preventDefault()});
+  let gp=null;const gx=()=>{if(gp){clearTimeout(gp.t);gp=null}};
+  document.addEventListener('pointerdown',e=>{const ic=e.target.closest('.fxic[data-fx="슬로우II"]');if(!ic)return;gx();
+    gp={x:e.clientX,y:e.clientY,t:setTimeout(()=>{gp=null;openAdmin(true)},300)}});
+  document.addEventListener('pointermove',e=>{if(gp&&Math.hypot(e.clientX-gp.x,e.clientY-gp.y)>10)gx()});
+  ['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,gx));
 })();
 function admPage(k){                           // 탭마다 안쪽을 작은 제목(구분)으로 나눔
   const sw=(a,lb)=>'<button type="button" class="admsw" data-a="'+a+'">'+lb+' <span></span></button>';
@@ -4080,9 +4094,9 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="admsub">패널</div><div class="admrow"><span>투명도</span><input type="range" class="admrange" data-a="op" min="30" max="100" step="5"><b data-o="op"></b></div><div class="admsk">'+bt('panelreset','위치·크기 초기화','admsub2')+'</div>';
   return '';
 }
-let ADM_OK=false;
+let ADM_OK=false,ADM_G=false;
 function admGate(){                              // 어드민 패널: 두 번 터치한 다음 비밀번호(2차)
-  if(ADM_OK||document.querySelector('.adm')){openAdmin();return}
+  if(ADM_OK||document.querySelector('.adm:not(.admg)')){openAdmin();return}
   if(document.querySelector('.pwmodal'))return;
   const m=document.createElement('div');m.className='pwmodal';
   m.innerHTML='<div class="pwbox"><div class="pwt">비밀번호</div><input class="pwin" type="password" inputmode="numeric" autocomplete="off"><div class="pwerr"></div><div class="pwbtns"><button type="button" class="pwno">취소</button><button type="button" class="pwyes">확인</button></div></div>';
@@ -4095,13 +4109,16 @@ function admGate(){                              // 어드민 패널: 두 번 �
   m.addEventListener('click',e=>{if(e.target===m&&performance.now()-t0>=350)close()});inp.addEventListener('keydown',e=>{if(e.key==='Enter')ok();if(e.key==='Escape')close()});
   inp.focus();setTimeout(()=>{if(m.isConnected&&document.activeElement!==inp)inp.focus()},30);
 }
-function openAdmin(){
-  try{localStorage.setItem('bftAdm','1')}catch(e){}                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
+function openAdmin(g){
+  g=g===true;
+  if(!g)try{localStorage.setItem('bftAdm','1')}catch(e){}                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
   let w=document.querySelector('.adm');
+  if(w&&!g&&w.classList.contains('admg')){clearInterval(w._iv);w.remove();w=null}   // 게임 전용이 떠 있으면 전체 패널로 바꿈
   if(w){if(w._expand)w._expand(true);return}
-  w=document.createElement('div');w.className='adm';
-  const TABS=[['main','메인'],['char','캐릭터'],['game','게임'],['mod','관리'],['user','유저'],['bl','블랙리스트'],['srv','서버'],['set','설정']];
-  w.innerHTML='<div class="admwin"><div class="admhd"><span class="admdot"></span><span class="admtt">어드민 패널</span><button type="button" class="admmin" aria-label="접기"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button></div>'
+  ADM_G=g;
+  w=document.createElement('div');w.className='adm'+(g?' admg':'');
+  const TABS=g?[['game','게임'],['char','캐릭터']]:[['main','메인'],['char','캐릭터'],['game','게임'],['mod','관리'],['user','유저'],['bl','블랙리스트'],['srv','서버'],['set','설정']];
+  w.innerHTML='<div class="admwin"><div class="admhd"><span class="admdot"></span><span class="admtt">'+(g?'어드민 패널 (게임 전용)':'어드민 패널')+'</span><button type="button" class="admmin" aria-label="접기"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button></div>'
     +'<div class="admmain"><div class="admtabs">'+TABS.map((t,k)=>'<button type="button" class="admtab'+(k?'':' on')+'" data-t="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'
     +'<div class="admpane">'+TABS.map((t,k)=>'<div class="admpg'+(k?'':' on')+'" data-p="'+t[0]+'"><div class="admh">'+t[1]+'</div>'+admPage(t[0])+'</div>').join('')+'</div></div></div>'
     +'<button type="button" class="admico" aria-label="어드민 패널 펼치기"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 12h8M8 15h5"/></svg></button>';
@@ -4190,8 +4207,8 @@ function openAdmin(){
     if(w.classList.contains('min'))return;
     T(()=>{const mi=w.querySelector('.mtinfo');if(mi){const t=MT.on?'지금 점검 중':'점검 꺼짐';if(mi.textContent!==t){mi.textContent=t;mi.style.color=MT.on?'#ff5c7a':'#8b90a0'}}});
     T(()=>{if(w.querySelector('.admpg.on[data-p="main"]')){admInfo(info);specPoll(w)}});
-    T(()=>{const l2=admLog.length+':'+(admLog[0]?admLog[0].t:'');if(l2!==lsig){lsig=l2;logs.innerHTML=admLogHTML()}});
-    T(()=>{const c2=JSON.stringify([PRES_DAYS,[...PRES_STAR],Object.keys(PRES_UV).map(k=>PRES_UV[k].length),UVN]);if(c2!==csig){csig=c2;ccub.innerHTML=admCcuHTML()}});
+    T(()=>{const l2=admLog.length+':'+(admLog[0]?admLog[0].t:'');if(l2!==lsig&&logs){lsig=l2;logs.innerHTML=admLogHTML()}});
+    T(()=>{const c2=JSON.stringify([PRES_DAYS,[...PRES_STAR],Object.keys(PRES_UV).map(k=>PRES_UV[k].length),UVN]);if(c2!==csig&&ccub){csig=c2;ccub.innerHTML=admCcuHTML()}});
     T(()=>{const a2=ANN_LOG.length+':'+(ANN_LOG.length?ANN_LOG[ANN_LOG.length-1].t:0);if(a2!==asig){asig=a2;const bx=w.querySelector('.annlog');if(bx)bx.innerHTML=ANN_LOG.length?ANN_LOG.slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> <b style="color:#17e3d6">'+admEsc(x.n)+' ('+x.pid+')</b> '+admEsc(x.m)+'</div>').join(''):'<div class="admnone">아직 공지가 없습니다.</div>'}});
     T(()=>{if(w.querySelector('.admpg.on[data-p="mod"]')){const m2=JSON.stringify(REG).length+':'+PEN.u+':'+Math.floor(Date.now()/20000)+':'+(NET.op&&NET.op.pid);if(m2!==msig){msig=m2;modRender(w)}}});
     T(()=>{if(w.querySelector('.admpg.on[data-p="user"],.admpg.on[data-p="bl"]')){const q=w.querySelector('.usrq'),bq=w.querySelector('.blq'),u2=FRP.v+':'+FRX.v+':'+JSON.stringify(FR.e).length+':'+(q?q.value:'')+':'+(bq?bq.value:'')+':'+KLOG.length+':'+[...usrOpen].join(',')+':'+NET.me.name+':'+presMy()+':'+Math.floor(Date.now()/20000)+':'+JSON.stringify(REG).length+':'+PRES.n;const ae=document.activeElement;if(u2!==usig&&!(ae&&ae.closest&&ae.closest('.usrlist'))){usig=u2;usrRender(w)}}});
@@ -4200,7 +4217,7 @@ function openAdmin(){
     T(()=>{admVals(w);});
     T(()=>{admSync();});
   };
-  setInterval(()=>{if(!document.hidden)refresh()},400);refresh();
+  w._iv=setInterval(()=>{if(!document.hidden)refresh()},400);refresh();
 }
 const ADM_SK={                              // 관리자: 캐릭터별 바로 쓰기 버튼 (연출·대기 없이 누르는 즉시 효과, 빠르게 누르면 그만큼 빠르게)
   nm:[['꼼짝마!',c=>admFreeze(c)],['체력별 데미지',c=>admPct(c)],['체력별 회복',c=>admHealPct(c)],['1년후',c=>{for(let i=0;i<5;i++){const r=grand();(r<.4?admFreeze:r<.7?admPct:admHealPct)(c)}}]],
@@ -4272,8 +4289,22 @@ function admRenderChars(box){const esc=admEsc;
   }));
   admSwSync(box);
 }
+const admOnOk=()=>{                              // 온라인 경기에서 어드민 조작이 되는지 (게임 전용 패널은 싱글에서만)
+  if(NET.spec){netToast('관전 중에는 쓸 수 없어요');return false}
+  if(ADM_G){netToast('온라인 경기 중에는 쓸 수 없어요');return false}
+  if(!NET.sim||over){netToast('경기가 시작된 뒤에 쓸 수 있어요');return false}
+  return true};
+function admSumExec(name,sd){                      // 온라인: 두 폰이 같은 단계에서 똑같이 바꿔 넣음 (출발 방향도 같은 난수)
+  const o=[...document.querySelectorAll('.modal .half')].find(h=>h.dataset.name===name);if(!o||over)return;
+  const old=chars.find(c=>c.side===sd);if(!old)return;
+  old.alive=false;umStop(false,old);removeChar(sd);
+  document.querySelector(pSel(sd)).querySelector('.name').innerHTML='';
+  launch(addCharAt(sd,o,false),grand()*360);
+}
 function admSummon(name,slot){
-  if(NET.match){netToast('온라인 경기 중에는 소환할 수 없어요');return}             // 관리자: 게임 중이든 아니든 캐릭터를 바로 소환 (slot: auto / left(1P) / right(2P))
+  if(NET.match){if(!admOnOk())return;                                            // 온라인: 지금 있는 자리 중 하나를 바꿈
+    const sd=slot==='left'||slot==='right'?slot:'right';if(!chars.some(c=>c.side===sd))return;
+    admCmd({a:'sum',name,side:sd});return}
   const o=[...document.querySelectorAll('.modal .half')].find(h=>h.dataset.name===name);if(!o)return;
   if(over)resetGame();
   let sd=slot==='left'||slot==='right'?slot:(MULTI()?['left','left2','right','right2']:['left','right']).find(k=>!chars.some(c=>c.side===k));
@@ -4433,6 +4464,7 @@ function usrData(){                              // 어드민: 저장소 기록 
 }
 const usrNm=(U,id)=>(U[id]?U[id].n:'?');
 function usrRender(w){
+  if(!w.querySelector('.usrq'))return;
   const q=(w.querySelector('.usrq').value||'').trim().toUpperCase(),{U,pairs}=usrData();
   const match=u=>!q||u.id.includes(q)||u.n.toUpperCase().includes(q);
   const off=u=>u.s[1]==='off'?1:0;let L=Object.values(U).filter(match).sort((a,b)=>off(a)-off(b)||(off(a)?0:a.s[2]-b.s[2])||(b.ls||0)-(a.ls||0)||a.n.localeCompare(b.n,'ko'));   // 접속 중인 사람 먼저, 그다음은 마지막 접속이 최근인 순서
@@ -4528,7 +4560,7 @@ function admDeb(c,k){                            // 고른 공에게 바로 상�
 }
 function admSetHp(c,v){if(!c.alive||over)return;const old=c.hp;c.hp=Math.max(1,Math.min(c.max,v));renderHp(c);hpChange(c,old)}
 function admRestart(){                           // 같은 캐릭터로 바로 다시 시작
-  if(NET.match){netToast('온라인 경기 중에는 다시 시작할 수 없어요');return}
+  if(NET.match){if(admOnOk())admCmd({a:'rst'});return}   // 온라인: 모든 캐릭터를 처음 상태로 다시 넣고 바로 출발
   const list=chars.map(c=>[c.side,c.name]);resetGame();
   for(const [sd,n] of list){const o=[...document.querySelectorAll('.modal .half')].find(h=>h.dataset.name===n);if(o)addCharAt(sd,o,true)}
   if(chars.length)btn.click();
@@ -4541,8 +4573,9 @@ function admSkip(){                              // 카운트다운 건너뛰고
 }
 /* 어드민 조작을 명령으로 만들어서 실행 — 온라인 경기 중이면 상대 폰에도 보내서 두 폰이 같은 순간(같은 계산 단계)에 똑같이 실행 */
 function admCmd(m){
+  if(ADM_G&&NET.match){netToast('온라인 경기 중에는 쓸 수 없어요');return}
   if(NET.spec){netToast('관전 중에는 쓸 수 없어요');return}
-  if(NET.match&&NET.conn){m.k2=NET.sim?NET.step+(NET.mp?60:24):-1;NET.admHist.push(Object.assign({},m));netSend({t:'adm',c:m});if(m.k2<0)admExec(m);else NET.admQ.push(m)}
+  if(NET.match&&NET.conn){m.k2=NET.sim&&m.a!=='pause'?NET.step+(NET.mp?60:24):-1;NET.admHist.push(Object.assign({},m));netSend({t:'adm',c:m});if(m.k2<0)admExec(m);else NET.admQ.push(m)}
   else admExec(m);
 }
 function admExec(m){
@@ -4565,14 +4598,23 @@ function admExec(m){
   else if(a==='gauge'&&c){if(!c.alive||over)return;if(c.kind==='bk')c.g=BK.max;else if(c.kind==='nu'){c.nuHits=NU.need;nuGauge(c)}else if(c.mode==='fill')c.gauge=1}
   else if(a==='deb'&&c)admDeb(c,m.k);
   else if(a==='center'&&c){c.x=WB/2;c.y=WB/2}
+  else if(a==='sum'&&c)admSumExec(String(m.name||''),c.side);
+  else if(a==='rst'){if(!over)chars.map(o=>[o.side,o.name]).forEach(([sd,n])=>admSumExec(n,sd))}
+  else if(a==='spd'){const v=+m.v;if(isFinite(v))admSpd=Math.max(.05,Math.min(10,v))}
+  else if(a==='pause')admPause=!!m.v;
+  else if(a==='endm'){if(!over){const L=chars.filter(o=>o.alive);L.forEach(o=>{const old=o.hp;o.hp=0;o.alive=false;renderHp(o);hpChange(o,old)});L.forEach(die)}}   // 게임 종료: 모두 한꺼번에 쓰러뜨려 무승부
   else if(a==='tpTo'&&c){if(c.alive){c.x=Math.min(WB-RW,Math.max(RW,+m.x||WB/2));c.y=Math.min(WB-RW,Math.max(RW,+m.y||WB/2));try{burstAt(c.x*aW(),c.y*aH(),'#ffffff',.6,6)}catch(_){}}}
   }catch(e){console.error(e)}
   admSync();
 }
 function admAct(a,b){
+  if(ADM_G&&NET.match){netToast('온라인 경기 중에는 쓸 수 없어요');return}
   const c=b.dataset.side?chars.find(o=>o.side===b.dataset.side):null;
   if(a==='restart')admRestart();
   else if(a==='skip')admSkip();
+  else if(NET.match&&['pause','end','spd','spdpm'].includes(a)){if(!admOnOk())return;   // 온라인: 상대 폰에도 똑같이
+    if(a==='pause')admCmd({a,v:!admPause});else if(a==='end')admCmd({a:'endm'});
+    else admCmd({a:'spd',v:a==='spd'?+b.dataset.v:Math.max(.05,Math.min(10,Math.round((admSpd+(+b.dataset.d)*admStepOf('spd'))*1000)/1000))})}
   else if(a==='pause')admPause=!admPause;
   else if(a==='end')resetGame();
   else if(a==='spd')admSpd=+b.dataset.v;
@@ -4742,7 +4784,7 @@ function resetGame(){chatInClear();wbSet();
   cancelAnimationFrame(raf);raf=0;
   document.querySelectorAll('.ball').forEach(b=>{if(b._anim)b._anim.cancel();b.remove()});
   cancelAnimationFrame(barRaf);barRaf=0;bhs.forEach(bhHumKill);bhSprayUpdate(-1);fx.classList.remove('gend');chars=[];movers=[];events=[];follows=[];foods=[];projs=[];mkCells=[];kdSl=[];bhs=[];mletters=[];bkSouls=[];now=0;lastMeet=0;over=false;objStop=0;revPause=0;if(shakeAnim){shakeAnim.cancel();shakeAnim=null}fx.innerHTML='';auraLayer.innerHTML='';
-  admTp=null;admPause=false;rngOff();
+  admTp=null;admPause=false;if(!document.querySelector('.adm'))admSpd=1;rngOff();   // 어드민 패널이 없는 폰: 온라인에서 받은 게임 속도가 다음 판에 남지 않게
   used.length=0;side=null;phase='idle';modal.hidden=true;count.textContent='';count.classList.remove('win');count.getAnimations().forEach(a=>a.cancel());
   ['.p1','.p2','.p3','.p4'].forEach(k=>{
     const p=document.querySelector(k),hp=p.querySelector('.hp');
@@ -4773,7 +4815,7 @@ const NET={admQ:[],admHist:[],screen:'lobby',state:'idle',searchId:0,peers:[],co
   seed:0,mySide:null,me:{name:'',dev:false,tst:false},op:null,myCh:null,pick:null,picking:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
-const NET_PROTO='b4928',NET_SLOTS=4,NET_SNAP=30;
+const NET_PROTO='b4929',NET_SLOTS=4,NET_SNAP=30;
 /* 온라인 모드: 1대1 · 2대2 · 1대1대1. 자리 순서 = 캐릭터를 놓는 순서 (모든 폰이 같아야 계산이 같음) */
 const MP_MAX={'1v1':2,'2v2':4,'ffa':4},MP_MIN={'1v1':2,'2v2':4,'ffa':3},MP_NAME={'1v1':'1대1','2v2':'2대2','ffa':'1대1대1대1'};
 const MP_SIDES={'2v2':['left','left2','right','right2'],'ffa':['left','right','left2','right2']};
@@ -5080,7 +5122,7 @@ function aimSpinTo(ball,deg){                           // 안 정한 사람의 
 }
 function netGo(L,R,sl,sr,K){netGoD({left:+L||0,right:+R||0},{left:!!sl,right:!!sr},K)}
 function netGoD(D0,S0,K){                              // 3·2·1: 정한 사람은 방향 공개, 안 정한 사람은 화살표가 빙빙 돌다가 멈춤
-  if(NET.goGot||NET.sim)return;NET.goGot=true;
+  if(NET.goGot||NET.sim)return;NET.goGot=true;admPause=false;if(!document.querySelector('.adm'))admSpd=1;
   NET.aiming=false;NET.aimEnded=true;arenaEl.classList.remove('aiming');
   const SD=chars.map(c=>c.side),D={},S={};for(const sd of SD){D[sd]=+(D0&&D0[sd])||0;S[sd]=!!(S0&&S0[sd])}NET.D=D;
   NET.K={};for(const c of chars){const v=Math.max(-3,Math.min(3,(K&&K[c.side])|0));c.wb=v;NET.K[c.side]=v}   // 놓은 순서대로 (모든 폰이 같은 순서)
