@@ -4044,11 +4044,11 @@ document.querySelector('.more').addEventListener('click',()=>{const g=document.g
     if(t-lt<=400){lt=0;if(e.pointerType==='touch'){arm=true;setTimeout(()=>{if(arm){arm=false;admGate()}},700)}else admGate()}else lt=t});
   document.addEventListener('touchend',e=>{if(!arm)return;arm=false;if(e.cancelable)e.preventDefault();admGate()},{passive:false,capture:true});   // 폰: 두 번째 터치에서 손을 뗄 때 열고, 뒤따르는 마우스 이벤트를 막아서 키패드가 바로 닫히지 않게
   document.addEventListener('contextmenu',e=>{if(e.target.closest('.fxic'))e.preventDefault()});
-  let gp=null;const gx=()=>{if(gp){clearTimeout(gp.t);gp=null}};
-  document.addEventListener('pointerdown',e=>{const ic=e.target.closest('.fxic[data-fx="슬로우II"]');if(!ic)return;gx();
-    gp={x:e.clientX,y:e.clientY,t:setTimeout(()=>{gp=null;openAdmin(true)},300)}});
-  document.addEventListener('pointermove',e=>{if(gp&&Math.hypot(e.clientX-gp.x,e.clientY-gp.y)>10)gx()});
-  ['pointerup','pointercancel'].forEach(t=>document.addEventListener(t,gx));
+  let gl=0,ga=false;                  // 얼음(슬로우II) 아이콘을 0.4초 안에 두 번 톡톡 누르면 게임 전용 패널
+  document.addEventListener('pointerdown',e=>{if(!e.target.closest('.fxic[data-fx="슬로우II"]'))return;
+    const t=performance.now();if(t-gl<=400){gl=0;ga=true}else{gl=t;ga=false}});
+  document.addEventListener('pointerup',()=>{if(ga){ga=false;openAdmin(true)}});
+  document.addEventListener('pointercancel',()=>{ga=false});
 })();
 function admPage(k){                           // 탭마다 안쪽을 작은 제목(구분)으로 나눔
   const sw=(a,lb)=>'<button type="button" class="admsw" data-a="'+a+'">'+lb+' <span></span></button>';
