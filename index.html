@@ -2504,7 +2504,7 @@ const UM_WIN_AUD='SUQzBAAAAAACIVRYWFgAAAASAAADbWFqb3JfYnJhbmQAaXNvbQBUWFhYAAAAEw
 const UMP=[
   {fr:UM_FR,aud:UM_AUD,fps:30,w:450,h:497,size:0.562,imgs:null,buf:null,dec:false},
   {fr:UM2_FR,aud:UM2_AUD,fps:30,w:510,h:306,size:.9,alpha:.92,fade:true,imgs:null,buf:null,dec:false}];
-const UM2={sec:3.05,beats:[.2,.9,1.6,2.3],sx:276/340,sy:199/204,dmg:18,fall:1.5,dmgMin:6,tam:43,tamR:.07,wall:.2,knock:.3,kLv:1,dur:.6,maxR:1.45,thick:.012,shake:14};   // 박자 = 템버린이 바닥에 닿는 시각(초) / sx,sy = 그 지점(영상 안 비율)
+const UM2={sec:3.05,beats:[.2,.9,1.6,2.3],sx:276/340,sy:199/204,dmg:18,fall:1.5,dmgMin:6,tam:43,tamR:.06,wall:.2,knock:.3,kLv:1,dur:.6,maxR:1.45,thick:.012,shake:14};   // 박자 = 템버린이 바닥에 닿는 시각(초) / sx,sy = 그 지점(영상 안 비율)
 let umClip=null,umP2=null,umRings=[],umCasts=[],umAllPl=[];   // 엄....edit 두 명(미러전)도 각자 따로 재생·판정
 const umPlOf=c=>{if(!c.umPl){c.umPl=[{},{}];umAllPl.push(...c.umPl)}return c.umPl};
 function umB64(b){const s=atob(b),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
@@ -3771,7 +3771,7 @@ const PATCH_VERSION='4.11.26';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'4.11.26',date:'2026-10-19',
-   chars:[{who:'엄....edit',tag:'nerf',lines:['템버린 직접 데미지 {-45 → 43}','파동 데미지 {-20 → 18}','파동 최소 데미지 {-8 → 6}']}],
+   chars:[{who:'엄....edit',tag:'nerf',lines:['템버린 직접 데미지 {-45 → 43}','템버린 직접 맞는 범위 {-7m → 6m}','파동 데미지 {-20 → 18}','파동 최소 데미지 {-8 → 6}']}],
    fx:[],
    sys:[]},
   {ver:'4.11.25',date:'2026-10-18',
@@ -4773,7 +4773,7 @@ const NET={admQ:[],admHist:[],screen:'lobby',state:'idle',searchId:0,peers:[],co
   seed:0,mySide:null,me:{name:'',dev:false,tst:false},op:null,myCh:null,pick:null,picking:false,
   step:0,acc:0,hist:new Map(),pend:[],endW:undefined,localW:undefined,waitEnd:false,shown:false,shownW:undefined,
   myDir:null,opDir:null,aiming:false,aimEnded:false,goSent:false,lastOpChat:0,umWin:false};
-const NET_PROTO='b4927',NET_SLOTS=4,NET_SNAP=30;
+const NET_PROTO='b4928',NET_SLOTS=4,NET_SNAP=30;
 /* 온라인 모드: 1대1 · 2대2 · 1대1대1. 자리 순서 = 캐릭터를 놓는 순서 (모든 폰이 같아야 계산이 같음) */
 const MP_MAX={'1v1':2,'2v2':4,'ffa':4},MP_MIN={'1v1':2,'2v2':4,'ffa':3},MP_NAME={'1v1':'1대1','2v2':'2대2','ffa':'1대1대1대1'};
 const MP_SIDES={'2v2':['left','left2','right','right2'],'ffa':['left','right','left2','right2']};
