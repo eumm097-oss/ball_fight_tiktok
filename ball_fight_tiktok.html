@@ -4085,7 +4085,7 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
   if(k==='bl')return '<div class="admsub">블랙리스트 검색</div><div class="admrow"><input class="modq blq" type="text" maxlength="12" placeholder="아이디 또는 이름" autocomplete="off" style="text-transform:none"></div>'
     +'<div class="admsub">블랙리스트 <span class="usrblc"></span></div><div class="usrbl"></div><div class="admnote">추방 중인 유저입니다. 바로 해제를 누르면 즉시 다시 들어올 수 있어요.</div>'
     +'<div class="admsub">추방 기록 <span class="usrklc"></span></div><div class="usrkl usrhist"></div><div class="admnote">관리자 폰들에서 추방하거나 해제한 기록입니다 (저장소에 함께 저장). 위 검색칸으로 같이 찾을 수 있어요.</div>';
-  if(k==='user')return '<div class="admsub">유저 검색</div><div class="admrow"><input class="modq usrq" type="text" maxlength="12" placeholder="아이디 또는 이름" autocomplete="off" style="text-transform:none"><button type="button" class="admbtn admsub2" data-a="usrref">새로고침</button></div>'
+  if(k==='user')return '<div class="admsub">유저 검색</div><div class="admrow"><input class="modq usrq" type="text" maxlength="12" placeholder="아이디 또는 이름" autocomplete="off" style="text-transform:none"><button type="button" class="admbtn admsub2" data-a="usrref">새로고침</button><button type="button" class="admbtn" data-a="usrnew">새로 온 순</button></div>'
     +'<div class="admsub">유저 <span class="usrcnt"></span></div><div class="usrlist"></div>'
     +'<div class="admsub">친구 관계</div><div class="usrpairs"></div>'
     +'<div class="admnote">이름을 정한 적이 있는 유저만 나옵니다. 유저를 누르면 친구·받은 요청·보낸 요청이 펼쳐집니다. 접속 상태는 실시간, 친구 기록은 1분마다 새로 받아 옵니다.</div>';
@@ -4396,6 +4396,7 @@ function modRender(w){
   w.querySelector('.modwarn').innerHTML=warn.length?warn.map(id=>modRow(id,all[id])).join(''):'<div class="admnone">경고 기록이 없습니다.</div>';
   w.querySelectorAll('.modchat[data-id]').forEach(el=>{const d=modChatData[el.dataset.id];if(d)el.innerHTML=d});
 }
+var usrNew=false;   // 유저 목록을 새 계정(만든 시각) 순으로
 const usrOpen=new Set(),usrKick={},usrFr={},usrEd={};   // usrFr[아이디]: 친구 정보(고른 방·불러오는 중)
 /* 어드민 폰에 1대1 대화를 모아 둠: 접속 중인 사람 폰에서 가져올 때마다 쌓여서, 나중에 둘 다 꺼져 있어도 볼 수 있음 (공개 저장소에는 올리지 않음) */
 const admIs=()=>{try{return localStorage.getItem('bftAdm')==='1'}catch(e){return false}};
@@ -4450,16 +4451,23 @@ function usrRoom(id,k){                             // 대화방 열기: 둘 중
   else if(F.sel){const who=(k===PID||FRP.pl[k])?k:((id===PID||FRP.pl[id])?id:null);
     if(who){F.rl=true;modQuery(who,r=>{if(r&&r.dmc)admDmPut(who,r.dmc,r.gc);F.rl=false;const w2=document.querySelector('.adm');if(w2)usrRender(w2)},{k:'dm',w:who===k?id:k})}}
   if(w)usrRender(w)}
+function firstOf(id){                           // 어드민: 처음 들어온 시각 (정확하면 x=0, 예전 유저는 '이 시각 이전부터'로 x=1)
+  if(id===PID)return {t:FIRST.t,x:FIRST.x};
+  if(FRX.f[id]&&!FRX.fx[id])return {t:FRX.f[id],x:0};
+  let t=0;const up=m=>{if(m>1e12&&(!t||m<t))t=m};
+  up(FRX.f[id]);up(FRX.n[id]&&FRX.n[id].u);up(ACXC[id]);up(ACX[id]);up(REG[id]&&REG[id].u);up(FRX.ls[id]);
+  for(const k in FRX.e){const e=FRX.e[k];if(e.a===id||e.b===id)up(e.u)}
+  return t?{t,x:1}:null}
 function usrData(){                              // 어드민: 저장소 기록 + 내 폰 기록을 합쳐 유저별로 정리
   const E={};for(const k in FRX.e)E[k]=FRX.e[k];for(const k in FR.e)if(!E[k]||E[k].u<FR.e[k].u)E[k]=FR.e[k];
   const U={},get=id=>U[id]||(U[id]={id,f:[],i:[],o:[]});
-  for(const id in FRX.n)get(id);for(const id in REG)get(id);for(const id in FRP.pl)if(FRID.test(id))get(id);if(NET.me.name)get(PID);
+  for(const id in FRX.n)get(id);for(const id in FRX.f)get(id);for(const id in REG)get(id);for(const id in FRP.pl)if(FRID.test(id))get(id);if(NET.me.name)get(PID);
   const pairs=[];
   for(const k in E){const e=E[k];if(e.st==='x')continue;const A=get(e.a),B=get(e.b);
     if(e.st==='f'){A.f.push(e.b);B.f.push(e.a);pairs.push(e)}
     else if(e.by===e.a){A.o.push(e.b);B.i.push(e.a)}else{B.o.push(e.a);A.i.push(e.b)}}
   for(const id in U){const u=U[id],x=id===PID?{n:NET.me.name}:(FRX.n[id]||FR.n[id]||(REG[id]?{n:REG[id].n}:null)),p=id===PID?[presMy()]:FRP.pl[id];
-    u.n=(p&&p[1])||(x&&x.n)||'?';u.s=p&&FRST[p[0]]?FRST[p[0]]:[offText(id),'off',3];u.ls=id===PID?Date.now():lastSeen(id);u.pt=id===PID?Math.floor(PT.t/60000):(FRX.pt[id]||0)}
+    u.n=(p&&p[1])||(x&&x.n)||'이름 없음';u.s=p&&FRST[p[0]]?FRST[p[0]]:[offText(id),'off',3];u.ls=id===PID?Date.now():lastSeen(id);u.pt=id===PID?Math.floor(PT.t/60000):(FRX.pt[id]||0)}
   return {U,pairs};
 }
 const usrNm=(U,id)=>(U[id]?U[id].n:'?');
@@ -4468,6 +4476,8 @@ function usrRender(w){
   const q=(w.querySelector('.usrq').value||'').trim().toUpperCase(),{U,pairs}=usrData();
   const match=u=>!q||u.id.includes(q)||u.n.toUpperCase().includes(q);
   const off=u=>u.s[1]==='off'?1:0;let L=Object.values(U).filter(match).sort((a,b)=>off(a)-off(b)||(off(a)?0:a.s[2]-b.s[2])||(b.ls||0)-(a.ls||0)||a.n.localeCompare(b.n,'ko'));   // 접속 중인 사람 먼저, 그다음은 마지막 접속이 최근인 순서
+  if(usrNew){const ft=id=>{const f=firstOf(id);return f&&!f.x?f.t:0};L.sort((a,b)=>ft(b.id)-ft(a.id))}   // 정확한 최초 접속이 가장 최근인 사람 먼저
+  {const nb=w.querySelector('[data-a="usrnew"]');if(nb){nb.textContent=usrNew?'새로 온 순 ✓':'새로 온 순';nb.classList.toggle('admheal',usrNew)}}
   const total=L.length,onN=L.filter(u=>u.s[1]!=='off').length;   // 전부 보여 줌 (접속 중 → 마지막 접속 최근 순)
   w.querySelector('.usrcnt').textContent='('+total+'명 · 접속 중 '+onN+'명)';
   const line=(id,extra)=>{const u=U[id]||{n:'?',s:[offText(id),'off']};return '<div class="modli"><b class="usrn">'+admEsc(u.n)+'</b> <span>'+id+'</span> <em class="usrst '+u.s[1]+'">'+u.s[0]+'</em>'+(extra||'')+'</div>'};
@@ -4487,6 +4497,8 @@ function usrRender(w){
     const open=usrOpen.has(u.id);
     return '<div class="admch usr"><button type="button" class="usrhd" data-a="usrtog" data-id="'+u.id+'"><b>'+admEsc(u.n)+'</b><i>'+u.id+'</i><em class="usrst '+u.s[1]+'">'+u.s[0]+'</em></button>'
       +'<div class="modl">친구 <b>'+u.f.length+'</b>명 · 받은 요청 <b>'+u.i.length+'</b> · 보낸 요청 <b>'+u.o.length+'</b></div>'
+      +'<div class="modl">최초 접속 <b>'+(()=>{const f=firstOf(u.id);return f?accDate(f.t)+(f.x?' 이전':''):'기록 없음'})()+'</b>'+(()=>{const f=firstOf(u.id);return f&&f.x?' <span>(예전 유저라 정확한 시각은 몰라요)</span>':''})()+'</div>'
+      +'<div class="modl">계정 생성 <b>'+(ACXC[u.id]?accDate(ACXC[u.id]):(ACX[u.id]?'기록 없음 (예전 계정)':'계정 없음'))+'</b></div>'
       +'<div class="modl">마지막 접속 <b>'+(u.s[1]!=='off'?'지금 접속 중':(u.ls?agoText(u.ls)+' ('+new Date(u.ls).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+')':'기록 없음'))+'</b> · 플레이 타임 <b>'+(u.pt?ptText(u.pt):'기록 없음')+'</b></div>'
       +(()=>{const r=REG[u.id],kl=r?Math.max(0,(+r.kb||0)-Date.now()):0,kv=usrKick[u.id]||{},ktm=Math.ceil(kl/60000),kh=Math.floor(ktm/60),km=ktm%60;
         const rc=u.id===PID?[PROF.w,PROF.l,PROF.d]:(FRX.rc[u.id]||null),wb=wbOf(u.id),WBL={'-3':'많이 짐','-2':'자주 짐','-1':'조금 짐','0':'보통','1':'조금 이김','2':'자주 이김','3':'많이 이김'};
@@ -4632,6 +4644,7 @@ function admAct(a,b){
   else if(a==='modfind'){const w=document.querySelector('.adm'),q=(w.querySelector('.modq').value||'').toUpperCase().replace(/[^A-Z0-9]/g,''),res=w.querySelector('.modres');
     if(!/^[A-Z2-9]{6}$/.test(q)){res.innerHTML='<div class="admnone">아이디 6자리를 입력하세요.</div>';return}
     const e=q===PID?regSelf():REG[q];res.innerHTML=modRow(q,e||{n:'?',w:0,cu:0,g:0,log:[]})+(e?'':'<div class="admnote">경고 기록이 없는 플레이어입니다.</div>')}
+  else if(a==='usrnew'){usrNew=!usrNew;const w=document.querySelector('.adm');if(w)usrRender(w)}
   else if(a==='usrtog'){const id=b.dataset.id;if(usrOpen.has(id))usrOpen.delete(id);else usrOpen.add(id);const w=document.querySelector('.adm');if(w)usrRender(w)}
   else if(a==='usrref'){cldSync(false)}
   else if(a==='usrcopy'){frCopy(b.dataset.id,b)}
@@ -5339,6 +5352,14 @@ function modCheck(text){                         // {bad, pi, word}
 /* 내 기기 아이디 · 경고/패널티 (폰 저장공간 두 곳에 같이 적어서 하나 지워도 남게) */
 function stGet(k){let v=null;try{v=localStorage.getItem(k)}catch(e){}if(v==null){const m=document.cookie.match(new RegExp('(?:^|; )'+k+'=([^;]*)'));if(m)try{v=decodeURIComponent(m[1])}catch(e){}}return v}
 function stSet(k,v,ck){try{localStorage.setItem(k,v)}catch(e){}if(ck)try{document.cookie=k+'='+encodeURIComponent(v)+';max-age=31536000;path=/;SameSite=Lax'}catch(e){}}
+var FIRST=(()=>{   // 이 폰이 처음 들어온 시각 (x=1이면 예전 유저라서 정확한 시각을 모르고 '이때 이전부터'라는 뜻)
+  try{const v=JSON.parse(localStorage.getItem('bftFirst')||'null');if(v&&+v.t>0)return {t:+v.t,x:v.x?1:0}}catch(e){}
+  let t=Date.now(),x=0;
+  if(/^[A-Z2-9]{6}$/.test(stGet('bftPid')||'')){x=1;   // 아이디가 이미 있었음 = 예전 유저: 폰에 남은 가장 이른 기록으로 추정
+    try{for(const k in PT.d){const m=Date.parse(k+'T00:00:00+09:00');if(m>0&&m<t)t=m}}catch(e){}
+    try{const a=JSON.parse(localStorage.getItem('bftAcc')||'null');if(a)for(const m of [+a.c,+a.u])if(m>1e12&&m<t)t=m}catch(e){}}
+  try{localStorage.setItem('bftFirst',JSON.stringify({t,x}))}catch(e){}
+  return {t,x}})();
 let PID=stGet('bftPid');if(!/^[A-Z2-9]{6}$/.test(PID||'')){PID='';const A='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';for(let i=0;i<6;i++)PID+=A[Math.floor(Math.random()*A.length)]}stSet('bftPid',PID,true);
 let PEN={w:0,cu:0,g:0,ub:0,u:0};try{const v=JSON.parse(stGet('bftPen')||'null');if(v&&typeof v==='object')PEN=Object.assign(PEN,v)}catch(e){}
 let PEN_LOG=[];try{PEN_LOG=JSON.parse(localStorage.getItem('bftPenLog')||'[]')||[]}catch(e){}
@@ -5725,7 +5746,7 @@ function specLeave(){
 const FRID=/^[A-Z2-9]{6}$/;
 const frKey=(x,y)=>x<y?x+y:y+x;
 var FR={e:{},n:{},s:{},ls:{},reg:'',dirty:false};   // ls: 친구를 마지막으로 접속 중으로 본 시각      // e: 관계(두 아이디를 정렬해 붙인 값 → {a,b,st,by,u}) · n: 아이디 → 이름 · s: 이미 본 요청
-var FRX={e:{},n:{},v:0,ls:{},pt:{},rc:{}};   // ls: 저장소에 남은 마지막 접속 · pt: 플레이 타임(분)                         // 저장소에서 받아 온 전체 기록 (어드민 유저 탭용, 저장 안 함)
+var FRX={e:{},n:{},v:0,ls:{},pt:{},rc:{},f:{},fx:{}};   // ls: 저장소에 남은 마지막 접속 · pt: 플레이 타임(분)                         // 저장소에서 받아 온 전체 기록 (어드민 유저 탭용, 저장 안 함)
 var FRP={pl:{},plS:'',v:0,ver:0,sig:'',tab:'list',ask:'',inv:{},chat:null};
 function frClean(x){if(!x||typeof x!=='object')return null;const a=x.a,b=x.b;if(!FRID.test(a)||!FRID.test(b)||a>=b)return null;
   if(x.st!=='p'&&x.st!=='f'&&x.st!=='x')return null;if(x.by!==a&&x.by!==b)return null;return {a,b,st:x.st,by:x.by,u:+x.u||0}}
@@ -5747,7 +5768,7 @@ const frFriends=()=>Object.values(FR.e).filter(e=>e.st==='f').map(frOther);
 const frIn=()=>Object.values(FR.e).filter(e=>e.st==='p'&&e.by!==PID);
 const frOut=()=>Object.values(FR.e).filter(e=>e.st==='p'&&e.by===PID);
 const frUnseen=()=>frIn().filter(e=>FR.s[e.a+e.b]!==e.u);
-const frNeedPush=()=>FR.dirty||(!!NET.me.name&&FR.reg!==NET.me.name);
+const frNeedPush=()=>FR.dirty||(!!NET.me.name&&FR.reg!==NET.me.name)||(FRX.v>0&&!(FRX.f[PID]>0));   // 저장소에 내 최초 접속 시각이 아직 없으면 한 번 올림
 function frInSync(d){                           // 내 친구 기록·이름이 저장소에 다 들어가 있는지 (바꾸지 않고 보기만)
   const fe=d.fe&&typeof d.fe==='object'&&!Array.isArray(d.fe)?d.fe:{},fu=d.fu&&typeof d.fu==='object'&&!Array.isArray(d.fu)?d.fu:{};
   for(const k in FR.e){const o=fe[k];if(!o||(+o.u||0)<FR.e[k].u)return false}
@@ -5759,9 +5780,9 @@ function frNotify(id,t){if(!NET.match)netToast(frNameOf(id)+' 님이 '+t)}
 /* 저장소 ↔ 내 폰 */
 function frPull(d){
   const fe=d.fe&&typeof d.fe==='object'&&!Array.isArray(d.fe)?d.fe:{},fu=d.fu&&typeof d.fu==='object'&&!Array.isArray(d.fu)?d.fu:{};
-  FRX.e={};FRX.n={};FRX.ls={};FRX.pt={};FRX.rc={};
+  FRX.e={};FRX.n={};FRX.ls={};FRX.pt={};FRX.rc={};FRX.f={};FRX.fx={};
   for(const k in fe){const e=frClean(fe[k]);if(e)FRX.e[e.a+e.b]=e}
-  for(const k in fu){const x=fu[k];if(!FRID.test(k)||!x||typeof x!=='object')continue;if(typeof x.n==='string')FRX.n[k]={n:x.n.slice(0,NMX),u:+x.u||0};if(+x.ls)FRX.ls[k]=+x.ls;if(+x.pt)FRX.pt[k]=+x.pt;if(Array.isArray(x.rc))FRX.rc[k]=x.rc.slice(0,3).map(v=>Math.max(0,v|0))}
+  for(const k in fu){const x=fu[k];if(!FRID.test(k)||!x||typeof x!=='object')continue;if(typeof x.n==='string')FRX.n[k]={n:x.n.slice(0,NMX),u:+x.u||0};if(+x.ls)FRX.ls[k]=+x.ls;if(+x.f>0){FRX.f[k]=+x.f;FRX.fx[k]=x.fx?1:0}if(+x.pt)FRX.pt[k]=+x.pt;if(Array.isArray(x.rc))FRX.rc[k]=x.rc.slice(0,3).map(v=>Math.max(0,v|0))}
   FRX.v++;
   let ch=false,inc=null,acc=null;
   for(const k in FRX.e){const e=FRX.e[k];if(e.a!==PID&&e.b!==PID)continue;const had=FR.e[k];
@@ -5778,8 +5799,9 @@ function frMerge(d){
   if(!d.fe||typeof d.fe!=='object'||Array.isArray(d.fe)){d.fe={};ch=true}
   if(!d.fu||typeof d.fu!=='object'||Array.isArray(d.fu)){d.fu={};ch=true}
   for(const k in FR.e){const e=FR.e[k],o=d.fe[k];if(!o||(+o.u||0)<e.u){d.fe[k]={a:e.a,b:e.b,st:e.st,by:e.by,u:e.u};ch=true}}
-  {const nm=NET.me.name,o=d.fu[PID];if(nm||o){const e=o&&typeof o==='object'?Object.assign({},o):{},now=Date.now();let c=false;   // 내 이름 · 마지막 접속(8분마다) · 플레이 타임
+  {const nm=NET.me.name,o=d.fu[PID];if(nm||o||FIRST){const e=o&&typeof o==='object'?Object.assign({},o):{},now=Date.now();let c=false;   // 내 이름 · 마지막 접속(8분마다) · 플레이 타임
     if(nm&&e.n!==nm){e.n=nm;e.u=now;c=true}
+    if(!(+e.f>0)||FIRST.t<+e.f){e.f=FIRST.t;e.fx=FIRST.x;c=true}   // 최초 접속 (이름·회원가입과 상관없이)
     if(now-(+e.ls||0)>8*60000){e.ls=now;c=true}
     const pt=Math.floor(PT.t/60000);if(pt>(+e.pt||0)){e.pt=pt;c=true}
     {const rc=[PROF.w|0,PROF.l|0,PROF.d|0];if(!Array.isArray(e.rc)||e.rc.join()!==rc.join()){e.rc=rc;c=true}}   // 온라인 전적 (어드민 유저 탭용)
@@ -6202,20 +6224,22 @@ async function accHash(pw,salt){                     // 비밀번호는 그대�
 function accProf(){const top={};Object.entries(PROF.ch).sort((a,b)=>b[1].g-a[1].g).slice(0,10).forEach(([n,o])=>top[n]={g:o.g|0,w:o.w|0});
   return {n:NET.me.name||'',dv:NET.me.dev?1:0,ts:NET.me.tst?1:0,pn:PROF.name||'',pdv:PROF.dev?1:0,pts:PROF.tst?1:0,w:PROF.w|0,l:PROF.l|0,d:PROF.d|0,ch:top,pt:Math.floor(PT.t/60000),ul:unlkGet()}}
 function accMerge(d){                                 // 저장소에 내 계정(비밀번호 확인값 + 프로필) 올림
-  if(Object.keys(ACC_RS).length){if(!d.ac||typeof d.ac!=='object'||Array.isArray(d.ac))d.ac={};for(const id in ACC_RS){const r=ACC_RS[id],o=d.ac[id];if(o&&(+o.u||0)>=r.u)continue;d.ac[id]={s:r.s,h:r.h,u:r.u,v:2,p:o&&o.p?o.p:{}}}}   // 관리자 비밀번호 초기화
+  if(Object.keys(ACC_RS).length){if(!d.ac||typeof d.ac!=='object'||Array.isArray(d.ac))d.ac={};for(const id in ACC_RS){const r=ACC_RS[id],o=d.ac[id];if(o&&(+o.u||0)>=r.u)continue;d.ac[id]={s:r.s,h:r.h,u:r.u,v:2,p:o&&o.p?o.p:{}};if(o&&+o.c>0)d.ac[id].c=+o.c}}   // 관리자 비밀번호 초기화
   if(!ACC)return;if(!d.ac||typeof d.ac!=='object'||Array.isArray(d.ac))d.ac={};
   const o=d.ac[PID];if(o&&(+o.u||0)>ACC.u)return;   // 다른 기기에서 비밀번호를 바꿨으면 그쪽이 맞음
-  const p=accProf(),n={s:ACC.s,h:ACC.h,u:ACC.u,p};if(ACC.v===2)n.v=2;if(o&&JSON.stringify(o)===JSON.stringify(n))return;d.ac[PID]=n;
+  const p=accProf(),n={s:ACC.s,h:ACC.h,u:ACC.u,p};if(ACC.v===2)n.v=2;if(ACC.c>0)n.c=ACC.c;if(o&&JSON.stringify(o)===JSON.stringify(n))return;d.ac[PID]=n;
   const ks=Object.keys(d.ac);if(ks.length>3000)ks.sort((a,b)=>(d.ac[a].u||0)-(d.ac[b].u||0)).slice(0,ks.length-3000).forEach(k=>delete d.ac[k])}
-var ACX={},ACC_RS={};   // ACX: 계정 있는 아이디 (관리자용) · ACC_RS: 관리자가 초기화한 비밀번호 (저장소에 올릴 것)
-function accPull(d){if(d.ac&&typeof d.ac==='object'){ACX={};for(const k in d.ac)if(FRID.test(k))ACX[k]=+(d.ac[k]&&d.ac[k].u)||1;for(const k in ACC_RS)if((ACX[k]||0)>=ACC_RS[k].u)delete ACC_RS[k];if(typeof acqFlush==='function')setTimeout(acqFlush,0)}
+var ACX={},ACXC={},ACC_RS={};   // ACXC: 계정 만든 시각 (관리자·본인 프로필에서만 보임)
+function accDate(t){return new Date(t).toLocaleString('ko-KR',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+   // ACX: 계정 있는 아이디 (관리자용) · ACC_RS: 관리자가 초기화한 비밀번호 (저장소에 올릴 것)
+function accPull(d){if(d.ac&&typeof d.ac==='object'){ACX={};ACXC={};for(const k in d.ac)if(FRID.test(k)){ACX[k]=+(d.ac[k]&&d.ac[k].u)||1;const cc=d.ac[k]&&+d.ac[k].c;if(cc>0)ACXC[k]=cc}for(const k in ACC_RS)if((ACX[k]||0)>=ACC_RS[k].u)delete ACC_RS[k];if(typeof acqFlush==='function')setTimeout(acqFlush,0)}
   accPull2(d)}
-function accPull2(d){const o=d.ac&&d.ac[PID];if(!ACC||!o||!(+o.u>ACC.u)||!/^[0-9a-f]{32}$/.test(o.s)||!/^[0-9a-f]{64}$/.test(o.h))return;ACC={id:PID,s:o.s,h:o.h,u:+o.u};if(o.v===2)ACC.v=2;accSave()}
+function accPull2(d){const o=d.ac&&d.ac[PID];if(ACC&&o&&+o.c>0&&!(ACC.c>0)){ACC.c=+o.c;accSave()}if(!ACC||!o||!(+o.u>ACC.u)||!/^[0-9a-f]{32}$/.test(o.s)||!/^[0-9a-f]{64}$/.test(o.h))return;{const oc=ACC.c;ACC={id:PID,s:o.s,h:o.h,u:+o.u};if(o.v===2)ACC.v=2;if(+o.c>0)ACC.c=+o.c;else if(oc>0)ACC.c=oc;accSave()}}
 const accPwOk=pw=>pw.length>=6&&pw.length<=20&&/^[\x21-\x7e]+$/.test(pw)&&!/^\d+$/.test(pw);   // 6~20자 · 숫자만은 안 됨
 async function accReset(id,pw){                        // 관리자: 비밀번호를 까먹은 유저의 비밀번호를 새로 정해 줌 (원래 비밀번호는 아무도 볼 수 없음)
   const s=hexOf(crypto.getRandomValues(new Uint8Array(16)).buffer),h=await accHash(pw,s),u=Date.now();ACC_RS[id]={s,h,u,v:2};
-  if(id===PID){ACC={id:PID,s,h,u,v:2};accSave()}await cldFresh();await cldSync(true)}
-async function accMake(pw){const s=hexOf(crypto.getRandomValues(new Uint8Array(16)).buffer),h=await accHash(pw,s);ACC={id:PID,s,h,u:Date.now(),v:2};accSave();await cldFresh();cldSoon(200)}
+  if(id===PID){const oc=(ACC&&ACC.c)||ACXC[id]||0;ACC={id:PID,s,h,u,v:2};if(oc>0)ACC.c=oc;accSave()}await cldFresh();await cldSync(true)}
+async function accMake(pw){const s=hexOf(crypto.getRandomValues(new Uint8Array(16)).buffer),h=await accHash(pw,s);const c0=(ACC&&ACC.c)||ACXC[PID]||(ACC?0:Date.now());ACC={id:PID,s,h,u:Date.now(),v:2};if(c0>0)ACC.c=c0;accSave();await cldFresh();cldSoon(200)}   // 비밀번호를 바꿔도 계정 만든 시각(c)은 그대로
 var LGF={n:0,until:0};try{const v=JSON.parse(localStorage.getItem('bftLgF')||'null');if(v)LGF={n:v.n|0,until:+v.until||0}}catch(e){}
 function lgfSave(){try{localStorage.setItem('bftLgF',JSON.stringify(LGF))}catch(e){}}
 const lgfWait=()=>Math.max(0,Math.ceil((LGF.until-Date.now())/1000));   // 비밀번호를 5번 틀리면 1분 동안 못 함
@@ -6228,11 +6252,11 @@ async function accLogin(id,pw){                       // 다른 아이디로 로
   if(await accHash(pw,a.s)!==a.h){lgfBad();return lgfWait()?'비밀번호를 5번 틀려서 1분 동안 로그인할 수 없어요':'비밀번호가 틀렸어요 (5번 틀리면 1분 동안 못 해요)'}
   lgfOk();
   const p=a.p&&typeof a.p==='object'?a.p:{};
-  if(id===PID){if(Array.isArray(p.ul)){const U=unlkGet();for(const x of p.ul)if(typeof x==='string'&&!U.includes(x))U.push(x);try{localStorage.setItem('bftUnlk',JSON.stringify(U.slice(0,20)))}catch(e){}unlkApply()}ACC={id,s:a.s,h:a.h,u:+a.u||Date.now()};if(a.v===2||accPwOk(pw))ACC.v=2;accSave();if(ACC.v===2&&a.v!==2)cldSoon(500);return ''}   // 지금 쓰는 아이디로 로그인: 이 폰 기록은 그대로 두고 계정만 연결
+  if(id===PID){if(Array.isArray(p.ul)){const U=unlkGet();for(const x of p.ul)if(typeof x==='string'&&!U.includes(x))U.push(x);try{localStorage.setItem('bftUnlk',JSON.stringify(U.slice(0,20)))}catch(e){}unlkApply()}ACC={id,s:a.s,h:a.h,u:+a.u||Date.now()};if(+a.c>0)ACC.c=+a.c;if(a.v===2||accPwOk(pw))ACC.v=2;accSave();if(ACC.v===2&&a.v!==2)cldSoon(500);return ''}   // 지금 쓰는 아이디로 로그인: 이 폰 기록은 그대로 두고 계정만 연결
   try{
     for(const k of ['bftDm','bftGc','bftFr','bftPen','bftPenLog','bftMyChat','bftAdmDm','bftWc'])localStorage.removeItem(k);   // 이 폰에 남은 예전 아이디 기록은 비움
     document.cookie='bftPen=;max-age=0;path=/';
-    stSet('bftPid',id,true);localStorage.setItem('bftAcc',JSON.stringify(Object.assign({id,s:a.s,h:a.h,u:+a.u||Date.now()},a.v===2||accPwOk(pw)?{v:2}:{})));
+    stSet('bftPid',id,true);localStorage.setItem('bftAcc',JSON.stringify(Object.assign({id,s:a.s,h:a.h,u:+a.u||Date.now()},a.v===2||accPwOk(pw)?{v:2}:{},+a.c>0?{c:+a.c}:{})));
     const nm=String(p.n||'').slice(0,NMX);localStorage.setItem('bftNick',nm);localStorage.setItem('bftDev',p.dv?'1':'0');localStorage.setItem('bftTst',p.ts?'1':'0');
     const ch={};if(p.ch&&typeof p.ch==='object')for(const n in p.ch){const o=p.ch[n];if(o&&(o.g|0)>0)ch[String(n).slice(0,20)]={g:o.g|0,w:Math.min(o.g|0,o.w|0)}}
     localStorage.setItem('bftProf',JSON.stringify({name:String(p.pn||'').slice(0,NMX),dev:!!p.pdv,tst:!!p.pts,w:p.w|0,l:p.l|0,d:p.d|0,ch,k:'',r:'',c:''}));
@@ -6249,7 +6273,7 @@ function accHTML(){
     +'<div class="rmsg acmsg"></div><div class="prsm acwarn">새 비밀번호도 메모장 같은 곳에 적어 두세요</div>'+'<div class="prsm achelp">비밀번호를 까먹었으면 <a href="https://open.kakao.com/o/sJsBKORi" target="_blank" rel="noopener">운영자 오픈채팅</a>에서 도움을 요청하세요</div>'+'<div class="rbtns"><button type="button" class="rbtn rgo" data-p="acchange">바꾸기</button><button type="button" class="rbtn" data-p="acback">취소</button></div>';
   if(v==='login')return '<div class="frsec">로그인</div><input class="rin acid" maxlength="6" placeholder="아이디 6자리"'+(!ACC&&ACX[PID]?' value="'+PID+'"':'')+' autocomplete="username" autocapitalize="characters" spellcheck="false"><input class="rin acp1" type="password" maxlength="20" placeholder="비밀번호" autocomplete="current-password" style="margin-top:6px">'
     +'<div class="rmsg acmsg"></div><div class="prsm">로그인하면 이 폰은 그 아이디가 되고, 이름·친구·전적을 이어서 써요. 1대1 대화 기록은 원래 폰에만 남아요.</div>'+'<div class="prsm achelp">비밀번호를 까먹었으면 <a href="https://open.kakao.com/o/sJsBKORi" target="_blank" rel="noopener">운영자 오픈채팅</a>에서 도움을 요청하세요</div>'+'<div class="rbtns"><button type="button" class="rbtn rgo" data-p="aclogin">로그인</button><button type="button" class="rbtn" data-p="acback">취소</button></div>';
-  return '<div class="frsec">계정</div>'+(ACC?'<div class="prrow"><b>비밀번호</b><span class="acon">설정됨 ✓</span></div><div class="prsm">다른 폰이나 앱에서 아이디 <b>'+PID+'</b>와 비밀번호로 로그인할 수 있어요.</div>'
+  return '<div class="frsec">계정</div><div class="prrow"><b>최초 접속</b><span>'+accDate(FIRST.t)+(FIRST.x?' 이전':'')+'</span></div>'+(ACC?'<div class="prrow"><b>비밀번호</b><span class="acon">설정됨 ✓</span></div>'+(ACC.c>0?'<div class="prrow"><b>계정 생성</b><span>'+accDate(ACC.c)+'</span></div>':'')+'<div class="prsm">다른 폰이나 앱에서 아이디 <b>'+PID+'</b>와 비밀번호로 로그인할 수 있어요.</div>'
       :(ACX[PID]?'<div class="prsm acwarn">이 아이디 <b>'+PID+'</b>는 이미 계정이 있어요. <b>로그인</b>을 눌러 비밀번호를 넣어 주세요.</div>':'<div class="prsm">회원가입하면 채팅을 할 수 있고, 앱이나 다른 폰에서 같은 계정으로 이어서 할 수 있어요.</div>'))
     +'<div class="acbtns">'+(ACC?'<button type="button" class="frsm" data-p="acv" data-v="change">비밀번호 바꾸기</button>':(ACX[PID]?'':'<button type="button" class="frsm ok" data-p="acv" data-v="make">회원가입</button>'))+'<button type="button" class="frsm'+(!ACC&&ACX[PID]?' ok':'')+'" data-p="acv" data-v="login">'+(ACC?'다른 계정으로 로그인':'로그인')+'</button></div>'}
 /* 로그인 안 한 사람에게 한 번(접속할 때마다) 로그인·회원가입하는 법을 알려 줌 · 이 아이디에 계정이 있으면 로그인하라고 */
