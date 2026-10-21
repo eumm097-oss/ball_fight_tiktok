@@ -727,11 +727,12 @@ function dbgErr(m,all){if(!all){try{if(localStorage.getItem('bftAdm')!=='1')retu
     el.textContent='오류: '+String(m).slice(0,160);el.hidden=false;clearTimeout(dbgErr.t);dbgErr.t=setTimeout(()=>{el.hidden=true},9000)}catch(_){}}
 window.addEventListener('error',e=>dbgErr((e.message||'?')+(e.lineno?' (줄 '+e.lineno+')':'')));
 var NMX=40;
-var PT={t:0,d:{}};try{const v=JSON.parse(localStorage.getItem('bftPt')||'null');if(v&&typeof v==='object'){PT.t=+v.t||0;if(v.d&&typeof v.d==='object')for(const k in v.d)if(/^\d{4}-\d\d-\d\d$/.test(k))PT.d[k]=+v.d[k]||0}}catch(e){}   // 플레이 타임: 게임 화면을 보고 있던 시간(ms) · 날짜별
-{let last=Date.now(),sv=0;const tick=()=>{const now=Date.now(),dt=Math.min(15000,Math.max(0,now-last));last=now;if(document.hidden)return;
+var PT={t:0,d:{}};try{const v=JSON.parse(localStorage.getItem('bftPt')||'null');if(v&&typeof v==='object'){PT.t=+v.t||0;if(v.d&&typeof v.d==='object')for(const k in v.d)if(/^\d{4}-\d\d-\d\d$/.test(k))PT.d[k]=+v.d[k]||0}}catch(e){}   // 플레이 타임: 게임에 들어와 있던 모든 시간(ms) · 날짜별
+{let last=Date.now(),sv=0;const save=()=>{try{localStorage.setItem('bftPt',JSON.stringify(PT))}catch(e){}};
+  const tick=()=>{const now=Date.now(),dt=Math.min(120000,Math.max(0,now-last));last=now;   // 게임이 열려 있는 모든 시간 (백그라운드·화면이 꺼져 있어도) · 한 번에 최대 2분까지만 셈 (폰이 잠든 동안은 안 세려고)
     PT.t+=dt;const k=new Date(now+9*3600e3).toISOString().slice(0,10);PT.d[k]=(PT.d[k]||0)+dt;
-    if(now-sv>30000){sv=now;const ks=Object.keys(PT.d).sort();ks.slice(0,Math.max(0,ks.length-14)).forEach(x=>delete PT.d[x]);try{localStorage.setItem('bftPt',JSON.stringify(PT))}catch(e){}}};
-  setInterval(tick,5000);document.addEventListener('visibilitychange',()=>{if(document.hidden)tick();last=Date.now()})}
+    if(now-sv>30000){sv=now;const ks=Object.keys(PT.d).sort();ks.slice(0,Math.max(0,ks.length-14)).forEach(x=>delete PT.d[x]);save()}};
+  setInterval(tick,5000);document.addEventListener('visibilitychange',tick);window.addEventListener('pagehide',()=>{tick();save()})}
 const ptText=min=>{min=Math.floor(min||0);const h=Math.floor(min/60);return h?h+'시간 '+(min%60)+'분':min+'분'};   // 이름을 주고받을 때 최대 길이 (일반은 10글자로 정해지고, 제작자만 40글자까지)
 let uiOpenT=-1e9;
 function uiOpen(id){const t=performance.now();if(t-uiOpenT<600)return;uiOpenT=t;try{if(id==='prbtn')prShow();else if(id==='tvbtn')tvShow();else frShow()}catch(err){dbgErr((err&&err.message)||err,1)}}
@@ -4497,7 +4498,7 @@ function usrRender(w){
     const open=usrOpen.has(u.id);
     return '<div class="admch usr"><button type="button" class="usrhd" data-a="usrtog" data-id="'+u.id+'"><b>'+admEsc(u.n)+'</b><i>'+u.id+'</i><em class="usrst '+u.s[1]+'">'+u.s[0]+'</em></button>'
       +'<div class="modl">친구 <b>'+u.f.length+'</b>명 · 받은 요청 <b>'+u.i.length+'</b> · 보낸 요청 <b>'+u.o.length+'</b></div>'
-      +'<div class="modl">최초 접속 <b>'+(()=>{const f=firstOf(u.id);return f?accDate(f.t)+(f.x?' 이전':''):'기록 없음'})()+'</b>'+(()=>{const f=firstOf(u.id);return f&&f.x?' <span>(예전 유저라 정확한 시각은 몰라요)</span>':''})()+'</div>'
+      +'<div class="modl">최초 접속 <b>'+(()=>{const f=firstOf(u.id);return f?accDate(f.t)+(f.x?' 이전':''):'기록 없음'})()+'</b>'+'</div>'
       +'<div class="modl">계정 생성 <b>'+(ACXC[u.id]?accDate(ACXC[u.id]):(ACX[u.id]?'기록 없음 (예전 계정)':'계정 없음'))+'</b></div>'
       +'<div class="modl">마지막 접속 <b>'+(u.s[1]!=='off'?'지금 접속 중':(u.ls?agoText(u.ls)+' ('+new Date(u.ls).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+')':'기록 없음'))+'</b> · 플레이 타임 <b>'+(u.pt?ptText(u.pt):'기록 없음')+'</b></div>'
       +(()=>{const r=REG[u.id],kl=r?Math.max(0,(+r.kb||0)-Date.now()):0,kv=usrKick[u.id]||{},ktm=Math.ceil(kl/60000),kh=Math.floor(ktm/60),km=ktm%60;
