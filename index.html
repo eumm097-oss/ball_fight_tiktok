@@ -2632,7 +2632,12 @@ function umTick(dt){
   for(const w of umRings.slice()){
     w.age+=dt;const u=Math.min(1,w.age/UM2.dur),r=UM2.maxR*(1-Math.pow(1-u,2));
     if(g&&u<1){                                               // 노란 파동: 바깥 주황빛 → 밝은 노란 테두리 → 안쪽 잔물결 2겹
-      const W=aW(),px=w.x*W,py=w.y*aH(),rr=r*W,a=1-u*u*.85,lw=2+5*(1-u);
+      const W=aW(),px=w.x*W,py=w.y*aH(),rr=r*W,lw=2+5*(1-u);
+      const dm=w.dm||(w.dm=Math.max(Math.hypot(w.x,w.y),Math.hypot(WB-w.x,w.y),Math.hypot(w.x,WB-w.y),Math.hypot(WB-w.x,WB-w.y))),   // 찍힌 자리에서 경기장 제일 먼 구석까지의 거리 = 파동이 닿을 수 있는 끝
+        fade=Math.max(0,1-Math.pow(r/dm,2)),                              // 퍼질수록 연해져서, 더 맞을 곳이 없는 끝에서는 같이 사라짐 (안쪽 잔물결도 같이)
+        str=Math.max(0,1-r/((UM2.dmg-UM2.dmgMin)/UM2.fall*.1)),           // 데미지가 약해지는 거리(최소 데미지 지점)까지는 조금 더 진함
+        a=fade*(.75+.25*str);
+      if(a>.02){
       g.globalAlpha=a;
       g.beginPath();g.arc(px,py,rr,0,6.2832);
       g.strokeStyle='rgba(255,140,0,.28)';g.lineWidth=lw+14;g.stroke();
@@ -2642,6 +2647,7 @@ function umTick(dt){
       g.beginPath();g.arc(px,py,rr*.84,0,6.2832);g.strokeStyle='rgba(255,190,0,.75)';g.lineWidth=2;g.stroke();
       g.setLineDash([6,6]);g.beginPath();g.arc(px,py,rr*.66,0,6.2832);g.strokeStyle='rgba(255,235,120,.55)';g.lineWidth=1.5;g.stroke();g.setLineDash([]);
       g.globalAlpha=1;
+      }
     }
     if(!w.hit&&!over){
       for(const c of chars){
