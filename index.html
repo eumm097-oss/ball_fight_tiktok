@@ -5817,7 +5817,7 @@ var MT={on:false,m:'',u:0};try{localStorage.removeItem('bftMt')}catch(e){}   // 
 let mtShown=false;
 function mtGot(d,from){                            // 더 나중에 정한 점검 상태만 받음 (모임 자리면 모두에게 전달)
   if(!d||typeof d!=='object')return false;const u=+d.u||0;if(u<=MT.u)return false;
-  MT={on:!!d.on,m:String(d.m||'').slice(0,80),u};try{localStorage.setItem('bftMt',JSON.stringify(MT))}catch(e){}
+  MT={on:!!d.on,m:String(d.m||'').slice(0,80),u,at:Date.now()};try{localStorage.setItem('bftMt',JSON.stringify(MT))}catch(e){}
   if(PRES.hub)for(const c of PRES.conns){if(c!==from)try{if(c.open)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u})}catch(_){}}
   mtCheck();return true}
 function mtSet(on,m){const d={on:!!on,m:String(m||'').replace(/\s+/g,' ').trim().slice(0,80),u:Math.max(Date.now(),(MT.u||0)+1)};mtGot(d,null);   // 기기 시계가 달라도 항상 '더 나중' 상태로 퍼지게
@@ -5848,6 +5848,7 @@ function mtCheck(){
   const t=MT.m||MT_DEF;if(el.querySelector('.mtx').textContent!==t)el.querySelector('.mtx').textContent=t;
 }
 setTimeout(mtCheck,0);setInterval(mtCheck,2000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&MT.on&&!admIs()&&typeof CLD!=='undefined'&&CLD&&!CLD.busy){mtPollT=Date.now();cldSync(false)}});
 let mtPollT=0;setInterval(()=>{if(MT.on&&!admIs()&&Date.now()-mtPollT>20000&&typeof CLD!=='undefined'&&CLD&&!CLD.busy){mtPollT=Date.now();cldSync(false)}},5000);   // 점검 화면에 막혀 있으면 20초마다 저장소를 다시 읽어서, 점검이 풀리면 바로 풀림
 function regPublish(){if(PEN.w>0||REG[PID]){REG[PID]=regSelf();regChg.add(PID);regSave();regFlush();cldSoon()}}
 function regAdmin(id,ua){const e=REG[id];if(!e)return;const now=Date.now();REG[id]=Object.assign({},e,{u:now,ub:now,ua},ua==='reset'?{w:0,log:[]}:{cu:0,g:0});regChg.add(id);regSave();regFlush();cldSoon(1500)}   // 어드민: 바로 풀기 / 경고 초기화
@@ -5888,7 +5889,8 @@ function annSend(m){const d={t:'ann',m:String(m).slice(0,80),id:Math.random().to
 const CLD_URL='https://api.npoint.io/47f3571657f7282501d6';
 var CLD={busy:false,again:false,ok:null,last:0,t:0,adm:false,fv:-1,fn:''};
 const cldKey=x=>x.id||(x.t+'|'+x.pid+'|'+x.m);
-async function cldFetch(){const r=await fetch(CLD_URL,{cache:'no-store'});if(!r.ok)throw new Error('get');const j=await r.json();return j&&typeof j==='object'&&!Array.isArray(j)?j:{}}
+const cldTO=ms=>{const c=new AbortController();setTimeout(()=>c.abort(),ms);return c.signal};   // 요청이 멈춰도 busy가 영영 안 풀리는 일이 없게 시간 제한
+async function cldFetch(){const r=await fetch(CLD_URL,{cache:'no-store',signal:cldTO(10000)});if(!r.ok)throw new Error('get');const j=await r.json();return j&&typeof j==='object'&&!Array.isArray(j)?j:{}}
 const cldNeed=()=>PEN.w>0||!!REG[PID];
 var UVN={};try{UVN=JSON.parse(localStorage.getItem('bftUvN')||'{}')||{}}catch(e){}   // 저장소에서 받아 온 날짜별 방문자 수 (접속자 명단 대신 숫자만)
 function uvnSet(k,v){if(!/^\d{4}-\d\d-\d\d$/.test(k)||!(v>0))return false;const lim=ccuDay(Date.now()-7*864e5);if(k<=lim&&!PRES_STAR.has(k))return false;if((UVN[k]||0)>=v)return false;UVN[k]=v|0;try{localStorage.setItem('bftUvN',JSON.stringify(UVN))}catch(e){}return true}
@@ -5897,7 +5899,8 @@ function cldKick(){if(typeof CLD==='undefined'||!CLD||CLD.t2)return;CLD.t2=setTi
 function cldPull(d){                                  // 저장소 → 내 폰
   if(d.ccu&&typeof d.ccu==='object'&&!Array.isArray(d.ccu))for(const k in d.ccu){const e=d.ccu[k];if(e&&typeof e==='object'){ccuSet(k,e.n|0,+e.t||0);uvnSet(k,e.v|0)}}
   if(d.reg&&typeof d.reg==='object'&&!Array.isArray(d.reg))regMerge(d.reg);
-  if(d.mt&&typeof d.mt==='object')mtGot(d.mt);
+  if(d.mt&&typeof d.mt==='object'){mtGot(d.mt);
+    if(MT.on&&!admIs()&&!d.mt.on&&(+d.mt.u||0)>0&&Date.now()-(MT.at||0)>25000){MT={on:false,m:'',u:+d.mt.u||0,at:0};mtCheck()}}   // 막힌 폰은 저장소가 '점검 끝'이면 번호와 상관없이 풀림
   try{accPull(d)}catch(_){}
   try{bossPull(d)}catch(_){}
   if(Array.isArray(d.kl)&&admIs()){const have=new Set(KLOG.map(x=>x.id+':'+x.t));let ch=false;
@@ -5938,7 +5941,7 @@ async function cldSync(push){
       const d=await cldFetch();cldPull(d);
       if(frInSync(d)){CLD.fv=FRP.ver;CLD.fn=NET.me.name||''}   // 내 친구 기록이 저장소에 다 들어가 있음
       if(!push||!cldMergeInto(d))break;
-      const r=await fetch(CLD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
+      const r=await fetch(CLD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),signal:cldTO(15000)});
       if(!r.ok)throw new Error('post');
     }
     CLD.ok=true;CLD.last=Date.now();
