@@ -737,8 +737,6 @@ body.hw .start,body.hw .mkbtn{background:#ff7a1a;color:#2a1238;border-color:#ffb
 body.hw .start::after{border-left-color:#2a1238}
 body.hw .end{background:#7b2cbf;border-color:#c9a0ff}
 body.hw .credit,body.hw .onhint{color:#b79bd6}
-body.hw .wrap::before{content:'🦇';position:absolute;left:10px;top:48px;font-size:22px;line-height:1;pointer-events:none;z-index:2}
-body.hw .wrap::after{content:'🎃';position:absolute;right:10px;top:48px;font-size:22px;line-height:1;pointer-events:none;z-index:2}
 body.hw :is(.modal,.frmodal,.rmodal,.pnmodal,.mmodal,.pwmodal,.lgn,.ntc,.bkm,.upmodal,.tvmodal){background:rgba(20,8,34,.72)}
 body.hw :is(.modal,.frmodal,.rmodal,.pnmodal,.mmodal,.pwmodal,.lgn,.ntc,.bkm,.upmodal,.tvmodal)>div{background:#fff1de;border-color:#ff7a1a}
 body.hw .rchip{border-color:#ff7a1a}
@@ -750,12 +748,10 @@ body.hw .rbtn,body.hw .rtog.on,body.hw .bkclose,body.hw .bktabs button.on{backgr
 /* 할로윈 방: 창을 어둡게 */
 .rmodal.hwr{background:rgba(12,3,22,.8)}
 .rmodal.hwr .rbox{position:relative;background:#1d1130;color:#ffe9cf;border:3px solid #ff7a1a}
-.rmodal.hwr .rbox::before{content:'🕸️';position:absolute;left:4px;top:0;font-size:26px;line-height:1;pointer-events:none}
-.rmodal.hwr .rbox::after{content:'🦇';position:absolute;right:8px;top:6px;font-size:20px;line-height:1;pointer-events:none}
-.rmodal.hwr .rtt{color:#ff9d3a}.rmodal.hwr .rtt::before{content:'🎃 '}.rmodal.hwr .rtt::after{content:' 🎃'}
+.rmodal.hwr .rtt{color:#ff9d3a}
 .rmodal.hwr .rsub,.rmodal.hwr .rmdl,.rmodal.hwr .rcd,.rmodal.hwr .rsn,.rmodal.hwr .rhint,.rmodal.hwr .rpubv{color:#ffe9cf}
 .rmodal.hwr .rsub i,.rmodal.hwr .rnone,.rmodal.hwr .rmsg{color:#b79bd6}
-.rmodal.hwr .rmdl::after{content:' · 🎃 할로윈 방';color:#ff9d3a}
+.rmodal.hwr .rmdl::after{content:' · 할로윈 방';color:#ff9d3a}
 .rmodal.hwr .rtog,.rmodal.hwr .rcpy,.rmodal.hwr .rmv,.rmodal.hwr .rtm{background:#2b1745;color:#ffe9cf;border-color:#ff7a1a}
 .rmodal.hwr .rtog.on,.rmodal.hwr .rtm.on{background:#ff7a1a;color:#1d1130}
 .rmodal.hwr .rbtn{background:#5b2a86;color:#ffe9cf;border-color:#ff7a1a}
@@ -770,7 +766,6 @@ body.hw .rbtn,body.hw .rtog.on,body.hw .bkclose,body.hw .bktabs button.on{backgr
 .rmodal.hwr .rvs,.rmodal.hwr .rtl{color:#ff9d3a}
 .rmodal.hwr .ritem{background:#2b1745;color:#ffe9cf;border-color:#ff7a1a}
 body.hw .hud .nwn,body.hw .hud .bttime{color:#f6e6d0}
-body.hw .stage:has(.end:not([hidden])) .wrap::before,body.hw .stage:has(.end:not([hidden])) .wrap::after{display:none}
 .rmodal.hwr .rcd b,.rmodal.hwr .rhint b,.rmodal.hwr .rmdl b{color:#ffe9cf}
 .rmodal.hwr .chl.sys{color:#b79bd6}
 body.hw.scr-online:not(.in-net) .rboard{background:#fff0da}
@@ -6762,7 +6757,7 @@ function hwApply(){document.body.classList.toggle('hw',HWS.on||hwRoom());const m
 function hwSet(v){HWS.on=!!v;try{localStorage.setItem('bftHw',v?'1':'0')}catch(e){}hwApply()}
 function hwSend(R){const o={t:'rhw',v:R.hw?1:0};
   if(R.party)partySend(o);else if(R.mp){for(const c of R.conns)try{if(c.open)c.send(o)}catch(_){}}else netSend(o)}
-function hwNote(R){roomLog({sys:1,m:R.hw?'🎃 할로윈 방으로 바뀌었어요':'할로윈 방이 끝났어요'});hwApply();if(ROOM.view==='room')roomRender()}
+function hwNote(R){roomLog({sys:1,m:R.hw?'할로윈 방으로 바뀌었어요':'할로윈 방이 끝났어요'});hwApply();if(ROOM.view==='room')roomRender()}
 function hwCmd(){                                   // 방 채팅에 /할로윈 : 방장만 켜고 끔
   const R=NET.room;if(!R)return;
   if(!R.host){netToast('방장만 쓸 수 있어요');return}
