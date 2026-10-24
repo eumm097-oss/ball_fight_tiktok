@@ -817,7 +817,7 @@ body.hw .rmbtn,body.hw .mdrow .mdmu.on{background:#7b2cbf}
       <button class="half" type="button" data-name="엄....edit" data-cls="um" data-kind="um">엄....edit</button>
       <button class="half" type="button" data-name="목박사" data-cls="mk" data-kind="mk">목박사</button>
       <button class="half" type="button" data-name="김동희세계관" data-cls="kd" data-kind="kd">김동희세계관</button>
-      <button class="half lockd" type="button" data-name="산와머니" data-cls="swm" data-kind="swm" data-lock="h:2rac38">산와머니</button>
+      <button class="half" type="button" data-name="산와머니" data-cls="swm" data-kind="swm">산와머니</button>
       <button class="half lockd" type="button" data-name="권루트" data-cls="kr" data-kind="kr" data-lock="h:1v40rqk">권루트</button>
     </div>
   </div>
@@ -4370,7 +4370,7 @@ const INFO=[
   {kind:'kd',cls:'kd',name:'김동희세계관',color:'#1cb5c9',tag:'환장RPG 스킬을 쓰는 공',chips:['HP '+STATS.kd.max,'이동속도 '+STATS.kd.speed],
    skills:[{n:'공허참',p:KD.cd1+'초마다',d:'위 게이지가 다 차면 그 자리에 멈춰 서서 '+KDS.hold+'초 동안 힘을 모은 뒤, 검기를 '+(Math.round(KDS.wind*100)/100)+'초 동안 만들었다가 가장 가까운 상대 쪽으로 빠르게 날린다(검기를 날릴 때까지는 움직이지 않는다). 검기에 닿은 상대는 '+KDS.dmg+' 데미지를 입고 날아가던 쪽으로 부딪힘III('+KDS.kb+'초)에 걸린다. 날리는 순간 방향이 정해지고 곧게 날아가서 피할 수 있고, 벽에 닿으면 그대로 날아가 사라진다. 날아가다 중간에 상대 목박사의 세포·바이러스에 맞으면 막혀서 사라지고, 그 세포·바이러스는 체력이 1 깎인다.'},
      {n:'소닉피어스',p:KD.cd2+'초마다',d:'아래 게이지가 다 차면 '+KDB.dur+'초 동안 검을 꺼내 가장 가까운 대상(상대 목박사의 세포·바이러스 포함) 쪽을 계속 바라보며 '+(Math.round((KD_BEAT[1]-KD_BEAT[0])*100)/100)+'초마다 모두 '+KD_BEAT.length+'번 빠르게 찌른다. 검 끝이 닿으면 한 번에 '+KDB.lo+'~'+KDB.hi+' 랜덤 데미지(다 최대로 맞으면 '+KDB.max+')와 슬로우II('+KDB.slow+'초)를 입히고, 세포·바이러스는 밀리지 않고 체력이 1 깎인다. 멈춰 있는 동안은 찌르지 않는다.'}]},
-  {kind:'swm',cls:'swm',name:'산와머니',color:'#9a5b2e',tag:'타워 공약으로 공격하는 공',locked:true,chips:['HP '+STATS.swm.max,'이동속도 '+STATS.swm.speed,'스킬 쿨타임 없음'],skills:[{n:'타워',p:'패시브',d:'쿨타임 없이 산와머니에게만 중력이 걸리고, '+SW.sec+'초마다 맵이 새 랜덤 점프맵으로 바뀐다. 바닥이나 발판에 닿으면 튕겨 오르며 점프하고, 맨 위의 도착 발판에는 어디서든 닿기만 하면 클리어하고 바로 다음 맵으로 간다. 클리어하면 상대 머리 위에 초가 뜨고, 상대가 벽에 닿는 순간 그때까지 흐른 시간 '+SW.tick+'초당 '+SW.tickDmg+' 피해를 입는다. 맵마다 '+Math.round(SW.blueP*100)+'% 확률로 특수 발판이 나오는데, 이걸 밟으면 그 맵이 끝날 때까지 일반 공처럼 튕기며 발판에도 부딪힌다(이때도 도착 발판에 닿으면 클리어). 맵이 바뀔 때까지 못 닿으면 자신이 '+SW.dmg+' 피해를 입는다. 블랙홀에는 끌려가고, 공격을 맞으면 맞은 방향으로 밀리고, 부딪힘도 평소처럼 받는다. 다른 캐릭터나 세포·밥상 같은 것을 위에서 밟으면 다시 점프한다.'},
+  {kind:'swm',cls:'swm',name:'산와머니',color:'#9a5b2e',tag:'타워 공약으로 공격하는 공',chips:['HP '+STATS.swm.max,'이동속도 '+STATS.swm.speed,'스킬 쿨타임 없음'],skills:[{n:'타워',p:'패시브',d:'쿨타임 없이 산와머니에게만 중력이 걸리고, '+SW.sec+'초마다 맵이 새 랜덤 점프맵으로 바뀐다. 바닥이나 발판에 닿으면 튕겨 오르며 점프하고, 맨 위의 도착 발판에는 어디서든 닿기만 하면 클리어하고 바로 다음 맵으로 간다. 클리어하면 상대 머리 위에 초가 뜨고, 상대가 벽에 닿는 순간 그때까지 흐른 시간 '+SW.tick+'초당 '+SW.tickDmg+' 피해를 입는다. 맵마다 '+Math.round(SW.blueP*100)+'% 확률로 특수 발판이 나오는데, 이걸 밟으면 그 맵이 끝날 때까지 일반 공처럼 튕기며 발판에도 부딪힌다(이때도 도착 발판에 닿으면 클리어). 맵이 바뀔 때까지 못 닿으면 자신이 '+SW.dmg+' 피해를 입는다. 블랙홀에는 끌려가고, 공격을 맞으면 맞은 방향으로 밀리고, 부딪힘도 평소처럼 받는다. 다른 캐릭터나 세포·밥상 같은 것을 위에서 밟으면 다시 점프한다.'},
      {n:'스피드러너',p:'패시브',d:'항상 이동속도 증가가 걸려 있다(×'+SW.run+').'},
       {n:'3초의 기적',p:'패시브',d:'타워의 남은 시간이 '+SW.buffAt+'초 이하가 되면 이동속도 증가II가 걸린다(×'+SW.buff+').'}]},
   {kind:'kr',cls:'kr',name:'권루트',color:'#14a37f',tag:'아직 스킬이 없는 공',locked:true,chips:['HP '+STATS.kr.max,'이동속도 '+STATS.kr.speed],skills:[]},
