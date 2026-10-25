@@ -1976,6 +1976,8 @@ function stepCells(h){
     o.x+=o.vx*o.sp*h;o.y+=o.vy*o.sp*h;
     if(o.x<MK.r){o.x=MK.r;o.vx=Math.abs(o.vx)}else if(o.x>WB-MK.r){o.x=WB-MK.r;o.vx=-Math.abs(o.vx)}
     if(o.y<MK.r){o.y=MK.r;o.vy=Math.abs(o.vy)}else if(o.y>WB-MK.r){o.y=WB-MK.r;o.vy=-Math.abs(o.vy)}
+    for(const sw of chars){if(!sw.alive||!sw.swMap||sw.mode!=='sw')continue;          // 산와머니 점프맵 발판에는 세포도 못 뚫고 튕김
+      for(const q of sw.swMap.plats){const c=swCirc(o,MK.r,q);if(!c)continue;o.x+=c.nx*c.dep;o.y+=c.ny*c.dep;const vn=o.vx*c.nx+o.vy*c.ny;if(vn<0){o.vx-=2*vn*c.nx;o.vy-=2*vn*c.ny}}}
     if(o.pass&&o.pass<=now&&o.passBall&&o.passBall.alive&&Math.hypot(o.passBall.x-o.x,o.passBall.y-o.y)<R+MK.r)o.pass=now+.05;   // 통과 중인 공에서 다 빠져나올 때까지 계속 통과 (갑자기 순간이동하지 않게)
     if(revPause>0||o.pass>now)continue;                                  // 부활 연출 중 · 벽과 공 사이에 낀 직후에는 공과 부딪히지 않음
     const own=o.owner,hit=c=>c.alive&&Math.hypot(c.x-o.x,c.y-o.y)<R+MK.r,foe=()=>chars.find(c=>!ally(c,own)&&hit(c));
@@ -2524,7 +2526,7 @@ function jyBump(a,b){if(ally(a,b))return;               // 제리얌과 몸이 �
     if(t.alive)applyKnock(t,t.x-s.x,t.y-s.y,JY.bumpSec);
   }
 }
-const BKA={tick:.099,dmg:1,heal:.5,soul:.75,soulSec:.25};
+const BKA={tick:.1235,dmg:1,heal:.5,soul:.75,soulSec:.25};
 const bkRad=()=>.22;                    // 백기철 아우라 반지름(몸 중심에서) 22m
 const bkReach=t=>bkRad()+((t&&t.rad)||R);            // 상대 몸이 닿는 거리   // 백기철 판타지 아우라: 상대 몸이 닿아 있는 동안 0.1초마다 1 데미지, 같은 만큼 회복
 const BKD={take:7,cd:HIT_GUARD};   // 백기철 판타지의 체력 베끼기: 몸이 부딪힌 상대의 체력 15를 베껴 그만큼 회복
@@ -3188,11 +3190,11 @@ function simStep(dt){
 
 
 /* ---------- 보스전: 볼파이트틱톡 (플레이어는 모두 한 팀 · 보스는 따로) ---------- */
-const SW={sec:10,dmg:25,touchDmg:2,touchGap:.3,g:2.2,jh:.30,hs:.22,lenNarrow:[.05,.08],lenWide:[.12,.18],nMin:3,nMax:5,nNarrow:[1,3],nWide:[1,3],goalY:[.05,.2],buffAt:3,buff:1.8,run:1.5,blueP:.2,th:.014,tries:60,gapF:.95,tick:.01,tickDmg:.175,push:1.1,pushT:.18};   // 산와머니 스킬: 쿨타임 없이 10초마다 새 랜덤 점프맵. 이 공에만 중력이 걸림. 맨 위 노란 발판에 닿으면 상대에게, 10초 안에 못 닿으면 자기에게 dmg 피해 (길이는 모두 맵 한 변(WB) 기준 비율)
+const SW={sec:10,dmg:25,touchDmg:2,touchGap:.3,g:2.2,jh:.30,hs:.22,lenNarrow:[.05,.08],lenWide:[.12,.7],bossLen:.5,nMin:3,nMax:5,nNarrow:[0,2],nWide:[1,3],goalY:[.05,.2],buffAt:3,buff:1.8,run:1.5,blueP:.2,th:.014,tries:60,gapF:.95,tick:.01,tickDmg:.21875,push:1.1,pushT:.18};   // 산와머니 스킬: 쿨타임 없이 10초마다 새 랜덤 점프맵. 이 공에만 중력이 걸림. 맨 위 노란 발판에 닿으면 상대에게, 10초 안에 못 닿으면 자기에게 dmg 피해 (길이는 모두 맵 한 변(WB) 기준 비율)
 function swGen(c){                                    // 랜덤 점프맵: 발판의 위치·높이·길이·개수가 모두 매번 랜덤 (도착 발판은 위쪽 구간에서만, 아래에서 위로 점프로 이어지는 높이 간격은 보장)
   const k=WB,els=[];let plats=[],gy=0;
   const mk=(cls,x,y,w,h)=>{const e=document.createElement('div');e.className='swel '+cls;e.style.left=((x-w/2)*100)+'%';e.style.top=(y*100)+'%';e.style.width=(w*100)+'%';e.style.height=(h*100)+'%';worldEl.insertBefore(e,worldEl.firstChild);els.push(e);return e};
-  const rl=r=>(r[0]+grand()*(r[1]-r[0]))*k,len=()=>grand()<.5?rl(SW.lenNarrow):rl(SW.lenWide);          // 도착·특수 발판 길이: 좁은 쪽/넓은 쪽 중 하나
+  const bl=MODE==='boss'?SW.bossLen:1,rl=r=>(r[0]+grand()*(r[1]-r[0]))*k*bl,len=()=>grand()<.35?rl(SW.lenNarrow):rl(SW.lenWide);          // 도착·특수 발판 길이: 좁은 쪽/넓은 쪽 중 하나
   const putX=(w,y)=>{for(let t=0;t<14;t++){const x=w/2+.03*k+grand()*(k-w-.06*k);if(plats.every(o=>Math.abs(o.y-y)>.05*k||Math.abs(o.x-x)>(o.w+w)/2+.08*k))return x}return null};
   for(let tr=0;tr<SW.tries;tr++){                      // 아무리 어려워도 깰 수 있는 맵만 나오게: 여러 출발 자리·방향에서 시뮬레이션해서 한 번이라도 깨지면 통과
     plats=[];
@@ -3332,7 +3334,7 @@ function swMark(t,own){                                    // 도착 발판 클�
 }
 function swUnmark(t){t.swG=null;if(t.swEl){t.swEl.remove();const i=follows.indexOf(t.swFl);if(i>=0)follows.splice(i,1)}t.swEl=t.swFl=null;t.swTm=null}
 const swDmgOf=t=>Math.round(Math.floor(t.swTm/SW.tick+1e-9)*SW.tickDmg);
-function swWall(t){const d=swDmgOf(t);swUnmark(t);if(d>0)hurt(t,d)}   // 바닥에 닿기 전까지 있던 시간 × (0.01초당 0.175 피해, 반올림)
+function swWall(t){const d=swDmgOf(t);swUnmark(t);if(d>0)hurt(t,d)}   // 바닥에 닿기 전까지 있던 시간 × (0.01초당 0.21875 피해, 반올림)
 function swTick(dt){
   for(const c of chars){
     if(c.swMap&&(!c.alive||c.mode!=='sw'))swClear(c);
@@ -4636,9 +4638,13 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.30';
+const PATCH_VERSION='4.13.31';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.31',date:'2026-10-26',
+   chars:[{who:'백기철 판타지',tag:'nerf',lines:['체력 베끼는 아우라 초당 피해 {-10.1 → 8.1}']}],
+   fx:[],
+   sys:[]},
   {ver:'4.13.30',date:'2026-10-25',
    chars:[{who:'태권히어로',tag:'buff',lines:['주먹 데미지 {+2 → 3}']},{who:'산와머니',tag:'adj',lines:['{~점프맵 발판을 다른 공도 통과하지 못함} (모서리·대각선 윗부분 포함)']}],
    fx:[],
