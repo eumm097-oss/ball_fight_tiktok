@@ -3657,22 +3657,28 @@ function bossPull(d){                                         // 저장소 → �
   if(ch)bossRecSave();
 }
 /* ---------- 관리자: 보스 랭킹 관리 (스피드런 기록 삭제 → 그 판 참가자 횟수 자동 차감, 횟수 직접 수정) ---------- */
-let BADM=false;
-async function bossAdmEdit(fn){
-  if(BADM||!admIs())return false;BADM=true;
+let BADM=false,BWHY='';
+async function bossAdmEdit(fn){                                   // 실패하면 이유를 BWHY에 남김 (토스트에 보여 주려고)
+  BWHY='';
+  if(!admIs()){BWHY='관리자 모드가 아니에요 (관리자 패널을 다시 열어 주세요)';return false}
+  if(BADM){BWHY='이미 처리 중이에요 · 잠시 뒤 다시 눌러 주세요';return false}
+  BADM=true;let st='';
   try{
-    for(let i=0;i<50&&CLD.busy;i++)await new Promise(r=>setTimeout(r,120));
+    st='저장소 읽기';for(let i=0;i<50&&CLD.busy;i++)await new Promise(r=>setTimeout(r,120));
     const d=await cldFetch();
+    st='';
     if(!d.bs||typeof d.bs!=='object'||Array.isArray(d.bs))d.bs={r:[],c:{}};
     const s=d.bs;if(!Array.isArray(s.r))s.r=[];if(!s.c||typeof s.c!=='object'||Array.isArray(s.c))s.c={};
     if(!Array.isArray(s.x))s.x=[];if(!s.z||typeof s.z!=='object'||Array.isArray(s.z))s.z={};
-    if(fn(s)===false)return false;
+    if(fn(s)===false){BWHY='바꿀 내용이 없어요';return false}
     if(s.x.length>300)s.x=s.x.slice(-300);
     const zk=Object.keys(s.z);if(zk.length>400)zk.sort((a,b)=>(s.z[a].t||0)-(s.z[b].t||0)).slice(0,zk.length-400).forEach(k=>delete s.z[k]);
+    st='저장소에 쓰기';
     const r=await fetch(CLD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),signal:cldTO(15000)});
-    if(!r.ok)throw new Error('post');
-    bossPull(d);return true;
-  }catch(e){return false}finally{BADM=false}
+    if(!r.ok){BWHY='저장소가 거절했어요 (오류 '+r.status+')';return false}
+    st='';try{bossPull(d)}catch(e){}
+    return true;
+  }catch(e){BWHY=(st||'처리')+' 중 연결이 안 됐어요 ('+String(e&&e.name==='AbortError'?'시간 초과':(e&&e.message)||e).slice(0,40)+')';return false}finally{BADM=false}
 }
 function bossSetCnt(s,pid,n){n=Math.max(0,Math.min(99999,n|0));if(n>0){const o=s.c[pid]||{n:'',c:0};o.c=n;s.c[pid]=o}else delete s.c[pid];s.z[pid]={t:Date.now(),c:n}}
 var RKSEL={r:new Set(),c:new Set()};                    // 관리자: 지우려고 골라 둔 스피드런 기록(k) · 처치 횟수(플레이어 아이디)
@@ -5567,11 +5573,12 @@ function admAct(a,b){
   else if(a==='usrref'||a==='rkref'){cldSync(false)}
   else if(a==='rkdel'){
     if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.textContent;b.textContent='한 번 더 눌러 삭제';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.textContent=t0},4000);return}
-    const k=b.dataset.k;
-    bossAdmEdit(s=>{const i=s.r.findIndex(x=>x&&x.k===k);if(i<0)return false;const run=s.r[i];s.r.splice(i,1);
-      const pids=[...new Set((run.p||[]).map(m=>m&&m.i).filter(v=>/^[A-Z2-9]{6}$/.test(v)))];
-      for(const pid of pids)bossSetCnt(s,pid,((s.c[pid]&&s.c[pid].c)|0)-1);          // 참가자 처치 횟수 자동 차감
-      if(!s.x.some(x=>x&&x.k===k))s.x.push({k,t:Date.now()})}).then(ok=>{netToast(ok?'기록을 삭제하고 횟수를 줄였습니다':'저장소에 연결하지 못했습니다')})}
+    const k=b.dataset.k,kk=v=>String(v==null?'':v).slice(0,24);
+    bossAdmEdit(s=>{const i=s.r.findIndex(x=>x&&kk(x.k)===k);
+      if(i>=0){const run=s.r[i];s.r.splice(i,1);
+        const pids=[...new Set((run.p||[]).map(m=>m&&m.i).filter(v=>/^[A-Z2-9]{6}$/.test(v)))];
+        for(const pid of pids)if(s.c[pid])bossSetCnt(s,pid,((s.c[pid].c)|0)-1)}          // 참가자 처치 횟수 자동 차감
+      if(!s.x.some(x=>x&&kk(x.k)===k))s.x.push({k,t:Date.now()})}).then(ok=>{if(ok){BOSSDB.r=BOSSDB.r.filter(x=>kk(x.k)!==k);const B=bossRecGet();B.runs=B.runs.filter(x=>kk(x.k)!==k);bossRecSave()}netToast(ok?'기록을 삭제하고 횟수를 줄였습니다':'삭제하지 못했습니다 · '+BWHY)})}
   else if(a==='rksel'){const g=b.dataset.g==='c'?'c':'r',k=b.dataset.k,S=RKSEL[g],on=!S.has(k);if(on)S.add(k);else S.delete(k);
     b.classList.toggle('on',on);b.textContent=on?'✔ 선택됨':'선택';const w=document.querySelector('.adm');if(w)w.querySelectorAll('.rkn').forEach(x=>x.textContent=rkSelN())}
   else if(a==='rkabn'){RKSEL.r.clear();RKSEL.c.clear();const A=rkAbnormal();for(const k of A.r.keys())RKSEL.r.add(k);for(const k of A.c.keys())RKSEL.c.add(k);
@@ -5583,15 +5590,19 @@ function admAct(a,b){
     const n=rkSelN();if(!n){netToast('지울 기록을 먼저 선택하세요');return}
     if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.innerHTML;b.textContent='한 번 더 눌러 '+n+'개 삭제';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.innerHTML=t0},4000);return}
     const ks=[...RKSEL.r],ids=[...RKSEL.c];
-    bossAdmEdit(s=>{let ch=false;
-      for(const k of ks){const i=s.r.findIndex(x=>x&&x.k===k);if(i<0)continue;const run=s.r[i];s.r.splice(i,1);ch=true;
-        const pids=[...new Set((run.p||[]).map(m=>m&&m.i).filter(v=>/^[A-Z2-9]{6}$/.test(v)))];
-        for(const pid of pids)bossSetCnt(s,pid,((s.c[pid]&&s.c[pid].c)|0)-1);
-        if(!s.x.some(x=>x&&x.k===k))s.x.push({k,t:Date.now()})}
-      for(const id of ids){if(s.c[id]){bossSetCnt(s,id,0);ch=true}}                  // 처치 횟수를 고른 건 0으로 (기록 삭제로 줄어든 값보다 나중에 적용)
-      if(!ch)return false}).then(ok=>{if(ok){RKSEL.r.clear();RKSEL.c.clear();const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML()}netToast(ok?n+'개를 삭제했습니다':'삭제하지 못했습니다 (저장소 연결을 확인하세요)')})}
+    const kk=v=>String(v==null?'':v).slice(0,24);
+    bossAdmEdit(s=>{
+      for(const k of ks){const i=s.r.findIndex(x=>x&&kk(x.k)===k);
+        if(i>=0){const run=s.r[i];s.r.splice(i,1);
+          const pids=[...new Set((run.p||[]).map(m=>m&&m.i).filter(v=>/^[A-Z2-9]{6}$/.test(v)))];
+          for(const pid of pids)if(s.c[pid])bossSetCnt(s,pid,((s.c[pid].c)|0)-1)}
+        if(!s.x.some(x=>x&&kk(x.k)===k))s.x.push({k,t:Date.now()})}            // 저장소에 이미 없어도 지운 걸로 표시 (내 폰에 남은 것도 같이 사라짐)
+      for(const id of ids){if(s.c[id])bossSetCnt(s,id,0);else s.z[id]={t:Date.now(),c:0}}}).then(ok=>{
+      if(ok){RKSEL.r.clear();RKSEL.c.clear();const B=bossRecGet();B.runs=B.runs.filter(x=>!ks.includes(kk(x.k)));bossRecSave();BOSSDB.r=BOSSDB.r.filter(x=>!ks.includes(kk(x.k)));for(const id of ids)delete BOSSDB.c[id];
+        const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML()}
+      netToast(ok?n+'개를 삭제했습니다':'삭제하지 못했습니다 · '+BWHY)})}
   else if(a==='rkcnt'){const id=b.dataset.id,dd=+b.dataset.d;
-    bossAdmEdit(s=>{const cur=(s.c[id]&&s.c[id].c)|0;bossSetCnt(s,id,dd===0?0:cur+dd)}).then(ok=>{netToast(ok?'횟수를 고쳤습니다':'저장소에 연결하지 못했습니다')})}
+    bossAdmEdit(s=>{const cur=(s.c[id]&&s.c[id].c)|0;bossSetCnt(s,id,dd===0?0:cur+dd)}).then(ok=>{netToast(ok?'횟수를 고쳤습니다':'고치지 못했습니다 · '+BWHY)})}
   else if(a==='usrcopy'){frCopy(b.dataset.id,b)}
   else if(a==='usrfr'){const id=b.dataset.id;if(usrFr[id]&&usrFr[id].st!=='load'){delete usrFr[id];const w=document.querySelector('.adm');if(w)usrRender(w)}else usrFrLoad(id)}
   else if(a==='usrroom'){usrRoom(b.dataset.id,b.dataset.w)}
