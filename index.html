@@ -3678,14 +3678,24 @@ function bossSetCnt(s,pid,n){n=Math.max(0,Math.min(99999,n|0));if(n>0){const o=s
 var RKSEL={r:new Set(),c:new Set()};                    // 관리자: 지우려고 골라 둔 스피드런 기록(k) · 처치 횟수(플레이어 아이디)
 const rkSelBtn=(g,id)=>'<button type="button" class="admbtn rkpick'+(RKSEL[g].has(id)?' on':'')+'" data-a="rksel" data-g="'+g+'" data-k="'+admEsc(id)+'">'+(RKSEL[g].has(id)?'✔ 선택됨':'선택')+'</button>';
 const rkSelN=()=>RKSEL.r.size+RKSEL.c.size;
+const RK_DPS={'낭만박상환':6,'제리얌':15,'태권히어로':18,'어둠속성 김켈리':13,'숏타민':14,'백기철 판타지':15,'엄....edit':11,'목박사':6,'김동희세계관':12,'산와머니':9,'권루트':18},RK_DPS_DEF=18;   // 캐릭터별 보스에게 줄 수 있는 초당 데미지의 넉넉한 최대치 (시뮬레이션으로 잰 최고 속도의 약 2.5배)
+function rkCap(r){let d=0;for(const m of r.p||[])d+=RK_DPS[m&&m.c]||RK_DPS_DEF;return d*r.t}   // 이 시간 동안 이 캐릭터들이 낼 수 있는 최대 데미지
+function rkAbnormal(){                                   // 지금 저장소의 랭킹 중 이상한 것을 찾아 이유와 함께 돌려줌: 참가 캐릭터들의 스킬로는 그 시간 안에 보스를 잡을 수 없는 기록
+  const R=new Map(),C=new Map();
+  for(const r of BOSSDB.r){const why=[],n=(r.p||[]).length,ids=(r.p||[]).map(m=>m&&m.i).filter(Boolean);
+    if(!n)why.push('참가자 없음');else if(n>4)why.push('참가자 5명 이상');
+    if(new Set(ids).size!==ids.length)why.push('같은 아이디 중복');
+    if(n>=1&&n<=4){const hp=BT.hp(n),cap=rkCap(r);if(!(+r.t>0)||cap<hp)why.push('이 캐릭터들로는 '+(+r.t||0)+'초 안에 보스(체력 '+hp+')를 잡을 수 없음 · 낼 수 있는 최대 약 '+Math.round(cap))}
+    if(why.length)R.set(r.k,why.join(' · '))}
+  return {r:R,c:C}}
 function bossAdmHTML(){
-  const E=admEsc,runs=BOSSDB.r.slice().sort((a,b)=>a.t-b.t),cs=Object.entries(BOSSDB.c).sort((a,b)=>b[1].c-a[1].c);
-  const rr=runs.map((r,i)=>'<div class="admch"><div class="admcn"><b>'+(i+1)+'. '+r.p.map(p=>E(p.n)).join(' · ')+'</b><span class="modw" style="color:#17e3d6">'+bossFmt(r.t)+'</span></div>'
+  const AB=rkAbnormal(),E=admEsc,runs=BOSSDB.r.slice().sort((a,b)=>a.t-b.t),cs=Object.entries(BOSSDB.c).sort((a,b)=>b[1].c-a[1].c);
+  const rr=runs.map((r,i)=>'<div class="admch"><div class="admcn"><b>'+(i+1)+'. '+r.p.map(p=>E(p.n)).join(' · ')+'</b><span class="modw" style="color:#17e3d6">'+bossFmt(r.t)+'</span></div>'+(AB.r.has(r.k)?'<div class="modl" style="color:#ff5c7a;font-weight:700">⚠ 비정상: '+E(AB.r.get(r.k))+'</div>':'')
     +'<div class="modl">'+r.p.map(p=>E(p.c)).filter(Boolean).join(' · ')+(r.d?' · '+new Date(r.d).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):'')+'</div>'
     +'<div class="admsk">'+rkSelBtn('r',r.k)+'<button type="button" class="admbtn admred" data-a="rkdel" data-k="'+E(r.k)+'">기록 삭제</button></div></div>').join('')||'<div class="admnone">기록 없음</div>';
-  const cc=cs.map(([id,e],i)=>'<div class="admch"><div class="admcn"><b>'+(i+1)+'. '+E(e.n)+'</b><i>'+id+'</i><span class="modw" style="color:#17e3d6">'+e.c+'회</span></div>'
+  const cc=cs.map(([id,e],i)=>'<div class="admch"><div class="admcn"><b>'+(i+1)+'. '+E(e.n)+'</b><i>'+id+'</i><span class="modw" style="color:#17e3d6">'+e.c+'회</span></div>'+(AB.c.has(id)?'<div class="modl" style="color:#ff5c7a;font-weight:700">⚠ 비정상: '+E(AB.c.get(id))+'</div>':'')
     +'<div class="admsk">'+rkSelBtn('c',id)+'<button type="button" class="admbtn" data-a="rkcnt" data-id="'+id+'" data-d="-1">-1</button><button type="button" class="admbtn admred" data-a="rkcnt" data-id="'+id+'" data-d="0">횟수 초기화</button></div></div>').join('')||'<div class="admnone">기록 없음</div>';
-  return '<div class="admsub">선택 삭제</div><div class="admsk rktool"><button type="button" class="admbtn" data-a="rkall">전체 선택</button><button type="button" class="admbtn" data-a="rknone">선택 해제</button><button type="button" class="admbtn admred rkdsel" data-a="rkdelsel">선택한 것 한 번에 삭제 (<span class="rkn">'+rkSelN()+'</span>개)</button></div><div class="admnote">기록은 삭제되면 그 판 참가자의 처치 횟수도 1씩 줄고, 처치 횟수를 고르면 0으로 초기화됩니다.</div>'
+  return '<div class="admsub">선택 삭제</div><div class="admsk rktool"><button type="button" class="admbtn" data-a="rkabn">비정상 자동 선택 ('+(AB.r.size+AB.c.size)+')</button><button type="button" class="admbtn" data-a="rkall">전체 선택</button><button type="button" class="admbtn" data-a="rknone">선택 해제</button><button type="button" class="admbtn admred rkdsel" data-a="rkdelsel">선택한 것 한 번에 삭제 (<span class="rkn">'+rkSelN()+'</span>개)</button></div><div class="admnote">기록은 삭제되면 그 판 참가자의 처치 횟수도 1씩 줄고, 처치 횟수를 고르면 0으로 초기화됩니다. 비정상 기준: 참가한 캐릭터들의 스킬이 낼 수 있는 최대 데미지(캐릭터별 초당 최대치 × 클리어 시간)가 보스 체력보다 작은 기록 · 참가자 0명/5명 이상/같은 아이디 중복.</div>'
     +'<div class="admsub">스피드런 기록 <span>'+runs.length+'개</span></div><div class="rkruns">'+rr+'</div><div class="admsub">처치 횟수 <span>'+cs.length+'명</span></div><div class="rkcnts">'+cc+'</div>';
 }
 function bossRankShow(tab){
@@ -5564,6 +5574,8 @@ function admAct(a,b){
       if(!s.x.some(x=>x&&x.k===k))s.x.push({k,t:Date.now()})}).then(ok=>{netToast(ok?'기록을 삭제하고 횟수를 줄였습니다':'저장소에 연결하지 못했습니다')})}
   else if(a==='rksel'){const g=b.dataset.g==='c'?'c':'r',k=b.dataset.k,S=RKSEL[g],on=!S.has(k);if(on)S.add(k);else S.delete(k);
     b.classList.toggle('on',on);b.textContent=on?'✔ 선택됨':'선택';const w=document.querySelector('.adm');if(w)w.querySelectorAll('.rkn').forEach(x=>x.textContent=rkSelN())}
+  else if(a==='rkabn'){RKSEL.r.clear();RKSEL.c.clear();const A=rkAbnormal();for(const k of A.r.keys())RKSEL.r.add(k);for(const k of A.c.keys())RKSEL.c.add(k);
+    const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML();netToast(rkSelN()?'비정상 '+rkSelN()+'개를 골랐어요. 확인하고 삭제를 눌러 주세요':'비정상으로 보이는 기록이 없어요')}
   else if(a==='rkall'||a==='rknone'){RKSEL.r.clear();RKSEL.c.clear();
     if(a==='rkall'){for(const r of BOSSDB.r)RKSEL.r.add(r.k);for(const id of Object.keys(BOSSDB.c))RKSEL.c.add(id)}
     const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML()}
