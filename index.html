@@ -3613,13 +3613,14 @@ function showBossResult(){                           // 혼자(한 기기) 하�
 }
 /* ---------- 보스전 랭킹 · 칭호 ---------- */
 var BOSSDB={r:[],c:{}},BOSSREC=null;
+const BOSS_MAX=2000;                                      // 저장하고 보여 주는 스피드런 기록 최대 개수 (사실상 제한 없음)
 const BT_TITLES=[[25,'볼파이트틱톡 정복자'],[10,'알고리즘 파괴자'],[5,'틱톡 사냥꾼'],[1,'보스 헌터']];
 const bossTitle=c=>{for(const [n,t] of BT_TITLES)if(c>=n)return t;return ''};
 const bossDir=()=>50+((NET.seed>>>0)%80);                  // 보스가 처음 가는 방향 (모든 폰이 같게)
 function bossRecGet(){
   if(BOSSREC)return BOSSREC;
   let v=null;try{v=JSON.parse(localStorage.getItem('bftBoss')||'null')}catch(e){}
-  BOSSREC={c:Math.max(0,(v&&v.c)|0),za:Math.max(0,+(v&&v.za)||0),solo:!!(v&&v.solo),runs:Array.isArray(v&&v.runs)?v.runs.filter(r=>r&&r.k&&+r.t>0&&Array.isArray(r.p)).slice(0,30):[],done:null};
+  BOSSREC={c:Math.max(0,(v&&v.c)|0),za:Math.max(0,+(v&&v.za)||0),solo:!!(v&&v.solo),runs:Array.isArray(v&&v.runs)?v.runs.filter(r=>r&&r.k&&+r.t>0&&Array.isArray(r.p)).slice(0,BOSS_MAX):[],done:null};
   return BOSSREC}
 function bossRecSave(){try{const B=bossRecGet();localStorage.setItem('bftBoss',JSON.stringify({c:B.c,za:B.za,solo:B.solo,runs:B.runs}))}catch(e){}}
 const bossNm=n=>String(n||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').trim().slice(0,NMX)||'이름 없음';
@@ -3628,7 +3629,7 @@ function bossRec(win,t,mem,k){                                // 보스를 잡�
   if(!win)return;
   B.c++;if(mem.length===1)B.solo=true;
   const run={k:String(k).slice(0,24),t:Math.round(t*100)/100,d:Date.now(),p:mem.slice(0,4).map(m=>({i:/^[A-Z2-9]{6}$/.test(m.pid)?m.pid:'',n:bossNm(m.name),c:String(m.ch||'').slice(0,40)}))};
-  B.runs=B.runs.filter(r=>r.k!==run.k);B.runs.push(run);B.runs.sort((a,b)=>a.t-b.t);B.runs=B.runs.slice(0,30);
+  B.runs=B.runs.filter(r=>r.k!==run.k);B.runs.push(run);B.runs.sort((a,b)=>a.t-b.t);B.runs=B.runs.slice(0,BOSS_MAX);
   bossRecSave();try{cldSoon(1500)}catch(e){}
 }
 function bossMerge(d){                                        // 내 폰 → 저장소
@@ -3638,14 +3639,14 @@ function bossMerge(d){                                        // 내 폰 → 저
   const have=new Map();for(const x of d.bs.r)if(x&&x.k)have.set(x.k,x);
   const dead=new Set(Array.isArray(d.bs.x)?d.bs.x.map(x=>x&&x.k):[]);
   for(const r of B.runs){if(dead.has(r.k))continue;const o=have.get(r.k);if(!o){d.bs.r.push(r);have.set(r.k,r)}else if(r.t<o.t)o.t=r.t}
-  d.bs.r=d.bs.r.filter(x=>x&&typeof x==='object'&&+x.t>0).sort((a,b)=>a.t-b.t).slice(0,30);
+  d.bs.r=d.bs.r.filter(x=>x&&typeof x==='object'&&+x.t>0).sort((a,b)=>a.t-b.t).slice(0,BOSS_MAX);
   if(B.c>0){const o=d.bs.c[PID],nm=NET.me.name||PROF.name||'',c=Math.max(B.c,+(o&&o.c)||0);if(!o||(+o.c||0)<c||o.n!==nm)d.bs.c[PID]={n:nm,c}}
   const ks=Object.keys(d.bs.c);if(ks.length>300)ks.sort((a,b)=>(d.bs.c[a].c||0)-(d.bs.c[b].c||0)).slice(0,ks.length-300).forEach(k=>delete d.bs.c[k]);
 }
 function bossPull(d){                                         // 저장소 → 내 폰
   const b=d&&d.bs;if(!b||typeof b!=='object')return;
   const dead=new Set();if(Array.isArray(b.x))for(const x of b.x.slice(-300))if(x&&typeof x.k==='string')dead.add(x.k.slice(0,24));
-  const r=[];if(Array.isArray(b.r))for(const x of b.r.slice(0,40)){if(!x||typeof x!=='object'||!(+x.t>0)||!Array.isArray(x.p)||dead.has(String(x.k||'').slice(0,24)))continue;
+  const r=[];if(Array.isArray(b.r))for(const x of b.r.slice(0,BOSS_MAX)){if(!x||typeof x!=='object'||!(+x.t>0)||!Array.isArray(x.p)||dead.has(String(x.k||'').slice(0,24)))continue;
     r.push({k:String(x.k||'').slice(0,24),t:+x.t,d:+x.d||0,p:x.p.slice(0,4).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)}))})}
   r.sort((a,b)=>a.t-b.t);
   const c={};if(b.c&&typeof b.c==='object')for(const id of Object.keys(b.c).slice(0,400)){const e=b.c[id];if(/^[A-Z2-9]{6}$/.test(id)&&e&&(+e.c)>0)c[id]={n:bossNm(e.n),c:Math.min(99999,e.c|0)}}
@@ -3713,10 +3714,10 @@ function bossRankShow(tab){
   const B=bossRecGet(),my=NET.me.name||PROF.name||'';
   const runs=BOSSDB.r.slice();for(const r of B.runs)if(!runs.some(x=>x.k===r.k))runs.push(r);runs.sort((a,b)=>a.t-b.t);
   const cm=Object.assign({},BOSSDB.c);if(B.c>0&&(!cm[PID]||cm[PID].c<B.c))cm[PID]={n:my||'이름 없음',c:B.c};
-  const crow=Object.entries(cm).sort((a,b)=>b[1].c-a[1].c).slice(0,20);
+  const crow=Object.entries(cm).sort((a,b)=>b[1].c-a[1].c);
   const tl=bossTitle(B.c);
   let rows;
-  if(tab==='t')rows=runs.slice(0,20).map((r,i)=>'<div class="bkrow'+(r.p.some(p=>p.i===PID)?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+r.p.map(p=>netEsc(p.n)).join(' · ')+'<small>'+r.p.map(p=>netEsc(p.c)).filter(Boolean).join(' · ')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+bossFmt(r.t)+'</div></div>').join('');
+  if(tab==='t')rows=runs.map((r,i)=>'<div class="bkrow'+(r.p.some(p=>p.i===PID)?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+r.p.map(p=>netEsc(p.n)).join(' · ')+'<small>'+r.p.map(p=>netEsc(p.c)).filter(Boolean).join(' · ')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+bossFmt(r.t)+'</div></div>').join('');
   else rows=crow.map(([id,e],i)=>'<div class="bkrow'+(id===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(e.n)+(bossTitle(e.c)?'<small>'+bossTitle(e.c)+'</small>':'')+'</div><div class="bkval">'+e.c+'회</div></div>').join('');
   m.innerHTML='<div class="bkbox"><div class="bkt">볼파이트틱톡 보스 랭킹</div>'
     +'<div class="bkrw">랭킹이 끝날 때 보상이 있어요!</div>'
