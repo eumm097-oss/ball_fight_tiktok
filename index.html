@@ -3626,6 +3626,7 @@ function bossRecSave(){try{const B=bossRecGet();localStorage.setItem('bftBoss',J
 const bossNm=n=>String(n||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').trim().slice(0,NMX)||'이름 없음';
 function bossRec(win,t,mem,k){                                // 보스를 잡으면 내 처치 횟수 +1, 이 판 기록을 저장소에 올림 (필터 없음)
   const B=bossRecGet();if(B.done===k)return;B.done=k;
+  if(ADMUSED||admSpd!==1||admPause)return;           // 어드민패널을 쓴 판은 랭킹·처치 횟수에 올리지 않음
   if(!win)return;
   B.c++;if(mem.length===1)B.solo=true;
   const run={k:String(k).slice(0,24),t:Math.round(t*100)/100,d:Date.now(),p:mem.slice(0,4).map(m=>({i:/^[A-Z2-9]{6}$/.test(m.pid)?m.pid:'',n:bossNm(m.name),c:String(m.ch||'').slice(0,40)}))};
@@ -3702,7 +3703,7 @@ function bossAdmHTML(){
     +'<div class="admsk">'+rkSelBtn('r',r.k)+'<button type="button" class="admbtn admred" data-a="rkdel" data-k="'+E(r.k)+'">기록 삭제</button></div></div>').join('')||'<div class="admnone">기록 없음</div>';
   const cc=cs.map(([id,e],i)=>'<div class="admch"><div class="admcn"><b>'+(i+1)+'. '+E(e.n)+'</b><i>'+id+'</i><span class="modw" style="color:#17e3d6">'+e.c+'회</span></div>'+(AB.c.has(id)?'<div class="modl" style="color:#ff5c7a;font-weight:700">⚠ 비정상: '+E(AB.c.get(id))+'</div>':'')
     +'<div class="admsk">'+rkSelBtn('c',id)+'<button type="button" class="admbtn" data-a="rkcnt" data-id="'+id+'" data-d="-1">-1</button><button type="button" class="admbtn admred" data-a="rkcnt" data-id="'+id+'" data-d="0">횟수 초기화</button></div></div>').join('')||'<div class="admnone">기록 없음</div>';
-  return '<div class="admsub">선택 삭제</div><div class="admsk rktool"><button type="button" class="admbtn" data-a="rkabn">비정상 자동 선택 ('+(AB.r.size+AB.c.size)+')</button><button type="button" class="admbtn" data-a="rkall">전체 선택</button><button type="button" class="admbtn" data-a="rknone">선택 해제</button><button type="button" class="admbtn admred rkdsel" data-a="rkdelsel">선택한 것 한 번에 삭제 (<span class="rkn">'+rkSelN()+'</span>개)</button></div><div class="admnote">기록은 삭제되면 그 판 참가자의 처치 횟수도 1씩 줄고, 처치 횟수를 고르면 0으로 초기화됩니다. 비정상 기준: 참가한 캐릭터들의 스킬이 낼 수 있는 최대 데미지(캐릭터별 초당 최대치 × 클리어 시간)가 보스 체력보다 작은 기록 · 참가자 0명/5명 이상/같은 아이디 중복.</div>'
+  return '<div class="admsub">선택 삭제</div><div class="admsk rktool"><button type="button" class="admbtn" data-a="rkabn">비정상 자동 선택 ('+(AB.r.size+AB.c.size)+')</button><button type="button" class="admbtn" data-a="rkme">내 아이디 기록 선택 ('+BOSSDB.r.filter(r=>(r.p||[]).some(m=>m&&m.i===PID)).length+')</button><button type="button" class="admbtn" data-a="rkall">전체 선택</button><button type="button" class="admbtn" data-a="rknone">선택 해제</button><button type="button" class="admbtn admred rkdsel" data-a="rkdelsel">선택한 것 한 번에 삭제 (<span class="rkn">'+rkSelN()+'</span>개)</button></div><div class="admnote">기록은 삭제되면 그 판 참가자의 처치 횟수도 1씩 줄고, 처치 횟수를 고르면 0으로 초기화됩니다. 비정상 기준: 참가한 캐릭터들의 스킬이 낼 수 있는 최대 데미지(캐릭터별 초당 최대치 × 클리어 시간)가 보스 체력보다 작은 기록 · 참가자 0명/5명 이상/같은 아이디 중복.</div>'
     +'<div class="admsub">스피드런 기록 <span>'+runs.length+'개</span></div><div class="rkruns">'+rr+'</div><div class="admsub">처치 횟수 <span>'+cs.length+'명</span></div><div class="rkcnts">'+cc+'</div>';
 }
 function bossRankShow(tab){
@@ -5250,7 +5251,7 @@ function admSwSync(box){                    // 켜짐/꺼짐 표시를 실제 �
     const on=k==='pas'?!c.admNoPas:k==='stop'?!!c.admStop:!!c.admGod;b.classList.toggle('on',on);b.querySelector('span').textContent=on?'켜짐':'꺼짐'});
 }
 /* ---------- 어드민 패널: 메인·캐릭터·게임·설정 기능 ---------- */
-let admSpd=1,admPause=false,admMute=false,admVol=1,admNoShake=false,admLowFx=false,admHit=false,admOp=1,admTp=null,admOut=null;
+let ADMUSED=false,admSpd=1,admPause=false,admMute=false,admVol=1,admNoShake=false,admLowFx=false,admHit=false,admOp=1,admTp=null,admOut=null;
 const admLog=[];
 const NM_DEF={...NM_ODDS},KK_DEF={...KK_ODDS},BK_DEF=BK_DEB.map(x=>x[1]);
 try{const s=JSON.parse(localStorage.getItem('admSet')||'{}');if(s&&typeof s==='object'){admMute=!!s.mute;admVol=isFinite(s.vol)?s.vol:1;admNoShake=!!s.noShake;admLowFx=!!s.lowFx;admOp=isFinite(s.op)?s.op:1}}catch(e){}
@@ -5517,6 +5518,7 @@ function admCmd(m){
 }
 function admExec(m){
   const c=m.side?chars.find(o=>o.side===m.side):null,a=m.a;
+  ADMUSED=a==='rst'?false:true;                 // 어드민패널로 판에 손댔으면 이 판은 랭킹에 안 올라감 (다시 시작하면 깨끗한 새 판)
   try{
   if(a==='sk'&&c){if(!c.alive||over)return;const k=(ADM_SK[c.kind]||[])[m.i|0];if(k)k[1](c)}
   else if(a==='sw'&&c){if(m.k==='pas')c.admNoPas=!c.admNoPas;else if(m.k==='stop')c.admStop=!c.admStop;else if(m.k==='god')c.admGod=!c.admGod}
@@ -5552,10 +5554,10 @@ function admAct(a,b){
   else if(NET.match&&['pause','end','spd','spdpm'].includes(a)){if(!admOnOk())return;   // 온라인: 상대 폰에도 똑같이
     if(a==='pause')admCmd({a,v:!admPause});else if(a==='end')admCmd({a:'endm'});
     else admCmd({a:'spd',v:a==='spd'?+b.dataset.v:Math.max(.05,Math.min(10,Math.round((admSpd+(+b.dataset.d)*admStepOf('spd'))*1000)/1000))})}
-  else if(a==='pause')admPause=!admPause;
+  else if(a==='pause'){admPause=!admPause;ADMUSED=true}
   else if(a==='end')resetGame();
-  else if(a==='spd')admSpd=+b.dataset.v;
-  else if(a==='spdpm')admSpd=Math.max(.05,Math.min(10,Math.round((admSpd+(+b.dataset.d)*admStepOf('spd'))*1000)/1000));   // 게임 속도 ×0.05 ~ ×10
+  else if(a==='spd'){admSpd=+b.dataset.v;ADMUSED=true}
+  else if(a==='spdpm'){ADMUSED=true;admSpd=Math.max(.05,Math.min(10,Math.round((admSpd+(+b.dataset.d)*admStepOf('spd'))*1000)/1000))}   // 게임 속도 ×0.05 ~ ×10
   else if(a==='stat'&&c)admCmd({a,side:c.side,f:b.dataset.f,d:+b.dataset.d*admStepOf('stat:'+c.side+':'+b.dataset.f)});
   else if(a==='odds')admCmd({a,g:b.dataset.g,k:b.dataset.k,d:+b.dataset.d*admStepOf('odds:'+b.dataset.g+':'+b.dataset.k)});
   else if(a==='oddsreset')admCmd({a,g:b.dataset.g});
@@ -5584,6 +5586,8 @@ function admAct(a,b){
     b.classList.toggle('on',on);b.textContent=on?'✔ 선택됨':'선택';const w=document.querySelector('.adm');if(w)w.querySelectorAll('.rkn').forEach(x=>x.textContent=rkSelN())}
   else if(a==='rkabn'){RKSEL.r.clear();RKSEL.c.clear();const A=rkAbnormal();for(const k of A.r.keys())RKSEL.r.add(k);for(const k of A.c.keys())RKSEL.c.add(k);
     const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML();netToast(rkSelN()?'비정상 '+rkSelN()+'개를 골랐어요. 확인하고 삭제를 눌러 주세요':'비정상으로 보이는 기록이 없어요')}
+  else if(a==='rkme'){RKSEL.r.clear();RKSEL.c.clear();let n=0;for(const r of BOSSDB.r)if((r.p||[]).some(m=>m&&m.i===PID)){RKSEL.r.add(r.k);n++}   // 어드민패널을 쓰는 내 아이디가 들어간 기록 (옛 기록은 쓴 표시가 없어서 이걸로 골라냄)
+    const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML();netToast(n?'내 아이디가 들어간 기록 '+n+'개를 골랐어요. 확인하고 삭제를 눌러 주세요':'내 아이디가 들어간 기록이 없어요')}
   else if(a==='rkall'||a==='rknone'){RKSEL.r.clear();RKSEL.c.clear();
     if(a==='rkall'){for(const r of BOSSDB.r)RKSEL.r.add(r.k);for(const id of Object.keys(BOSSDB.c))RKSEL.c.add(id)}
     const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML()}
@@ -5748,7 +5752,7 @@ function addCharAt(side,o,withRm){      // side 자리에 o(선택 버튼) 캐�
   return ball;
 }
 function chatInClear(room){try{document.querySelectorAll('.chatmenu .ccin'+(room?',.rmodal .rcin':'')).forEach(i=>{i.value=''})}catch(_){}}   // 못 보낸 채팅은 다음 판으로 안 넘어감
-function resetGame(){chatInClear();wbSet();
+function resetGame(){ADMUSED=false;chatInClear();wbSet();
   umStop(true);
   try{if(master&&actx)(master.gain.cancelScheduledValues(actx.currentTime),master.gain.setValueAtTime(1.15,actx.currentTime))}catch(e){}   // 효과음 복구
   timers.forEach(clearTimeout);timers.length=0;
