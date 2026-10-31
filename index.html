@@ -3997,7 +3997,7 @@ function bossSetCnt(s,pid,n){n=Math.max(0,Math.min(99999,n|0));if(n>0){const o=s
 var RKSEL={r:new Set(),c:new Set()};                    // 관리자: 지우려고 골라 둔 스피드런 기록(k) · 처치 횟수(플레이어 아이디)
 const rkSelBtn=(g,id)=>'<button type="button" class="admbtn rkpick'+(RKSEL[g].has(id)?' on':'')+'" data-a="rksel" data-g="'+g+'" data-k="'+admEsc(id)+'">'+(RKSEL[g].has(id)?'✔ 선택됨':'선택')+'</button>';
 const rkSelN=()=>RKSEL.r.size+RKSEL.c.size;
-const RK_DPS={'낭만박상환':6,'제리얌':15,'태권히어로':18,'어둠속성 김켈리':13,'숏타민':14,'백기철 판타지':15,'엄....edit':11,'목박사':6,'김동희세계관':12,'산와머니':9,'권루트':18},RK_DPS_DEF=18;   // 캐릭터별 보스에게 줄 수 있는 초당 데미지의 넉넉한 최대치 (시뮬레이션으로 잰 최고 속도의 약 2.5배)
+const RK_DPS={'낭만박상환':8.3,'제리얌':12.4,'태권히어로':24,'어둠속성 김켈리':13.3,'숏타민':10.9,'백기철 판타지':10,'엄....edit':10.1,'목박사':5.7,'김동희세계관':12,'산와머니':8.1,'권루트':9.4,'설화':2,'슬계':2,'비누계':2},RK_DPS_DEF=12;   // 캐릭터별로 보스에게 1초에 줄 수 있는 데미지의 넉넉한 최대치 (지금 밸런스로 혼자 보스와 60초씩 8번 싸워 잰 가장 높은 값의 2배)
 function rkChars(r){const L=[];for(const m of r.p||[])for(const x of String(m&&m.c||'').split('·')){const t=x.trim();if(t)L.push(t)}return L}   // 이 판에 쓰인 캐릭터들 (한 기기에서 여러 캐릭터를 넣은 기록은 한 사람 칸에 ' · '로 이어져 있음)
 function rkDps(nm){if(nm in RK_DPS)return RK_DPS[nm];let b=0;for(const k in RK_DPS)if(k.startsWith(nm)&&RK_DPS[k]>b)b=RK_DPS[k];return b||RK_DPS_DEF}   // 이름이 40자에서 잘린 기록은 앞부분이 같은 캐릭터로 찾음
 function rkCap(r){let d=0;for(const c of rkChars(r))d+=rkDps(c);return d*r.t}   // 이 시간 동안 이 캐릭터들이 낼 수 있는 최대 데미지
@@ -4016,7 +4016,7 @@ function rkAbnormal(){                                   // 지금 저장소의 
 /* ---------- 관리자: 랭킹 정리 — 이상한 기록을 지우고, 사람마다 처치 횟수를 남은 시간 기록 수(그 사람이 들어간 기록 수)에 맞춤 ---------- */
 let RKPLAN=null,RKDONE='';
 const rkKey=v=>String(v==null?'':v).slice(0,24);
-function rkPlan(runs,cs){                // runs: [{k,t,d,p}] · cs: {아이디:{n,c}} → 지울 기록과 고칠 횟수
+function rkPlan(runs,cs,mode){           // runs: [{k,t,d,p}] · cs: {아이디:{n,c}} · mode: 'sub'(지운 기록만큼만 빼기) / 'eq'(남은 기록 수와 똑같이) → 지울 기록과 고칠 횟수
   const del=new Map();
   for(const r of runs){const w=rkWhy(r);if(w)del.set(r.k,w)}
   const seen=new Map();                  // 같은 판이 두 번 저장된 것: 같은 참가자 · 같은 시간 · 1분 안
@@ -4027,25 +4027,28 @@ function rkPlan(runs,cs){                // runs: [{k,t,d,p}] · cs: {아이디:
   const idsOf=r=>[...new Set((r.p||[]).map(m=>m&&m.i).filter(v=>/^[A-Z2-9]{6}$/.test(v||'')))];
   for(const r of keep){for(const m of r.p||[])if(m&&m.i)nm[m.i]=m.n;for(const id of idsOf(r))cnt[id]=(cnt[id]||0)+1}
   for(const r of runs)if(del.has(r.k))for(const id of idsOf(r))gone[id]=(gone[id]||0)+1;
-  const fix=[];
-  for(const id of new Set([...Object.keys(cs),...Object.keys(cnt)])){const cur=Math.max(0,(cs[id]&&cs[id].c)|0),want=cnt[id]||0;if(cur!==want)fix.push({id,n:(cs[id]&&cs[id].n)||nm[id]||'?',cur,want,gone:gone[id]||0})}
-  fix.sort((a,b)=>(b.cur-b.want)-(a.cur-a.want));
-  return {runs,del,keep:keep.length,fix,people:Object.keys(cnt).length}}
+  const fix=[],many=[];mode=mode==='eq'?'eq':'sub';
+  for(const id of new Set([...Object.keys(cs),...Object.keys(cnt)])){const cur=Math.max(0,(cs[id]&&cs[id].c)|0),g=gone[id]||0,have=cnt[id]||0,n=(cs[id]&&cs[id].n)||nm[id]||'?';
+    const want=mode==='eq'?have:Math.max(0,cur-g);if(cur!==want)fix.push({id,n,cur,want,gone:g,have});
+    if(want-have>=20&&want>=3*Math.max(1,have))many.push({id,n,c:want,have})}   // 남는 기록보다 횟수가 훨씬 많은 사람 (직접 확인용)
+  fix.sort((a,b)=>(b.cur-b.want)-(a.cur-a.want));many.sort((a,b)=>b.c-a.c);
+  return {runs,del,keep:keep.length,fix,many,mode,people:Object.keys(cnt).length}}
 function rkPlanHTML(){
   const E=admEsc,P=RKPLAN;let h='';
   if(RKDONE)h+='<div class="admnote" style="color:#2bff5a;font-weight:700">'+E(RKDONE)+'</div>';
   if(!P)return h;
-  if(!P.del.size&&!P.fix.length)return h+'<div class="admnote" style="color:#2bff5a;font-weight:700">✓ 이상한 기록이 없고, '+P.people+'명 모두 처치 횟수가 시간 기록 수와 같아요 (기록 '+P.keep+'개)</div>';
-  h+='<div class="admnote">지울 기록 <b>'+P.del.size+'개</b> · 남는 기록 <b>'+P.keep+'개</b> · 횟수를 고칠 사람 <b>'+P.fix.length+'명</b> — 확인하고 아래 \'정리 실행\'을 두 번 누르세요</div>';
+  const manyH=P.many&&P.many.length?'<div class="admlbl">기록보다 횟수가 훨씬 많은 사람 (예전엔 기록이 30개까지만 남아서 진짜일 수도 있음 · 아래 처치 횟수 목록에서 직접 확인)</div>'+P.many.map(m=>'<div class="modl">'+admEsc(m.n)+' <i>'+m.id+'</i> · 처치 '+m.c+'회 · 남은 기록 '+m.have+'개</div>').join(''):'';
+  if(!P.del.size&&!P.fix.length)return h+'<div class="admnote" style="color:#2bff5a;font-weight:700">✓ 정리할 게 없어요'+(P.mode==='eq'?' · '+P.people+'명 모두 처치 횟수가 시간 기록 수와 같아요':' · 이상한 기록이 없어요')+' (기록 '+P.keep+'개)</div>'+manyH;
+  h+='<div class="admnote">['+(P.mode==='eq'?'횟수를 남은 기록 수에 맞추기':'지운 기록만큼만 횟수 빼기')+'] 지울 기록 <b>'+P.del.size+'개</b> · 남는 기록 <b>'+P.keep+'개</b> · 횟수를 고칠 사람 <b>'+P.fix.length+'명</b> — 확인하고 \'정리 실행\'을 두 번 누르세요</div>';
   if(P.del.size){h+='<div class="admlbl">지울 기록</div>';let n=0;
     for(const [k,w] of P.del){if(++n>120){h+='<div class="admnone">… 외 '+(P.del.size-120)+'개</div>';break}
       const r=P.runs.find(x=>x.k===k)||{p:[],t:0};
       h+='<div class="admch"><div class="admcn"><b>'+(r.p.map(p=>E(p.n)).join(' · ')||'(참가자 없음)')+'</b><span class="modw" style="color:#17e3d6">'+bossFmt(+r.t||0)+'</span></div><div class="modl">'+r.p.map(p=>E(p.c)).filter(Boolean).join(' · ')+'</div><div class="modl" style="color:#ff5c7a;font-weight:700">⚠ '+E(w)+'</div></div>'}}
-  if(P.fix.length){h+='<div class="admlbl">처치 횟수 고침 (이전 → 이후 = 남는 시간 기록 수)</div>';
+  if(P.fix.length){h+='<div class="admlbl">처치 횟수 고침 (이전 → 이후'+(P.mode==='eq'?' = 남는 시간 기록 수':' · 지운 기록만큼 뺌')+')</div>';
     for(const f of P.fix){const why=[];if(f.gone)why.push('지울 기록 '+f.gone+'개');const left=f.cur-f.gone-f.want;
-      if(left>0)why.push('남는 기록보다 '+left+'회 많음');else if(left<0)why.push('남는 기록보다 '+(-left)+'회 적음');
+      if(P.mode==='eq'){if(left>0)why.push('남는 기록보다 '+left+'회 많음');else if(left<0)why.push('남는 기록보다 '+(-left)+'회 적음')}
       h+='<div class="admch"><div class="admcn"><b>'+E(f.n)+'</b><i>'+f.id+'</i><span class="modw" style="color:'+(f.want<f.cur?'#ff5c7a':'#2bff5a')+'">'+f.cur+'회 → '+f.want+'회</span></div><div class="modl">'+E(why.join(' · '))+'</div></div>'}}
-  return h}
+  return h+manyH}
 
 function bossAdmHTML(){
   const AB=rkAbnormal(),E=admEsc,runs=BOSSDB.r.slice().sort((a,b)=>a.t-b.t),cs=Object.entries(BOSSDB.c).sort((a,b)=>b[1].c-a[1].c);
@@ -4054,7 +4057,7 @@ function bossAdmHTML(){
     +'<div class="admsk">'+rkSelBtn('r',r.k)+'<button type="button" class="admbtn" data-a="rkname" data-k="'+E(r.k)+'">같은 이름 전부 선택</button><button type="button" class="admbtn admred" data-a="rkdel" data-k="'+E(r.k)+'">기록 삭제</button></div></div>').join('')||'<div class="admnone">기록 없음</div>';
   const cc=cs.map(([id,e],i)=>'<div class="admch"><div class="admcn"><b>'+(i+1)+'. '+E(e.n)+'</b><i>'+id+'</i><span class="modw" style="color:#17e3d6">'+e.c+'회</span></div>'+(AB.c.has(id)?'<div class="modl" style="color:#ff5c7a;font-weight:700">⚠ 비정상: '+E(AB.c.get(id))+'</div>':'')
     +'<div class="admsk">'+rkSelBtn('c',id)+'<button type="button" class="admbtn" data-a="rkcnt" data-id="'+id+'" data-d="-1">-1</button><button type="button" class="admbtn admred" data-a="rkcnt" data-id="'+id+'" data-d="0">횟수 초기화</button></div></div>').join('')||'<div class="admnone">기록 없음</div>';
-  return '<div class="admsub">랭킹 정리</div><div class="admsk"><button type="button" class="admbtn" data-a="rkplan">정리할 것 찾기</button><button type="button" class="admbtn admred" data-a="rkclean">정리 실행</button></div><div class="admnote">이상한 기록(시간·참가자가 잘못됐거나 그 캐릭터들로는 그 시간 안에 보스를 못 잡는 기록, 같은 판이 두 번 저장된 것)을 지우고, 사람마다 처치 횟수를 그 사람이 들어간 시간 기록 수에 맞춥니다.</div><div class="rkplan">'+rkPlanHTML()+'</div>'
+  return '<div class="admsub">랭킹 정리</div><div class="admsk"><button type="button" class="admbtn" data-a="rkplan" data-m="sub">찾기: 지운 기록만큼만 횟수 빼기</button><button type="button" class="admbtn" data-a="rkplan" data-m="eq">찾기: 횟수를 기록 수에 맞추기</button><button type="button" class="admbtn admred" data-a="rkclean">정리 실행</button></div><div class="admnote">이상한 기록(시간·참가자가 잘못됐거나 그 캐릭터들로는 그 시간 안에 보스를 못 잡는 기록, 같은 판이 두 번 저장된 것)을 지웁니다. 횟수는 고른 방식대로 고칩니다. 10월 28일 전에는 기록이 30개까지만 남아서, \'기록 수에 맞추기\'를 하면 진짜로 많이 깬 사람도 횟수가 줄어들 수 있어요.</div><div class="rkplan">'+rkPlanHTML()+'</div>'
     +'<div class="admsub">선택 삭제</div><div class="admsk rktool"><button type="button" class="admbtn" data-a="rkabn">비정상 자동 선택 ('+(AB.r.size+AB.c.size)+')</button><button type="button" class="admbtn" data-a="rkme">내 아이디 기록 선택 ('+BOSSDB.r.filter(r=>(r.p||[]).some(m=>m&&m.i===PID)).length+')</button><button type="button" class="admbtn" data-a="rkall">전체 선택</button><button type="button" class="admbtn" data-a="rknone">선택 해제</button><button type="button" class="admbtn admred rkdsel" data-a="rkdelsel">선택한 것 한 번에 삭제 (<span class="rkn">'+rkSelN()+'</span>개)</button></div><div class="admnote">기록은 삭제되면 그 판 참가자의 처치 횟수도 1씩 줄고, 처치 횟수를 고르면 0으로 초기화됩니다. 비정상 기준: 참가한 캐릭터들의 스킬이 낼 수 있는 최대 데미지(캐릭터별 초당 최대치 × 클리어 시간)가 보스 체력보다 작은 기록 · 참가자 0명/5명 이상/같은 아이디 중복.</div>'
     +'<div class="admsub">스피드런 기록 <span>'+runs.length+'개</span></div><div class="rkruns">'+rr+'</div><div class="admsub">처치 횟수 <span>'+cs.length+'명</span></div><div class="rkcnts">'+cc+'</div>';
 }
@@ -4066,6 +4069,7 @@ function bossRankShow(tab){
   tab=tab||m._tab||'t';m._tab=tab;
   const B=bossRecGet(),my=NET.me.name||PROF.name||'';
   const runs=BOSSDB.r.slice();for(const r of B.runs)if(!runs.some(x=>x.k===r.k))runs.push(r);runs.sort((a,b)=>a.t-b.t);
+  for(let i=runs.length-1;i>=0;i--)if(rkWhy(runs[i]))runs.splice(i,1);   // 말이 안 되는 기록(가짜)은 저장소에서 지우기 전이라도 랭킹에 안 보임
   const cm=Object.assign({},BOSSDB.c);if(B.c>0&&(!cm[PID]||cm[PID].c<B.c))cm[PID]={n:my||'이름 없음',c:B.c};
   const crow=Object.entries(cm).sort((a,b)=>b[1].c-a[1].c);
   const tl=bossTitle(B.c);
@@ -5912,9 +5916,11 @@ function admAct(a,b){
       if(!s.x.some(x=>x&&kk(x.k)===k))s.x.push({k,t:Date.now()})}).then(ok=>{if(ok){BOSSDB.r=BOSSDB.r.filter(x=>kk(x.k)!==k);const B=bossRecGet();B.runs=B.runs.filter(x=>kk(x.k)!==k);bossRecSave()}netToast(ok?'기록을 삭제하고 횟수를 줄였습니다':'삭제하지 못했습니다 · '+BWHY)})}
   else if(a==='rksel'){const g=b.dataset.g==='c'?'c':'r',k=b.dataset.k,S=RKSEL[g],on=!S.has(k);if(on)S.add(k);else S.delete(k);
     b.classList.toggle('on',on);b.textContent=on?'✔ 선택됨':'선택';const w=document.querySelector('.adm');if(w)w.querySelectorAll('.rkn').forEach(x=>x.textContent=rkSelN())}
-  else if(a==='rkplan'){RKDONE='';RKPLAN=rkPlan(BOSSDB.r,BOSSDB.c);const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML();
+  else if(a==='rkplan'){RKDONE='';RKPLAN=rkPlan(BOSSDB.r,BOSSDB.c,b.dataset.m);const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML();
     netToast(RKPLAN.del.size||RKPLAN.fix.length?'지울 기록 '+RKPLAN.del.size+'개 · 횟수 고칠 사람 '+RKPLAN.fix.length+'명':'정리할 게 없어요 · 모두 맞아요')}
   else if(a==='rkclean'){
+    if(!RKPLAN){netToast('먼저 \'찾기\'로 무엇이 바뀌는지 확인해 주세요');return}
+    const mode=RKPLAN.mode;
     if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.innerHTML;b.textContent='한 번 더 누르면 정리';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.innerHTML=t0},4000);return}
     let res=null;
     bossAdmEdit(s=>{                     // 저장소에서 막 받은 최신 기록으로 다시 계산해서 정리
@@ -5922,15 +5928,15 @@ function admAct(a,b){
       s.r=s.r.filter(x=>x&&typeof x==='object');
       const runs=s.r.filter(x=>!dead.has(rkKey(x.k))).map(x=>({k:rkKey(x.k),t:+x.t||0,d:+x.d||0,p:Array.isArray(x.p)?x.p.slice(0,8).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)})):[]}));
       const cs={};for(const id in s.c){const e=s.c[id];if(/^[A-Z2-9]{6}$/.test(id)&&e&&typeof e==='object')cs[id]={n:bossNm(e.n),c:Math.max(0,e.c|0)}}
-      const P=rkPlan(runs,cs);if(!P.del.size&&!P.fix.length)return false;
+      const P=rkPlan(runs,cs,mode);if(!P.del.size&&!P.fix.length)return false;
       s.r=s.r.filter(x=>!P.del.has(rkKey(x.k)));
       for(const k of P.del.keys())if(!s.x.some(x=>x&&rkKey(x.k)===k))s.x.push({k,t:Date.now()});   // 다른 폰이 다시 올리지 못하게 지운 표시
       for(const f of P.fix){bossSetCnt(s,f.id,f.want);if(f.want>0&&s.c[f.id]&&!s.c[f.id].n)s.c[f.id].n=f.n}   // 그 사람 폰의 횟수도 이 값으로 맞춰짐
       res=P}).then(ok=>{
-        if(ok&&res){RKSEL.r.clear();RKSEL.c.clear();const chk=rkPlan(BOSSDB.r,BOSSDB.c);RKPLAN=chk;
+        if(ok&&res){RKSEL.r.clear();RKSEL.c.clear();const chk=rkPlan(BOSSDB.r,BOSSDB.c,mode);RKPLAN=chk;
           RKDONE='정리 완료: 기록 '+res.del.size+'개 삭제 · '+res.fix.length+'명 횟수 고침'+(chk.del.size||chk.fix.length?' (다시 확인했더니 남은 게 있어요 — 한 번 더 정리해 주세요)':' · 다시 확인: 모두 맞아요');
           netToast(RKDONE)}
-        else if(BWHY==='바꿀 내용이 없어요'){RKPLAN=rkPlan(BOSSDB.r,BOSSDB.c);RKDONE='';netToast('정리할 게 없어요 · 모두 맞아요')}
+        else if(BWHY==='바꿀 내용이 없어요'){RKPLAN=rkPlan(BOSSDB.r,BOSSDB.c,mode);RKDONE='';netToast('정리할 게 없어요 · 모두 맞아요')}
         else netToast('정리하지 못했습니다 · '+BWHY);
         const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML()})}
   else if(a==='rkabn'){RKSEL.r.clear();RKSEL.c.clear();const A=rkAbnormal();for(const k of A.r.keys())RKSEL.r.add(k);for(const k of A.c.keys())RKSEL.c.add(k);
