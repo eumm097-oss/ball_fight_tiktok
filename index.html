@@ -557,7 +557,9 @@ body.wc-drag,body.wc-drag *{user-select:none!important;-webkit-user-select:none!
 .rwait{flex:1;font-size:12.5px;color:#666;text-align:center}
 .admhitcv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
 
-.fxic[data-fx]{-webkit-touch-callout:none;touch-action:manipulation}.pwmodal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.pwbox{width:100%;max-width:300px;background:var(--bg,#fff);border:3px solid var(--ink,#111);padding:18px;font-family:inherit}.pwt{font-size:18px;font-weight:700;margin-bottom:6px}.pwd{font-size:13px;color:#555;margin-bottom:12px}.pwin{width:100%;box-sizing:border-box;height:40px;font-size:18px;padding:0 10px;border:2px solid var(--ink,#111);border-radius:0;font-family:inherit;letter-spacing:.2em}.pwin:focus{outline:none;border-color:#111}.pwerr{min-height:18px;font-size:12px;color:#e5484d;margin:6px 0 4px}.pwbtns{display:flex;gap:8px}.pwbtns button{flex:1;height:38px;font-family:inherit;font-size:15px;font-weight:700;border:2px solid var(--ink,#111);border-radius:0;cursor:pointer}.pwno{background:#fff;color:#111}.pwyes{background:#111;color:#fff}.pnmodal{position:fixed;inset:0;overscroll-behavior:contain;touch-action:pan-y;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:12}
+.fxic[data-fx]{-webkit-touch-callout:none;touch-action:manipulation}.pwmodal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}.pwbox{width:100%;max-width:300px;background:var(--bg,#fff);border:3px solid var(--ink,#111);padding:18px;font-family:inherit}.pwt{font-size:18px;font-weight:700;margin-bottom:6px}.pwd{font-size:13px;color:#555;margin-bottom:12px}.pwin{width:100%;box-sizing:border-box;height:40px;font-size:18px;padding:0 10px;border:2px solid var(--ink,#111);border-radius:0;font-family:inherit;letter-spacing:.2em}.pwin:focus{outline:none;border-color:#111}.pwerr{min-height:18px;font-size:12px;color:#e5484d;margin:6px 0 4px}
+.pwsub{font-size:12px;line-height:1.45;opacity:.75;margin:0 0 8px}
+body.hw .pwbox{color:#2b1838}.pwbtns{display:flex;gap:8px}.pwbtns button{flex:1;height:38px;font-family:inherit;font-size:15px;font-weight:700;border:2px solid var(--ink,#111);border-radius:0;cursor:pointer}.pwno{background:#fff;color:#111}.pwyes{background:#111;color:#fff}.pnmodal{position:fixed;inset:0;overscroll-behavior:contain;touch-action:pan-y;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:12}
 .pnmodal[hidden]{display:none}
 .pnpanel{position:relative;width:100%;max-width:560px;max-height:min(86vh,720px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:var(--bg);border:3px solid var(--ink);padding:52px 20px 24px;font-family:"IBM Plex Sans KR","Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111;-webkit-font-smoothing:antialiased}
 .pnclose{position:absolute;top:8px;right:8px;width:36px;height:36px;font-size:20px;line-height:1;color:var(--ink);background:transparent;border:2px solid var(--ink);cursor:pointer}
@@ -3922,6 +3924,80 @@ function showBossResult(){                           // 혼자(한 기기) 하�
   count.classList.add('win');count.animate([{opacity:0},{opacity:1}],{duration:400,fill:'forwards'});
   try{bossOffRec(win,b)}catch(e){}
 }
+/* ---------- 관리자 도장 (전자 서명) ----------
+   관리자 폰에만 넣어 두는 비밀 도장(개인키)으로 관리자 명령마다 도장을 찍고, 모든 폰은 이 파일에 든 공개키로 진짜 도장인지 확인함.
+   도장이 없거나 가짜인 관리자 명령(추방·승률 보정·전적 수정·경고 해제·점검·공지·투표·대화 조회·온라인 경기 조작·랭킹 정리·전체 접속자/방 조회)은 모두 무시.
+   개인키는 이 파일 어디에도 없어서 파일을 뜯어 봐도 도장을 만들 수 없음 (P-256 ECDSA · 확인은 아래 순수 JS, 찍기는 브라우저 WebCrypto) */
+const SG=(()=>{
+  const S={have:null,d:null,k:null,cred:'',credPid:'',credP:null};
+  const PUB=[['2bc1c40ab463a9e48465f886fe4c237e4f1c139d0cd8c8c521cab44c38869486','948762d85e014e58e10197b10df4f87c6ca9cbe27b8b310dc975ba799f35c5f4']];   // 도장 공개키 (도장을 바꾸면 새 공개키를 여기에 추가)
+  if(typeof BigInt!=='function'||typeof TextEncoder!=='function')return S;   // 아주 옛날 브라우저: 확인을 못 하니 관리자 명령을 모두 무시
+  const B=BigInt,Z=B(0),O=B(1),T2=B(2),T3=B(3),T4=B(4),T8=B(8),
+    P=B('0xffffffff00000001000000000000000000000000ffffffffffffffffffffffff'),
+    N=B('0xffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551'),
+    G=[B('0x6b17d1f2e12c4247f8bce6e563a440f277037d812deb33a0f4a13945d898c296'),B('0x4fe342e2fe1a7f9b8ee7eb4a7c0f9e162bce33576b315ececbb6406837bf51f5'),O],INF=[O,O,Z];
+  const md=(a,m)=>{a%=m;return a<Z?a+m:a},mp=a=>md(a,P);
+  const inv=(a,m)=>{let r0=md(a,m),r1=m,s0=O,s1=Z;while(r1!==Z){const q=r0/r1,r2=r0-q*r1,s2=s0-q*s1;r0=r1;r1=r2;s0=s1;s1=s2}return r0===O?md(s0,m):Z};
+  const dbl=p=>{const X=p[0],Y=p[1],W=p[2];if(W===Z||Y===Z)return INF;   // 야코비 좌표 (a=-3 곡선)
+    const d=mp(W*W),g=mp(Y*Y),be=mp(X*g),al=mp(T3*(X-d)*(X+d)),X3=mp(al*al-T8*be);
+    return [X3,mp(al*(T4*be-X3)-T8*g*g),mp((Y+W)*(Y+W)-g-d)]};
+  const add=(p,q)=>{if(p[2]===Z)return q;if(q[2]===Z)return p;
+    const z1=mp(p[2]*p[2]),z2=mp(q[2]*q[2]),u1=mp(p[0]*z2),u2=mp(q[0]*z1),s1=mp(p[1]*q[2]*z2),s2=mp(q[1]*p[2]*z1),h=mp(u2-u1),r=mp(T2*(s2-s1));
+    if(h===Z)return r===Z?dbl(p):INF;
+    const i=mp(T4*h*h),j=mp(h*i),v=mp(u1*i),X3=mp(r*r-j-T2*v);
+    return [X3,mp(r*(v-X3)-T2*s1*j),mp(((p[2]+q[2])*(p[2]+q[2])-z1-z2)*h)]};
+  const aff=p=>{if(p[2]===Z)return null;const zi=inv(p[2],P),z2=mp(zi*zi);return [mp(p[0]*z2),mp(p[1]*z2*zi)]};
+  const mul=(k,p)=>{let R=INF;const s=k.toString(2);for(let i=0;i<s.length;i++){R=dbl(R);if(s.charCodeAt(i)===49)R=add(R,p)}return R};
+  const mul2=(a,b,Q)=>{const GQ=add(G,Q),sa=a.toString(2),sb=b.toString(2),L=Math.max(sa.length,sb.length),x1=sa.padStart(L,'0'),x2=sb.padStart(L,'0');let R=INF;   // a·G + b·Q 를 한 번에
+    for(let i=0;i<L;i++){R=dbl(R);const u=x1.charCodeAt(i)===49,v=x2.charCodeAt(i)===49;if(u&&v)R=add(R,GQ);else if(u)R=add(R,G);else if(v)R=add(R,Q)}return R};
+  const KH='428a2f98 71374491 b5c0fbcf e9b5dba5 3956c25b 59f111f1 923f82a4 ab1c5ed5 d807aa98 12835b01 243185be 550c7dc3 72be5d74 80deb1fe 9bdc06a7 c19bf174 e49b69c1 efbe4786 0fc19dc6 240ca1cc 2de92c6f 4a7484aa 5cb0a9dc 76f988da 983e5152 a831c66d b00327c8 bf597fc7 c6e00bf3 d5a79147 06ca6351 14292967 27b70a85 2e1b2138 4d2c6dfc 53380d13 650a7354 766a0abb 81c2c92e 92722c85 a2bfe8a1 a81a664b c24b8b70 c76c51a3 d192e819 d6990624 f40e3585 106aa070 19a4c116 1e376c08 2748774c 34b0bcb5 391c0cb3 4ed8aa4a 5b9cca4f 682e6ff3 748f82ee 78a5636f 84c87814 8cc70208 90befffa a4506ceb bef9a3f7 c67178f2 6a09e667 bb67ae85 3c6ef372 a54ff53a 510e527f 9b05688c 1f83d9ab 5be0cd19'.split(' ').map(h=>parseInt(h,16)|0);
+  const sha=b=>{const l=b.length,n=((l+72)>>6)<<6,m=new Uint8Array(n);m.set(b);m[l]=128;const dv=new DataView(m.buffer);dv.setUint32(n-4,(l*8)>>>0);dv.setUint32(n-8,Math.floor(l/536870912));   // SHA-256
+    const H=KH.slice(64),w=new Int32Array(64);
+    for(let o=0;o<n;o+=64){for(let t=0;t<16;t++)w[t]=dv.getInt32(o+t*4);
+      for(let t=16;t<64;t++){const x=w[t-15],y=w[t-2];w[t]=(w[t-16]+((x>>>7|x<<25)^(x>>>18|x<<14)^(x>>>3))+w[t-7]+((y>>>17|y<<15)^(y>>>19|y<<13)^(y>>>10)))|0}
+      let a=H[0],b2=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+      for(let t=0;t<64;t++){const t1=(h+((e>>>6|e<<26)^(e>>>11|e<<21)^(e>>>25|e<<7))+((e&f)^(~e&g))+KH[t]+w[t])|0,t2=(((a>>>2|a<<30)^(a>>>13|a<<19)^(a>>>22|a<<10))+((a&b2)^(a&c)^(b2&c)))|0;h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b2;b2=a;a=(t1+t2)|0}
+      H[0]=(H[0]+a)|0;H[1]=(H[1]+b2)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0}
+    const r=new Uint8Array(32),rv=new DataView(r.buffer);for(let i=0;i<8;i++)rv.setInt32(i*4,H[i]);return r};
+  const u8=s=>new TextEncoder().encode(s),hex=b=>{let s='';for(let i=0;i<b.length;i++)s+=(b[i]<16?'0':'')+b[i].toString(16);return s},big=b=>B('0x'+(hex(b)||'0'));
+  const b64d=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const t=atob(s),o=new Uint8Array(t.length);for(let i=0;i<t.length;i++)o[i]=t.charCodeAt(i);return o};
+  const b64e=b=>{let t='';for(let i=0;i<b.length;i++)t+=String.fromCharCode(b[i]);return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')};
+  const b32=x=>{let h=x.toString(16);while(h.length<64)h='0'+h;const o=new Uint8Array(32);for(let i=0;i<32;i++)o[i]=parseInt(h.substr(i*2,2),16);return o};
+  const PQ=PUB.map(p=>[B('0x'+p[0]),B('0x'+p[1]),O]);
+  const vf=(m,sig)=>{                              // 서명 확인 (r·s 64바이트, base64url)
+    if(typeof m!=='string'||typeof sig!=='string'||!/^[A-Za-z0-9_-]{86}$/.test(sig))return false;
+    const b=b64d(sig);if(b.length!==64)return false;const r=big(b.subarray(0,32)),s=big(b.subarray(32));
+    if(r===Z||s===Z||r>=N||s>=N)return false;
+    const e=big(sha(u8(m))),w=inv(s,N),u1=md(e*w,N),u2=md(r*w,N);
+    for(const Q of PQ){const X=aff(mul2(u1,u2,Q));if(X&&md(X[0],N)===r)return true}return false};
+  const C=new Map();let CP=null,cpT=0;              // C: 이번에 확인한 결과 · CP: 이 폰이 전에 진짜로 확인한 도장 (다시 계산하지 않으려고 저장)
+  const cpLoad=()=>{if(CP)return CP;CP=new Set();try{const v=JSON.parse(localStorage.getItem('bftSgOk')||'[]');if(Array.isArray(v))for(const x of v.slice(-3000))if(typeof x==='string')CP.add(x)}catch(e){}return CP};
+  const cpSave=()=>{clearTimeout(cpT);cpT=setTimeout(()=>{try{localStorage.setItem('bftSgOk',JSON.stringify([...CP].slice(-3000)))}catch(e){}},1500)};
+  S.m=(...a)=>JSON.stringify(a.map(x=>typeof x==='number'?Math.floor(x):(x==null?'':x)));   // 도장 찍을 내용 (항상 같은 글자로)
+  S.v=(m,s)=>{if(typeof s!=='string'||!s||typeof m!=='string')return false;const k=s+'|'+m;let r=C.get(k);if(r!==undefined)return r;
+    const h=hex(sha(u8(k))).slice(0,24);if(cpLoad().has(h))r=true;else{r=vf(m,s);if(r){CP.add(h);cpSave()}}
+    if(C.size>4000)C.clear();C.set(k,r);return r};
+  const keyOf=c=>{c=String(c||'').replace(/\s+/g,'').replace(/^BFT-?/i,'');if(!/^[A-Za-z0-9_-]{43}$/.test(c))return null;   // 도장 코드 → 개인키 (공개키와 짝이 맞아야 함)
+    const d=big(b64d(c));if(d===Z||d>=N)return null;const Q=aff(mul(d,G));if(!Q)return null;
+    const i=PQ.findIndex(p=>p[0]===Q[0]&&p[1]===Q[1]);return i<0?null:{c,d,i}};
+  S.has=()=>{if(S.have===null){S.have=false;try{const c=localStorage.getItem('bftSg');if(c){const k=keyOf(c);if(k){S.d=k;S.have=true}}}catch(e){}}return S.have};
+  S.set=c=>{const k=keyOf(c);if(!k)return false;try{localStorage.setItem('bftSg',k.c)}catch(e){}S.d=k;S.have=true;S.k=null;S.cred='';return true};
+  S.clear=()=>{try{localStorage.removeItem('bftSg')}catch(e){}S.d=null;S.have=false;S.k=null;S.cred=''};
+  S.sign=async m=>{try{if(!S.has()||typeof crypto==='undefined'||!crypto.subtle)return '';   // 도장 찍기 (관리자 폰)
+    if(!S.k){const Q=PQ[S.d.i];S.k=await crypto.subtle.importKey('jwk',{kty:'EC',crv:'P-256',x:b64e(b32(Q[0])),y:b64e(b32(Q[1])),d:b64e(b32(S.d.d)),ext:true},{name:'ECDSA',namedCurve:'P-256'},false,['sign'])}
+    const s=b64e(new Uint8Array(await crypto.subtle.sign({name:'ECDSA',hash:{name:'SHA-256'}},S.k,u8(m))));
+    C.set(s+'|'+m,true);return s}catch(e){return ''}};
+  S.test=async()=>{const m=S.m('t',Date.now());const s=await S.sign(m);C.delete(s+'|'+m);return !!s&&vf(m,s)};   // 이 폰에서 찍은 도장을 다른 폰도 알아보는지
+  S.vf=vf;S.sha=b=>hex(sha(u8(b)));
+  return S})();
+const sgMsg=(...a)=>SG.m?SG.m(...a):'',sgOk=(a,s)=>!!SG.v&&SG.v(sgMsg(...a),s),sgHave=()=>!!SG.has&&SG.has();
+function sgDo(a,fn){                                // 관리자 동작: 도장을 찍은 다음 fn(도장)
+  if(!sgHave()){try{netToast('관리자 도장이 없는 폰이라서 할 수 없어요')}catch(_){}return}
+  SG.sign(sgMsg(...a)).then(s=>{if(s)fn(s);else try{netToast('도장을 찍지 못했어요 (이 브라우저에서는 안 돼요)')}catch(_){}})}
+function sgCred(){                                  // 관리자 확인증 (모임 자리에 '관리자 폰'임을 보여 줌): 아직 없으면 만들기 시작하고 '' 돌려줌
+  if(!sgHave())return '';if(SG.cred&&SG.credPid===PID)return SG.cred;
+  if(!SG.credP)SG.credP=SG.sign(sgMsg('c',PID)).then(s=>{SG.cred=s;SG.credPid=PID;SG.credP=null});return ''}
+const sgCredOk=(ac,pid)=>/^[A-Z2-9]{6}$/.test(pid||'')&&sgOk(['c',pid],ac);
 /* ---------- 보스전 랭킹 · 칭호 ---------- */
 var BOSSDB={r:[],c:{}},BOSSREC=null;
 const BOSS_MAX=2000;                                      // 저장하고 보여 주는 스피드런 기록 최대 개수 (사실상 제한 없음)
@@ -3944,28 +4020,30 @@ function bossRec(win,t,mem,k){                                // 보스를 잡�
   B.runs=B.runs.filter(r=>r.k!==run.k);B.runs.push(run);B.runs.sort((a,b)=>a.t-b.t);B.runs=B.runs.slice(0,BOSS_MAX);
   bossRecSave();try{cldSoon(1500)}catch(e){}
 }
+function bossDeadMap(x){const m=new Map();if(Array.isArray(x))for(const e of x.slice(-3000))if(e&&typeof e.k==='string'&&typeof e.s==='string'){const k=e.k.slice(0,24);(m.get(k)||m.set(k,[]).get(k)).push(e.s)}return m}   // 관리자 도장이 찍힌 삭제 표시만 (확인은 필요한 기록만 그때그때)
+const bossDead=(m,k)=>{k=String(k==null?'':k).slice(0,24);const L=m.get(k);return !!L&&L.some(s=>sgOk(['x',k],s))};
 function bossMerge(d){                                        // 내 폰 → 저장소
   const B=bossRecGet();if(!B.c&&!B.runs.length)return;
   if(!d.bs||typeof d.bs!=='object'||Array.isArray(d.bs))d.bs={r:[],c:{}};
   if(!Array.isArray(d.bs.r))d.bs.r=[];if(!d.bs.c||typeof d.bs.c!=='object'||Array.isArray(d.bs.c))d.bs.c={};
   const have=new Map();for(const x of d.bs.r)if(x&&x.k)have.set(x.k,x);
-  const dead=new Set(Array.isArray(d.bs.x)?d.bs.x.map(x=>x&&x.k):[]);
-  for(const r of B.runs){if(dead.has(r.k))continue;const o=have.get(r.k);if(!o){d.bs.r.push(r);have.set(r.k,r)}else if(r.t<o.t)o.t=r.t}
+  const xs=bossDeadMap(d.bs.x);
+  for(const r of B.runs){if(bossDead(xs,r.k))continue;const o=have.get(r.k);if(!o){d.bs.r.push(r);have.set(r.k,r)}else if(r.t<o.t)o.t=r.t}
   d.bs.r=d.bs.r.filter(x=>x&&typeof x==='object'&&+x.t>0).sort((a,b)=>a.t-b.t).slice(0,BOSS_MAX);
   if(B.c>0){const o=d.bs.c[PID],nm=NET.me.name||PROF.name||'',c=Math.max(B.c,+(o&&o.c)||0);if(!o||(+o.c||0)<c||o.n!==nm)d.bs.c[PID]={n:nm,c}}
   const ks=Object.keys(d.bs.c);if(ks.length>300)ks.sort((a,b)=>(d.bs.c[a].c||0)-(d.bs.c[b].c||0)).slice(0,ks.length-300).forEach(k=>delete d.bs.c[k]);
 }
 function bossPull(d){                                         // 저장소 → 내 폰
   const b=d&&d.bs;if(!b||typeof b!=='object')return;
-  const dead=new Set();if(Array.isArray(b.x))for(const x of b.x.slice(-1000))if(x&&typeof x.k==='string')dead.add(x.k.slice(0,24));
+  const xs=bossDeadMap(b.x),dead={has:k=>bossDead(xs,k)};   // 관리자 도장이 맞는 삭제 표시만 따름
   const r=[];if(Array.isArray(b.r))for(const x of b.r.slice(0,BOSS_MAX)){if(!x||typeof x!=='object'||!(+x.t>0)||!Array.isArray(x.p)||dead.has(String(x.k||'').slice(0,24)))continue;
     r.push({k:String(x.k||'').slice(0,24),t:+x.t,d:+x.d||0,p:x.p.slice(0,4).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)}))})}
   r.sort((a,b)=>a.t-b.t);
   const c={};if(b.c&&typeof b.c==='object')for(const id of Object.keys(b.c).slice(0,400)){const e=b.c[id];if(/^[A-Z2-9]{6}$/.test(id)&&e&&(+e.c)>0)c[id]={n:bossNm(e.n),c:Math.min(99999,e.c|0)}}
   BOSSDB={r,c};
   const B=bossRecGet();let ch=false;
-  if(b.z&&typeof b.z==='object'&&!Array.isArray(b.z)){const e=b.z[PID];if(e&&typeof e==='object'&&(+e.t||0)>B.za){B.za=+e.t;B.c=Math.max(0,Math.min(99999,e.c|0));if(!B.c)B.solo=false;ch=true}}   // 관리자가 기록을 지우거나 횟수를 고치면 내 횟수도 그대로 맞춰짐
-  if(dead.size&&B.runs.some(x=>dead.has(x.k))){B.runs=B.runs.filter(x=>!dead.has(x.k));ch=true}
+  if(b.z&&typeof b.z==='object'&&!Array.isArray(b.z)){const e=b.z[PID];if(e&&typeof e==='object'&&(+e.t||0)>B.za&&sgOk(['z',PID,+e.t||0,e.c|0],e.s)){B.za=+e.t;B.c=Math.max(0,Math.min(99999,e.c|0));if(!B.c)B.solo=false;ch=true}}   // 관리자가 기록을 지우거나 횟수를 고치면 내 횟수도 그대로 맞춰짐
+  if(xs.size&&B.runs.some(x=>dead.has(x.k))){B.runs=B.runs.filter(x=>!dead.has(x.k));ch=true}
   const mine=c[PID];if(mine&&mine.c>B.c){B.c=mine.c;ch=true}
   if(ch)bossRecSave();
 }
@@ -3973,7 +4051,7 @@ function bossPull(d){                                         // 저장소 → �
 let BADM=false,BWHY='';
 async function bossAdmEdit(fn){                                   // 실패하면 이유를 BWHY에 남김 (토스트에 보여 주려고)
   BWHY='';
-  if(!admIs()){BWHY='관리자 모드가 아니에요 (관리자 패널을 다시 열어 주세요)';return false}
+  if(!admIs()){BWHY=sgHave()?'관리자 모드가 아니에요 (관리자 패널을 다시 열어 주세요)':'이 폰에 관리자 도장이 없어요';return false}
   if(BADM){BWHY='이미 처리 중이에요 · 잠시 뒤 다시 눌러 주세요';return false}
   BADM=true;let st='';
   try{
@@ -3983,9 +4061,15 @@ async function bossAdmEdit(fn){                                   // 실패하�
     if(!d.bs||typeof d.bs!=='object'||Array.isArray(d.bs))d.bs={r:[],c:{}};
     const s=d.bs;if(!Array.isArray(s.r))s.r=[];if(!s.c||typeof s.c!=='object'||Array.isArray(s.c))s.c={};
     if(!Array.isArray(s.x))s.x=[];if(!s.z||typeof s.z!=='object'||Array.isArray(s.z))s.z={};
+    const T0=Date.now();
     if(fn(s)===false){BWHY='바꿀 내용이 없어요';return false}
-    if(s.x.length>1000)s.x=s.x.slice(-1000);
-    const zk=Object.keys(s.z);if(zk.length>400)zk.sort((a,b)=>(s.z[a].t||0)-(s.z[b].t||0)).slice(0,zk.length-400).forEach(k=>delete s.z[k]);
+    {const L=[];   // 이번에 새로 만든 삭제 표시·횟수 고침에 관리자 도장을 찍음 (도장이 없는 건 다른 폰이 따르지 않음)
+      for(const x of s.x)if(x&&typeof x.k==='string'&&!x.s&&(+x.t||0)>=T0){x.k=x.k.slice(0,24);L.push(SG.sign(sgMsg('x',x.k)).then(v=>{x.s=v}))}
+      for(const id in s.z){const e=s.z[id];if(e&&typeof e==='object'&&!e.s&&(+e.t||0)>=T0)L.push(SG.sign(sgMsg('z',id,+e.t||0,e.c|0)).then(v=>{e.s=v}))}
+      st='도장 찍기';await Promise.all(L);st='';
+      if(s.x.some(x=>x&&x.s===''&&(+x.t||0)>=T0)||Object.values(s.z).some(e=>e&&e.s===''&&(+e.t||0)>=T0)){BWHY='관리자 도장을 찍지 못했어요';return false}}
+    if(s.x.length>1000){const a=s.x.filter(x=>x&&x.s),b=s.x.filter(x=>!(x&&x.s));s.x=a.length>=1000?a.slice(-1000):b.slice(-(1000-a.length)).concat(a)}   // 넘치면 도장 없는 것부터 지움
+    const zk=Object.keys(s.z),zt=k=>(s.z[k]&&+s.z[k].t)||0,zs=k=>s.z[k]&&s.z[k].s?1:0;if(zk.length>400)zk.sort((a,b)=>(zs(a)-zs(b))||(zt(a)-zt(b))).slice(0,zk.length-400).forEach(k=>delete s.z[k]);
     st='저장소에 쓰기';
     const r=await fetch(CLD_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),signal:cldTO(15000)});
     if(!r.ok){BWHY='저장소가 거절했어요 (오류 '+r.status+')';return false}
@@ -5321,25 +5405,32 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
   if(k==='set')return '<div class="admsub">소리</div><div class="admsk admtg">'+sw('mute','효과음')+'</div><div class="admrow"><span>음량</span><input type="range" class="admrange" data-a="vol" min="0" max="150" step="5"><b data-o="vol"></b></div>'
     +'<div class="admsub">효과음 미리 듣기</div>'+SFX_PRE.map(([g,L])=>'<div class="admlbl">'+g+'</div><div class="admsk">'+L.map(([k,n])=>bt('sfxp',n,'',' data-k="'+k+'"')).join('')+'</div>').join('')
     +'<div class="admsub">화면</div><div class="admsk admtg">'+sw('shake','화면 흔들림')+sw('lowfx','효과 줄이기')+sw('hit','히트박스')+'</div>'
-    +'<div class="admsub">패널</div><div class="admrow"><span>투명도</span><input type="range" class="admrange" data-a="op" min="30" max="100" step="5"><b data-o="op"></b></div><div class="admsk">'+bt('panelreset','위치·크기 초기화','admsub2')+'</div>';
+    +'<div class="admsub">패널</div><div class="admrow"><span>투명도</span><input type="range" class="admrange" data-a="op" min="30" max="100" step="5"><b data-o="op"></b></div><div class="admsk">'+bt('panelreset','위치·크기 초기화','admsub2')+'</div>'
+    +(ADM_G?'':'<div class="admsub">관리자 도장</div><div class="admnote">이 폰에 관리자 도장이 들어 있어요. 내 폰이 아니면 지워 주세요 (지우면 도장 코드를 다시 넣어야 패널이 열려요).</div><div class="admsk">'+bt('sgdel','이 폰에서 도장 지우기','admsub2')+'</div>');
   return '';
 }
 let ADM_OK=false,ADM_G=false;
-function admGate(){                              // 어드민 패널: 두 번 터치한 다음 비밀번호(2차)
-  if(ADM_OK||document.querySelector('.adm:not(.admg)')){openAdmin();return}
+function admGate(){                              // 어드민 패널: 두 번 터치한 다음 비밀번호(2차) · 관리자 도장이 없는 폰은 도장 코드부터 (비밀번호만으로는 안 열림)
+  if((ADM_OK&&sgHave())||document.querySelector('.adm:not(.admg)')){openAdmin();return}
   if(document.querySelector('.pwmodal'))return;
+  const need=!sgHave();
   const m=document.createElement('div');m.className='pwmodal';
-  m.innerHTML='<div class="pwbox"><div class="pwt">비밀번호</div><input class="pwin" type="password" inputmode="numeric" autocomplete="off"><div class="pwerr"></div><div class="pwbtns"><button type="button" class="pwno">취소</button><button type="button" class="pwyes">확인</button></div></div>';
+  m.innerHTML='<div class="pwbox"><div class="pwt">'+(need?'관리자 도장':'비밀번호')+'</div>'+(need?'<div class="pwsub">이 폰에는 관리자 도장이 없어요. 도장 코드를 붙여 넣어 주세요.</div>':'')+'<input class="pwin" type="password" '+(need?'autocapitalize="off" spellcheck="false"':'inputmode="numeric"')+' autocomplete="off"><div class="pwerr"></div><div class="pwbtns"><button type="button" class="pwno">취소</button><button type="button" class="pwyes">확인</button></div></div>';
   document.body.appendChild(m);const inp=m.querySelector('.pwin'),err=m.querySelector('.pwerr'),close=()=>m.remove();
   const h=t=>{let x=0x811c9dc5;for(const b of new TextEncoder().encode(t)){x^=b;x=Math.imul(x,0x01000193)>>>0}return x};
-  const ok=()=>{if(h('bft:'+inp.value)===542645959){ADM_OK=true;close();openAdmin()}else{err.textContent='비밀번호가 틀렸습니다.';inp.value='';inp.focus()}};
+  let busy=false;
+  const ok=()=>{if(busy)return;
+    if(need){const v=inp.value;inp.value='';if(!SG.set||!SG.set(v)){err.textContent='도장 코드가 맞지 않아요.';inp.focus();return}
+      busy=true;err.textContent='확인 중...';SG.test().then(t=>{busy=false;if(!t){SG.clear();err.textContent='이 브라우저에서는 도장을 쓸 수 없어요.';return}
+        ADM_OK=true;close();openAdmin();netToast('관리자 도장을 이 폰에 저장했어요')});return}
+    if(h('bft:'+inp.value)===542645959){ADM_OK=true;close();openAdmin()}else{err.textContent='비밀번호가 틀렸습니다.';inp.value='';inp.focus()}};
   m.querySelector('.pwyes').addEventListener('click',ok);m.querySelector('.pwno').addEventListener('click',close);
   const t0=performance.now();   // 열리자마자 들어온 바깥 터치로 닫히지 않게
   m.addEventListener('pointerdown',e=>{if(e.target===m&&performance.now()-t0<350)e.preventDefault()});
   m.addEventListener('click',e=>{if(e.target===m&&performance.now()-t0>=350)close()});inp.addEventListener('keydown',e=>{if(e.key==='Enter')ok();if(e.key==='Escape')close()});
   inp.focus();setTimeout(()=>{if(m.isConnected&&document.activeElement!==inp)inp.focus()},30);
 }
-let BOSS_UNLK=false;try{BOSS_UNLK=sessionStorage.getItem('bftBossAdm')==='1'}catch(e){}
+let BOSS_UNLK=false;try{BOSS_UNLK=sessionStorage.getItem('bftBossAdm')==='1'&&sgHave()}catch(e){}
 const admBossNo=()=>MODE==='boss'&&!BOSS_UNLK;   // 보스전: 관리자 패널 버튼이 모두 잠김 (비번 129를 넣어야 풀림)
 function openAdmin(g){
   g=g===true;
@@ -5452,7 +5543,8 @@ function openAdmin(g){
   };
   {const lb=document.createElement('div');lb.className='admlockbar';lb.innerHTML='<span>보스전 잠금</span><input class="admlkin" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호"><button type="button" class="admlkok">풀기</button>';
     win.insertBefore(lb,w.querySelector('.admmain'));const inp=lb.querySelector('.admlkin');
-    const tryU=()=>{if(inp.value==='129'){BOSS_UNLK=true;try{sessionStorage.setItem('bftBossAdm','1')}catch(e){}inp.value='';admLockSync(w);netToast('잠금을 풀었어요')}else{inp.value='';netToast('비밀번호가 틀렸습니다')}};
+    const tryU=()=>{if(inp.value==='129'&&!sgHave()){inp.value='';netToast('관리자 도장이 있는 폰에서만 풀 수 있어요');return}   // 도장이 없는 폰은 비밀번호를 알아도 못 풂
+      if(inp.value==='129'){BOSS_UNLK=true;try{sessionStorage.setItem('bftBossAdm','1')}catch(e){}inp.value='';admLockSync(w);netToast('잠금을 풀었어요')}else{inp.value='';netToast('비밀번호가 틀렸습니다')}};
     lb.querySelector('.admlkok').addEventListener('click',tryU);inp.addEventListener('keydown',e=>{if(e.key==='Enter')tryU()});admLockSync(w)}
   w._iv=setInterval(()=>{if(!document.hidden){admLockSync(w);refresh()}},400);refresh();
 }
@@ -5655,7 +5747,7 @@ function modRender(w){
 var usrNew=false;   // 유저 목록을 새 계정(만든 시각) 순으로
 const usrOpen=new Set(),usrKick={},usrFr={},usrEd={};   // usrFr[아이디]: 친구 정보(고른 방·불러오는 중)
 /* 어드민 폰에 1대1 대화를 모아 둠: 접속 중인 사람 폰에서 가져올 때마다 쌓여서, 나중에 둘 다 꺼져 있어도 볼 수 있음 (공개 저장소에는 올리지 않음) */
-const admIs=()=>{try{return localStorage.getItem('bftAdm')==='1'}catch(e){return false}};
+const admIs=()=>{try{return localStorage.getItem('bftAdm')==='1'&&sgHave()}catch(e){return false}};   // 관리자 폰: 패널을 연 적 있고 관리자 도장이 있어야 함
 var ADMDM={p:{},f:{}};                              // p: '아이디|아이디' → [{i,t,a(보낸 사람),m}] · f: 마지막으로 모은 시각
 try{if(admIs()){const v=JSON.parse(localStorage.getItem('bftAdmDm')||'null');if(v&&v.p&&typeof v.p==='object'){ADMDM.p=v.p;ADMDM.f=v.f||{};if(v.g&&typeof v.g==='object')ADMDM.g=v.g}}}catch(e){}
 const admPair=(a,b)=>a<b?a+'|'+b:b+'|'+a;
@@ -5741,8 +5833,9 @@ function usrRender(w){
     const now=Date.now(),B=Object.keys(REG).filter(id=>(+REG[id].kb||0)>now&&bm(id,U[id]?U[id].n:REG[id].n)).sort((a,b)=>REG[a].kb-REG[b].kb);   // 블랙리스트: 지금 추방 중인 사람
     w.querySelector('.usrblc').textContent='('+B.length+'명)';
     {const K=KLOG.filter(x=>bm(x.id,x.n)).slice().reverse(),fd=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      const last={};for(const x of KLOG)if(!last[x.id]||x.t>=last[x.id].t)last[x.id]=x;   // 아직 끝나지 않았는데 지금 추방 중이 아닌 기록(도장이 없던 예전 추방 등)은 '다시 추방'으로 도장을 찍어 다시 적용
       w.querySelector('.usrklc').textContent='('+K.length+'개)';
-      const kh=K.length?K.map(x=>'<div class="modli"><span>'+fd(x.t)+'</span> <b class="usrn">'+admEsc(x.n)+'</b> <span>'+x.id+'</span> '+(x.u?'<b>추방</b> ~'+fd(x.u)+(x.r?' · '+admEsc(x.r):''):'<b>해제</b>')+'</div>').join(''):'<div class="admnone">'+(bq?'검색 결과가 없습니다.':'기록이 없습니다.')+'</div>';
+      const kh=K.length?K.map(x=>'<div class="modli"><span>'+fd(x.t)+'</span> <b class="usrn">'+admEsc(x.n)+'</b> <span>'+x.id+'</span> '+(x.u?'<b>추방</b> ~'+fd(x.u)+(x.r?' · '+admEsc(x.r):''):'<b>해제</b>')+(x.u>now&&last[x.id]===x&&!((+(REG[x.id]||{}).kb||0)>now)?' <button type="button" class="admbtn admsub2" data-a="klre" data-id="'+x.id+'" data-u="'+x.u+'" data-r="'+admEsc(x.r||'')+'">다시 추방</button>':'')+'</div>').join(''):'<div class="admnone">'+(bq?'검색 결과가 없습니다.':'기록이 없습니다.')+'</div>';
       const ke=w.querySelector('.usrkl');if(ke._h!==kh){ke._h=kh;ke.innerHTML=kh}}
     w.querySelector('.usrbl').innerHTML=B.length?B.map(id=>{const r=REG[id],tm=Math.ceil((r.kb-now)/60000),h=Math.floor(tm/60),m=tm%60,nm=U[id]?U[id].n:(r.n||'?');
       return '<div class="admch usrblr"><div class="admcn"><b>'+admEsc(nm)+'</b><i>'+id+'</i><span class="modw">'+(h?h+'시간 ':'')+m+'분 남음</span></div>'
@@ -5844,9 +5937,16 @@ function admCmd(m){
   if(ADM_G&&NET.match){netToast('온라인 경기 중에는 쓸 수 없어요');return}
   if(admBossNo()){netToast('보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
   if(NET.spec){netToast('관전 중에는 쓸 수 없어요');return}
-  if(NET.match&&NET.conn){m.k2=NET.sim&&m.a!=='pause'?NET.step+(NET.mp?60:24):-1;NET.admHist.push(Object.assign({},m));netSend({t:'adm',c:m});if(m.k2<0)admExec(m);else NET.admQ.push(m)}
+  if(NET.match&&NET.conn){if(!sgHave()){netToast('관리자 도장이 없는 폰이라서 온라인 경기에서는 쓸 수 없어요');return}
+    m.k2=NET.sim&&m.a!=='pause'?NET.step+(NET.mp?60:24):-1;m.r=Math.random().toString(36).slice(2,8);NET.admHist.push(Object.assign({},m));
+    const cs=JSON.stringify(m);SG.sign(sgMsg('o',NET.seed|0,cs)).then(s=>{if(s)netSend({t:'adm',c:m,cs,s})});   // 관리자 도장을 찍어 보냄 (상대 폰은 도장이 맞아야 따름)
+    if(m.k2<0)admExec(m);else NET.admQ.push(m)}
   else admExec(m);
 }
+function admIn(d){                                  // 상대 폰이 보낸 관리자 조작: 관리자 도장이 맞고 처음 받은 것만 (가짜·다시 보낸 것은 무시)
+  if(typeof d.cs!=='string'||d.cs.length>4000||!sgOk(['o',NET.seed|0,d.cs],d.s))return null;
+  let m=null;try{m=JSON.parse(d.cs)}catch(e){return null}if(!m||typeof m!=='object'||Array.isArray(m))return null;
+  if(NET.admSeenK!==(NET.seed|0)){NET.admSeenK=NET.seed|0;NET.admSeen=new Set()}if(NET.admSeen.has(d.cs))return null;NET.admSeen.add(d.cs);return m}
 function admExec(m){
   const c=m.side?chars.find(o=>o.side===m.side):null,a=m.a;
   ADMUSED=a==='rst'?false:true;                 // 어드민패널로 판에 손댔으면 이 판은 랭킹에 안 올라감 (다시 시작하면 깨끗한 새 판)
@@ -5924,9 +6024,9 @@ function admAct(a,b){
     if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.innerHTML;b.textContent='한 번 더 누르면 정리';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.innerHTML=t0},4000);return}
     let res=null;
     bossAdmEdit(s=>{                     // 저장소에서 막 받은 최신 기록으로 다시 계산해서 정리
-      const dead=new Set(s.x.map(x=>x&&rkKey(x.k)));
+      const xs=bossDeadMap(s.x);
       s.r=s.r.filter(x=>x&&typeof x==='object');
-      const runs=s.r.filter(x=>!dead.has(rkKey(x.k))).map(x=>({k:rkKey(x.k),t:+x.t||0,d:+x.d||0,p:Array.isArray(x.p)?x.p.slice(0,8).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)})):[]}));
+      const runs=s.r.filter(x=>!bossDead(xs,rkKey(x.k))).map(x=>({k:rkKey(x.k),t:+x.t||0,d:+x.d||0,p:Array.isArray(x.p)?x.p.slice(0,8).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)})):[]}));
       const cs={};for(const id in s.c){const e=s.c[id];if(/^[A-Z2-9]{6}$/.test(id)&&e&&typeof e==='object')cs[id]={n:bossNm(e.n),c:Math.max(0,e.c|0)}}
       const P=rkPlan(runs,cs,mode);if(!P.del.size&&!P.fix.length)return false;
       s.r=s.r.filter(x=>!P.del.has(rkKey(x.k)));
@@ -5976,6 +6076,7 @@ function admAct(a,b){
   else if(a==='usrwb'){regWb(b.dataset.id,+b.dataset.v);const w=document.querySelector('.adm');if(w)usrRender(w)}
   else if(a==='usrpe'){const id=b.dataset.id,row=b.closest('.usrper'),rc=id===PID?[PROF.w,PROF.l,PROF.d]:(FRX.rc[id]||[0,0,0]),g=(k,i)=>{const x=(row.querySelector('[data-k="'+k+'"]')||{}).value;return x===''||x==null?rc[i]|0:Math.max(0,parseInt(x,10)||0)};
     regPe(id,g('w',0),g('l',1),g('d',2));delete usrEd[id];b.textContent='적용됨';const w=document.querySelector('.adm');setTimeout(()=>{if(w)usrRender(w)},700)}
+  else if(a==='klre'){const u=+b.dataset.u;if(u>Date.now()){b.disabled=true;regKick(b.dataset.id,u,b.dataset.r||'')}else netToast('이미 끝난 추방이에요')}
   else if(a==='usrkick'||a==='usrunkick'){const id=b.dataset.id,w=document.querySelector('.adm');
     if(a==='usrunkick'){regKick(id,0)}
     else{const row=b.closest('.usrops'),v=k=>Math.max(0,parseInt((row.querySelector('[data-k="'+k+'"]')||{}).value||'0',10)||0),min=v('h')*60+v('m');
@@ -5996,6 +6097,8 @@ function admAct(a,b){
   else if(a==='annsend'){const i=document.querySelector('.adm .annin'),t=(i.value||'').trim();if(!t)return;annSend(t);i.value=''}
   else if(a==='ccstar'){const k=b.dataset.k;if(PRES_STAR.has(k))PRES_STAR.delete(k);else PRES_STAR.add(k);ccuSave();ccuPurge()}
   else if(a==='sfxp'){sfxPreview(b.dataset.k)}
+  else if(a==='sgdel'){if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.textContent;b.textContent='한 번 더 누르면 지워요';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.textContent=t0},4000);return}
+    SG.clear();ADM_OK=false;const w=document.querySelector('.adm');if(w){clearInterval(w._iv);w.remove()}netToast('이 폰에서 관리자 도장을 지웠어요')}
   else if(a==='mute'){admMute=!admMute;admApplyVol();admSave()}
   else if(a==='shake'){admNoShake=!admNoShake;admSave()}
   else if(a==='lowfx'){admLowFx=!admLowFx;admSave()}
@@ -6160,7 +6263,7 @@ let NET_MODE='1v1';try{const v=localStorage.getItem('bftNetMode');if(MP_MAX[v])N
 let NET_MULTI=false,NET_MODES=[NET_MODE];try{NET_MULTI=localStorage.getItem('bftNetMulti')==='1';const v=JSON.parse(localStorage.getItem('bftNetModes')||'null');if(Array.isArray(v)){const L=v.filter(x=>MP_MAX[x]);if(L.length)NET_MODES=L}}catch(e){}
 if(!NET_MULTI)NET_MODES=[NET_MODE];
 const NET_CHAT=['안녕하세요!','줴줴이야','아니','나이스!','엄.','예?'];
-try{NET.me.name=localStorage.getItem('bftNick')||'';NET.me.dev=localStorage.getItem('bftDev')==='1';NET.me.tst=!NET.me.dev&&localStorage.getItem('bftTst')==='1';NET.pick=localStorage.getItem('bftPick')||null}catch(e){}
+try{NET.me.name=localStorage.getItem('bftNick')||'';NET.me.dev=localStorage.getItem('bftDev')==='1'&&sgHave();NET.me.tst=!NET.me.dev&&localStorage.getItem('bftTst')==='1';NET.pick=localStorage.getItem('bftPick')||null}catch(e){}
 const netEsc=t=>String(t).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 const WRENCH='<svg class="wrench" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(45 12 12)"><rect x="10.3" y="9.6" width="3.4" height="13" rx="1.5" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1"/><path d="M7.2 1.6h9.3a.9.9 0 0 1 .9.9v7.4a.9.9 0 0 1-.9.9h-6.3V8.1h3.9V5.3H7.2a.9.9 0 0 1-.9-.9v-1.9a.9.9 0 0 1 .9-.9z" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1" stroke-linejoin="round"/><rect x="7.6" y="7.2" width="6.6" height="2.4" rx=".6" fill="#1d5cff" stroke="#0a2f8f" stroke-width="1.1"/><path d="M10.6 11.6h2.8M10.6 13.1h2.8" stroke="#0a2f8f" stroke-width=".9" stroke-linecap="round"/></g></svg>';
 const netHalf=n=>[...document.querySelectorAll('.modal .half[data-name]')].find(h=>h.dataset.name===n);
@@ -6204,7 +6307,7 @@ function netDots(){const k=['online','lobby','2v2'].indexOf(NET.screen);document
 const onlEl=document.querySelector('.onl'),nmIn=onlEl.querySelector('.nmin'),nmMsg=onlEl.querySelector('.nmmsg'),chBtn=onlEl.querySelector('.chpick');
 function netMsg(t,cls){nmMsg.textContent=t;nmMsg.className='nmmsg '+cls;nmMsg.getAnimations().forEach(a=>a.cancel());nmMsg.animate([{opacity:0,transform:'translateY(-3px)'},{opacity:1,transform:'none'}],{duration:180,easing:'ease-out'})}
 function netSaveName(auto){
-  const raw=nmIn.value,dev0=/\[\s*bft48\s*\]/i.test(raw),tst0=/\[\s*tst8\s*\]/i.test(raw),nm=raw.replace(/\[\s*(bft48|tst8)\s*\]/ig,'').replace(/\s+/g,' ').trim();   // 제작자·테스터 코드는 이름에서 빼고 표시만 바꿈
+  const raw=nmIn.value,dev0=/\[\s*bft48\s*\]/i.test(raw)&&sgHave(),tst0=/\[\s*tst8\s*\]/i.test(raw),nm=raw.replace(/\[\s*(bft48|tst8)\s*\]/ig,'').replace(/\s+/g,' ').trim();   // 제작자·테스터 코드는 이름에서 빼고 표시만 바꿈
   if(!nm){if(!auto||raw)netMsg('이름을 입력해 주세요','bad');return false}
   if(!/^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]+$/.test(nm)){netMsg('숫자·영어·한글·띄어쓰기·!·?·.·~·( )만 쓸 수 있어요','bad');return false}   // 쓸 수 있는 글자
   {const mc=modCheck(nm);if(mc.bad||mc.pi){netMsg('사용할 수 없는 이름이에요','bad');return false}}
@@ -6510,7 +6613,7 @@ function netData(d){
     const tm=d.tm&&NET.mp&&NET.mp.mode==='2v2'?1:0;if(typeof d.txt==='string'){let x=d.txt.replace(/\s+/g,' ').trim().slice(0,30);const mc=modCheck(x);if(mc.pi||(mc.bad&&!NET.cons))x='***';const sid=NET.seed;if(x&&chatAcOk(NET.mp?(NET.mp.P[sd]||{}).pid:(NET.op||{}).pid,()=>{if(NET.match&&NET.seed===sid)netChatShow(sd,x,tm)}))netChatShow(sd,x,tm)}else{const i=d.i|0;if(i>=0&&i<NET_CHAT.length)netChatShow(sd,i,tm)}}
   else if(d.t==='cack'){NET.chatAck=d.id}
   else if(d.t==='cons'){if(NET.mp){mpConsCli(d);return}if(d.a==='req'&&!NET.cons)netConsAsk();else if(d.a==='ok'){NET.cons=true;netSysLine('비속어 합의 완료! 이번 판은 서로 비속어를 써도 돼요');chatMark()}else if(d.a==='no'){netSysLine('상대가 비속어 합의를 거절했어요');chatMark()}}
-  else if(d.t==='adm'&&d.c&&typeof d.c==='object'){const m=d.c;NET.admHist.push(Object.assign({},m));if(!NET.sim||m.k2<0||m.k2<=NET.step)admExec(m);else NET.admQ.push(m)}
+  else if(d.t==='adm'&&d.c&&typeof d.c==='object'){const m=admIn(d);if(m){NET.admHist.push(Object.assign({},m));if(!NET.sim||m.k2<0||m.k2<=NET.step)admExec(m);else NET.admQ.push(m)}}
   else if(d.t==='bye'){NET.byeGot=true;netClosed()}
 }
 function netClosed(){
@@ -6706,42 +6809,62 @@ const regChg=new Set();let regT=0;
 function regSave(){const ks=Object.keys(REG);if(ks.length>300){ks.sort((a,b)=>regKeep(REG[a])-regKeep(REG[b])).slice(0,ks.length-300).forEach(k=>delete REG[k])}
   const old=Date.now()-14*864e5;for(const k in REG){const e=REG[k];if((e.u||0)<old&&(e.wu||0)<old&&!((e.cu||0)>Date.now()||(e.g|0)>0||(e.kb||0)>Date.now()||(e.wb|0)!==0))delete REG[k]}
   try{localStorage.setItem('bftReg',JSON.stringify(REG))}catch(e){}}
-function regSelf(){return {n:NET.me.name||'?',w:PEN.w,cu:PEN.cu,g:PEN.g,log:PEN_LOG.slice(-10),u:PEN.u,ub:PEN.ub,kb:+PEN.kb||0,ku:+PEN.ku||0,kr:String(PEN.kr||''),wb:PEN.wb|0,wu:+PEN.wu||0,pe:PEN.pe||null,pu:+PEN.pu||0}}
-function regClean(e){return {n:String(e.n||'?').slice(0,NMX),w:e.w|0,cu:+e.cu||0,g:e.g|0,log:Array.isArray(e.log)?e.log.slice(-10).map(x=>({t:+x.t||0,m:String(x.m||'').slice(0,30),r:String(x.r||'').slice(0,12)})):[],u:+e.u||0,ub:+e.ub||0,ua:e.ua==='reset'?'reset':(e.ua?'unpen':undefined),kb:+e.kb||0,ku:+e.ku||0,kr:String(e.kr||'').slice(0,60),wb:Math.max(-3,Math.min(3,e.wb|0)),wu:+e.wu||0,pe:Array.isArray(e.pe)?e.pe.slice(0,3).map(x=>Math.max(0,Math.min(99999,x|0))):null,pu:+e.pu||0}}
+function regSelf(){return {n:NET.me.name||'?',w:PEN.w,cu:PEN.cu,g:PEN.g,log:PEN_LOG.slice(-10),u:PEN.u,ub:PEN.ub,ua:PEN.ua,bs:PEN.bs||undefined,kb:+PEN.kb||0,ku:+PEN.ku||0,kr:String(PEN.kr||''),ks:PEN.ks||undefined,wb:PEN.wb|0,wu:+PEN.wu||0,ws:PEN.ws||undefined,pe:PEN.pe||null,pu:+PEN.pu||0,ps:PEN.ps||undefined}}
+function regClean(e,id){const r=regClean0(e),ok=(a,s)=>typeof s==='string'&&sgOk(a,s);   // 관리자가 정하는 칸은 관리자 도장이 맞을 때만 남김 (없거나 가짜면 0)
+  if(r.ku&&ok(['k',id,r.kb,r.ku,r.kr],e.ks))r.ks=e.ks;else{r.kb=0;r.ku=0;r.kr=''}
+  if(r.ub&&ok(['b',id,r.ub,r.ua||''],e.bs))r.bs=e.bs;else{r.ub=0;r.ua=undefined}
+  if(r.wu&&ok(['w',id,r.wb,r.wu],e.ws))r.ws=e.ws;else{r.wb=0;r.wu=0}
+  if(r.pu&&r.pe&&ok(['p',id,r.pe[0]|0,r.pe[1]|0,r.pe[2]|0,r.pu],e.ps))r.ps=e.ps;else{r.pe=null;r.pu=0}
+  return r}
+function regClean0(e){return {n:String(e.n||'?').slice(0,NMX),w:e.w|0,cu:+e.cu||0,g:e.g|0,log:Array.isArray(e.log)?e.log.slice(-10).map(x=>({t:+x.t||0,m:String(x.m||'').slice(0,30),r:String(x.r||'').slice(0,12)})):[],u:+e.u||0,ub:+e.ub||0,ua:e.ua==='reset'?'reset':(e.ua?'unpen':undefined),kb:+e.kb||0,ku:+e.ku||0,kr:String(e.kr||'').slice(0,60),wb:Math.max(-3,Math.min(3,e.wb|0)),wu:+e.wu||0,pe:Array.isArray(e.pe)?e.pe.slice(0,3).map(x=>Math.max(0,Math.min(99999,x|0))):null,pu:+e.pu||0}}
 function regMix(o,e){                              // 경고 기록은 더 나중 것, 추방·패널티 해제 표시는 각각 더 나중에 정한 것
   if(!o)return e;if(!e)return o;
   const base=(+e.u||0)>(+o.u||0)?e:o,k=(+e.ku||0)>(+o.ku||0)?e:o,b=(+e.ub||0)>(+o.ub||0)?e:o,W=(+e.wu||0)>(+o.wu||0)?e:o,Q=(+e.pu||0)>(+o.pu||0)?e:o;
   if(base===k&&base===b&&base===W&&base===Q)return base;
-  return Object.assign({},base,{kb:+k.kb||0,ku:+k.ku||0,kr:String(k.kr||''),ub:+b.ub||0,ua:b.ua,wb:W.wb|0,wu:+W.wu||0,pe:Q.pe||null,pu:+Q.pu||0})}
+  return Object.assign({},base,{kb:+k.kb||0,ku:+k.ku||0,kr:String(k.kr||''),ks:k.ks||undefined,ub:+b.ub||0,ua:b.ua,bs:b.bs||undefined,wb:W.wb|0,wu:+W.wu||0,ws:W.ws||undefined,pe:Q.pe||null,pu:+Q.pu||0,ps:Q.ps||undefined})}
 const regKeep=e=>(+e.kb||0)>Date.now()||(e.wb|0)!==0?9e15:(+e.u||0);   // 개수 제한으로 지울 때 추방 중인 사람은 남김
+{let ch=false;const ok=(a,s)=>typeof s==='string'&&sgOk(a,s);   // 처음 켤 때: 관리자 도장이 없는 관리자 설정(도장 생기기 전 것·가짜)은 지움
+  const kOk=(+PEN.ku||0)>0&&ok(['k',PID,+PEN.kb||0,+PEN.ku,String(PEN.kr||'').slice(0,60)],PEN.ks);if(!kOk&&(PEN.ku||PEN.kb||PEN.kr||PEN.ks)){PEN.kb=0;PEN.ku=0;PEN.kr='';delete PEN.ks;ch=true}
+  const bOk=(+PEN.ub||0)>0&&ok(['b',PID,+PEN.ub,PEN.ua==='reset'?'reset':(PEN.ua?'unpen':'')],PEN.bs);if(!bOk&&(PEN.ub||PEN.ua||PEN.bs)){PEN.ub=0;delete PEN.ua;delete PEN.bs;ch=true}
+  const wOk=(+PEN.wu||0)>0&&ok(['w',PID,Math.max(-3,Math.min(3,PEN.wb|0)),+PEN.wu],PEN.ws);if(!wOk&&(PEN.wu||PEN.wb||PEN.ws)){PEN.wb=0;PEN.wu=0;delete PEN.ws;ch=true}
+  const pOk=(+PEN.pu||0)>0&&Array.isArray(PEN.pe)&&ok(['p',PID,PEN.pe[0]|0,PEN.pe[1]|0,PEN.pe[2]|0,+PEN.pu],PEN.ps);if(!pOk&&(PEN.pu||PEN.pe||PEN.ps)){PEN.pe=null;PEN.pu=0;delete PEN.ps;ch=true}
+  if(ch)penSave();ch=false;
+  for(const k of Object.keys(REG)){const e=REG[k];if(!/^[A-Z2-9]{6}$/.test(k)||!e||typeof e!=='object'){delete REG[k];ch=true;continue}const c=regClean(e,k);if(c.ku!==(+e.ku||0)||c.ub!==(+e.ub||0)||c.wu!==(+e.wu||0)||c.pu!==(+e.pu||0)||c.wb!==(e.wb|0)||c.kb!==(+e.kb||0)){REG[k]=c;ch=true}}
+  if(ch)try{localStorage.setItem('bftReg',JSON.stringify(REG))}catch(e){}}
 function regMerge(map,from){
   let ch=false;if(!map||typeof map!=='object')return false;
-  for(const id in map){if(!/^[A-Z2-9]{6}$/.test(id))continue;const e=map[id];if(!e||typeof e!=='object')continue;
-    if(id===PID&&(+e.ku||0)>(+PEN.ku||0)){PEN.ku=+e.ku;PEN.kb=+e.kb||0;PEN.kr=String(e.kr||'').slice(0,60);penSave();if(PEN.w>0||REG[PID])regPublish();kickCheck()}   // 관리자가 정한 추방
-    if(id===PID&&(+e.wu||0)>(+PEN.wu||0)){PEN.wu=+e.wu;PEN.wb=Math.max(-3,Math.min(3,e.wb|0));penSave()}   // 관리자가 정한 승률 보정 (표시 안 함)
-    if(id===PID&&(+e.pu||0)>(+PEN.pu||0)&&Array.isArray(e.pe)){PEN.pu=+e.pu;PEN.pe=e.pe.slice(0,3).map(x=>Math.max(0,x|0));penSave();PROF.w=PEN.pe[0]|0;PROF.l=PEN.pe[1]|0;PROF.d=PEN.pe[2]|0;profSave();try{if(prOpen())prRender()}catch(_){}cldSoon(1500)}   // 관리자가 고친 전적
-    if(id===PID){if((+e.ub||0)>(PEN.ub||0)){PEN.ub=+e.ub;if(e.ua==='reset'){PEN.w=0;PEN_LOG=[]}else{PEN.cu=0;PEN.g=0}PEN.u=Date.now();penSave();regPublish();try{netToast(e.ua==='reset'?'관리자가 경고를 초기화했어요':'관리자가 채팅 금지를 풀었어요')}catch(_){}}continue}
-    const o=REG[id],m=regMix(o,regClean(e));if(m!==o){REG[id]=m;regChg.add(id);ch=true}}
+  for(const id in map){if(!/^[A-Z2-9]{6}$/.test(id))continue;const e0=map[id];if(!e0||typeof e0!=='object')continue;const e=regClean(e0,id);   // 관리자 칸은 도장이 맞는 것만 남음
+    if(id===PID){
+      if(e.ku>(+PEN.ku||0)){PEN.ku=e.ku;PEN.kb=e.kb;PEN.kr=e.kr;PEN.ks=e.ks;penSave();if(PEN.w>0||REG[PID])regPublish();kickCheck()}   // 관리자가 정한 추방
+      if(e.wu>(+PEN.wu||0)){PEN.wu=e.wu;PEN.wb=e.wb;PEN.ws=e.ws;penSave()}   // 관리자가 정한 승률 보정 (표시 안 함)
+      if(e.pu>(+PEN.pu||0)&&Array.isArray(e.pe)){PEN.pu=e.pu;PEN.pe=e.pe.slice(0,3).map(x=>Math.max(0,x|0));PEN.ps=e.ps;penSave();PROF.w=PEN.pe[0]|0;PROF.l=PEN.pe[1]|0;PROF.d=PEN.pe[2]|0;profSave();try{if(prOpen())prRender()}catch(_){}cldSoon(1500)}   // 관리자가 고친 전적
+      if(e.ub>(PEN.ub||0)){PEN.ub=e.ub;PEN.ua=e.ua;PEN.bs=e.bs;if(e.ua==='reset'){PEN.w=0;PEN_LOG=[]}else{PEN.cu=0;PEN.g=0}PEN.u=Date.now();penSave();regPublish();try{netToast(e.ua==='reset'?'관리자가 경고를 초기화했어요':'관리자가 채팅 금지를 풀었어요')}catch(_){}}
+      continue}
+    const o=REG[id],m=regMix(o,e);if(m!==o){REG[id]=m;regChg.add(id);ch=true}}
   if(ch){regSave();regFlush()}return ch;
 }
 function regFlush(){clearTimeout(regT);regT=setTimeout(()=>{if(!regChg.size)return;const o={};for(const id of regChg)if(REG[id])o[id]=REG[id];regChg.clear();
   if(PRES.hub){for(const c of PRES.conns){try{if(c.open)c.send({t:'reg',e:o})}catch(_){}}}else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'reg',e:o})}catch(_){}}},1500)}   // 모아서 1.5초에 한 번만 보냄
-function regWb(id,v){                               // 어드민: 승률 보정 (-3 많이 짐 ~ +3 많이 이김)
+const usrReRender=()=>{try{const w=document.querySelector('.adm');if(w)usrRender(w)}catch(_){}};
+function regWb(id,v){                               // 어드민: 승률 보정 (-3 많이 짐 ~ +3 많이 이김) · 관리자 도장을 찍어야 다른 폰이 따름
   if(!/^[A-Z2-9]{6}$/.test(id))return;const now=Date.now();v=Math.max(-3,Math.min(3,v|0));
-  if(id===PID){PEN.wb=v;PEN.wu=now;penSave()}
-  const e=REG[id]||{n:(FRX.n[id]&&FRX.n[id].n)||'?',w:0,cu:0,g:0,log:[],u:now,ub:0};REG[id]=Object.assign({},e,{wb:v,wu:now});regChg.add(id);regSave();regFlush();cldSoon(1500)}
-function regPe(id,w,l,d){                           // 어드민: 전적 고치기
+  sgDo(['w',id,v,now],ws=>{
+    if(id===PID){PEN.wb=v;PEN.wu=now;PEN.ws=ws;penSave()}
+    const e=REG[id]||{n:(FRX.n[id]&&FRX.n[id].n)||'?',w:0,cu:0,g:0,log:[],u:now,ub:0};REG[id]=Object.assign({},e,{wb:v,wu:now,ws});regChg.add(id);regSave();regFlush();cldSoon(1500);usrReRender()})}
+function regPe(id,w,l,d){                           // 어드민: 전적 고치기 (관리자 도장)
   if(!/^[A-Z2-9]{6}$/.test(id))return;const now=Date.now(),pe=[w,l,d].map(x=>Math.max(0,Math.min(99999,x|0)));
-  if(id===PID){PEN.pe=pe;PEN.pu=now;penSave();PROF.w=pe[0];PROF.l=pe[1];PROF.d=pe[2];profSave()}
-  else{FRX.rc[id]=pe}
-  const e=REG[id]||{n:(FRX.n[id]&&FRX.n[id].n)||'?',w:0,cu:0,g:0,log:[],u:now,ub:0};REG[id]=Object.assign({},e,{pe,pu:now});regChg.add(id);regSave();regFlush();cldSoon(1500)}
+  sgDo(['p',id,pe[0],pe[1],pe[2],now],ps=>{
+    if(id===PID){PEN.pe=pe;PEN.pu=now;PEN.ps=ps;penSave();PROF.w=pe[0];PROF.l=pe[1];PROF.d=pe[2];profSave()}
+    else{FRX.rc[id]=pe}
+    const e=REG[id]||{n:(FRX.n[id]&&FRX.n[id].n)||'?',w:0,cu:0,g:0,log:[],u:now,ub:0};REG[id]=Object.assign({},e,{pe,pu:now,ps});regChg.add(id);regSave();regFlush();cldSoon(1500);usrReRender()})}
 const wbOf=pid=>pid===PID?(PEN.wb|0):((REG[pid]&&REG[pid].wb)|0);
 const WB_MUL={'-3':1.7,'-2':1.4,'-1':1.18,'0':1,'1':0.85,'2':0.7,'3':0.55};   // 받는 피해 배수
-function regKick(id,until,why){                     // 어드민: 그 아이디를 until까지 추방 (0이면 해제) · why: 사유. 접속 중이면 바로, 아니면 다음 접속 때 적용
-  if(!/^[A-Z2-9]{6}$/.test(id)||id===PID)return;const now=Date.now();
-  const e=REG[id]||{n:(FRX.n[id]&&FRX.n[id].n)||'?',w:0,cu:0,g:0,log:[],u:now,ub:0};
-  REG[id]=Object.assign({},e,{kb:until>now?until:0,ku:now,kr:until>now?String(why||'').replace(/\s+/g,' ').trim().slice(0,60):''});regChg.add(id);regSave();regFlush();cldSoon(1500);
-  kickLogAdd({id,n:String(REG[id].n||'?').slice(0,NMX),t:now,u:until>now?until:0,r:REG[id].kr||''})}
+function regKick(id,until,why){                     // 어드민: 그 아이디를 until까지 추방 (0이면 해제) · why: 사유. 접속 중이면 바로, 아니면 다음 접속 때 적용 (관리자 도장)
+  if(!/^[A-Z2-9]{6}$/.test(id)||id===PID)return;const now=Date.now(),kb=until>now?Math.floor(until):0,kr=kb?String(why||'').replace(/\s+/g,' ').trim().slice(0,60):'';
+  sgDo(['k',id,kb,now,kr],ks=>{
+    const e=REG[id]||{n:(FRX.n[id]&&FRX.n[id].n)||'?',w:0,cu:0,g:0,log:[],u:now,ub:0};
+    REG[id]=Object.assign({},e,{kb,ku:now,kr,ks});regChg.add(id);regSave();regFlush();cldSoon(1500);
+    kickLogAdd({id,n:String(REG[id].n||'?').slice(0,NMX),t:now,u:kb,r:kr});usrReRender()})}
 /* 어드민 폰에만 남는 추방·해제 기록 (블랙리스트 탭에서 검색) */
 var KLOG=[];try{const v=JSON.parse(localStorage.getItem('bftKickLog')||'[]');if(Array.isArray(v))KLOG=v.filter(x=>x&&/^[A-Z2-9]{6}$/.test(x.id)).slice(-500)}catch(e){}
 function kickLogAdd(x){KLOG.push(x);if(KLOG.length>500)KLOG.splice(0,KLOG.length-500);try{localStorage.setItem('bftKickLog',JSON.stringify(KLOG))}catch(e){}}
@@ -6762,13 +6885,15 @@ setInterval(kickCheck,1000);
 const MT_DEF='업데이트 중이에요. 잠시 후 새로고침해서 다시 들어와 주세요.';
 var MT={on:false,m:'',u:0};try{localStorage.removeItem('bftMt')}catch(e){}   // 예전에 저장된 점검 상태는 믿지 않음 (저장소에서 새로 받음)
 let mtShown=false;
-function mtGot(d,from){                            // 더 나중에 정한 점검 상태만 받음 (모임 자리면 모두에게 전달)
+function mtGot(d,from){                            // 더 나중에 정한 점검 상태만 받음 (관리자 도장이 맞아야 함 · 모임 자리면 모두에게 전달)
   if(!d||typeof d!=='object')return false;const u=+d.u||0;if(u<=MT.u)return false;
-  MT={on:!!d.on,m:String(d.m||'').slice(0,80),u,at:Date.now()};try{localStorage.setItem('bftMt',JSON.stringify(MT))}catch(e){}
-  if(PRES.hub)for(const c of PRES.conns){if(c!==from)try{if(c.open)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u})}catch(_){}}
+  const on=!!d.on,mm=String(d.m||'').slice(0,80);if(!sgOk(['m',on?1:0,mm,u],d.s))return false;
+  MT={on,m:mm,u,s:d.s,at:Date.now()};try{localStorage.setItem('bftMt',JSON.stringify(MT))}catch(e){}
+  if(PRES.hub)for(const c of PRES.conns){if(c!==from)try{if(c.open)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u,s:MT.s})}catch(_){}}
   mtCheck();return true}
-function mtSet(on,m){const d={on:!!on,m:String(m||'').replace(/\s+/g,' ').trim().slice(0,80),u:Math.max(Date.now(),(MT.u||0)+1)};mtGot(d,null);   // 기기 시계가 달라도 항상 '더 나중' 상태로 퍼지게
-  if(!PRES.hub&&PRES.conn&&PRES.conn.open){try{PRES.conn.send(Object.assign({t:'mt'},d))}catch(_){}}cldSoon(500);mtLegacy()}
+function mtSet(on,m){const d={on:!!on,m:String(m||'').replace(/\s+/g,' ').trim().slice(0,80),u:Math.max(Date.now(),(MT.u||0)+1)};   // 기기 시계가 달라도 항상 '더 나중' 상태로 퍼지게
+  sgDo(['m',d.on?1:0,d.m,d.u],s=>{d.s=s;mtGot(d,null);   // 관리자 도장을 찍어서 보냄
+    if(!PRES.hub&&PRES.conn&&PRES.conn.open){try{PRES.conn.send(Object.assign({t:'mt'},d))}catch(_){}}cldSoon(500);mtLegacy()})}
 /* 예전 버전 폰들은 다른 모임 자리에 모여 있어서, 관리자 폰이 그쪽에도 직접 점검 소식을 전함 (업데이트하라고 막기 위해) */
 const MT_OLD_HUBS=['bftball-hub-2'];let mtLgT=0;
 async function mtLegacy(){
@@ -6778,7 +6903,7 @@ async function mtLegacy(){
     const kill=()=>{try{p.destroy()}catch(_){}};const to=setTimeout(kill,9000);
     p.on('error',()=>{clearTimeout(to);kill()});
     p.on('open',()=>{let c=null;try{c=p.connect(id,{reliable:true,serialization:'json'})}catch(e){kill();return}
-      c.on('open',()=>{try{c.send({t:'hi',pid:PID,n:NET.me.name||'',reg:{},uv:{}});c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u})}catch(_){}setTimeout(()=>{clearTimeout(to);kill()},2500)});
+      c.on('open',()=>{try{c.send({t:'hi',pid:PID,n:NET.me.name||'',reg:{},uv:{}});c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u,s:MT.s})}catch(_){}setTimeout(()=>{clearTimeout(to);kill()},2500)});
       c.on('error',()=>{})})}}
 setInterval(()=>{if(MT.on&&admIs()&&Date.now()-mtLgT>120000&&(PRES.hub||(PRES.conn&&PRES.conn.open))){mtLgT=Date.now();mtLegacy()}},15000);   // 점검 중이면 2분마다 다시 알림 (늦게 들어온 예전 버전 폰도 막힘)
 function mtCheck(){
@@ -6798,12 +6923,15 @@ setTimeout(mtCheck,0);setInterval(mtCheck,2000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&MT.on&&!admIs()&&typeof CLD!=='undefined'&&CLD&&!CLD.busy){mtPollT=Date.now();cldSync(false)}});
 let mtPollT=0;setInterval(()=>{if(MT.on&&!admIs()&&Date.now()-mtPollT>20000&&typeof CLD!=='undefined'&&CLD&&!CLD.busy){mtPollT=Date.now();cldSync(false)}},5000);   // 점검 화면에 막혀 있으면 20초마다 저장소를 다시 읽어서, 점검이 풀리면 바로 풀림
 function regPublish(){if(PEN.w>0||REG[PID]){REG[PID]=regSelf();regChg.add(PID);regSave();regFlush();cldSoon()}}
-function regAdmin(id,ua){const e=REG[id];if(!e)return;const now=Date.now();REG[id]=Object.assign({},e,{u:now,ub:now,ua},ua==='reset'?{w:0,log:[]}:{cu:0,g:0});regChg.add(id);regSave();regFlush();cldSoon(1500)}   // 어드민: 바로 풀기 / 경고 초기화
+function regAdmin(id,ua){if(!REG[id])return;const now=Date.now();ua=ua==='reset'?'reset':'unpen';sgDo(['b',id,now,ua],bs=>{const e=REG[id];if(!e)return;REG[id]=Object.assign({},e,{u:now,ub:now,ua,bs},ua==='reset'?{w:0,log:[]}:{cu:0,g:0});regChg.add(id);regSave();regFlush();cldSoon(1500);try{const w=document.querySelector('.adm');if(w)modRender(w)}catch(_){}})}   // 어드민: 바로 풀기 / 경고 초기화
 /* 채팅 기록 조회: 어드민 → 모임 자리 → 그 사람 폰 → 다시 어드민 */
 const MODQ={};
 function modQuery(id,cb,opt){const rid=Math.random().toString(36).slice(2,8),k=opt&&opt.k==='dm'?'dm':undefined,w=opt&&/^[A-Z2-9]{6}$/.test(opt.w)?opt.w:undefined;MODQ[rid]=cb;setTimeout(()=>{if(MODQ[rid]){delete MODQ[rid];cb(null)}},8000);
   if(id===PID){delete MODQ[rid];cb(modParse(modAnswer({rid,k,w})));return}
-  const q={t:'q',id,rid,k,w};if(PRES.hub)presHubData(null,q);else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(q)}catch(_){}}}
+  const at=Date.now();sgDo(['q',id,rid,k||'',w||'',at],s=>{const q={t:'q',id,rid,k,w,at,s};if(PRES.hub)presHubData(null,q);else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(q)}catch(_){}}})}
+const MODQS=new Set();
+function modQOk(d){const at=+d.at||0,k=d.k==='dm'?'dm':'',w=/^[A-Z2-9]{6}$/.test(d.w)?d.w:'',rid=String(d.rid||'');   // 내 기록 조회: 관리자 도장 + 30분 안에 보낸 것 + 처음 받은 것만 답함
+  if(!rid||MODQS.has(rid)||Math.abs(Date.now()-at)>18e5||!sgOk(['q',PID,rid,k,w,at],d.s))return false;if(MODQS.size>500)MODQS.clear();MODQS.add(rid);return true}
 function modAnswer(d){                             // 어드민이 물어본 내 기록 (게임 채팅 · 1대1 대화)
   const r={t:'qr',rid:d.rid,id:PID,n:NET.me.name};
   if(d.k==='dm'){const w=/^[A-Z2-9]{6}$/.test(d.w)?d.w:null,o={},nm={};
@@ -6827,11 +6955,14 @@ function annShow(m){                                // 전체 공지: 위에서 
   setTimeout(()=>{if(!el.isConnected)return;el.animate([{opacity:1},{opacity:0}],{duration:600,easing:'ease-in',fill:'forwards'}).onfinish=()=>el.remove()},4000);   // 나타난 뒤 3.5초 보여 주고 사라짐
 }
 let ANN_LOG=[];try{ANN_LOG=(JSON.parse(localStorage.getItem('bftAnnLog')||'[]')||[]).slice(-15)}catch(e){}
-function annGot(d){if(!d||typeof d.m!=='string'||annSeen.has(d.id))return false;annSeen.add(d.id);annShow(d.m);try{wcSys({i:'a'+String(d.id||'').slice(0,12),k:'ann',m:String(d.m).slice(0,80),n:String(d.n||'')})}catch(_){}
+function annGot(d){if(!d||typeof d.m!=='string'||annSeen.has(d.id))return false;
+  if(Math.abs(Date.now()-(+d.at||0))>18e5||!sgOk(['a',String(d.id||''),d.m,String(d.pid||''),String(d.n||''),+d.at||0],d.s))return false;   // 관리자 도장 + 30분 안에 보낸 공지만 (폰 시계가 조금 달라도 되게)
+  annSeen.add(d.id);annShow(d.m);try{wcSys({i:'a'+String(d.id||'').slice(0,12),k:'ann',m:String(d.m).slice(0,80),n:String(d.n||''),ap:String(d.pid||''),at:+d.at||0,s:d.s})}catch(_){}
   ANN_LOG.push({t:Date.now(),m:String(d.m).slice(0,80),pid:/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:'?',n:String(d.n||'?').slice(0,NMX),id:String(d.id||'').slice(0,12)});ANN_LOG=ANN_LOG.slice(-15);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}   // 공지 기록 (15개 넘으면 오래된 것부터 지움): 누가(아이디) 무엇을
   return true}
-function annSend(m){const d={t:'ann',m:String(m).slice(0,80),id:Math.random().toString(36).slice(2,10),pid:PID,n:NET.me.name||'?'};annGot(d);cldSoon(1500);
-  if(PRES.hub){for(const c of PRES.conns){try{if(c.open)c.send(d)}catch(_){}}}else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(d)}catch(_){}}}
+function annSend(m){const d={t:'ann',m:String(m).slice(0,80),id:Math.random().toString(36).slice(2,10),pid:PID,n:NET.me.name||'?',at:Date.now()};
+  sgDo(['a',d.id,d.m,d.pid,d.n,d.at],s=>{d.s=s;annGot(d);cldSoon(1500);   // 관리자 도장을 찍어서 보냄
+    if(PRES.hub){for(const c of PRES.conns){try{if(c.open)c.send(d)}catch(_){}}}else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(d)}catch(_){}}})}
 /* 클라우드 기록: 접속 중이 아니어도 남도록 무료 JSON 저장소(npoint)에 경고·공지 기록을 저장 (채팅 원문은 저장하지 않음) */
 const CLD_URL='https://api.npoint.io/47f3571657f7282501d6';
 var CLD={busy:false,again:false,ok:null,last:0,t:0,adm:false,fv:-1,fn:''};
@@ -6847,7 +6978,7 @@ function cldPull(d){                                  // 저장소 → 내 폰
   if(d.ccu&&typeof d.ccu==='object'&&!Array.isArray(d.ccu))for(const k in d.ccu){const e=d.ccu[k];if(e&&typeof e==='object'){ccuSet(k,e.n|0,+e.t||0);uvnSet(k,e.v|0)}}
   if(d.reg&&typeof d.reg==='object'&&!Array.isArray(d.reg))regMerge(d.reg);
   if(d.mt&&typeof d.mt==='object'){mtGot(d.mt);
-    if(MT.on&&!admIs()&&!d.mt.on&&(+d.mt.u||0)>0&&Date.now()-(MT.at||0)>25000){MT={on:false,m:'',u:+d.mt.u||0,at:0};mtCheck()}}   // 막힌 폰은 저장소가 '점검 끝'이면 번호와 상관없이 풀림
+    if(MT.on&&!admIs()&&!d.mt.on&&(+d.mt.u||0)>0&&Date.now()-(MT.at||0)>25000&&sgOk(['m',0,String(d.mt.m||'').slice(0,80),+d.mt.u||0],d.mt.s)){MT={on:false,m:'',u:+d.mt.u||0,at:0};mtCheck()}}   // 막힌 폰은 저장소가 '점검 끝'이면 번호와 상관없이 풀림
   try{accPull(d)}catch(_){}
   try{bossPull(d)}catch(_){}
   if(Array.isArray(d.kl)&&admIs()){const have=new Set(KLOG.map(x=>x.id+':'+x.t));let ch=false;
@@ -6863,14 +6994,14 @@ function cldMergeInto(d){                             // 내 폰 → 저장소 (
   const before=JSON.stringify(d);let ch=false;
   if(!d.reg||typeof d.reg!=='object'||Array.isArray(d.reg)){d.reg={};ch=true}
   const mine=Object.assign({},REG);if(cldNeed())mine[PID]=regSelf();
-  for(const id in mine){const o=d.reg[id],m=regMix(o&&typeof o==='object'?o:null,mine[id]);if(m!==o){d.reg[id]=m;ch=true}}
+  for(const id in mine){const o=d.reg[id],oc=o&&typeof o==='object'&&/^[A-Z2-9]{6}$/.test(id)?regClean(o,id):null,m=regMix(oc,mine[id]);if(m!==oc){d.reg[id]=m;ch=true}}   // 저장소 쪽 관리자 칸도 도장을 확인하고 섞음
   {const ks=Object.keys(d.reg);if(ks.length>150){ks.sort((a,b)=>regKeep(d.reg[a])-regKeep(d.reg[b])).slice(0,ks.length-150).forEach(k=>delete d.reg[k]);ch=true}}
   if(!d.ccu||typeof d.ccu!=='object'||Array.isArray(d.ccu)){d.ccu={};ch=true}
   {const lim=ccuDay(Date.now()-7*864e5),days=new Set([...Object.keys(PRES_DAYS),...Object.keys(PRES_UV),...Object.keys(UVN)]);
    for(const k of days){if(k<=lim&&!PRES_STAR.has(k))continue;const n=(PRES_DAYS[k]&&PRES_DAYS[k].n)|0,v=uvCount(k),o=d.ccu[k]||{n:0,v:0,t:0};
      if(n>(o.n|0)||v>(o.v|0)){d.ccu[k]={n:Math.max(n,o.n|0),v:Math.max(v,o.v|0),t:n>(o.n|0)?(PRES_DAYS[k].t||Date.now()):(o.t||0)};ch=true}}
    const ks=Object.keys(d.ccu).sort();if(ks.length>40){ks.slice(0,ks.length-40).forEach(k=>delete d.ccu[k]);ch=true}}
-  if(MT.u&&(!d.mt||typeof d.mt!=='object'||(+d.mt.u||0)<MT.u))d.mt={on:MT.on,m:MT.m,u:MT.u};   // 점검 상태
+  if(MT.u&&MT.s&&(!d.mt||typeof d.mt!=='object'||(+d.mt.u||0)<MT.u||!sgOk(['m',d.mt.on?1:0,String(d.mt.m||'').slice(0,80),+d.mt.u||0],d.mt.s)))d.mt={on:MT.on,m:MT.m,u:MT.u,s:MT.s};   // 점검 상태 (저장소 것이 도장이 없거나 가짜면 내 것으로)
   if(!Array.isArray(d.ann)){d.ann=[];ch=true}
   {const have=new Set(d.ann.map(cldKey));for(const x of ANN_LOG){if(!have.has(cldKey(x))){d.ann.push(x);have.add(cldKey(x));ch=true}}
    d.ann.sort((a,b)=>(a.t||0)-(b.t||0));if(d.ann.length>15)d.ann=d.ann.slice(-15)}
@@ -7156,13 +7287,13 @@ function frPl(pl){const s=JSON.stringify(pl||{});if(s===FRP.plS)return;FRP.plS=s
     if(FRP.plInit&&nw.length&&frNotiOn()&&!NET.sim){const n0=frLive(nw[0])||frNameOf(nw[0]);netToast(n0+' 님'+(nw.length>1?' 외 '+(nw.length-1)+'명':'')+'이 접속했어요')}}
   FRP.plInit=true;
   FRP.pl=o;FRP.v++;setTimeout(dmFlush,300);let ch=false;for(const id in o)if(o[id][1]&&FR.e[frKey(PID,id)]&&frName(id,o[id][1]))ch=true;if(ch)frSave();frUI()}
-setInterval(()=>{const ids=frIds(),sig=ids.join()+(admIs()?'|a':'');
+setInterval(()=>{const ids=frIds(),ac=admIs()?sgCred():'',sig=ids.join()+(admIs()?'|a':'')+(ac?'|c':'');
   if(PRES.hub){if(PRES.selfSig!==sig){PRES.selfSig=sig;PRES.selfFr=ids;presCast()}}
-  else if(PRES.conn&&PRES.conn.open){if(FRP.sig!==sig){FRP.sig=sig;try{PRES.conn.send({t:'fl',ids,all:admIs()?1:0})}catch(_){FRP.sig=''}}}},2000);
+  else if(PRES.conn&&PRES.conn.open){if(FRP.sig!==sig){FRP.sig=sig;try{PRES.conn.send({t:'fl',ids,all:ac?1:0,ac:ac||undefined})}catch(_){FRP.sig=''}}}},2000);   // 관리자 폰은 확인증(도장)을 같이 보내야 전체 접속자를 받음
 function frDeliver(to,o){let n=0;if(to===PID){if(o.t==='gm'||o.t==='gma')gcGot(o);else frGot(o);n++}for(const t of PRES.conns)if(t._pid===to&&t.open)try{t.send(o);n++}catch(_){}return n}
 function frHub(c,d){                              // 모임 자리: 친구 요청·초대를 상대에게 전달
   const from=c?c._pid:PID;
-  if(d.t==='fl'){const ids=Array.isArray(d.ids)?d.ids.filter(x=>FRID.test(x)).slice(0,500):[];if(c){c._fr=ids;c._all=!!d.all}else PRES.selfFr=ids;presCast();return}
+  if(d.t==='fl'){const ids=Array.isArray(d.ids)?d.ids.filter(x=>FRID.test(x)).slice(0,500):[];if(c){c._fr=ids;c._all=!!d.all&&sgCredOk(d.ac,c._pid)}else PRES.selfFr=ids;presCast();return}
   if(!from)return;
   const fn=((c?c._n:NET.me.name)||'').slice(0,NMX);
   if(d.t==='fe'){const e=frClean(d.e);if(!e||(e.a!==from&&e.b!==from))return;frDeliver(e.a===from?e.b:e.a,{t:'fe',e,n:fn})}
@@ -7529,7 +7660,7 @@ function gcNewRender(box){                           // 단체 대화 만들기:
 /* 프로필: 내 이름·아이디·온라인 전적·많이 쓴 캐릭터 (전적은 이 폰에만 저장) */
 var PROF={w:0,l:0,d:0,ch:{},k:'',r:'',c:'',name:'',dev:false,tst:false};
 var PRS={edit:false};
-try{const v=JSON.parse(localStorage.getItem('bftProf')||'null');if(v&&typeof v==='object'){PROF.name=typeof v.name==='string'?[...v.name].slice(0,NMX).join(''):'';PROF.dev=!!v.dev&&!!PROF.name;PROF.tst=!PROF.dev&&!!v.tst&&!!PROF.name;PROF.w=v.w|0;PROF.l=v.l|0;PROF.d=v.d|0;PROF.k=String(v.k||'');PROF.r=String(v.r||'');PROF.c=String(v.c||'');
+try{const v=JSON.parse(localStorage.getItem('bftProf')||'null');if(v&&typeof v==='object'){PROF.name=typeof v.name==='string'?[...v.name].slice(0,NMX).join(''):'';PROF.dev=!!v.dev&&!!PROF.name&&sgHave();PROF.tst=!PROF.dev&&!!v.tst&&!!PROF.name;PROF.w=v.w|0;PROF.l=v.l|0;PROF.d=v.d|0;PROF.k=String(v.k||'');PROF.r=String(v.r||'');PROF.c=String(v.c||'');
   if(v.ch&&typeof v.ch==='object')for(const n in v.ch){const o=v.ch[n];if(o&&(o.g|0)>0)PROF.ch[n]={g:o.g|0,w:Math.min(o.g|0,o.w|0)}}}}catch(e){}
 function profSave(){try{localStorage.setItem('bftProf',JSON.stringify(PROF))}catch(e){}}
 function profAdd(r,ch,d){PROF[r]=Math.max(0,(PROF[r]|0)+d);if(ch){const o=PROF.ch[ch]||(PROF.ch[ch]={g:0,w:0});o.g=Math.max(0,o.g+d);if(r==='w')o.w=Math.max(0,o.w+d);o.w=Math.min(o.w,o.g);if(!o.g)delete PROF.ch[ch]}}
@@ -7565,6 +7696,7 @@ function accPull(d){if(d.ac&&typeof d.ac==='object'){ACX={};ACXC={};for(const k 
 function accPull2(d){const o=d.ac&&d.ac[PID];if(ACC&&o&&+o.c>0&&!(ACC.c>0)){ACC.c=+o.c;accSave()}if(!ACC||!o||!(+o.u>ACC.u)||!/^[0-9a-f]{32}$/.test(o.s)||!/^[0-9a-f]{64}$/.test(o.h))return;{const oc=ACC.c;ACC={id:PID,s:o.s,h:o.h,u:+o.u};if(o.v===2)ACC.v=2;if(+o.c>0)ACC.c=+o.c;else if(oc>0)ACC.c=oc;accSave()}}
 const accPwOk=pw=>pw.length>=6&&pw.length<=20&&/^[\x21-\x7e]+$/.test(pw)&&!/^\d+$/.test(pw);   // 6~20자 · 숫자만은 안 됨
 async function accReset(id,pw){                        // 관리자: 비밀번호를 까먹은 유저의 비밀번호를 새로 정해 줌 (원래 비밀번호는 아무도 볼 수 없음)
+  if(!sgHave()){netToast('관리자 도장이 없는 폰이라서 할 수 없어요');throw new Error('no key')}
   const s=hexOf(crypto.getRandomValues(new Uint8Array(16)).buffer),h=await accHash(pw,s),u=Date.now();ACC_RS[id]={s,h,u,v:2};
   if(id===PID){const oc=(ACC&&ACC.c)||ACXC[id]||0;ACC={id:PID,s,h,u,v:2};if(oc>0)ACC.c=oc;accSave()}await cldFresh();await cldSync(true)}
 async function accMake(pw){const s=hexOf(crypto.getRandomValues(new Uint8Array(16)).buffer),h=await accHash(pw,s);const c0=(ACC&&ACC.c)||ACXC[PID]||(ACC?0:Date.now());ACC={id:PID,s,h,u:Date.now(),v:2};if(c0>0)ACC.c=c0;accSave();await cldFresh();cldSoon(200)}   // 비밀번호를 바꿔도 계정 만든 시각(c)은 그대로
@@ -7681,7 +7813,7 @@ async function accAct(a,b){
   }catch(e){msg('문제가 생겼어요. 다시 해 주세요')}finally{done()}}
 function prSaveName(){                           // 프로필 이름: 온라인 이름과 따로. 제작자 코드는 이름에서 빼고 표시만 바꿈
   const inp=prEl.querySelector('.prnin'),msg=prEl.querySelector('.prmsg'),say=t=>{msg.textContent=t;msg.className='rmsg prmsg bad'};
-  const raw=inp.value,dev0=/\[\s*bft48\s*\]/i.test(raw),tst0=/\[\s*tst8\s*\]/i.test(raw),nm=raw.replace(/\[\s*(bft48|tst8)\s*\]/ig,'').replace(/\s+/g,' ').trim();
+  const raw=inp.value,dev0=/\[\s*bft48\s*\]/i.test(raw)&&sgHave(),tst0=/\[\s*tst8\s*\]/i.test(raw),nm=raw.replace(/\[\s*(bft48|tst8)\s*\]/ig,'').replace(/\s+/g,' ').trim();
   if(!nm){say('이름을 입력해 주세요');return}
   if(!/^[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]+$/.test(nm)){say('숫자·영어·한글·띄어쓰기·!·?·.·~·( )만 쓸 수 있어요');return}
   if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(nm)){say('띄어쓰기·기호만으로는 이름을 만들 수 없어요');return}
@@ -7753,10 +7885,14 @@ setInterval(()=>{if(prOpen()&&document.body.classList.contains('in-net'))prHide(
 setTimeout(frUI,0);
 /* 투표 공지: 관리자가 질문·보기를 보내면 모든 접속자에게 10초 동안 뜨고, 끝나면 결과가 뜸. 표는 모임 자리가 한 사람당 하나로 셈 */
 function pollSend(q,opts,mu){
-  const d={t:'poll',id:Math.random().toString(36).slice(2,10),q:String(q).slice(0,60),o:opts.slice(0,4).map(x=>String(x).slice(0,20)),pid:PID,n:NET.me.name||'?',mu:mu?1:0};
-  if(PRES.hub)presHubData(null,d);else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(d)}catch(_){return false}}else return false;
+  if(!PRES.hub&&!(PRES.conn&&PRES.conn.open))return false;
+  const d={t:'poll',id:Math.random().toString(36).slice(2,10),q:String(q).slice(0,60),o:opts.slice(0,4).map(x=>String(x).slice(0,20)),pid:PID,n:NET.me.name||'?',mu:mu?1:0,at:Date.now()};
+  const P=pollNorm(d);if(!P)return false;
+  sgDo(['v',P.id,P.q,P.o,P.mu,P.pid,P.n,d.at],s=>{d.s=s;if(PRES.hub)presHubData(null,d);else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send(d)}catch(_){}}});   // 관리자 도장을 찍어서 보냄
   return true}
-function pollClean(d){if(!d||typeof d.id!=='string'||typeof d.q!=='string'||!Array.isArray(d.o))return null;const o=d.o.slice(0,4).map(x=>String(x||'').slice(0,20)).filter(Boolean);if(o.length<2||!d.q.trim())return null;
+function pollClean(d){const P=pollNorm(d),at=d&&+d.at||0;if(!P)return null;   // 투표: 관리자 도장 + 30분 안에 만든 것만
+  if(Math.abs(Date.now()-at)>18e5||!sgOk(['v',P.id,P.q,P.o,P.mu,P.pid,P.n,at],d.s))return null;P.at=at;P.s=d.s;return P}
+function pollNorm(d){if(!d||typeof d.id!=='string'||typeof d.q!=='string'||!Array.isArray(d.o))return null;const o=d.o.slice(0,4).map(x=>String(x||'').slice(0,20)).filter(Boolean);if(o.length<2||!d.q.trim())return null;
   return {id:d.id.slice(0,12),q:d.q.slice(0,60),o,pid:/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:'?',n:String(d.n||'?').slice(0,NMX),mu:d.mu?1:0}}
 function pollCount(st){const cnt=st.P.o.map(()=>0);for(const v of st.v.values())for(const i of v)cnt[i]++;return cnt}
 function pollHub(c,d){                             // 모임 자리: 모두에게 보내고, 표가 들어올 때마다 지금 결과를 모두에게, 10초 뒤 최종 결과
@@ -7781,7 +7917,7 @@ function pollShow(d){
   el.querySelector('.pollq').textContent=P.q;el.querySelectorAll('.pollo button').forEach((b,i)=>{b.querySelector('em').textContent=P.o[i]});
   document.body.appendChild(el);
   const cur={P,el,end:Date.now()+10000,mine:-1,sel:P.mu?new Set():null,done:false,live:null};pollCur=cur;
-  try{wcSys({i:'p'+P.id,k:'poll',q:P.q,o:P.o,pid:P.id})}catch(_){}   // 전체 채팅에도 남고 거기서도 투표 가능
+  try{wcSys({i:'p'+P.id,k:'poll',q:P.q,o:P.o,pid:P.id,mu:P.mu,sp:P.pid,sn:P.n,at:P.at,s:P.s})}catch(_){}   // 전체 채팅에도 남고 거기서도 투표 가능
   el.addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(!b||cur.done)return;const v=+b.dataset.v;
     if(cur.sel){if(cur.sel.has(v))cur.sel.delete(v);else cur.sel.add(v);toHub({t:'pv',id:P.id,v:[...cur.sel]});el.querySelectorAll('.pollo button').forEach((x,i)=>x.classList.toggle('on',cur.sel.has(i)));el.querySelector('.pollmsg').textContent=cur.sel.size?cur.sel.size+'개 골랐어요. 다시 누르면 취소돼요':'여러 개를 고를 수 있어요'}
     else{cur.mine=v;toHub({t:'pv',id:P.id,v});el.querySelectorAll('.pollo button').forEach(x=>x.classList.toggle('on',x===b));el.querySelector('.pollmsg').textContent='투표했어요. 바꾸려면 다른 보기를 누르세요'}
@@ -7799,7 +7935,7 @@ function pollResult(d){
   cur.done=true;cur.live=null;const tot=pollBars(cur,c,n);
   el.classList.add('closed','res');el.querySelector('.pollt').textContent='끝';
   el.querySelector('.pollmsg').textContent=tot?(cur.P.mu?n+'명 투표 · 총 '+tot+'표':'총 '+tot+'표'):'아무도 투표하지 않았어요';
-  try{wcSys({i:'r'+cur.P.id,k:'pr',q:cur.P.q,o:cur.P.o,c,pid:cur.P.id});wcRender()}catch(_){}
+  try{wcSys({i:'r'+cur.P.id,k:'pr',q:cur.P.q,o:cur.P.o,c,pid:cur.P.id,mu:cur.P.mu,sp:cur.P.pid,sn:cur.P.n,at:cur.P.at,s:cur.P.s});wcRender()}catch(_){}
   if(cur.P.pid===PID){ANN_LOG.push({t:Date.now(),m:('[투표] '+cur.P.q+' → '+cur.P.o.map((x,i)=>x+' '+c[i]).join(' / ')).slice(0,80),pid:PID,n:NET.me.name||'?',id:'p'+cur.P.id});ANN_LOG=ANN_LOG.slice(-15);try{localStorage.setItem('bftAnnLog',JSON.stringify(ANN_LOG))}catch(e){}cldSoon(1500)}   // 공지 기록에 남김
   setTimeout(()=>{if(el.isConnected)el.remove();if(pollCur===cur)pollCur=null},7000);
 }
@@ -7812,11 +7948,12 @@ function presHubData(c,d){                        // 모임 자리가 받은 메
   if(['mi','ml','sp','sd','sc'].includes(d.t)){spHub(c,d);return}
   if(d.t==='ann'){if(annGot(d))for(const x of PRES.conns){if(x!==c)try{if(x.open)x.send(d)}catch(_){}}return}
   if(d.t==='room'||d.t==='roomsq'){roomHub(c,d);return}
-  if(d.t==='hi'){c._pid=/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:null;c._n=typeof d.n==='string'?d.n.slice(0,NMX):'';regMerge(d.reg);{const k=ccuDay(),add=uvMerge(d.uv);if(c._pid&&uvAdd(k,c._pid)){add.push([k,c._pid]);uvSave()}uvCast(add,c)}try{c.send({t:'reg',e:REG});c.send({t:'rooms',L:ROOM.list||[]});c.send({t:'uv',u:uvRecent()});if(MT.u)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u});if(WC.L.length)c.send({t:'wch',L:WC.L})}catch(_){}}
+  if(d.t==='hi'){c._pid=/^[A-Z2-9]{6}$/.test(d.pid)?d.pid:null;c._n=typeof d.n==='string'?d.n.slice(0,NMX):'';regMerge(d.reg);{const k=ccuDay(),add=uvMerge(d.uv);if(c._pid&&uvAdd(k,c._pid)){add.push([k,c._pid]);uvSave()}uvCast(add,c)}try{c.send({t:'reg',e:REG});c.send({t:'rooms',L:ROOM.list||[]});c.send({t:'uv',u:uvRecent()});if(MT.u)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u,s:MT.s});if(WC.L.length)c.send({t:'wch',L:WC.L})}catch(_){}}
   else if(d.t==='reg')regMerge(d.e,c);
-  else if(d.t==='q'){if(d.id===PID){const r=modAnswer(d);if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
+  else if(d.t==='q'){const qk=d.k==='dm'?'dm':undefined,qw=/^[A-Z2-9]{6}$/.test(d.w)?d.w:undefined;if(!sgOk(['q',String(d.id||''),String(d.rid||''),qk||'',qw||'',+d.at||0],d.s))return;   // 관리자 도장이 없는 조회는 버림
+    if(d.id===PID){if(!modQOk(d))return;const r=modAnswer(d);if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
     const tg=[...PRES.conns].find(x=>x._pid===d.id&&x.open);if(!tg){const r={t:'qr',rid:d.rid,id:d.id,none:1};if(c)try{c.send(r)}catch(_){}else presCliData(r);return}
-    PRES.qmap=PRES.qmap||{};PRES.qmap[d.rid]=c||'self';try{tg.send({t:'q',id:d.id,rid:d.rid,k:d.k==='dm'?'dm':undefined,w:/^[A-Z2-9]{6}$/.test(d.w)?d.w:undefined})}catch(_){}}
+    PRES.qmap=PRES.qmap||{};PRES.qmap[d.rid]=c||'self';try{tg.send({t:'q',id:d.id,rid:d.rid,k:qk,w:qw,at:+d.at||0,s:d.s})}catch(_){}}
   else if(d.t==='qr'){const to=PRES.qmap&&PRES.qmap[d.rid];if(!to)return;delete PRES.qmap[d.rid];if(to==='self')presCliData(d);else try{to.send(d)}catch(_){}}
 }
 function presCliData(d){                          // 손님 폰이 받은 메시지
@@ -7836,7 +7973,7 @@ function presCliData(d){                          // 손님 폰이 받은 메시
   if(d.t==='ann'){annGot(d);return}
   if(d.t==='rooms'||d.t==='roomsall'){roomCli(d);return}
   if(d.t==='reg')regMerge(d.e);
-  else if(d.t==='q'&&d.id===PID){try{PRES.conn.send(modAnswer(d))}catch(_){}}
+  else if(d.t==='q'&&d.id===PID){if(modQOk(d))try{PRES.conn.send(modAnswer(d))}catch(_){}}
   else if(d.t==='qr'){const cb=MODQ[d.rid];if(cb){delete MODQ[d.rid];cb(modParse(d))}}
 }
 /* 빠른 채팅 */
@@ -8003,11 +8140,11 @@ function roomsBroadcast(){if(!PRES.hub)return;const now=Date.now();for(const k i
   const L=Object.values(PRES.rooms||{}).filter(r=>r.pub).map(r=>({code:r.code,title:r.title,host:r.host,lock:!!r.pw,n:r.n,m:r.m||'1v1',pt:r.pt?1:0,x:r.x|0}));ROOM.list=L;if(ROOM.view==='menu')roomRender();rbRender();
   for(const c of PRES.conns){try{if(c.open)c.send({t:'rooms',L})}catch(_){}}}
 setInterval(roomsBroadcast,5000);
-function roomsAll(cb){ROOM.allCb=cb;if(PRES.hub)cb(Object.values(PRES.rooms||{}));else if(PRES.conn&&PRES.conn.open){try{PRES.conn.send({t:'roomsq'})}catch(_){cb(null)}}else cb(null)}
+function roomsAll(cb,re){ROOM.allCb=cb;if(PRES.hub)cb(Object.values(PRES.rooms||{}));else if(PRES.conn&&PRES.conn.open){const ac=sgCred();if(!ac){if(SG.credP&&!re)SG.credP.then(()=>roomsAll(cb,1));else cb(null);return}try{PRES.conn.send({t:'roomsq',ac})}catch(_){cb(null)}}else cb(null)}   // 관리자 확인증을 같이 보내야 모임 자리가 알려 줌
 function roomHub(c,d){                             // 모임 자리: 방 등록·목록·어드민 조회
   if(d.t==='room'){const r=d.r||{};if(!/^[A-Z2-9]{6}$/.test(r.code))return;PRES.rooms=PRES.rooms||{};
     if(r.del)delete PRES.rooms[r.code];else PRES.rooms[r.code]={code:r.code,title:String(r.title||'').slice(0,16),pub:!!r.pub,pw:String(r.pw||'').slice(0,8),n:r.n|0,m:MP_MAX[r.m]?r.m:'1v1',pt:r.pt?1:0,x:r.x|0?Math.max(1,Math.min(4,r.x|0)):0,host:String(r.host||'').slice(0,NMX),ts:Date.now()};roomsBroadcast()}
-  else if(d.t==='roomsq'){const L=Object.values(PRES.rooms||{});if(c)try{c.send({t:'roomsall',L})}catch(_){}else if(ROOM.allCb)ROOM.allCb(L)}
+  else if(d.t==='roomsq'){if(c&&!sgCredOk(d.ac,c._pid)){try{c.send({t:'roomsall',L:[]})}catch(_){}return}const L=Object.values(PRES.rooms||{});if(c)try{c.send({t:'roomsall',L})}catch(_){}else if(ROOM.allCb)ROOM.allCb(L)}
 }
 /* 온라인 탭: 경기장 자리에 공개 방 목록 (가로 3개씩, 한 칸 = 경기장 가로 1/3 × 세로 1/17) · 위에서 모드 고르기 */
 let RB_MD='all',RB_MU=false,RB_SET=new Set(),rbEl=null,rbF=null,rbMore=null;   // RB_MU: 복수 선택 (RB_SET에 고른 모드들)
@@ -8374,7 +8511,7 @@ function mpHostData(c,d){                           // 방장: 손님에게서 �
     if(tm)mpCastTeam(m,sd,c);else mpCast(m,c)}                                     // 다른 손님에게도 전해 줌
   else if(d.t==='cack'){NET.chatAck=d.id}
   else if(d.t==='cons'&&c._side){mpConsHost(c._side,d)}
-  else if(d.t==='adm'&&d.c&&typeof d.c==='object'){mpCast(d,c);netData(d)}
+  else if(d.t==='adm'&&d.c&&typeof d.c==='object'){if(typeof d.cs==='string'&&sgOk(['o',NET.seed|0,d.cs],d.s)){mpCast(d,c);netData(d)}}
 }
 /* 여럿이 하는 경기의 비속어 합의: 남아 있는 사람 모두가 동의해야 됨 (방장이 셈) */
 const mpNm=sd=>{const I=NET.mp&&(sd===NET.mySide?NET.me:NET.mp.P[sd]);return I?I.name:'?'};
@@ -8718,8 +8855,10 @@ function wcClean(x){if(!x||typeof x!=='object'||typeof x.i!=='string')return nul
   const o={i:x.i.slice(0,24),t:+x.t||0,k};
   if(k==='u'){if(!FRID.test(x.p))return null;o.p=x.p;o.n=String(x.n||'?').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').slice(0,NMX)||'?';o.dev=!!x.dev;o.tst=!x.dev&&!!x.tst;o.a=x.a?1:0;
     let m=String(x.m||'').replace(/\s+/g,' ').trim().slice(0,60);const mc=modCheck(m);if(mc.pi||mc.bad)m='***';if(!m)return null;o.m=m}
-  else if(k==='ann'){o.m=String(x.m||'').slice(0,80);o.n=String(x.n||'').slice(0,NMX)}
-  else{o.q=String(x.q||'').slice(0,60);o.o=Array.isArray(x.o)?x.o.slice(0,4).map(y=>String(y).slice(0,20)):[];o.pid=String(x.pid||'').slice(0,12);if(k==='pr')o.c=Array.isArray(x.c)?x.c.slice(0,4).map(y=>Math.max(0,y|0)):[]}
+  else if(k==='ann'){o.m=String(x.m||'').slice(0,80);o.n=String(x.n||'').slice(0,NMX);o.ap=String(x.ap||'');o.at=+x.at||0;o.s=typeof x.s==='string'?x.s:'';
+    if(!sgOk(['a',o.i.slice(1),o.m,o.ap,o.n,o.at],o.s))return null}   // 공지·투표 줄은 관리자 도장이 맞아야 (지난 채팅으로 가짜 공지를 끼워 넣지 못하게)
+  else{o.q=String(x.q||'').slice(0,60);o.o=Array.isArray(x.o)?x.o.slice(0,4).map(y=>String(y).slice(0,20)):[];o.pid=String(x.pid||'').slice(0,12);if(k==='pr')o.c=Array.isArray(x.c)?x.c.slice(0,4).map(y=>Math.max(0,y|0)):[];
+    o.mu=x.mu?1:0;o.sp=String(x.sp||'');o.sn=String(x.sn||'');o.at=+x.at||0;o.s=typeof x.s==='string'?x.s:'';if(!sgOk(['v',o.pid,o.q,o.o,o.mu,o.sp,o.sn,o.at],o.s))return null}
   return o}
 let wcSvT=0;function wcSave(){clearTimeout(wcSvT);wcSvT=setTimeout(()=>{try{localStorage.setItem('bftWc',JSON.stringify(WC));if(admIs())localStorage.setItem('bftWcLog',JSON.stringify(WCLOG.slice(-3000)))}catch(e){}},400)}
 function wcAdd(x,quiet){x=wcClean(x);if(!x||WC.L.some(y=>y.i===x.i))return false;
@@ -8879,7 +9018,7 @@ function presJoin(){
   PRES.to=setTimeout(()=>{if(g===PRES.gen&&!PRES.n)presLater()},12000);
   q.on('open',()=>{if(g!==PRES.gen)return;PRES.st='다른 접속자와 연결하는 중';let c;try{c=q.connect(PRES_ID,{reliable:true,serialization:'json'})}catch(e){presLater();return}
     PRES.conn=c;PRES.last=Date.now();
-    c.on('open',()=>{miAt=0;try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy(),n:NET.me.name||''});c.send({t:'hi',pid:PID,n:NET.me.name||'',reg:REG,uv:(uvAdd(ccuDay(),PID)&&uvSave(),uvRecent())});const ids=frIds();FRP.sig=ids.join();c.send({t:'fl',ids,all:admIs()?1:0});if(MT.u)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u});if(WC.L.length)c.send({t:'wch',L:WC.L})}catch(_){FRP.sig=''}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
+    c.on('open',()=>{miAt=0;try{c.send({t:'max',days:ccuRecent()});c.send({t:'st',s:presMy(),n:NET.me.name||''});c.send({t:'hi',pid:PID,n:NET.me.name||'',reg:REG,uv:(uvAdd(ccuDay(),PID)&&uvSave(),uvRecent())});const ids=frIds(),ac=admIs()?sgCred():'';FRP.sig=ids.join()+(admIs()?'|a':'')+(ac?'|c':'');c.send({t:'fl',ids,all:ac?1:0,ac:ac||undefined});if(MT.u)c.send({t:'mt',on:MT.on,m:MT.m,u:MT.u,s:MT.s});if(WC.L.length)c.send({t:'wch',L:WC.L})}catch(_){FRP.sig=''}});   // 내가 알고 있던 기록을 모임 자리에 알려 줌
     c.on('data',d=>{if(g===PRES.gen&&d&&['reg','q','qr','ann','rooms','roomsall','uv','uvadd','mlr','spr','spq','sd','sc','fe','inv','dm','dma','dmc','poll','pr','mt','gm','gma','wc','wch'].includes(d.t)){presCliData(d);return}if(g===PRES.gen&&d&&d.t==='cnt'){frPl(d.pl&&typeof d.pl==='object'?d.pl:{});PRES.n=d.n|0;PRES.q=d.q|0;PRES.mt=d.mt|0;PRES.qm=d.qm&&typeof d.qm==='object'?d.qm:null;PRES.st='';PRES.last=Date.now();presMax(PRES.n);ccuMerge(d.days)}});
     c.on('close',()=>{if(g===PRES.gen){PRES.n=0;presLater()}});c.on('error',()=>{if(g===PRES.gen){PRES.n=0;presLater()}})});
   q.on('error',e=>{if(g!==PRES.gen)return;PRES.st='연결 다시 시도 중 ('+(e&&e.type||'?')+')';if(e&&e.type==='peer-unavailable')presLater(300+Math.random()*700);else presLater()});
