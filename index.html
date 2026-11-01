@@ -501,11 +501,12 @@ body.in-net .tvbtn,.stage:has(.end:not([hidden])) .tvbtn{display:none}
 body.in-net .mlbtn,.stage:has(.end:not([hidden])) .mlbtn{display:none}
 .mlmodal,.mlmodal *{font-family:"Jua",sans-serif;font-synthesis:none}
 .mllist{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;margin-top:12px;border-top:2px solid var(--ink)}
-.mlit{border-bottom:1px solid #ddd}.mlhd{display:flex;align-items:center;gap:10px;width:100%;padding:10px 4px;background:none;border:0;text-align:left;cursor:pointer;color:#111;-webkit-tap-highlight-color:transparent}
-.mlic{flex:none;width:30px;height:30px;color:#e8590c}.mlic svg{display:block;width:100%;height:100%}.mlit.rd .mlic{color:#a3a8ad}
+.mlit{position:relative;border-bottom:1px solid #ddd}.mlhd{position:relative;display:flex;align-items:center;gap:8px;width:100%;padding:10px 32px 10px 14px;background:none;border:0;text-align:left;cursor:pointer;color:#111;-webkit-tap-highlight-color:transparent}
 .mlt{flex:1;min-width:0}.mlt b{display:block;font-weight:400;font-size:15.5px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mlit.rd .mlt b{color:#777}.mlt small{display:block;font-size:12px;color:#999;margin-top:3px}
-.mlnew{flex:none;width:9px;height:9px;border-radius:50%;background:#e03131}
-.mlbody{padding:0 6px 12px 44px;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-all;color:#222}.mlact{display:flex;justify-content:flex-end;margin-top:8px}
+.mlnew{position:absolute;left:2px;top:50%;width:9px;height:9px;margin-top:-4.5px;border-radius:50%;background:#e03131}
+.mldx{position:absolute;top:6px;right:0;z-index:1;width:28px;height:28px;padding:6px;box-sizing:border-box;background:none;border:0;color:#9aa0a6;cursor:pointer;-webkit-tap-highlight-color:transparent}.mldx svg{display:block;width:100%;height:100%}.mldx:active{color:#111}
+.mlex{color:#e03131}.mlit.ex .mlt b{color:#999}
+.mlbody{padding:0 6px 12px 14px;font-size:14px;line-height:1.55;white-space:pre-wrap;word-break:break-all;color:#222}.mlact{display:flex;justify-content:flex-end;margin-top:8px}
 .mlfoot{display:flex;gap:6px;justify-content:flex-end;padding-top:10px}.mlfoot[hidden]{display:none}.mlnone{text-align:center;padding:24px 0}
 .tvitem{gap:8px}.tvvs{flex:1;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px;font-size:14.5px;word-break:break-all}.tvvs i{font-style:normal;color:#d32f2f;font-weight:900;margin:0 3px}
 .cheerbtn{position:absolute;left:25%;bottom:calc(100% + 8px);z-index:21;display:flex;align-items:center;justify-content:center;width:50%;height:38px;padding:0 0 calc(var(--shift,.05)*2em);border:2px solid var(--ink);border-radius:5px;background:#ffef00;color:#111;font:700 clamp(15px,4.5vw,21px)/1 "Noto Sans KR",sans-serif;letter-spacing:.04em;cursor:pointer;-webkit-tap-highlight-color:transparent}.cheerbtn:active{transform:scale(.96)}.cheerbtn[hidden]{display:none}body.spec-u .netrow{margin-top:92px}
@@ -635,21 +636,56 @@ body.in-net .shbtn,.stage:has(.end:not([hidden])) .shbtn{display:none}
 .shmodal,.shmodal *{font-family:"Jua",sans-serif;font-synthesis:none}.shbox{height:auto;padding-bottom:24px}
 .shsoon{display:flex;flex-direction:column;align-items:center;gap:8px;padding:28px 10px 6px;text-align:center}.shsoon svg{width:84px;height:84px;color:#e8590c;margin-bottom:6px}.shsoon b{font-size:21px;font-weight:400;color:#111}.shsoon span{font-size:14px;color:#8a8f92}
 /* 볼 · 상점 · 업적 · 칭호 · 이름표 색 */
-.blb{display:inline-block;width:.82em;height:.82em;margin-right:.22em;box-sizing:border-box;border:.15em solid #111;border-radius:50%;background:#fff;vertical-align:-.08em}
+.blb{position:relative;display:inline-block;width:.82em;height:.82em;margin-right:.22em;box-sizing:border-box;border:.15em solid #111;border-radius:50%;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11.2 14'%3E%3Cpath d='M1.2 6.5V1.2H6.2A2.65 2.65 0 0 1 6.2 6.5H6.8A3.15 3.15 0 0 1 6.8 12.8H1.2ZM1.2 6.5H6.5' fill='none' stroke='%23111' stroke-width='2.4'/%3E%3C/svg%3E") center/auto 60% no-repeat;vertical-align:-.08em}
 .blpill{position:absolute;z-index:4;top:calc(15px + env(safe-area-inset-top,0px));right:136px;height:28px;min-width:86px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:space-between;gap:10px;padding:0 13px 0 8px;margin:0;border:2.5px solid #8a8f92;border-radius:14px;background:#fff;color:#7d8286;font:400 15px/1 "Jua",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap}
-.blpill::before{content:'';flex:none;width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:3px solid #111;background:#fff}
+.blpill::before{content:'';flex:none;width:18px;height:18px;box-sizing:border-box;border-radius:50%;border:3px solid #111;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11.2 14'%3E%3Cpath d='M1.2 6.5V1.2H6.2A2.65 2.65 0 0 1 6.2 6.5H6.8A3.15 3.15 0 0 1 6.8 12.8H1.2ZM1.2 6.5H6.5' fill='none' stroke='%23111' stroke-width='2.4'/%3E%3C/svg%3E") center/auto 60% no-repeat}
 .blpill:active{transform:scale(.96)}
+.blpill:not(.sh) .bln.sm{display:block;max-width:38px;white-space:normal;text-align:right;font-size:10px;line-height:1.05;word-break:keep-all}
 .blpill.sh{position:relative;left:auto;top:auto;right:auto;flex:none;min-width:104px;margin-left:14px;cursor:default}.blpill.sh:active{transform:none}
 body.in-net .blpill:not(.sh),body.in-net .acbtn,.stage:has(.end:not([hidden])) .blpill:not(.sh),.stage:has(.end:not([hidden])) .acbtn{display:none}
 @media (max-width:380px){.blpill:not(.sh){right:114px}}
 .acbtn{position:absolute;z-index:4;left:46px;top:calc(10px + env(safe-area-inset-top,0px));width:38px;height:38px;padding:5px;background:none;border:0;color:#8a8f92;cursor:pointer;-webkit-tap-highlight-color:transparent}.acbtn svg{display:block;width:100%;height:100%}.acbtn:active{color:#444}
 .acbtn.new::after{content:'';position:absolute;top:5px;right:4px;width:9px;height:9px;border-radius:50%;background:#e03131;border:1.5px solid #fff}
 @media (max-width:480px){.acbtn{left:38px;width:34px;padding:4px}}
-@media (max-width:350px){.prbtn{left:2px;width:30px;padding:3px}.acbtn{left:32px;width:30px;padding:3px}.mlbtn{left:62px;width:30px;padding:3px}.tvbtn{left:92px;width:30px;padding:3px}.blpill:not(.sh){right:112px;top:calc(17px + env(safe-area-inset-top,0px));height:24px;min-width:0;gap:7px;padding:0 9px 0 6px;font-size:13px}.blpill:not(.sh)::before{width:14px;height:14px;border-width:2.5px}}
+@media (max-width:350px){.prbtn{left:2px;width:30px;padding:3px}.acbtn{left:32px;width:30px;padding:3px}.mlbtn{left:62px;width:30px;padding:3px}.tvbtn{left:92px;width:30px;padding:3px}.blpill:not(.sh){right:112px;top:calc(17px + env(safe-area-inset-top,0px));height:24px;min-width:0;gap:7px;padding:0 9px 0 6px;font-size:13px}.blpill:not(.sh)::before{width:14px;height:14px;border-width:2.5px}.blpill:not(.sh) .bln.sm{font-size:8px;max-width:34px}}
+/* 출석 달력 버튼 (우편함과 경기 관전 사이): 왼쪽 버튼 5개가 좁은 폰에서도 안 겹치게 폭을 줄임 */
+.cabtn{position:absolute;z-index:4;left:122px;top:calc(10px + env(safe-area-inset-top,0px));width:38px;height:38px;padding:5px;background:none;border:0;color:#8a8f92;cursor:pointer;-webkit-tap-highlight-color:transparent}.cabtn svg{display:block;width:100%;height:100%}.cabtn:active{color:#444}
+.cabtn.new::after,.shbtn.new::after{content:'';position:absolute;top:5px;right:4px;width:9px;height:9px;border-radius:50%;background:#e03131;border:1.5px solid #fff}
+body.in-net .cabtn,.stage:has(.end:not([hidden])) .cabtn{display:none}
+.tvbtn{left:160px}
+@media (max-width:480px){.prbtn{left:4px;width:30px;padding:3px}.acbtn{left:34px;width:30px;padding:3px}.mlbtn{left:64px;width:30px;padding:3px}.cabtn{left:94px;width:30px;padding:3px}.tvbtn{left:124px;width:30px;padding:3px}}
+@media (max-width:380px){.prbtn{left:2px;width:28px}.acbtn{left:30px;width:28px}.mlbtn{left:58px;width:28px}.cabtn{left:86px;width:28px}.tvbtn{left:114px;width:28px}}
+@media (max-width:340px){.prbtn{width:26px}.acbtn{left:28px;width:26px}.mlbtn{left:54px;width:26px}.cabtn{left:80px;width:26px}.tvbtn{left:106px;width:26px}}
+/* 상점 메인 탭: 일일 무료 볼 */
+.shtab{position:relative}.shtab.new::after{content:'';position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:#e03131;border:1.5px solid #fff}.shtab.on.new::after{border-color:#111}
+.dfc{border:2px solid var(--ink);padding:12px 10px 11px;text-align:center;background:#fff}
+.dft{font:400 18px/1.25 "Jua",sans-serif;color:#111}
+.dfbtn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:54px;margin-top:11px;padding:0;border:2px solid var(--ink);background:#111;color:#fff;font:400 18px/1 "Jua",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dfbtn:active:not(:disabled){transform:scale(.97)}.dfbtn:disabled{background:#e6e6e6;color:#8a8f92;border-color:#bbb;cursor:default}.dfbtn .blb{width:20px;height:20px;margin:0;border-width:3px;vertical-align:baseline}
+@keyframes dfpop{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+/* 출석 달력 */
+.cabox{height:auto;max-height:min(560px,88vh);overflow:hidden}
+.cascr{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:14px 10px 14px 8px}
+.cagrid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px 8px}
+.cad{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:92px;padding:9px 3px;border:2px solid var(--ink);background:#fff;color:#111;text-align:center;min-width:0}
+.cad small{font-size:12px;color:#8a8f92}
+.cad.big{grid-column:span 2;flex-direction:column;background:#fff8dc}
+.cav{display:inline-flex;align-items:center;justify-content:center;flex-wrap:nowrap;white-space:nowrap;gap:3px;font:400 clamp(12px,4.3vw,17px)/1.15 "Jua",sans-serif;color:#111}.cav .blb{font-size:clamp(12px,4.3vw,17px);width:.74em;height:.74em;margin-right:.1em;border-width:.13em;vertical-align:baseline}
+.cav .ttl{margin:0;font-size:12px}.cav.rg{flex-direction:column;gap:4px;font-size:clamp(11px,3.5vw,14.5px)}.cav.rg .blb{margin:0}
+.cad.done{background:#f1f1f1}.cad.done.big{background:#f1f1f1}.cad.done small{color:#555}
+.cad.today{box-shadow:0 0 0 3px #fff,0 0 0 5.5px #111}
+.cast{display:none}.cad.done .cast{display:block;position:absolute;right:-7px;top:-7px;width:22px;height:22px;box-sizing:border-box;border-radius:50%;background:#2f9e44;border:2px solid #fff;color:#fff;font:700 12px/18px "Noto Sans KR",sans-serif;text-align:center}
+.cad.today.done .cast{animation:dfpop .5s cubic-bezier(.2,1.5,.4,1)}
+.caact{flex:none;padding-top:10px;border-top:2px solid var(--ink)}.caact .rbtn{display:block;width:100%;height:42px;font:400 18px/1 "Jua",sans-serif}.caact .rbtn:disabled{opacity:.4}
+.blgain{position:fixed;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:60;transform:translateX(-50%);display:inline-flex;align-items:center;gap:7px;padding:9px 17px 10px;border-radius:22px;background:#111;color:#fff;font:400 21px/1 "Jua",sans-serif;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.3);white-space:nowrap}.blgain .blb{font-size:21px;margin:0}
+.blpop{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.5)}
+.blpbox{width:min(230px,66vw);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:#fff;border:3px solid var(--ink);animation:dfpop .45s cubic-bezier(.2,1.5,.4,1)}
+.blpn{display:flex;align-items:center;gap:10px;font:400 44px/1 "Jua",sans-serif;color:#111}.blpn .blb{font-size:44px;margin:0}
+.blpok{height:40px;padding:0 26px;font:400 17px/1 "Jua",sans-serif}
 .nmc{font-weight:inherit}
 .rbn{background:linear-gradient(90deg,#ff3b5c,#ff9a1f,#ffd60a,#3ddc6a,#26c6f5,#6a5cff,#d94bff,#ff3b5c);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent!important;-webkit-text-fill-color:transparent;animation:rbmv 3s linear infinite}
 @keyframes rbmv{from{background-position:0 0}to{background-position:200% 0}}
-.ttl{display:inline-block;margin:0 3px;padding:2px 7px 3px;border:1.5px solid #111;border-radius:10px;background:#fff;color:#111;font:700 11px/1.15 "Noto Sans KR",sans-serif;vertical-align:middle;white-space:nowrap;-webkit-text-fill-color:#111;text-shadow:none}
+.ttl{display:inline-block;margin:0 3px;padding:.3em .64em .12em;border:1.5px solid #111;border-radius:10px;background:#fff;color:#111;font:700 11px/1.15 "Noto Sans KR",sans-serif;vertical-align:middle;white-space:nowrap;-webkit-text-fill-color:#111;text-shadow:none}
 .prtt{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;font-size:13px;color:#888}.prtt b{font-weight:800;color:#555}.prtt .ttl{margin:0;font-size:12px}
 .ttpick{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}
 .ttpk{padding:5px 10px;border:2px solid var(--ink);border-radius:14px;background:#fff;font:700 13px/1.1 "Noto Sans KR",sans-serif;color:#111;cursor:pointer}.ttpk.on{background:#111;color:#fff}
@@ -657,10 +693,11 @@ body.in-net .blpill:not(.sh),body.in-net .acbtn,.stage:has(.end:not([hidden])) .
 .ttl.gold{position:relative;overflow:hidden;border-color:#8a5a00;background:linear-gradient(180deg,#fff6b8 0%,#ffd84a 40%,#f0a500 72%,#ffe27a 100%);color:#4a2f00;-webkit-text-fill-color:#4a2f00;text-shadow:0 1px 0 rgba(255,255,255,.6);box-shadow:0 0 6px rgba(255,200,0,.8),inset 0 0 0 1px rgba(255,255,255,.6)}
 .ttl.gold::after{content:'';position:absolute;top:-40%;bottom:-40%;left:-70%;width:38%;transform:skewX(-22deg);background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.95),rgba(255,255,255,0));animation:ttsh 2.8s ease-in-out infinite;pointer-events:none}
 @keyframes ttsh{0%{left:-70%}55%,100%{left:140%}}
-.shtc{flex:none;display:flex;align-items:center;min-width:0}.shtc .ttl{margin:0;padding:3px 10px 4px;font-size:13px}
+.shtc{flex:none;display:flex;align-items:center;min-width:0}.shtc .ttl{margin:0;padding:.3em .77em .12em;font-size:13px}
 .shpvn .ttl{margin-left:7px;font-size:12px}
 .shnote{margin:14px 2px 4px;font-size:12px;line-height:1.5;color:#8a8f92;word-break:keep-all}
-.mlgf{flex:none;padding:2px 8px 3px;border:1.5px solid #111;border-radius:10px;background:#111;color:#fff;font:400 12px/1.1 "Jua",sans-serif;white-space:nowrap}.mlgf.dn{background:#fff;color:#8a8f92;border-color:#bbb}
+.mlgf{flex:none;display:inline-flex;align-items:center;gap:1px;max-width:156px;font:400 14px/1.1 "Jua",sans-serif;color:#111;background:none;border:0;padding:0;white-space:nowrap}.mlgf .blb{font-size:20px;margin-right:4px}.mlgf.sm{font-size:11.5px}.mlgf em{margin-left:6px;font-style:normal;font-size:11.5px;color:#2f9e44}.mlgf.dn,.mlgf.ex{color:#9aa0a6}.mlgf.ex .bnum{text-decoration:line-through}
+.mlgx{color:#e03131!important}
 .mlgift{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:8px 10px;border:2px solid var(--ink);background:#fff;white-space:normal}.mlgv{display:inline-flex;align-items:center;font-size:15px;color:#111}.mlgd{font-size:13px;color:#2f9e44}.mlgift .rbtn{height:32px;padding:0 12px;font:400 14px/1 "Jua",sans-serif}
 .mltr{align-items:center;gap:.5em}.adm .mltr .admbtn{margin-left:0}.adm .mltr .mltcur{flex:none}.adm .mltr .mlitcur{flex:none;color:#2bff5a;font-size:.95em}.adm .mltr .admbtn svg{display:inline-block;width:1.1em;height:1.1em;vertical-align:-.2em}.mltcur{font-size:1.15em;font-weight:700;color:#fff}.mltv{padding:.3em .55em!important;line-height:0}.mltv svg{width:1.15em;height:1.15em;transition:transform .15s}.mltv.open svg{transform:rotate(180deg)}
 .adm .admrow[hidden],.adm .admsk[hidden]{display:none}
@@ -870,7 +907,7 @@ body.scr-2v2.bn2 .p3,body.scr-2v2.bn2 .p4,body.scr-2v2.bn1 .p2,body.scr-2v2.bn1 
   <div class="netrow"><button class="chatbtn" type="button" aria-label="빠른 채팅"><svg class="cbase" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg><svg class="cfill" viewBox="0 0 24 24"><path d="M4 3.5h16a2 2 0 0 1 2 2v9.5a2 2 0 0 1-2 2h-9l-5 4.5v-4.5H4a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2z"/></svg></button><button class="netleave" type="button">나가기</button><a class="netkk" href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener" hidden>오픈채팅</a><div class="chatmenu" hidden></div></div>
   <div class="onl"><div class="nmrow"><input class="nmin" type="text" maxlength="60" placeholder="이름 정하기" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="이름"><button class="nmok" type="button">확인</button></div><div class="nmmsg" aria-live="polite"></div><button class="chpick" type="button"><i></i><span>캐릭터 선택</span></button><div class="mdrow"><button type="button" data-md="1v1">1대1</button><button type="button" data-md="2v2">2대2</button><button type="button" data-md="ffa">1대1대1대1</button><button type="button" class="mdmu" data-mu="1">복수<br>선택</button></div><div class="mkrow"><button class="mkbtn" type="button">빠른 매칭</button><button class="rmbtn" type="button">방</button></div></div>
 <div class="pgdots" aria-hidden="true"><i></i><i class="on"></i><i></i></div>
-</div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="blpill" id="blpill" type="button" aria-label="내 볼 (누르면 상점)"><b class="bln">0</b></button><button class="shbtn" id="shbtn" type="button" aria-label="상점"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 10.8V19a1.5 1.5 0 0 0 1.5 1.5h11.8a1.5 1.5 0 0 0 1.5-1.5v-8.2"/><path d="M3.2 8.7 5 3.6h14l1.8 5.1"/><path d="M3.2 8.7a2.93 2.93 0 0 0 5.87 0a2.93 2.93 0 0 0 5.86 0a2.93 2.93 0 0 0 5.87 0"/><path d="M9.8 20.5v-4.7h4.4v4.7"/></svg></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><div class="kkl"><span>문의:</span><a href="https://open.kakao.com/o/sJsBKORi" target="_blank" rel="noopener">https://open.kakao.com/o/sJsBKORi</a></div><div class="kkl"><span>공식 방:</span><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">https://open.kakao.com/o/gi4UJORi</a></div></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><button class="prbtn" id="prbtn" type="button" aria-label="프로필"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.7 18.4c1.2-2.1 3-3.2 5.3-3.2s4.1 1.1 5.3 3.2"/></svg></button><button class="acbtn" id="acbtn" type="button" aria-label="업적"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.2 2.6l2.9 5.9M15.8 2.6l-2.9 5.9"/><circle cx="12" cy="14.8" r="6.3"/><path d="M12 11.5l1 2.1 2.3.3-1.7 1.6.4 2.3-2-1.1-2 1.1.4-2.3-1.7-1.6 2.3-.3z" stroke-width="1.2"/></svg></button><button class="mlbtn" id="mlbtn" type="button" aria-label="우편함"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5.3" width="18.4" height="13.4" rx="2.2"/><path d="M3.6 6.5 12 12.7l8.4-6.2"/><path d="M3.7 17.6l5.8-5.3M20.3 17.6l-5.8-5.3"/></svg><span class="mlbg" hidden></span></button><button class="tvbtn" id="tvbtn" type="button" aria-label="경기 관전"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6 2.6L12 5.6l3.4-3"/><rect x="2.6" y="5.6" width="18.8" height="13.2" rx="2.6"/><path d="M8.5 21.4h7"/><text x="12" y="15.5" text-anchor="middle" font-size="7.6" font-weight="900" font-style="italic" font-family="Arial Black,Arial,Helvetica,sans-serif" fill="currentColor" stroke="currentColor" stroke-width=".55" letter-spacing="-.2">VS</text></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div><div class="pidtag" id="pidtag"></div></div>
+</div><button class="more" type="button">도움말<span class="marr">↓</span></button><button class="blpill" id="blpill" type="button" aria-label="내 볼 (누르면 상점)"><b class="bln">0</b></button><button class="shbtn" id="shbtn" type="button" aria-label="상점"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 10.8V19a1.5 1.5 0 0 0 1.5 1.5h11.8a1.5 1.5 0 0 0 1.5-1.5v-8.2"/><path d="M3.2 8.7 5 3.6h14l1.8 5.1"/><path d="M3.2 8.7a2.93 2.93 0 0 0 5.87 0a2.93 2.93 0 0 0 5.86 0a2.93 2.93 0 0 0 5.87 0"/><path d="M9.8 20.5v-4.7h4.4v4.7"/></svg></button><button class="kkbtn" id="kkbtn" type="button" aria-label="오픈채팅"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4.5c-4.7 0-8.5 3-8.5 6.7 0 2.4 1.6 4.5 4 5.7l-.9 3.3 3.8-2.5c.5.1 1 .1 1.6.1 4.7 0 8.5-3 8.5-6.6S16.7 4.5 12 4.5z"/></svg></button><div class="kkpop" id="kkpop" hidden><div class="kkl"><span>문의:</span><a href="https://open.kakao.com/o/sJsBKORi" target="_blank" rel="noopener">https://open.kakao.com/o/sJsBKORi</a></div><div class="kkl"><span>공식 방:</span><a href="https://open.kakao.com/o/gi4UJORi" target="_blank" rel="noopener">https://open.kakao.com/o/gi4UJORi</a></div></div><button class="pnbtn" id="pnbtn" type="button" aria-label="패치노트"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v13.2H7.3a1.8 1.8 0 0 0-1.8 1.8"/><path d="M5.5 19.5V4.5A1.5 1.5 0 0 1 7 3"/><path d="M5.5 19.5A1.5 1.5 0 0 0 7 21h12v-3.3"/><path d="M9.5 7.5h6M9.5 10.5h4"/></svg></button><button class="prbtn" id="prbtn" type="button" aria-label="프로필"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3"/><path d="M6.7 18.4c1.2-2.1 3-3.2 5.3-3.2s4.1 1.1 5.3 3.2"/></svg></button><button class="acbtn" id="acbtn" type="button" aria-label="업적"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.2 2.6l2.9 5.9M15.8 2.6l-2.9 5.9"/><circle cx="12" cy="14.8" r="6.3"/><path d="M12 11.5l1 2.1 2.3.3-1.7 1.6.4 2.3-2-1.1-2 1.1.4-2.3-1.7-1.6 2.3-.3z" stroke-width="1.2"/></svg></button><button class="mlbtn" id="mlbtn" type="button" aria-label="우편함"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5.3" width="18.4" height="13.4" rx="2.2"/><path d="M3.6 6.5 12 12.7l8.4-6.2"/><path d="M3.7 17.6l5.8-5.3M20.3 17.6l-5.8-5.3"/></svg><span class="mlbg" hidden></span></button><button class="cabtn" id="cabtn" type="button" aria-label="출석"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="5" width="17.2" height="15.6" rx="2.2"/><path d="M3.4 10.2h17.2M8 3v4.2M16 3v4.2"/><path d="M8.4 14.9l2.3 2.3 4.5-4.6"/></svg></button><button class="tvbtn" id="tvbtn" type="button" aria-label="경기 관전"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.6 2.6L12 5.6l3.4-3"/><rect x="2.6" y="5.6" width="18.8" height="13.2" rx="2.6"/><path d="M8.5 21.4h7"/><text x="12" y="15.5" text-anchor="middle" font-size="7.6" font-weight="900" font-style="italic" font-family="Arial Black,Arial,Helvetica,sans-serif" fill="currentColor" stroke="currentColor" stroke-width=".55" letter-spacing="-.2">VS</text></svg></button><div class="recwarn">⚠ 인게임 화면을 녹화 후 영상으로 사용하는 행위는 엄격히 금지됩니다</div><div class="vtag" id="vtag"></div><div class="pidtag" id="pidtag"></div></div>
 <div class="pnmodal" id="pnmodal" hidden><div class="pnpanel" role="dialog" aria-modal="true" aria-label="패치노트"><div class="pntitle">패치노트</div><button class="pnclose" id="pnclose" type="button" aria-label="닫기">✕</button><div id="pnbody"></div></div></div>
 <div id="audiohint" class="audiohint" hidden>🔇 소리가 멈췄어요. 화면을 한 번 터치해 주세요</div>
 <section class="guide" id="guide" aria-label="도움말"></section>
@@ -912,9 +949,9 @@ var PT={t:0,d:{}};try{const v=JSON.parse(localStorage.getItem('bftPt')||'null');
   setInterval(tick,5000);document.addEventListener('visibilitychange',tick);window.addEventListener('pagehide',()=>{tick();save()})}
 const ptText=min=>{min=Math.floor(min||0);const h=Math.floor(min/60);return h?h+'시간 '+(min%60)+'분':min+'분'};   // 이름을 주고받을 때 최대 길이 (일반은 10글자로 정해지고, 제작자만 40글자까지)
 let uiOpenT=-1e9;
-function uiOpen(id){const t=performance.now();if(t-uiOpenT<600)return;uiOpenT=t;try{if(id==='prbtn')prShow();else if(id==='tvbtn')tvShow();else if(id==='mlbtn')mlShow();else if(id==='shbtn'||id==='blpill')shShow();else if(id==='acbtn')acShow();else frShow()}catch(err){dbgErr((err&&err.message)||err,1)}}
+function uiOpen(id){const t=performance.now();if(t-uiOpenT<600)return;uiOpenT=t;try{if(id==='prbtn')prShow();else if(id==='tvbtn')tvShow();else if(id==='mlbtn')mlShow();else if(id==='shbtn'||id==='blpill')shShow();else if(id==='acbtn')acShow();else if(id==='cabtn')caShow();else frShow()}catch(err){dbgErr((err&&err.message)||err,1)}}
 {let dn=null;                                      // 프로필·친구 버튼: 손을 뗄 때 바로 열고, 클릭으로도 열림 (둘 중 먼저 온 것 한 번만)
-  const btn=e=>e.target&&e.target.closest?e.target.closest('#prbtn,#frbtn,#tvbtn,#mlbtn,#shbtn,#acbtn,#blpill'):null;
+  const btn=e=>e.target&&e.target.closest?e.target.closest('#prbtn,#frbtn,#tvbtn,#mlbtn,#cabtn,#shbtn,#acbtn,#blpill'):null;
   document.addEventListener('pointerdown',e=>{const b=btn(e);dn=b?{id:b.id,x:e.clientX,y:e.clientY}:null},true);
   document.addEventListener('pointerup',e=>{const b=btn(e),d=dn;dn=null;if(!b||!d||d.id!==b.id||e.pointerType==='mouse')return;if(Math.hypot(e.clientX-d.x,e.clientY-d.y)>14)return;uiOpen(b.id)},true);
   document.addEventListener('click',e=>{const b=btn(e);if(!b)return;e.stopPropagation();uiOpen(b.id)},true)}
@@ -5205,9 +5242,11 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.35';
+const PATCH_VERSION='4.13.36';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.36',date:'2026-11-02',chars:[],fx:[],
+   sys:['상점에 메인 탭 추가 (일일 무료 볼 · 매일 밤 12시에 10~100볼 랜덤)','출석 추가 (달력 버튼 · 7일 · 7일차는 칭호 「개근상」 + 300볼)','우편 보관 기간이 지나면 만료됨 (보상 못 받음)','우편마다 삭제 버튼 · 읽은 우편 전부 삭제 추가','볼 개수는 항상 숫자로 표시','커스텀 색은 색을 바꿀 때마다 새로 사야 함','상점에서 한 번만 눌러도 구매됨']},
   {ver:'4.13.35',date:'2026-11-02',chars:[
    {who:'권루트',tag:'adj',lines:['L을 가져가 확률 {+20% → 25%}','탱고 확률 {-30% → 25%}','스킬 쿨타임 {+6.5초 → 6초}','워프 메이커 · 포탈 오류: 권루트가 포탈을 탈 때마다 {+체력 8 회복}','측면대측면 지속 시간 {+2초 → 3초}','{~측면대측면 중 우주의 반응(블랙홀) 지속 피해를 물리공격처럼 피하던 버그 수정}','{~권루트가 이기면 경기장에 \'L을 가져가\' 영상이 연하게 반복 재생됨}']},
    {who:'제리얌',tag:'nerf',lines:['데미지 전체 {-2} 하락','밥상 데미지 {-65 → 63}','포크 데미지 {-30 → 28}','마지막 포크 추가 데미지 {-20 → 18}','몸통 박치기 데미지 {-8 → 6}']},
@@ -5553,9 +5592,7 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="admlbl">보관 기간</div><div class="admrow mlxr">'+[['d','일',30,3],['h','시간',0,3],['m','분',0,4],['s','초',0,5]].map(([u,lb,v,n])=>'<input class="admstep mlxv" data-u="'+u+'" inputmode="numeric" maxlength="'+n+'" autocomplete="off" value="'+v+'"><span class="usru">'+lb+'</span>').join('')+'</div>'
     +'<div class="admsk">'+[[60,'1분'],[3600,'1시간'],[86400,'1일'],[604800,'7일'],[2592000,'30일']].map(([v,lb])=>'<button type="button" class="admbtn admsub2" data-a="mlxp" data-v="'+v+'">'+lb+'</button>').join('')+'</div><div class="admnote mlxe"></div>'
     +'<div class="admsk" style="margin-top:0.5em"><button type="button" class="admbtn admheal" data-a="mlsend">보내기</button></div><div class="admnote mlprev"></div>'
-    +'<div class="admnote">관리자 도장이 찍힌 편지만 플레이어 우편함에 떠요. 접속 중인 사람은 몇 분 안에, 아닌 사람은 다음에 들어올 때 받아요. 편지는 누구나 열어 볼 수 있는 저장소에 들어가니 비밀번호 같은 건 쓰지 마세요.</div>'
-    +'<div class="admnote">볼을 붙인 편지는 받는 사람이 우편함에서 <b>받기</b>를 눌러야 볼이 들어와요 (보관 기간이 지나면 못 받아요). "로그인한 사람만 / 로그인 안 한 사람만"은 편지를 여는 순간의 로그인 상태로 가려요.</div>'
-    +'<div class="admsub">보낸 편지 <span class="mlcnt"></span></div><div class="mlsent"></div><div class="admnote">회수하면 아직 안 읽은 사람의 우편함에서도 사라져요.</div>';}
+    +'<div class="admsub">보낸 편지 <span class="mlcnt"></span></div><div class="mlsent"></div>';}
   if(k==='srv')return '<div class="admsub">접속 · 매칭</div><div class="srvnow"></div><div class="admnote">매칭 중 인원은 고른 모드마다 셉니다 (복수 선택이면 모드마다 한 번씩).</div>'
     +'<div class="admsub">동접 기록</div><div class="admccu"></div><div class="admnote">날짜는 한국 시간 기준이고 7일이 지나면 지워집니다. ☆을 누른 날은 지워지지 않습니다.</div>'
     +'<div class="admsub">전체 채팅 기록 <span class="srvwcn"></span></div><div class="admsk"><button type="button" class="admbtn" data-a="srvwc">펼치기</button></div><div class="srvwc usrhist" hidden></div><div class="admnote">이 폰이 켜져 있을 때 오간 전체 채팅과 접속할 때 받은 최근 30개가 모두 남습니다 (최대 3000개).</div>';
@@ -5584,7 +5621,7 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="admsub">효과음 미리 듣기</div>'+SFX_PRE.map(([g,L])=>'<div class="admlbl">'+g+'</div><div class="admsk">'+L.map(([k,n])=>bt('sfxp',n,'',' data-k="'+k+'"')).join('')+'</div>').join('')
     +'<div class="admsub">화면</div><div class="admsk admtg">'+sw('shake','화면 흔들림')+sw('lowfx','효과 줄이기')+sw('hit','히트박스')+'</div>'+'<div class="admnote">히트박스: 초록 공 테두리와 겹치면 맞아요 · 빨강 공격 범위 · 노랑 날아가는 공격 · 파랑 아우라 · 보라 포탈 · 하늘색 점선 먹는 아이템 · 주황 발판</div>'
     +'<div class="admsub">패널</div><div class="admrow"><span>투명도</span><input type="range" class="admrange" data-a="op" min="30" max="100" step="5"><b data-o="op"></b></div><div class="admsk">'+bt('panelreset','위치·크기 초기화','admsub2')+'</div>'
-    +(ADM_G?'':'<div class="admsub">상점 (이 폰만)</div><div class="admnote">시험해 볼 때 쓰세요. 이 폰의 볼만 바뀌어요.</div><div class="admsk">'+bt('blgive','볼 +500','admsub2')+bt('blzero','볼 0으로','admsub2')+bt('blrst','상점 기록 지우기','admsub2')+'</div>')+(ADM_G?'':'<div class="admsub">관리자 도장</div><div class="admnote">이 폰에 관리자 도장이 들어 있어요. 내 폰이 아니면 지워 주세요 (지우면 도장 코드를 다시 넣어야 패널이 열려요).</div><div class="admsk">'+bt('sgdel','이 폰에서 도장 지우기','admsub2')+'</div>');
+    +(ADM_G?'':'<div class="admsub">상점 (이 폰만)</div><div class="admsk">'+bt('blgive','볼 +500','admsub2')+bt('blzero','볼 0으로','admsub2')+bt('blrst','상점 기록 지우기','admsub2')+'</div>')+(ADM_G?'':'<div class="admsub">관리자 도장</div><div class="admnote">이 폰에 관리자 도장이 들어 있어요. 내 폰이 아니면 지워 주세요 (지우면 도장 코드를 다시 넣어야 패널이 열려요).</div><div class="admsk">'+bt('sgdel','이 폰에서 도장 지우기','admsub2')+'</div>');
   return '';
 }
 let ADM_OK=false,ADM_G=false;
@@ -6194,7 +6231,6 @@ function admAct(a,b){
   else if(a==='usrtog'){const id=b.dataset.id;if(usrOpen.has(id))usrOpen.delete(id);else usrOpen.add(id);const w=document.querySelector('.adm');if(w)usrRender(w)}
   else if(a==='usrref'||a==='rkref'){cldSync(false)}
   else if(a==='rkdel'){
-    if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.textContent;b.textContent='한 번 더 눌러 삭제';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.textContent=t0},4000);return}
     const k=b.dataset.k,kk=v=>String(v==null?'':v).slice(0,24);
     bossAdmEdit(s=>{const i=s.r.findIndex(x=>x&&kk(x.k)===k);
       if(i>=0){const run=s.r[i];rkTrash(s,run);s.r.splice(i,1);
@@ -6208,7 +6244,6 @@ function admAct(a,b){
   else if(a==='rkclean'){
     if(!RKPLAN){netToast('먼저 \'찾기\'로 무엇이 바뀌는지 확인해 주세요');return}
     const mode=RKPLAN.mode;
-    if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.innerHTML;b.textContent='한 번 더 누르면 정리';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.innerHTML=t0},4000);return}
     let res=null;
     bossAdmEdit(s=>{                     // 저장소에서 막 받은 최신 기록으로 다시 계산해서 정리
       const xs=bossDeadMap(s.x);
@@ -6238,7 +6273,6 @@ function admAct(a,b){
     const bx=document.querySelector('.adm .rkbox');if(bx)bx.innerHTML=bossAdmHTML()}
   else if(a==='rkdelsel'){
     const n=rkSelN();if(!n){netToast('지울 기록을 먼저 선택하세요');return}
-    if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.innerHTML;b.textContent='한 번 더 눌러 '+n+'개 삭제';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.innerHTML=t0},4000);return}
     const ks=[...RKSEL.r],ids=[...RKSEL.c];
     const kk=v=>String(v==null?'':v).slice(0,24);
     bossAdmEdit(s=>{
@@ -6269,7 +6303,6 @@ function admAct(a,b){
   else if(a==='rkzu'){const id=b.dataset.id,t=+b.dataset.t,va=+b.dataset.v,vb=+b.dataset.b;b.disabled=true;   // 처치 횟수 바뀐 기록: 이 사람만 바뀌기 전 값으로
     bossAdmEdit(s=>{const z=s.zl.find(z=>z&&z.i===id&&+z.t===t&&(z.a|0)===va&&(z.b|0)===vb);if(!z||z.u){BWHY='이미 되돌렸거나 기록이 없어요';return false}z.u=1;bossSetCnt(s,id,va,z.n)}).then(ok=>{netToast(ok?'처치 횟수를 '+va+'회로 되돌렸어요':'되돌리지 못했습니다 · '+BWHY);rkRe()})}
   else if(a==='rkzg'){const g=+b.dataset.g;if(!g)return;   // 그때 한 일(정리·삭제) 전체 되돌리기: 처치 횟수는 그 전 값으로, 그때 지운 기록은 휴지통에서 원래대로 (정상 표시는 안 함)
-    if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.textContent;b.textContent='한 번 더 누르면 되돌려요';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.textContent=t0},4000);return}
     b.disabled=true;let nz=0,nr=0;
     bossAdmEdit(s=>{nz=0;nr=0;const zs=s.zl.filter(z=>z&&+z.g===g&&!z.u),trs=s.tr.filter(x=>x&&+x.g===g);if(!zs.length&&!trs.length){BWHY='이미 되돌렸어요';return false}
       for(const x of trs){const k=rkKey(x.k);s.tr.splice(s.tr.indexOf(x),1);s.x=s.x.filter(y=>!(y&&rkKey(y.k)===k));if(x.r&&typeof x.r==='object'&&Array.isArray(x.r.p)&&!s.r.some(y=>y&&rkKey(y.k)===k)){s.r.push(x.r);nr++}}
@@ -6291,8 +6324,6 @@ function admAct(a,b){
     {const I=P.map(m=>m.i).filter(Boolean);if(new Set(I).size!==I.length){say('같은 아이디가 두 번 들어갔어요');return}}
     const plus=f.querySelector('.rkac').checked,run={k:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),t:Math.round(t*100)/100,d,p:P};
     const desc=P.map(m=>m.n+' '+(m.i||'(아이디 없음)')+(m.c?' · '+m.c:'')).join(' / ')+' — '+bossFmt(run.t)+' · '+new Date(d).toLocaleDateString('ko-KR')+(plus?' · 처치 횟수 +1'+(P.some(m=>!m.i)?' (아이디 없는 사람은 빼고)':''):'');
-    if(!(b.dataset.arm&&Date.now()-b.dataset.arm<6000&&b.dataset.desc===desc)){b.dataset.arm=Date.now();b.dataset.desc=desc;pv.style.color='#e3d94a';pv.textContent='만들 기록: '+desc+' — 맞으면 한 번 더 누르세요';b.textContent='한 번 더 누르면 만들어요';
-      setTimeout(()=>{if(b.isConnected&&Date.now()-(+b.dataset.arm||0)>=5900){delete b.dataset.arm;b.textContent='기록 만들기'}},6000);return}
     delete b.dataset.arm;b.disabled=true;b.textContent='만드는 중...';
     bossAdmEdit(s=>{const sg=r=>(r.p||[]).map(m=>m&&(m.i||'?'+m.n)).sort().join(',');
       if(s.r.some(x=>x&&typeof x==='object'&&Math.abs((+x.t||0)-run.t)<0.01&&sg(x)===sg(run))){BWHY='같은 참가자·같은 시간 기록이 이미 있어요';return false}
@@ -6319,18 +6350,15 @@ function admAct(a,b){
     if(w)w.querySelectorAll('.mlxv').forEach(i=>{i.value=String(q[i.dataset.u]||0)});mlXUpd()}
   else if(a==='blgive'){blAdd(500);shSave();blUi();netToast('볼 +500 (지금 '+BLF(SH.b)+')')}
   else if(a==='blzero'){SH.b=0;shSave();blUi();netToast('볼을 0으로 했어요')}
-  else if(a==='blrst'){if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();b.textContent='한 번 더 누르면 지움';setTimeout(()=>{delete b.dataset.arm;b.textContent='상점 기록 지우기'},4000)}
-    else{delete b.dataset.arm;b.textContent='상점 기록 지우기';SH=shBlank();acSeen=null;shSave();blUi();acNote();csPub();netToast('상점 기록을 지웠어요')}}
+  else if(a==='blrst'){SH=shBlank();acSeen=null;shSave();blUi();acNote();csPub();netToast('상점 기록을 지웠어요')}
   else if(a==='mlsend')mlSend(b);
   else if(a==='usrbg'){const id=b.dataset.id,row=b.closest('.usrbl'),inp=row&&row.querySelector('[data-bid]'),n=parseInt(String((inp&&inp.value)||'').replace(/[^0-9]/g,''),10)||0,sg=+b.dataset.v>0?1:-1,lb=sg>0?'주기':'빼기';   // 유저: 볼 주기 · 빼기 (두 번 눌러야)
     const back=t=>{b.textContent=t;setTimeout(()=>{if(b.isConnected&&!b.dataset.arm)b.textContent=lb},1500)};
     if(n<1){back('수를 넣어 주세요');return}if(n>BL_MAX){back('너무 커요');return}
     const amt=sg*n;
-    if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000&&b.dataset.n===String(amt))){b.dataset.arm=Date.now();b.dataset.n=String(amt);b.textContent='한 번 더: '+(sg>0?'+':'-')+BLF(n);setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.textContent=lb},4000);return}
     delete b.dataset.arm;b.disabled=true;b.textContent='보내는 중...';
     bgSend(id,amt,ok=>{if(b.isConnected){b.disabled=false;b.textContent=lb}if(ok&&usrEd[id])delete usrEd[id].bl;if(ok&&inp&&inp.isConnected)inp.value=''})}
-  else if(a==='mlrc'){const i=b.dataset.i;   // 편지 회수 (두 번 눌러야)
-    if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();b.textContent='한 번 더 누르면 회수';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.textContent='회수'},4000);return}
+  else if(a==='mlrc'){const i=b.dataset.i;   // 편지 회수
     b.disabled=true;MLA.rc.add(i);mlAdmEdit(L=>{const k=L.findIndex(x=>x&&x.i===i);if(k<0)return '이미 없어요';L.splice(k,1)}).then(why=>{netToast(why?'회수하지 못했어요 · '+why:'편지를 회수했어요');mlAdmRender()})}
   else if(a==='usrcopy'){frCopy(b.dataset.id,b)}
   else if(a==='usrfr'){const id=b.dataset.id;if(usrFr[id]&&usrFr[id].st!=='load'){delete usrFr[id];const w=document.querySelector('.adm');if(w)usrRender(w)}else usrFrLoad(id)}
@@ -6363,7 +6391,7 @@ function admAct(a,b){
   else if(a==='annsend'){const i=document.querySelector('.adm .annin'),t=(i.value||'').trim();if(!t)return;annSend(t);i.value=''}
   else if(a==='ccstar'){const k=b.dataset.k;if(PRES_STAR.has(k))PRES_STAR.delete(k);else PRES_STAR.add(k);ccuSave();ccuPurge()}
   else if(a==='sfxp'){sfxPreview(b.dataset.k)}
-  else if(a==='sgdel'){if(!(b.dataset.arm&&Date.now()-b.dataset.arm<4000)){b.dataset.arm=Date.now();const t0=b.textContent;b.textContent='한 번 더 누르면 지워요';setTimeout(()=>{delete b.dataset.arm;if(b.isConnected)b.textContent=t0},4000);return}
+  else if(a==='sgdel'){
     SG.clear();ADM_OK=false;const w=document.querySelector('.adm');if(w){clearInterval(w._iv);w.remove()}netToast('이 폰에서 관리자 도장을 지웠어요')}
   else if(a==='mute'){admMute=!admMute;admApplyVol();admSave()}
   else if(a==='shake'){admNoShake=!admNoShake;admSave()}
@@ -8003,12 +8031,17 @@ const achOf=id=>ACH.find(a=>a[0]===id);
 const TT_SHOP=[['rich','돈이 넘쳐나는 놈',1000]];   // 상점에서 사는 칭호: [열쇠, 이름, 값]
 const ttShopOf=k=>TT_SHOP.find(x=>x[0]===k);
 const TT_GOLD=new Set(['돈이 넘쳐나는 놈']);   // 금빛으로 반짝이는 칭호
+const AT_TT='개근상';   // 출석 7일차를 채우면 받는 칭호
+const kstDay=t=>new Date((t==null?Date.now():t)+9*3600e3).toISOString().slice(0,10);   // 한국 시간 날짜 (밤 12시 정각에 바뀜)
+const DF={lo:10,hi:100,pw:3};   // 일일 무료 볼: 10~100볼 · 거듭제곱이 클수록 낮은 수가 잘 나옴 (높은 수는 드묾)
+const AT=[[10,10,1],[30,30,1],[30,30,1],[100,100,1],[100,200,1.6],[100,100,1],[300,300,1]];   // 출석 1~7일차 볼: [최소, 최대, 낮은 수가 잘 나오는 정도] (5일차는 100~200 · 낮은 쪽이 조금 더 잘 나옴)
+const rollN=(lo,hi,pw)=>lo+Math.floor((hi-lo+1)*Math.pow(Math.random(),pw||1));
 const ttcl=t=>TT_GOLD.has(t)?'ttl gold':'ttl';
-const ACH_T=new Set(ACH.map(a=>a[7]).concat(TT_SHOP.map(x=>x[1])));
+const ACH_T=new Set(ACH.map(a=>a[7]).concat(TT_SHOP.map(x=>x[1]),[AT_TT]));
 const idOld=id=>{const t=parseInt(String(id).slice(1,9),36);return t>1e12&&Date.now()-t>400*864e5};   // 편지 · 볼 기록 아이디에는 만든 시각이 들어 있음: 400일이 지나면 받은 기록도 지움 (그때는 편지 · 기록 자체가 없음)
 const idList=(a,p)=>(Array.isArray(a)?a:[]).filter((x,i,A)=>typeof x==='string'&&new RegExp('^'+p+'[0-9a-z]{4,20}$').test(x)&&A.indexOf(x)===i&&!idOld(x)).slice(-500);
-const shBlank=()=>({b:0,own:[],cc:'#ff4d6d',nc:'',tt:'',ti:[],ac:[],bn:0,lk:'',lr:0,mc:[],gl:[]});
-var SH=shBlank();   // 내 볼 · 산 것 · 커스텀 색 · 쓰는 색 · 쓰는 칭호 · 산 칭호 · 받은 업적 · 산 횟수 · 마지막 경기(볼 고치려고) · 받은 편지 볼 · 적용한 관리자 볼 기록
+const shBlank=()=>({b:0,own:[],cc:'#ff4d6d',nc:'',tt:'',ti:[],ac:[],bn:0,lk:'',lr:0,mc:[],gl:[],dd:'',da:0,ad:'',an:0,ar:[],ak:0});
+var SH=shBlank();   // 내 볼 · 산 것 · 커스텀 색 · 쓰는 색 · 쓰는 칭호 · 산 칭호 · 받은 업적 · 산 횟수 · 마지막 경기(볼 고치려고) · 받은 편지 볼 · 적용한 관리자 볼 기록 · 일일 무료 볼 받은 날(dd)·받은 양(da) · 출석 마지막 날(ad)·며칠째(an)·이번 바퀴에 날마다 받은 볼(ar)·개근상 받음(ak)
 function shLoad(v){
   if(!v||typeof v!=='object')return;
   SH.b=Math.max(0,Math.min(BL_MAX,+v.b||0));
@@ -8017,15 +8050,20 @@ function shLoad(v){
   SH.nc=SH.own.includes(v.nc)?v.nc:'';
   SH.ac=(Array.isArray(v.a)?v.a:[]).filter((x,i,a)=>typeof x==='string'&&!!achOf(x)&&a.indexOf(x)===i);
   SH.ti=(Array.isArray(v.ti)?v.ti:[]).filter((x,i,a)=>!!ttShopOf(x)&&a.indexOf(x)===i);
-  SH.tt=(SH.ac.some(id=>achOf(id)[7]===v.tt)||SH.ti.some(k=>ttShopOf(k)[1]===v.tt))?v.tt:'';
+  const dk=x=>typeof x==='string'&&/^\d{4}-\d\d-\d\d$/.test(x)?x:'';
+  SH.dd=dk(v.dd);SH.da=Math.max(0,Math.min(1e5,v.da|0));SH.ad=dk(v.ad);SH.an=SH.ad?Math.max(0,Math.min(7,v.an|0)):0;SH.ak=v.ak===1?1:0;
+  SH.ar=(Array.isArray(v.ar)?v.ar:[]).slice(0,SH.an).map(x=>Math.max(0,Math.min(1e5,x|0)));while(SH.ar.length<SH.an)SH.ar.push(0);
+  SH.tt=(SH.ac.some(id=>achOf(id)[7]===v.tt)||SH.ti.some(k=>ttShopOf(k)[1]===v.tt)||(SH.ak&&v.tt===AT_TT))?v.tt:'';
   SH.mc=idList(v.mc,'m');SH.gl=idList(v.gl,'g');
   SH.bn=Math.max(0,v.bn|0);SH.lk=typeof v.lk==='string'?v.lk.slice(0,24):'';SH.lr=Math.max(0,v.lr|0)}
 try{shLoad(JSON.parse(localStorage.getItem('bftSh')||'null'))}catch(e){}
-const shSnap=()=>({b:SH.b,o:SH.own.slice(),cc:SH.cc,nc:SH.nc,tt:SH.tt,ti:SH.ti.slice(),a:SH.ac.slice(),bn:SH.bn,lk:SH.lk,lr:SH.lr,mc:SH.mc.slice(),gl:SH.gl.slice()});   // 저장 · 계정 (다른 폰에서 로그인해도 이어짐)
+const shSnap=()=>({b:SH.b,o:SH.own.slice(),cc:SH.cc,nc:SH.nc,tt:SH.tt,ti:SH.ti.slice(),a:SH.ac.slice(),bn:SH.bn,lk:SH.lk,lr:SH.lr,mc:SH.mc.slice(),gl:SH.gl.slice(),dd:SH.dd,da:SH.da,ad:SH.ad,an:SH.an,ar:SH.ar.slice(),ak:SH.ak});   // 저장 · 계정 (다른 폰에서 로그인해도 이어짐)
 function shSave(){try{localStorage.setItem('bftSh',JSON.stringify(shSnap()))}catch(e){}try{cldSoon(2500)}catch(_){}}
 function blAdd(n){SH.b=Math.max(0,Math.min(BL_MAX,SH.b+(n|0)))}
-const BLC=n=>{n=Math.max(0,Math.floor(+n||0));if(n<1e4)return BLF(n);if(n<1e6)return String(Math.floor(n/1000)/10).replace(/\.0$/,'')+'만';return Math.floor(n/1e4)+'만'};   // 로비의 작은 알약: 1만이 넘으면 줄여서 (1.2만)
-function blUi(){const f=BLF(SH.b),c=BLC(SH.b);document.querySelectorAll('.blpill .bln').forEach(e=>{const t=e.closest('.sh')?f:c;if(e.textContent!==t)e.textContent=t})}
+const blNum=n=>BLF(n).replace(/,/g,',<wbr>');   // 볼 수는 항상 숫자로 (1만 · 1.2만 같은 글자 없이) · 자리가 모자라면 쉼표 뒤에서 줄바꿈
+function blUi(){const f=BLF(SH.b);document.querySelectorAll('.blpill .bln').forEach(e=>{const sh=!!e.closest('.sh');
+  if(e.dataset.v!==f){e.dataset.v=f;if(sh)e.textContent=f;else e.innerHTML=blNum(SH.b)}
+  if(!sh)e.classList.toggle('sm',f.length>5)})}   // 로비 알약: 6글자(12,345)부터는 글씨를 줄이고 두 줄로 꽉 채움
 function blRec(k,r){                               // 경기 하나가 끝나면 볼을 줌 (결과가 나중에 바로잡히면 앞에 준 볼을 고쳐서 줌)
   const amt=BL_EARN[r]|0,was=SH.lk===k?SH.lr:0;
   blAdd(amt-was);SH.lk=k;SH.lr=amt;shSave();blUi();
@@ -8077,7 +8115,7 @@ function acVal(k){
   return 0}
 const acDone=a=>acVal(a[4])>=a[5];
 const acClaimable=()=>ACH.filter(a=>acDone(a)&&!SH.ac.includes(a[0]));
-const ttOwned=()=>ACH.filter(a=>SH.ac.includes(a[0])).map(a=>a[7]).concat(TT_SHOP.filter(x=>SH.ti.includes(x[0])).map(x=>x[1]));
+const ttOwned=()=>ACH.filter(a=>SH.ac.includes(a[0])).map(a=>a[7]).concat(TT_SHOP.filter(x=>SH.ti.includes(x[0])).map(x=>x[1]),SH.ak?[AT_TT]:[]);
 function ttSet(t){t=String(t||'');if(t&&!ttOwned().includes(t))return;SH.tt=t;shSave();csPub()}
 function acClaim(id){const a=achOf(id);if(!a||SH.ac.includes(id)||!acDone(a))return false;SH.ac.push(id);blAdd(a[6]);shSave();blUi();acUi();csPub();return true}
 function acUi(){const n=acClaimable().length,b=document.getElementById('acbtn');if(b)b.classList.toggle('new',n>0)}
@@ -8085,9 +8123,39 @@ let acSeen=null;
 function acNote(){                                  // 새로 달성한 업적이 있으면 알려 줌 (받는 건 업적 창에서)
   const c=acClaimable();if(acSeen===null){acSeen=new Set(c.map(a=>a[0]));acUi();return}
   const nw=c.filter(a=>!acSeen.has(a[0]));nw.forEach(a=>acSeen.add(a[0]));acUi();
-  if(nw.length)try{netToast('업적을 달성했어요! 업적 버튼에서 받아 가세요')}catch(_){}}
+  if(nw.length)try{netToast('업적 달성!')}catch(_){}}
 setTimeout(()=>{blUi();try{acNote()}catch(_){}},0);
 setInterval(()=>{try{acNote()}catch(_){}},15000);
+/* ---------- 일일 무료 볼 (밤 12시에 새로) · 출석 (수령 버튼, 7일) ---------- */
+const dfReady=()=>SH.dd<kstDay();   // 한국 시간으로 아직 오늘 안 받았음 (폰 시계를 뒤로 돌려도 다시 못 받음)
+function dfClaim(){
+  if(!dfReady())return 0;
+  const n=rollN(DF.lo,DF.hi,DF.pw);SH.dd=kstDay();SH.da=n;blAdd(n);shSave();blUi();shBadge();try{acNote()}catch(_){}
+  return n}
+const atReady=()=>SH.ad<kstDay();   // 오늘 출석을 아직 안 받았음
+function atClaim(){                                 // 수령 버튼: 차례대로 1일차부터 (빠진 날이 있어도 이어서 · 7일차를 받으면 다음엔 1일차부터 또)
+  if(!atReady())return null;
+  const n=SH.an>=7?1:SH.an+1,w=AT[n-1],g=rollN(w[0],w[1],w[2]);
+  SH.ar=n===1?[]:SH.ar.slice(0,n-1);while(SH.ar.length<n-1)SH.ar.push(0);SH.ar.push(g);
+  SH.ad=kstDay();SH.an=n;blAdd(g);
+  if(n===7)SH.ak=1;
+  shSave();blUi();atUi();try{acNote()}catch(_){}
+  return {n,g,rnd:w[0]!==w[1]}}
+function atUi(){const b=document.getElementById('cabtn');if(b)b.classList.toggle('new',atReady())}   // 오늘 출석을 아직 안 받았으면 달력 버튼에 빨간 점
+/* 볼을 받았을 때 보여 주는 것: 랜덤으로 받은 볼은 가운데 네모난 창 · 출석 · 우편 · 업적으로 받은 볼은 아래에 +n */
+function blGain(n){
+  document.querySelectorAll('.blgain').forEach(x=>x.remove());
+  const el=document.createElement('div');el.className='blgain';el.innerHTML='<span>+'+BLF(n)+'</span><i class="blb"></i>';document.body.appendChild(el);
+  el.animate([{opacity:0,transform:'translate(-50%,10px)'},{opacity:1,transform:'translate(-50%,0)',offset:.12},{opacity:1,transform:'translate(-50%,0)',offset:.8},{opacity:0,transform:'translate(-50%,-6px)'}],{duration:2200,fill:'forwards'}).onfinish=()=>el.remove()}
+function blPop(n){
+  document.querySelectorAll('.blpop').forEach(x=>x.remove());
+  const el=document.createElement('div');el.className='blpop';
+  el.innerHTML='<div class="blpbox" role="dialog" aria-modal="true"><div class="blpn"><span class="blpv">+0</span><i class="blb"></i></div><button type="button" class="rbtn rgo blpok">확인</button></div>';
+  document.body.appendChild(el);
+  const v=el.querySelector('.blpv'),t0=performance.now();
+  const f=t=>{if(!el.isConnected)return;const u=Math.min(1,(t-t0)/600);v.textContent='+'+BLF(Math.round(n*(1-Math.pow(1-u,3))));if(u<1)requestAnimationFrame(f)};requestAnimationFrame(f);
+  el.addEventListener('click',e=>{if(e.target===el||e.target.closest('.blpok'))el.remove()})}
+function shBadge(){const b=document.getElementById('shbtn');if(b)b.classList.toggle('new',dfReady())}   // 오늘 무료 볼을 아직 안 받았으면 상점 버튼에 빨간 점
 /* ---------- 계정: 지금 쓰는 아이디에 비밀번호를 만들면 계정이 됨 → 다른 폰·앱에서 아이디+비밀번호로 로그인 ---------- */
 var ACC=null;try{const v=JSON.parse(localStorage.getItem('bftAcc')||'null');if(v&&v.id===PID&&/^[0-9a-f]{32}$/.test(v.s)&&/^[0-9a-f]{64}$/.test(v.h))ACC=v}catch(e){}
 function accSave(){try{if(ACC)localStorage.setItem('bftAcc',JSON.stringify(ACC));else localStorage.removeItem('bftAcc')}catch(e){}}
@@ -8130,7 +8198,7 @@ async function accLogin(id,pw){                       // 다른 아이디로 로
   const p=a.p&&typeof a.p==='object'?a.p:{};
   if(id===PID){if(Array.isArray(p.ul)){const U=unlkGet();for(const x of p.ul)if(typeof x==='string'&&!U.includes(x))U.push(x);try{localStorage.setItem('bftUnlk',JSON.stringify(U.slice(0,20)))}catch(e){}unlkApply()}ACC={id,s:a.s,h:a.h,u:+a.u||Date.now()};if(+a.c>0)ACC.c=+a.c;if(a.v===2||accPwOk(pw))ACC.v=2;accSave();if(ACC.v===2&&a.v!==2)cldSoon(500);return ''}   // 지금 쓰는 아이디로 로그인: 이 폰 기록은 그대로 두고 계정만 연결
   try{
-    for(const k of ['bftDm','bftGc','bftFr','bftPen','bftPenLog','bftMyChat','bftAdmDm','bftWc'])localStorage.removeItem(k);   // 이 폰에 남은 예전 아이디 기록은 비움
+    for(const k of ['bftDm','bftGc','bftFr','bftPen','bftPenLog','bftMyChat','bftAdmDm','bftWc','bftMlA'])localStorage.removeItem(k);   // 이 폰에 남은 예전 아이디 기록은 비움
     document.cookie='bftPen=;max-age=0;path=/';
     stSet('bftPid',id,true);localStorage.setItem('bftAcc',JSON.stringify(Object.assign({id,s:a.s,h:a.h,u:+a.u||Date.now()},a.v===2||accPwOk(pw)?{v:2}:{},+a.c>0?{c:+a.c}:{})));
     const nm=String(p.n||'').slice(0,NMX);localStorage.setItem('bftNick',nm);localStorage.setItem('bftDev',p.dv?'1':'0');localStorage.setItem('bftTst',p.ts?'1':'0');
@@ -9213,50 +9281,66 @@ function tvRender(){if(!tvEl)return;const box=tvEl.querySelector('.tvlist'),L=SP
   if(box._h!==h){box._h=h;box.innerHTML=h}}
 setInterval(()=>{if(!tvOpen())return;if(document.body.classList.contains('in-net')){tvHide();return}if(Date.now()-SPEC.t>3000)specAsk();tvRender()},1000);
 /* ---------- 우편함: 운영자가 보낸 편지 (관리자 도장이 맞는 것만) · 읽음/지움은 이 폰에만 저장 ---------- */
-var ML={L:[],all:[],ok:false,r:new Set(),d:new Set(),n:new Set()};   // L: 나에게 온 편지 · all: 저장소의 편지 전부 (관리자 화면·정리용) · r 읽음 · d 지움 · n 새 편지 알림을 띄운 것
+var ML={L:[],E:[],arc:{},all:[],ok:false,r:new Set(),d:new Set(),n:new Set()};   // L: 나에게 온 편지(기간이 남은 것) · E: 기간이 지나 만료된 편지(받은 적 있는 것만, 지우기 전까지 우편함에 남음) · arc: 받은 적 있는 편지 보관(이 폰) · all: 저장소의 편지 전부 (관리자 화면·정리용) · r 읽음 · d 지움 · n 새 편지 알림을 띄운 것
 try{const v=JSON.parse(localStorage.getItem('bftMl')||'null');if(v&&typeof v==='object')for(const k of ['r','d','n'])if(Array.isArray(v[k]))v[k].slice(-300).forEach(x=>{if(typeof x==='string')ML[k].add(x.slice(0,24))})}catch(e){}
-function mlSave(){try{const keep=ML.ok?new Set(ML.all.map(m=>m.i)):null,o={};for(const k of ['r','d','n'])o[k]=[...ML[k]].filter(x=>!keep||keep.has(x)).slice(-300);localStorage.setItem('bftMl',JSON.stringify(o))}catch(e){}}   // 저장소에서 사라진 편지는 기록도 지움
+try{const v=JSON.parse(localStorage.getItem('bftMlA')||'null');if(Array.isArray(v))for(const m of v.slice(-120)){const e=mlClean(m);if(e&&e.s&&!idOld(e.i))ML.arc[e.i]=e}}catch(e){}
+function mlSaveA(){const ks=Object.keys(ML.arc);if(ks.length>120)ks.sort((a,b)=>ML.arc[a].t-ML.arc[b].t).slice(0,ks.length-120).forEach(k=>delete ML.arc[k]);
+  try{localStorage.setItem('bftMlA',JSON.stringify(Object.values(ML.arc)))}catch(e){}}
+function mlSave(){try{const keep=ML.ok?new Set(ML.all.map(m=>m.i).concat(Object.keys(ML.arc))):null,o={};for(const k of ['r','d','n'])o[k]=[...ML[k]].filter(x=>!keep||keep.has(x)).slice(-300);localStorage.setItem('bftMl',JSON.stringify(o))}catch(e){}}   // 저장소에서 사라진 편지는 기록도 지움
 const mlSig=m=>m.v>0?['ml',m.i,m.t,m.x,m.to,m.h,m.b,m.v]:['ml',m.i,m.t,m.x,m.to,m.h,m.b];   // 관리자 도장을 찍는 내용 (받는 사람·제목·내용·보관 기간을 바꾸면 도장이 안 맞음)
 function mlClean(m){if(!m||typeof m!=='object'||typeof m.i!=='string'||!/^m[0-9a-z]{4,20}$/.test(m.i))return null;
   const to=m.to==='*'||m.to==='@in'||m.to==='@out'?m.to:String(m.to||'').split(',').filter(x=>/^[A-Z2-9]{6}$/.test(x)).slice(0,60).join(',');if(!to)return null;   // *: 모두 · @in: 로그인한 사람 · @out: 로그인 안 한 사람 · 아니면 아이디들
   return {i:m.i,t:+m.t||0,x:+m.x||0,to,h:String(m.h||'').slice(0,30),b:String(m.b||'').slice(0,300),v:Math.max(0,Math.min(BL_MAX,Math.floor(+m.v)||0)),s:typeof m.s==='string'?m.s:''}}
 const mlFor=e=>e.to==='*'||(e.to==='@in'?!!ACC:e.to==='@out'?!ACC:e.to.split(',').includes(PID));   // 이 폰(지금 로그인 상태)이 받는 편지인지
-function mlRefilter(){const now=Date.now();ML.L=ML.all.filter(e=>e.x>now&&mlFor(e)&&e.s&&sgOk(mlSig(e),e.s))}
+function mlRefilter(){const now=Date.now(),ok=e=>mlFor(e)&&e.s&&sgOk(mlSig(e),e.s);
+  ML.L=ML.all.filter(e=>e.x>now&&ok(e));
+  let ch=false;for(const e of ML.L)if(!ML.arc[e.i]&&!ML.d.has(e.i)){ML.arc[e.i]=e;ch=true}if(ch)mlSaveA();   // 받은 편지는 지우기 전까지 이 폰에 보관
+  ML.E=Object.values(ML.arc).filter(e=>e.x<=now&&!ML.d.has(e.i)&&ok(e)).sort((a,b)=>b.t-a.t)}   // 기간이 지난 편지: 지우기 전까지 「만료됨」으로 남음 (볼은 못 받음)
 const mlDone=e=>!(e.v>0)||SH.mc.includes(e.i);   // 볼이 없거나 이미 받은 편지
 function mlClaim(i){const e=ML.L.find(x=>x.i===i);if(!e||!(e.v>0)||SH.mc.includes(i))return false;
+  if(e.x<=Date.now()){try{netToast('만료된 우편이에요')}catch(_){}mlRefilter();mlBadge();if(mlOpen())mlRender();return false}   // 만료된 편지의 볼은 못 받음
   SH.mc.push(i);SH.mc=SH.mc.slice(-500);blAdd(e.v);shSave();blUi();try{acNote()}catch(_){}
-  try{netToast('볼 +'+BLF(e.v)+' 받았어요 (지금 '+BLF(SH.b)+')')}catch(_){}return true}
+  try{blGain(e.v)}catch(_){}return true}
 function mlPull(d){                                   // 저장소 → 내 폰
   const now=Date.now(),A=[];if(Array.isArray(d.ml))for(const m of d.ml.slice(-200)){const e=mlClean(m);if(e&&e.x>now)A.push(e)}
   A.sort((a,b)=>b.t-a.t);ML.all=A;ML.ok=true;
-  ML.sa=!!ACC;mlRefilter();
+  ML.sa=!!ACC;
+  const had=new Set(A.map(e=>e.i));
+  if(Array.isArray(d.ml)){for(const k of Object.keys(ML.arc))if(ML.arc[k].x>Date.now()&&!had.has(k))delete ML.arc[k]}   // 관리자가 회수한 편지는 기간이 남았어도 사라짐
+  mlSaveA();mlRefilter();
   const fresh=ML.L.filter(e=>!ML.r.has(e.i)&&!ML.d.has(e.i)&&!ML.n.has(e.i));
   if(fresh.length){fresh.forEach(e=>ML.n.add(e.i));if(!NET.match&&!mlOpen())try{netToast('우편함에 새 편지가 왔어요')}catch(_){}}
   mlSave();mlBadge();if(mlOpen())mlRender()}
 const mlUnread=()=>ML.L.filter(e=>!ML.r.has(e.i)&&!ML.d.has(e.i)).length;
 function mlBadge(){const b=document.getElementById('mlbtn');if(!b)return;const n=mlUnread(),g=b.querySelector('.mlbg');if(g){g.hidden=!n;g.textContent=n>9?'9+':String(n)}b.classList.toggle('new',n>0)}
-let mlEl=null,mlCur='';
+let mlEl=null,mlCur='';try{mlRefilter()}catch(_){}
 const mlOpen=()=>!!(mlEl&&!mlEl.hidden);
-const ML_IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="5.3" width="18.4" height="13.4" rx="2.2"/><path d="M3.6 6.5 12 12.7l8.4-6.2"/><path d="M3.7 17.6l5.8-5.3M20.3 17.6l-5.8-5.3"/></svg>',
-  ML_IC2='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.2v8.3a1.8 1.8 0 0 0 1.8 1.8h14.4a1.8 1.8 0 0 0 1.8-1.8v-8.3"/><path d="M3 10.2 12 3.8l9 6.4"/><path d="M3.7 10.9 12 16.4l8.3-5.5"/></svg>';   // 안 읽은 편지(닫힌 봉투) · 읽은 편지(열린 봉투)
 function mlShow(){
   if(!mlEl){mlEl=document.createElement('div');mlEl.className='frmodal mlmodal';mlEl.hidden=true;
-    mlEl.innerHTML='<div class="frbox mlbox"><button type="button" class="frx" data-ml="close" aria-label="닫기">✕</button><div class="rtt">우편함</div><div class="mllist"></div><div class="mlfoot"><button type="button" class="frsm" data-ml="all">모두 읽음</button><button type="button" class="frsm" data-ml="clr">읽은 편지 지우기</button></div><div class="dmnote">편지는 보관 기간이 지나면 사라져요</div></div>';
+    mlEl.innerHTML='<div class="frbox mlbox"><button type="button" class="frx" data-ml="close" aria-label="닫기">✕</button><div class="rtt">우편함</div><div class="mllist"></div><div class="mlfoot"><button type="button" class="frsm" data-ml="all">모두 읽음</button><button type="button" class="frsm" data-ml="clr">읽은 우편 전부 삭제</button></div></div>';
     document.body.appendChild(mlEl);
     mlEl.addEventListener('click',e=>{if(e.target===mlEl){if(performance.now()-uiOpenT>450)mlHide();return}const b=e.target.closest('[data-ml]');if(!b)return;const a=b.dataset.ml,i=b.dataset.i||'';
       if(a==='close')mlHide();
       else if(a==='open'){mlCur=mlCur===i?'':i;if(mlCur&&!ML.r.has(i)){ML.r.add(i);mlSave();mlBadge()}mlRender()}   // 펼치면 읽음
       else if(a==='gift'){if(mlClaim(i))mlRender()}
-      else if(a==='del'){const e0=ML.L.find(x=>x.i===i);if(e0&&!mlDone(e0))return;ML.d.add(i);ML.r.add(i);if(mlCur===i)mlCur='';mlSave();mlBadge();mlRender()}
-      else if(a==='all'){ML.L.forEach(e=>ML.r.add(e.i));mlSave();mlBadge();mlRender()}
-      else if(a==='clr'){ML.L.forEach(e=>{if(ML.r.has(e.i)&&mlDone(e))ML.d.add(e.i)});mlCur='';mlSave();mlBadge();mlRender()}})}
+      else if(a==='del'){mlDel(i);mlAfter()}
+      else if(a==='all'){mlAll().forEach(e=>ML.r.add(e.i));mlSave();mlBadge();mlRender()}
+      else if(a==='clr'){mlAll().forEach(e=>{if(ML.r.has(e.i)&&!mlRisky(e))mlDel(e.i)});mlCur='';mlAfter()}})}   // 읽은 우편 전부 삭제 (아직 안 받은 볼이 있는 편지는 남김)
   mlEl.hidden=false;mlRender();if(Date.now()-(CLD.last||0)>15000)Promise.resolve(cldSync(false)).catch(()=>{})}   // 열 때 새 편지가 있는지 저장소를 한 번 더 봄
 function mlHide(){if(mlEl)mlEl.hidden=true}
+const mlRisky=e=>e.v>0&&e.x>Date.now()&&!SH.mc.includes(e.i);   // 아직 안 받은 볼이 남은 편지 (지우면 볼을 못 받음)
+const mlAll=()=>ML.L.filter(e=>!ML.d.has(e.i)).concat(ML.E);   // 우편함에 보이는 편지 (기간이 남은 것 → 만료된 것)
+function mlDel(i){ML.d.add(i);ML.r.add(i);delete ML.arc[i];if(mlCur===i)mlCur=''}
+function mlAfter(){mlRefilter();mlSave();mlSaveA();mlBadge();mlRender()}
+const ML_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function mlRender(){if(!mlOpen())return;
-  const box=mlEl.querySelector('.mllist'),L=ML.L.filter(e=>!ML.d.has(e.i));
-  const h=L.length?L.map(e=>{const rd=ML.r.has(e.i),op=mlCur===e.i,gf=e.v>0,got=gf&&SH.mc.includes(e.i);
-    return '<div class="mlit'+(rd?' rd':'')+'"><button type="button" class="mlhd" data-ml="open" data-i="'+e.i+'"><span class="mlic">'+(rd?ML_IC2:ML_IC)+'</span><span class="mlt"><b>'+netEsc(e.h||'(제목 없음)')+'</b><small><span class="mlag" data-t="'+e.t+'">'+mlAgo(e.t)+'</span> · <span class="mllf" data-x="'+e.x+'">'+mlLeft(e.x)+'</span></small></span>'+(gf?'<span class="mlgf'+(got?' dn':'')+'">'+(got?'받음':'볼 '+BLF(e.v))+'</span>':'')+(rd?'':'<i class="mlnew"></i>')+'</button>'
-      +(op?'<div class="mlbody">'+netEsc(e.b||'(내용 없음)')+(gf?'<div class="mlgift"><span class="mlgv"><i class="blb"></i>볼 '+BLF(e.v)+'</span>'+(got?'<span class="mlgd">받았어요</span>':'<button type="button" class="rbtn rgo" data-ml="gift" data-i="'+e.i+'">받기</button>')+'</div>':'')+'<div class="mlact">'+(mlDone(e)?'<button type="button" class="frsm" data-ml="del" data-i="'+e.i+'">지우기</button>':'')+'</div></div>':'')+'</div>'}).join('')
+  const box=mlEl.querySelector('.mllist'),now=Date.now(),L=mlAll();
+  const h=L.length?L.map(e=>{const ex=e.x<=now,rd=ML.r.has(e.i)||ex,op=mlCur===e.i,gf=e.v>0,got=gf&&SH.mc.includes(e.i);
+    const amt=gf?'<span class="mlgf'+(got?' dn':ex?' ex':'')+(BLF(e.v).length>9?' sm':'')+'"><i class="blb"></i><span class="bnum">'+blNum(e.v)+'</span>'+(got?'<em>받음</em>':'')+'</span>':'';
+    return '<div class="mlit'+(rd?' rd':'')+(ex?' ex':'')+'"><button type="button" class="mlhd" data-ml="open" data-i="'+e.i+'">'+(rd?'':'<i class="mlnew"></i>')
+      +'<span class="mlt"><b>'+netEsc(e.h||'(제목 없음)')+'</b><small><span class="mlag" data-t="'+e.t+'">'+mlAgo(e.t)+'</span> · '+(ex?'<span class="mlex">만료됨</span>':'<span class="mllf" data-x="'+e.x+'">'+mlLeft(e.x)+'</span>')+'</small></span>'+amt+'</button>'
+      +'<button type="button" class="mldx" data-ml="del" data-i="'+e.i+'" aria-label="지우기">'+ML_X+'</button>'
+      +(op?'<div class="mlbody">'+netEsc(e.b||'(내용 없음)')+(gf?'<div class="mlgift"><span class="mlgv"><i class="blb"></i>'+blNum(e.v)+'</span>'+(got?'<span class="mlgd">받았어요</span>':ex?'<span class="mlgd mlgx">만료됨</span>':'<button type="button" class="rbtn rgo" data-ml="gift" data-i="'+e.i+'">받기</button>')+'</div>':'')+'</div>':'')+'</div>'}).join('')
     :'<div class="rnone mlnone">'+(ML.ok?'받은 편지가 없어요':'편지를 불러오는 중...')+'</div>';
   if(box._h!==h){box._h=h;box.innerHTML=h}
   mlEl.querySelector('.mlfoot').hidden=!L.length}
@@ -9266,7 +9350,7 @@ const mlAgo=t=>{const s=Math.max(0,Math.floor((Date.now()-t)/1000));if(s<1)retur
   const mo=Math.floor(s/2592000),d=Math.floor(s%2592000/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),c=s%60;
   return (mo?mo+'개월'+(d?' '+d+'일':''):d?d+'일'+(h?' '+h+'시간':''):h?h+'시간'+(m?' '+m+'분':''):m?m+'분'+(c?' '+c+'초':''):c+'초')+' 전'};
 const mlLfTick=root=>{if(!root)return;root.querySelectorAll('.mllf').forEach(e=>{const t=mlLeft(+e.dataset.x);if(e.textContent!==t)e.textContent=t});root.querySelectorAll('.mlag').forEach(e=>{const t=mlAgo(+e.dataset.t);if(e.textContent!==t)e.textContent=t})};   // 남은 시간 글자만 바꿈 (목록을 다시 그리지 않아서 누르는 중에도 안 끊김)
-setInterval(()=>{if(!ML.ok)return;if(ML.sa!==!!ACC){ML.sa=!!ACC;mlRefilter();mlBadge();if(mlOpen())mlRender()}if(ML.L.some(e=>e.x<=Date.now())){ML.L=ML.L.filter(e=>e.x>Date.now());mlBadge();if(mlOpen())mlRender()}if(mlOpen())mlLfTick(mlEl)},1000);   // 보관 기간이 지난 편지는 바로 사라짐
+setInterval(()=>{if(!ML.ok)return;if(ML.sa!==!!ACC){ML.sa=!!ACC;mlRefilter();mlBadge();if(mlOpen())mlRender()}if(ML.L.some(e=>e.x<=Date.now())){mlRefilter();mlBadge();if(mlOpen())mlRender()}if(mlOpen())mlLfTick(mlEl)},1000);   // 보관 기간이 지난 편지는 「만료됨」으로 바뀌어 우편함에 남음
 /* 관리자: 편지 보내기 · 회수 (저장소에 도장 찍힌 편지를 넣고 빼기) */
 var MLA={to:'all',item:'',busy:false,rc:new Set()};
 const CHEVD='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>';   // v 모양
@@ -9306,8 +9390,6 @@ function mlSend(b){const w=document.querySelector('.adm');if(!w)return;const pv=
     if(v<1){say('볼 수를 넣어 주세요 (볼을 안 보내려면 "아이템 빼기"를 눌러 주세요)');return}if(v>BL_MAX){say('볼은 한 번에 '+BLF(BL_MAX)+'개까지 보낼 수 있어요');return}}
   const sec=mlDurSec();if(!(sec>=1&&sec<=ML_XMAX)){say(sec<1?'보관 기간을 1초 이상으로 정해 주세요':'보관 기간은 365일까지예요');return}
   const key=to+'|'+h+'|'+bd+'|'+sec+'|'+v;
-  if(!(b.dataset.arm&&Date.now()-b.dataset.arm<6000&&b.dataset.key===key)){b.dataset.arm=Date.now();b.dataset.key=key;b.textContent='한 번 더 누르면 보내요';say('받는 사람: '+desc+(v?' · 볼 '+BLF(v)+'개':'')+' · 제목: '+h+' · 보관 '+mlDurTxt(sec)+' — 맞으면 한 번 더 누르세요','#e3d94a');
-    setTimeout(()=>{if(b.isConnected&&Date.now()-(+b.dataset.arm||0)>=5900){delete b.dataset.arm;b.textContent='보내기'}},6000);return}
   delete b.dataset.arm;
   if(!sgHave()){say('이 폰에 관리자 도장이 없어요');return}
   b.disabled=true;b.textContent='보내는 중...';
@@ -9343,10 +9425,11 @@ function mlSentHTML(){const E=admEsc,P=rkPeople(),fd=t=>new Date(t).toLocaleStri
       +'<div class="admsk"><button type="button" class="admbtn admred" data-a="mlrc" data-i="'+E(e.i)+'">회수</button></div></div>'}).join('')}
 function mlAdmRender(){const w=document.querySelector('.adm');if(!w)return;const bx=w.querySelector('.mlsent');if(bx)bx.innerHTML=mlSentHTML();const c=w.querySelector('.mlcnt');if(c)c.textContent=ML.ok?ML.all.length+'개':''}
 /* ---------- 상점 (아직 준비 중: 곧 열려요) ---------- */
-let shEl=null,acEl=null;
-const SHS={tab:'nm',sel:'',tsel:'',cc:'#ff4d6d',arm:0,armT:0,hsv:[345,.7,1],drag:'',dw:null};
+let shEl=null,acEl=null,caEl=null;
+const SHS={tab:'mn',sel:'',tsel:'',cc:'#ff4d6d',arm:0,armT:0,hsv:[345,.7,1],drag:'',dw:null};
 const shOpen=()=>!!(shEl&&!shEl.hidden);
 const acOpen=()=>!!(acEl&&!acEl.hidden);
+const caOpen=()=>!!(caEl&&!caEl.hidden);
 const BLB=n=>'<i class="blb"></i>'+BLF(n);
 const MEDAL_SVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.2 2.6l2.9 5.9M15.8 2.6l-2.9 5.9"/><circle cx="12" cy="14.8" r="6.3"/><path d="M12 11.5l1 2.1 2.3.3-1.7 1.6.4 2.3-2-1.1-2 1.1.4-2.3-1.7-1.6 2.3-.3z" stroke-width="1.2"/></svg>';
 function shPvCol(){const s=SHS.sel;return s==='rb'?'rb':s==='cu'?SHS.cc:s||blMine().c}   // 미리보기 색 (고른 것 → 없으면 지금 쓰는 것)
@@ -9361,7 +9444,7 @@ function whlPos(h,s,v){const a=h*Math.PI/180,side=WHL.d*Math.SQRT2,ux=(s-.5)*sid
   return {hx:.5+WHL.rm*Math.cos(a),hy:.5-WHL.rm*Math.sin(a),kx:.5+(ux-uy)*k,ky:.5+(ux+uy)*k}}
 function whlHTML(){const [h,s,v]=SHS.hsv,hx=hsv2hex(h,s,v),p=whlPos(h,s,v),nm=PROF.name||NET.me.name||'내 이름';
   return '<div class="cwbox"><div class="cwpv">'+csSpan(netEsc(nm),hx)+'</div><div class="cw" style="--hc:hsl('+h.toFixed(1)+',100%,50%);--c:'+hx+'"><div class="cwr"></div><div class="cwd"></div><b class="cwh" style="left:'+(p.hx*100).toFixed(2)+'%;top:'+(p.hy*100).toFixed(2)+'%"></b><b class="cwk" style="left:'+(p.kx*100).toFixed(2)+'%;top:'+(p.ky*100).toFixed(2)+'%"></b></div>'
-    +'<div class="cwft"><code class="shhex">'+hx.toUpperCase()+'</code><small>고리는 색 · 안쪽은 진하기와 밝기</small></div></div>'}
+    +'<div class="cwft"><code class="shhex">'+hx.toUpperCase()+'</code></div></div>'}
 let shSaveT=0;
 function whlApply(){                               // 끌 때마다: 핸들 · 코드 · 이름 미리보기를 바로 바꿈 (산 뒤에는 내 이름 색도 같이 바뀜)
   const [h,s,v]=SHS.hsv,hx=hsv2hex(h,s,v);SHS.cc=hx;
@@ -9372,7 +9455,7 @@ function whlApply(){                               // 끌 때마다: 핸들 · �
   const t=shEl.querySelector('.shhex');if(t)t.textContent=hx.toUpperCase();
   const html=csSpan(netEsc(PROF.name||NET.me.name||'내 이름'),hx),a1=shEl.querySelector('.cwpv'),a2=shEl.querySelector('.shpvn');
   if(a1)a1.innerHTML=html;if(a2&&SHS.sel==='cu')a2.innerHTML=html;
-  if(SH.own.includes('cu')){SH.cc=hx;clearTimeout(shSaveT);shSaveT=setTimeout(shSave,400);if(SH.nc==='cu')csPubSoon()}}
+}
 function whlPt(e,w){const r=w.getBoundingClientRect(),nx=(e.clientX-r.left)/r.width-.5,ny=(e.clientY-r.top)/r.height-.5,k=Math.SQRT1_2;return {nx,ny,ux:(nx+ny)*k,uy:(ny-nx)*k}}
 function whlMove(e){const w=SHS.dw;if(!w||!w.isConnected)return;const q=whlPt(e,w),side=WHL.d*Math.SQRT2;
   if(SHS.drag==='h')SHS.hsv[0]=((Math.atan2(-q.ny,q.nx)*180/Math.PI)+360)%360;
@@ -9383,24 +9466,31 @@ function whlDown(e){const w=e.target.closest&&e.target.closest('.cw');if(!w||(e.
   SHS.drag=Math.abs(q.ux)<=half&&Math.abs(q.uy)<=half?'sv':'h';SHS.dw=w;   // 마름모 안을 누르면 진하기 · 밝기, 바깥은 색
   try{w.setPointerCapture(e.pointerId)}catch(_){}
   e.preventDefault();whlMove(e)}
-function whlEnd(){if(!SHS.drag)return;SHS.drag='';clearTimeout(shSaveT);if(SH.own.includes('cu'))shSave()}
+function whlEnd(){if(!SHS.drag)return;SHS.drag='';shRender()}   // 색을 다 고르면 사기 버튼을 새로 그림 (색은 사야 바뀜)
 function ttPvName(t){return csSpan(netEsc(PROF.name||NET.me.name||'내 이름'),blMine().c)+(t?'<span class="'+ttcl(t)+'">'+netEsc(t)+'</span>':'')}
 function shRenderTt(box){                          // 칭호 탭: 사면 이름 옆에 붙는 칭호
   const sc=box.querySelector('.shscroll'),st=sc?sc.scrollTop:0,s=SHS.tsel,x=ttShopOf(s),has=k=>SH.ti.includes(k),cur=SH.tt;
   const h='<div class="shpv"><div class="shpvn">'+ttPvName(x?x[1]:cur)+'</div><small>미리보기</small></div>'
-    +'<div class="shsec"><b>칭호</b><span>이름 옆에 붙어요</span></div>'
-    +TT_SHOP.map(([k,n,p])=>'<button type="button" class="shrow'+(s===k?' sel':'')+'" data-sh="ts" data-v="'+k+'"><span class="shtc"><span class="'+ttcl(n)+'">'+netEsc(n)+'</span></span><span class="shrt"><b>'+(has(k)?'산 칭호':BLB(p))+'</b><small>'+(has(k)?(cur===n?'쓰는 중':'눌러서 쓰기'):'사면 바로 써요')+'</small></span></button>').join('')
-    +'<div class="shnote">업적을 달성하면 다른 칭호도 얻어요. 쓰는 칭호는 프로필에서도 바꿀 수 있어요.</div>';
+    +'<div class="shsec"><b>칭호</b></div>'
+    +TT_SHOP.map(([k,n,p])=>'<button type="button" class="shrow'+(s===k?' sel':'')+'" data-sh="ts" data-v="'+k+'"><span class="shtc"><span class="'+ttcl(n)+'">'+netEsc(n)+'</span></span><span class="shrt"><b>'+(has(k)?'산 칭호':BLB(p))+'</b>'+(has(k)?'<small>'+(cur===n?'쓰는 중':'눌러서 쓰기')+'</small>':'')+'</span></button>').join('')
+    ;
   let act;
-  if(!x)act='<div class="shact"><span class="shat">눌러서 미리 보세요</span>'+(cur?'<button type="button" class="rbtn" data-sh="off">칭호 빼기</button>':'')+'</div>';
-  else if(!has(s)){const can=SH.b>=x[2];act='<div class="shact"><span class="shat"><b>'+netEsc(x[1])+'</b></span><button type="button" class="rbtn rgo shbuy" data-sh="buy"'+(can?'':' disabled')+'>'+(can?(SHS.arm?'한 번 더 누르면 사요':BLF(x[2])+'볼로 사기'):'볼이 모자라요')+'</button></div>'}
+  if(!x)act='<div class="shact"><span class="shat">눌러서 미리 보기</span>'+(cur?'<button type="button" class="rbtn" data-sh="off">칭호 빼기</button>':'')+'</div>';
+  else if(!has(s)){const can=SH.b>=x[2];act='<div class="shact"><span class="shat"><b>'+netEsc(x[1])+'</b></span><button type="button" class="rbtn rgo shbuy" data-sh="buy"'+(can?'':' disabled')+'>'+(can?(BLF(x[2])+'볼로 사기'):'볼이 모자라요')+'</button></div>'}
   else if(cur===x[1])act='<div class="shact"><span class="shat"><b>'+netEsc(x[1])+'</b> 쓰는 중</span><button type="button" class="rbtn" data-sh="off">빼기</button></div>';
   else act='<div class="shact"><span class="shat"><b>'+netEsc(x[1])+'</b></span><button type="button" class="rbtn rgo" data-sh="use">쓰기</button></div>';
   box.innerHTML='<div class="shscroll">'+h+'</div>'+act;
   const n=box.querySelector('.shscroll');if(n)n.scrollTop=st}
+function shRenderMn(box){                          // 메인 탭: 일일 무료 볼
+  const sc=box.querySelector('.shscroll'),st=sc?sc.scrollTop:0,ok=dfReady();
+  box.innerHTML='<div class="shscroll"><div class="dfc"><div class="dft">일일 무료 볼</div><button type="button" class="dfbtn" data-sh="df"'+(ok?'':' disabled')+'>'+(ok?'<i class="blb"></i>무료 볼 받기':'오늘은 받았어요')+'</button></div></div>';
+  const n=box.querySelector('.shscroll');if(n)n.scrollTop=st}
+setInterval(()=>{try{if(shOpen()&&SHS.tab==='mn'&&dfReady()!==!!shEl.querySelector('.dfbtn:not([disabled])'))shRender()}catch(_){}},1000);   // 밤 12시가 지나면 다시 받을 수 있게
 function shRender(){
   if(!shEl)return;
   const box=shEl.querySelector('.shmain');shEl.querySelectorAll('.shtab').forEach(t=>t.classList.toggle('on',t.dataset.v===SHS.tab));blUi();
+  const mt=shEl.querySelector('.shtab[data-v="mn"]');if(mt)mt.classList.toggle('new',dfReady());
+  if(SHS.tab==='mn'){shRenderMn(box);return}
   if(SHS.tab==='tt'){shRenderTt(box);return}
   const sc=box.querySelector('.shscroll'),st=sc?sc.scrollTop:0,has=x=>SH.own.includes(x),eq=SH.nc,s=SHS.sel;
   const nm=PROF.name||NET.me.name||'내 이름';
@@ -9408,14 +9498,18 @@ function shRender(){
     +'<div class="shsec"><b>기본 색</b><span>하나에 '+BLB(BL_PRICE.c)+'</span></div><div class="shsw">'
     +BL_COLORS.map(([n,c])=>'<button type="button" class="sws'+(has(c)?' own':'')+(eq===c?' eq':'')+(s===c?' sel':'')+'" data-sh="sw" data-v="'+c+'" style="--c:'+c+'" aria-label="'+n+'"><i></i></button>').join('')+'</div>'
     +'<div class="shsec"><b>커스텀 색</b><span>'+BLB(BL_PRICE.cu)+'</span></div>'
-    +'<button type="button" class="shrow'+(s==='cu'?' sel':'')+'" data-sh="sw" data-v="cu"><span class="sws cu'+(has('cu')?' own':'')+(eq==='cu'?' eq':'')+'"><i></i></span><span class="shrt"><b>원하는 색으로</b><small>'+(has('cu')?'색을 마음대로 바꿀 수 있어요':'사면 색을 직접 정할 수 있어요')+'</small></span></button>'
+    +'<button type="button" class="shrow'+(s==='cu'?' sel':'')+'" data-sh="sw" data-v="cu"><span class="sws cu'+(has('cu')?' own':'')+(eq==='cu'?' eq':'')+'"><i></i></span><span class="shrt"><b>원하는 색으로</b></span></button>'
     +(s==='cu'?whlHTML():'')
     +'<div class="shsec"><b>무지개</b><span>'+BLB(BL_PRICE.rb)+'</span></div>'
-    +'<button type="button" class="shrow'+(s==='rb'?' sel':'')+'" data-sh="sw" data-v="rb"><span class="sws rbw'+(has('rb')?' own':'')+(eq==='rb'?' eq':'')+'"><i></i></span><span class="shrt"><b><span class="nmc rbn">반짝반짝 무지개</span></b><small>색이 예쁘게 계속 움직여요</small></span></button>';
+    +'<button type="button" class="shrow'+(s==='rb'?' sel':'')+'" data-sh="sw" data-v="rb"><span class="sws rbw'+(has('rb')?' own':'')+(eq==='rb'?' eq':'')+'"><i></i></span><span class="shrt"><b><span class="nmc rbn">반짝반짝 무지개</span></b></span></button>';
   let act;
-  if(!s)act='<div class="shact"><span class="shat">눌러서 미리 보세요</span>'+(eq?'<button type="button" class="rbtn" data-sh="off">기본 색으로</button>':'')+'</div>';
-  else{const k=s==='cu'||s==='rb'?s:'c',price=BL_PRICE[k],name=shItemName(s);
-    if(!has(s)){const can=SH.b>=price;act='<div class="shact"><span class="shat"><b>'+name+'</b> '+BLB(price)+'</span><button type="button" class="rbtn rgo shbuy" data-sh="buy"'+(can?'':' disabled')+'>'+(can?(SHS.arm?'한 번 더 누르면 사요':BLF(price)+'볼로 사기'):'볼이 모자라요')+'</button></div>'}
+  if(!s)act='<div class="shact"><span class="shat">눌러서 미리 보기</span>'+(eq?'<button type="button" class="rbtn" data-sh="off">기본 색으로</button>':'')+'</div>';
+  else if(s==='cu'){const price=BL_PRICE.cu,same=has('cu')&&String(SHS.cc).toLowerCase()===String(SH.cc).toLowerCase();   // 커스텀 색은 색을 바꿀 때마다 새로 삼
+    if(!same){const can=SH.b>=price;act='<div class="shact"><span class="shat"><b>커스텀 색</b> '+BLB(price)+'</span><button type="button" class="rbtn rgo shbuy" data-sh="buy"'+(can?'':' disabled')+'>'+(can?BLF(price)+'볼로 사기':'볼이 모자라요')+'</button></div>'}
+    else if(eq==='cu')act='<div class="shact"><span class="shat"><b>커스텀 색</b> 쓰는 중</span><button type="button" class="rbtn" data-sh="off">빼기</button></div>';
+    else act='<div class="shact"><span class="shat"><b>커스텀 색</b></span><button type="button" class="rbtn rgo" data-sh="use">쓰기</button></div>'}
+  else{const k=s==='rb'?s:'c',price=BL_PRICE[k],name=shItemName(s);
+    if(!has(s)){const can=SH.b>=price;act='<div class="shact"><span class="shat"><b>'+name+'</b> '+BLB(price)+'</span><button type="button" class="rbtn rgo shbuy" data-sh="buy"'+(can?'':' disabled')+'>'+(can?(BLF(price)+'볼로 사기'):'볼이 모자라요')+'</button></div>'}
     else if(eq===s)act='<div class="shact"><span class="shat"><b>'+name+'</b> 쓰는 중</span><button type="button" class="rbtn" data-sh="off">빼기</button></div>';
     else act='<div class="shact"><span class="shat"><b>'+name+'</b> 가지고 있어요</span><button type="button" class="rbtn rgo" data-sh="use">쓰기</button></div>'}
   box.innerHTML='<div class="shscroll">'+h+'</div>'+act;
@@ -9423,17 +9517,16 @@ function shRender(){
 function shBuy(){
   const tt=SHS.tab==='tt',s=tt?SHS.tsel:SHS.sel;if(!s)return;
   const x=tt?ttShopOf(s):null,price=tt?(x?x[2]:0):BL_PRICE[s==='cu'||s==='rb'?s:'c'];
-  if(tt?(!x||SH.ti.includes(s)):SH.own.includes(s))return;if(SH.b<price)return;
-  if(!(SHS.arm&&Date.now()-SHS.arm<4000)){SHS.arm=Date.now();clearTimeout(SHS.armT);SHS.armT=setTimeout(()=>{SHS.arm=0;if(shOpen())shRender()},4000);shRender();return}   // 두 번 눌러야 삼
+  if(tt?(!x||SH.ti.includes(s)):(s!=='cu'&&SH.own.includes(s)))return;if(SH.b<price)return;
   SHS.arm=0;clearTimeout(SHS.armT);
   blAdd(-price);
-  if(tt){SH.ti.push(s);SH.tt=x[1]}else{SH.own.push(s);if(s==='cu')SH.cc=SHS.cc;SH.nc=s}
+  if(tt){SH.ti.push(s);SH.tt=x[1]}else{if(!SH.own.includes(s))SH.own.push(s);if(s==='cu')SH.cc=SHS.cc;SH.nc=s}
   SH.bn++;shSave();csPub();blUi();try{acNote()}catch(_){}
-  shRender();try{netToast(tt?'샀어요! 칭호를 바로 쓰고 있어요':'샀어요! 바로 쓰고 있어요')}catch(_){}}
+  shRender();try{netToast('샀어요!')}catch(_){}}
 function shShow(){
   if(!shEl){shEl=document.createElement('div');shEl.className='frmodal shmodal';shEl.hidden=true;
     shEl.innerHTML='<div class="frbox shbox"><button type="button" class="frx" data-sh="close" aria-label="닫기">✕</button><div class="shhd"><div class="rtt">상점</div><span class="blpill sh" aria-label="내 볼"><b class="bln">0</b></span></div>'
-      +'<div class="shbd"><div class="shtabs"><button type="button" class="shtab on" data-sh="tab" data-v="nm">이름</button><button type="button" class="shtab" data-sh="tab" data-v="tt">칭호</button></div><div class="shmain"></div></div></div>';
+      +'<div class="shbd"><div class="shtabs"><button type="button" class="shtab on" data-sh="tab" data-v="mn">메인</button><button type="button" class="shtab" data-sh="tab" data-v="nm">이름</button><button type="button" class="shtab" data-sh="tab" data-v="tt">칭호</button></div><div class="shmain"></div></div></div>';
     document.body.appendChild(shEl);
     shEl.addEventListener('click',e=>{
       if(e.target===shEl){if(performance.now()-uiOpenT>450)shHide();return}
@@ -9442,12 +9535,13 @@ function shShow(){
       else if(a==='tab'){SHS.tab=b.dataset.v;SHS.arm=0;shRender()}
       else if(a==='sw'){SHS.sel=b.dataset.v;SHS.arm=0;shRender()}
       else if(a==='ts'){SHS.tsel=b.dataset.v;SHS.arm=0;shRender()}
+      else if(a==='df'){const n=dfClaim();shRender();if(n)blPop(n)}
       else if(a==='buy')shBuy();
       else if(a==='use'){if(SHS.tab==='tt'){const x=ttShopOf(SHS.tsel);if(x)ttSet(x[1])}else{SH.nc=SHS.sel;shSave();csPub()}shRender()}
       else if(a==='off'){if(SHS.tab==='tt')ttSet('');else{SH.nc='';shSave();csPub()}shRender()}});
     shEl.addEventListener('pointerdown',whlDown);shEl.addEventListener('pointermove',e=>{if(SHS.drag)whlMove(e)});shEl.addEventListener('pointerup',whlEnd);shEl.addEventListener('pointercancel',whlEnd);
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&shOpen())shHide()})}
-  SHS.tab='nm';SHS.sel='';SHS.tsel='';SHS.arm=0;SHS.cc=SH.cc;SHS.hsv=hex2hsv(SH.cc);SHS.drag='';shEl.hidden=false;shRender()}
+  SHS.tab='mn';SHS.sel='';SHS.tsel='';SHS.arm=0;SHS.cc=SH.cc;SHS.hsv=hex2hsv(SH.cc);SHS.drag='';shEl.hidden=false;shRender()}
 function shHide(){if(shEl)shEl.hidden=true}
 /* 업적 */
 function acRender(){
@@ -9469,15 +9563,45 @@ function acShow(){
       if(e.target===acEl){if(performance.now()-uiOpenT>450)acHide();return}
       const b=e.target.closest('[data-ac]');if(!b)return;const a=b.dataset.ac;
       if(a==='close')acHide();
-      else if(a==='get'){const x=achOf(b.dataset.i);if(x&&acClaim(x[0])){try{netToast('볼 +'+x[6]+' · 칭호 「'+x[7]+'」를 얻었어요')}catch(_){}acRender()}}});
+      else if(a==='get'){const x=achOf(b.dataset.i);if(x&&acClaim(x[0])){try{blGain(x[6])}catch(_){}acRender()}}});
     document.addEventListener('keydown',e=>{if(e.key==='Escape'&&acOpen())acHide()})}
   acEl.hidden=false;acRender();try{acNote()}catch(_){}}
 function acHide(){if(acEl)acEl.hidden=true}
+/* 출석 달력 */
+function caRender(){
+  if(!caEl)return;
+  const ready=atReady(),st=(SH.an>=7&&ready)?0:SH.an,tg=ready?st+1:0;let h='';
+  for(let i=1;i<=7;i++){
+    const w=AT[i-1],done=i<=st,got=done?SH.ar[i-1]:0,big=i===7;
+    const amt=done&&got>0?'+'+BLF(got):(w[0]===w[1]?BLF(w[0]):BLF(w[0])+'~'+BLF(w[1]));
+    h+='<div class="cad'+(done?' done':'')+((i===tg||(!ready&&i===SH.an))?' today':'')+(big?' big':'')+'"><span class="cast">✓</span><small>'+i+'일차</small>'
+      +'<div class="cav'+(!done&&w[0]!==w[1]?' rg':'')+'"><i class="blb"></i>'+amt+'</div>'
+      +(big?'<div class="cav"><span class="'+ttcl(AT_TT)+'">'+AT_TT+'</span></div>':'')
+      +'</div>'}
+  const sc=caEl.querySelector('.cascr'),sp=sc.scrollTop;
+  sc.innerHTML='<div class="cagrid">'+h+'</div>';sc.scrollTop=sp;
+  const bt=caEl.querySelector('.caact button');bt.disabled=!ready;bt.textContent=ready?'수령':'수령 완료'}
+function caShow(){
+  if(!caEl){caEl=document.createElement('div');caEl.className='frmodal camodal';caEl.hidden=true;
+    caEl.innerHTML='<div class="frbox cabox"><button type="button" class="frx" data-ca="close" aria-label="닫기">✕</button><div class="rtt">출석</div><div class="cascr"></div><div class="caact"><button type="button" class="rbtn rgo" data-ca="claim">수령</button></div></div>';
+    document.body.appendChild(caEl);
+    caEl.addEventListener('click',e=>{if(e.target===caEl){if(performance.now()-uiOpenT>450)caHide();return}const b=e.target.closest('[data-ca]');if(!b||b.disabled)return;
+      if(b.dataset.ca==='close')caHide();
+      else if(b.dataset.ca==='claim'){const r=atClaim();if(r){caRender();if(r.rnd)blPop(r.g);else blGain(r.g)}}});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&caOpen())caHide()})}
+  caEl.hidden=false;caRender();atUi()}
+function caHide(){if(caEl)caEl.hidden=true}
+let caPopDay='',caWant=true;   // caWant: 들어와서 출석 창을 띄울 차례를 기다리는 중
+const caFree=()=>phase==='idle'&&!document.body.classList.contains('in-net')&&!document.querySelector('.lgn,.blpop,.adm,.pnmodal:not([hidden]),.frmodal:not([hidden]),.modal:not([hidden])');
+setInterval(()=>{try{if(!caWant)return;if(!atReady()||caPopDay===kstDay()){caWant=false;return}if(!caFree())return;caWant=false;caPopDay=kstDay();caShow()}catch(_){}},1200);   // 오늘 출석을 안 받았으면 들어왔을 때 출석 창이 열림 (받았으면 안 열림)
+setTimeout(()=>{try{atUi();shBadge()}catch(e){dbgErr((e&&e.message)||e,1)}},600);
+setInterval(()=>{try{atUi();shBadge();if(caOpen())caRender()}catch(_){}},30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{atUi();shBadge();if(atReady()&&caPopDay!==kstDay())caWant=true}catch(_){}}});
 setInterval(()=>{if(acOpen())acRender()},5000);
 /* 프로필의 칭호 정하기 */
 function ttRowHTML(){const own=ttOwned();
   let h='<div class="prtt">칭호 <b>'+(SH.tt?'<span class="'+ttcl(SH.tt)+'">'+netEsc(SH.tt)+'</span>':'없음')+'</b><button type="button" class="frsm" data-p="tt">'+(PRS.tt?'닫기':'정하기')+'</button></div>';
-  if(PRS.tt)h+='<div class="ttpick">'+(own.length?'<button type="button" class="ttpk'+(SH.tt?'':' on')+'" data-p="ttset" data-v="">없음</button>'+own.map(t=>'<button type="button" class="ttpk'+(TT_GOLD.has(t)?' gold':'')+(SH.tt===t?' on':'')+'" data-p="ttset" data-v="'+netEsc(t)+'">'+netEsc(t)+'</button>').join(''):'<div class="rnone">아직 얻은 칭호가 없어요. 업적을 달성하고 받아 보세요!</div>')+'</div>';
+  if(PRS.tt)h+='<div class="ttpick">'+(own.length?'<button type="button" class="ttpk'+(SH.tt?'':' on')+'" data-p="ttset" data-v="">없음</button>'+own.map(t=>'<button type="button" class="ttpk'+(TT_GOLD.has(t)?' gold':'')+(SH.tt===t?' on':'')+'" data-p="ttset" data-v="'+netEsc(t)+'">'+netEsc(t)+'</button>').join(''):'<div class="rnone">얻은 칭호가 없어요</div>')+'</div>';
   return h}
 let cheerBtn=null;
 function cheerUpd(){const on=!!NET.spec;document.body.classList.toggle('spec-u',on&&!admIs());
