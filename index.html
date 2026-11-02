@@ -2585,7 +2585,7 @@ function startCast(c){
 
 /* ---------- 제리얌: 음식 소환 / 밥상 던지기 / 포크 ---------- */
 const HIT_GUARD=.05;                  // 부딪힘 계열 타격: 같은 충돌이 한 번에 여러 번 세어지지 않게 하는 아주 짧은 간격(초)
-const JY={burgerHeal:40,buffMul:1.5,buffSec:5,strAtk:10,strSec:10,wallDmg2:8,maxFood:150,
+const JY={burgerHeal:25,buffMul:1.5,buffSec:5,strAtk:10,strSec:10,wallDmg2:8,maxFood:150,
   tableDmg:63,tableSpeed:1.1,tableLife:8,knockSec:1.5,knockSpeed:1.6,wallDmg:3,
   forkDmg:28,forkExtra:18,forkOdds:[.75,.65,.4,.2],
   bumpDmg:6,bumpSec:1,bumpCd:HIT_GUARD};
@@ -5245,7 +5245,7 @@ renderGuide();
 const PATCH_VERSION='4.13.36';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
-  {ver:'4.13.36',date:'2026-11-02',chars:[],fx:[],
+  {ver:'4.13.36',date:'2026-11-02',chars:[{who:'제리얌',tag:'nerf',lines:['회복량 전체 {-15} 하락','햄버거 회복 {-40 → 25}']}],fx:[],
    sys:['상점에 메인 탭 추가','출석 추가','우편 보관 기간이 지나면 만료됨','우편마다 삭제 버튼 · 읽은 우편 전부 삭제 추가','볼 개수는 항상 숫자로 표시','커스텀 색은 색을 바꿀 때마다 새로 사야 함','상점에서 한 번만 눌러도 구매됨']},
   {ver:'4.13.35',date:'2026-11-02',chars:[
    {who:'권루트',tag:'adj',lines:['L을 가져가 확률 {+20% → 25%}','탱고 확률 {-30% → 25%}','스킬 쿨타임 {+6.5초 → 6초}','워프 메이커 · 포탈 오류: 권루트가 포탈을 탈 때마다 {+체력 8 회복}','측면대측면 지속 시간 {+2초 → 3초}','{~측면대측면 중 우주의 반응(블랙홀) 지속 피해를 물리공격처럼 피하던 버그 수정}','{~권루트가 이기면 경기장에 \'L을 가져가\' 영상이 연하게 반복 재생됨}']},
