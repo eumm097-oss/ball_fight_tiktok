@@ -928,8 +928,8 @@ body.scr-2v2.bn2 .p3,body.scr-2v2.bn2 .p4,body.scr-2v2.bn1 .p2,body.scr-2v2.bn1 
       <button class="half" type="button" data-name="김동희세계관" data-cls="kd" data-kind="kd">김동희세계관</button>
       <button class="half" type="button" data-name="산와머니" data-cls="swm" data-kind="swm">산와머니</button>
       <button class="half" type="button" data-name="권루트" data-cls="kr" data-kind="kr">권루트</button>
+      <button class="half" type="button" data-name="슬계" data-cls="sg" data-kind="sg">슬계</button>
       <button class="half lockd" type="button" data-name="설화" data-cls="sh" data-kind="sh" data-lock="h:1xsccyc">설화</button>
-      <button class="half lockd" type="button" data-name="슬계" data-cls="sg" data-kind="sg" data-lock="h:1vcv924">슬계</button>
       <button class="half lockd" type="button" data-name="비누계" data-cls="bn" data-kind="bn" data-lock="h:g8ti8k">비누계</button>
     </div>
   </div>
@@ -5281,7 +5281,6 @@ const INFO=[
      {n:'스피드러너',p:'패시브',d:'항상 이동속도 증가가 걸려 있다(×'+SW.run+').'},
       {n:'3초의 기적',p:'패시브',d:'타워의 남은 시간이 '+SW.buffAt+'초 이하가 되면 이동속도 증가II가 걸린다(×'+SW.buff+').'}]},
   {kind:'sh',cls:'sh',name:'설화',color:'#e0709a',tag:'아직 스킬이 없는 공',locked:true,chips:['HP '+STATS.sh.max,'이동속도 '+STATS.sh.speed,'스킬 쿨타임 없음'],skills:[]},
-  {kind:'sg',cls:'sg',name:'슬계',color:'#8fdc8f',tag:'슬라임으로 공격하는 공',locked:true,chips:['HP '+STATS.sg.max,'이동속도 '+STATS.sg.speed,'스킬 쿨타임 '+STATS.sg.cooldown+'초'],skills:[{n:'끈적한 슬라임',p:'패시브',d:'벽에 닿으면 그 벽과 슬계 사이에 슬라임이 늘어나 이어진다. 이어진 채로 다른 벽에 닿으면 슬라임이 두 벽 사이에 붙고, 다음에 벽에 닿으면 새 슬라임이 또 이어진다. 상대가 슬라임에 닿으면 '+SLM.dmg+' 데미지를 입고 '+SLM.slowSec+'초 동안 슬로우에 걸린다. 계속 닿아 있으면 '+SLM.tick+'초마다 다시 데미지를 입고, 슬라임 여러 줄에 닿으면 줄마다 따로 데미지를 입는다.'},{n:'빨아들이기',p:STATS.sg.cooldown+'초마다',d:'깔아 둔 슬라임을 전부 슬계 쪽으로 빨아들인다. 빨려 오는 슬라임에 닿은 상대는 '+SLM.abDmg+' 데미지를 입고, 슬계는 빨아들인 슬라임 1개당 체력을 '+SLM.abHeal+' 회복한다.'}]},
   {kind:'bn',cls:'bn',name:'비누계',color:'#9ad7f5',tag:'아직 스킬이 없는 공',locked:true,chips:['HP '+STATS.bn.max,'이동속도 '+STATS.bn.speed,'스킬 쿨타임 없음'],skills:[]},
   {kind:'kr',cls:'kr',name:'권루트',color:'#14a37f',tag:'랜덤으로 스킬을 쓰는 공',chips:['HP '+STATS.kr.max,'이동속도 '+STATS.kr.speed,'스킬 쿨타임 '+STATS.kr.cooldown+'초'],skills:[
      {n:'L을 가져가',p:KR_ODDS.lg+'%',d:'상대가 있는 자리에 '+KR.lGap+'초 간격으로 '+(KR.lN*KR.lGap).toFixed(1)+'초 동안 L을 계속 깐다(총 '+KR.lN+'개). 다 깔고 나면 만든 순서대로 '+KR.lPull+'초 간격으로 권루트가 L을 속도 '+KR.lSp+'로 끌어온다. 끌려오는 L에 닿은 상대는 '+KR.lDmg+' 데미지를 입고, L이 권루트에게 도착할 때마다 체력을 '+(KR.lHeal/KR.lN)+' 회복한다(L '+KR.lN+'개가 다 도착하면 총 '+KR.lHeal+').'},
@@ -5290,6 +5289,7 @@ const INFO=[
      {n:'포탈 오류',p:KR_ODDS.err+'%',d:'워프 메이커와 똑같지만, 상대가 탄 포탈이 우주의 반응(블랙홀)로 변한다. 김켈리의 우주의 반응보다 크기가 작고(×'+KR.bhSc+', 반지름 '+Math.round(BH.size*KR.bhSc*50)+'m) 중심 초당 피해가 '+KR.bhDpsCut+' 낮다(최대 '+(BH.rMax-KR.bhDpsCut)+').'},
      {n:'탱고',p:KR_ODDS.tango+'%',d:'하늘에서 '+KR.roseSec+'초 동안 장미가 떨어진다. 장미마다 각도가 다르고, 맞으면 '+KR.roseDmg+' 데미지를 입는다. 장미는 맞아도 사라지지 않고 끝까지 떨어지며, 넉백은 없다.'}
    ]},
+  {kind:'sg',cls:'sg',name:'슬계',color:'#8fdc8f',tag:'슬라임으로 공격하는 공',chips:['HP '+STATS.sg.max,'이동속도 '+STATS.sg.speed,'스킬 쿨타임 '+STATS.sg.cooldown+'초'],skills:[{n:'끈적한 슬라임',p:'패시브',d:'벽에 닿으면 그 벽과 슬계 사이에 슬라임이 늘어나 이어진다. 이어진 채로 다른 벽에 닿으면 슬라임이 두 벽 사이에 붙고, 다음에 벽에 닿으면 새 슬라임이 또 이어진다. 상대가 슬라임에 닿으면 '+SLM.dmg+' 데미지를 입고 '+SLM.slowSec+'초 동안 슬로우에 걸린다. 계속 닿아 있으면 '+SLM.tick+'초마다 다시 데미지를 입고, 슬라임 여러 줄에 닿으면 줄마다 따로 데미지를 입는다.'},{n:'빨아들이기',p:STATS.sg.cooldown+'초마다',d:'깔아 둔 슬라임을 전부 슬계 쪽으로 빨아들인다. 빨려 오는 슬라임에 닿은 상대는 '+SLM.abDmg+' 데미지를 입고, 슬계는 빨아들인 슬라임 1개당 체력을 '+SLM.abHeal+' 회복한다.'}]},
 ];
 const CHEV="<svg viewBox='0 0 24 10' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><polyline points='2.5,2.5 12,7.5 21.5,2.5'/></svg>";   // 납작하고 각이 넓은 ∨
 function renderFx(){                 // 상태효과 정리 (수치는 게임에서 쓰는 값에서 가져와요)
@@ -5357,9 +5357,11 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.36';
+const PATCH_VERSION='4.13.37';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.37',date:'2026-11-03',chars:[{who:'슬계',tag:'new',lines:['신규 캐릭터 추가']}],fx:[],
+   sys:['매칭 중에 다른 앱으로 나가도 매칭이 계속됨','매칭이 잡히면 다른 앱에 있어도 알림이 옴','내가 만든 방에 누가 들어오면 다른 앱에 있어도 알림이 옴']},
   {ver:'4.13.36',date:'2026-11-02',chars:[{who:'제리얌',tag:'nerf',lines:['회복량 전체 {-15} 하락','햄버거 회복 {-40 → 25}']},{who:'낭만박상환',tag:'nerf',lines:['꼼짝마! 슬로우 {-1.75초 → 없음}']}],fx:[],
    sys:['상점에 메인 탭 추가','출석 추가','우편 보관 기간이 지나면 만료됨','우편마다 삭제 버튼 · 읽은 우편 전부 삭제 추가','볼 개수는 항상 숫자로 표시','커스텀 색은 색을 바꿀 때마다 새로 사야 함','상점에서 한 번만 눌러도 구매됨']},
   {ver:'4.13.35',date:'2026-11-02',chars:[
@@ -6792,6 +6794,17 @@ function netPaintOnl(){
 onlEl.querySelector('.mkbtn').addEventListener('click',()=>netFind());
 onlEl.querySelector('.rmbtn').addEventListener('click',()=>{if(NET.state!=='idle'&&!NET.room)return;if(NET.room){roomShow('room');return}if(!NET.me.name){netMsg('이름부터 정해주세요!','bad');return}roomShow('menu')});
 
+/* 매칭 알림: 매칭 중에 다른 앱·탭에 가 있어도 매칭이 잡히면 폰 알림으로 알려 줌 (매칭을 시작할 때 알림 허용을 한 번 물어봄) */
+let mnReg=null,mnAsked=false;
+try{if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').then(r=>{mnReg=r}).catch(()=>{})}catch(_){}   // 안드로이드 크롬은 서비스 워커로만 알림을 띄울 수 있음
+function mnAsk(){try{if(mnAsked||!('Notification' in window)||Notification.permission!=='default')return;mnAsked=true;const p=Notification.requestPermission();if(p&&p.catch)p.catch(()=>{})}catch(_){}}   // 매칭 버튼을 누를 때 (아직 안 정했으면 한 번)
+function mnShow(t,tag){                              // 다른 앱·탭에 가 있을 때만 알림 (게임을 보고 있으면 안 띄움)
+  try{if(!document.hidden&&document.hasFocus())return;if(!('Notification' in window)||Notification.permission!=='granted')return;
+    const plain=()=>{try{new Notification(t,{tag,renotify:true})}catch(_){}};
+    if(mnReg&&mnReg.showNotification)mnReg.showNotification(t,{tag,renotify:true,vibrate:[200,100,200]}).catch(plain);else plain()}catch(_){}}
+function mnFound(){mnShow('매칭이 잡혔어요!','bft-match')}   // 매칭이 잡힘
+function mnRoom(t){mnShow(t,'bft-room')}                     // 내가 만든 방에 누가 들어옴
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&mnReg&&mnReg.getNotifications)mnReg.getNotifications().then(L=>L.forEach(n=>n.close())).catch(()=>{})});   // 돌아오면 알림은 지움
 /* 매칭 창 */
 let netOvRaf=0;
 function netOvEl(){
@@ -6900,6 +6913,7 @@ async function netFind(){
   if(!NET.me.name){netMsg('이름부터 정해주세요!','bad');nmIn.animate([{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(-3px)'},{transform:'none'}],{duration:220});return}
   if(!NET.pick||(NET.pick!=='random'&&!netHalf(NET.pick))){netMsg('캐릭터부터 골라주세요!','bad');chBtn.animate([{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(-3px)'},{transform:'none'}],{duration:220});return}
   try{initAudio()}catch(e){}
+  mnAsk();
   if(NET.pick==='random'){const pool=[...document.querySelectorAll('.modal .half[data-name]')].filter(h=>!h.dataset.dummy&&!(h.dataset.lock&&!h.dataset.ok));NET.myCh=(pool[Math.floor(Math.random()*pool.length)]||netHalf('더미')).dataset.name}
   else NET.myCh=NET.pick;
   if(NET_MULTI&&NET_MODES.length>1){multiFind(NET_MODES);return}   // 여러 모드 같이
@@ -6939,7 +6953,7 @@ function netMatched(){
   const c=NET.conn;
   NET.peers.slice().forEach(p=>{if(p!==c.provider)netKill(p);else{try{p.disconnect()}catch(_){}}});   // 서버 자리는 비워 주고(다음 사람이 쓸 수 있게) 상대와의 연결만 남김
   c.on('data',netData);c.on('close',()=>netClosed());c.on('error',()=>{});
-  netBeep([660,990],.09);
+  netBeep([660,990],.09);mnFound();
   const m=netOvEl();cancelAnimationFrame(netOvRaf);m.querySelector('.kkad').hidden=true;
   m.querySelector('.mtt1').textContent='매칭 완료!';m.querySelector('.mdots').hidden=true;m.querySelector('.mfield').hidden=true;m.querySelector('.mtime').hidden=true;m.querySelector('.mstat').hidden=true;m.querySelector('.mcancel').hidden=true;m.querySelector('.mretry').hidden=true;
   const v=m.querySelector('.mvs');v.hidden=false;v.className='mvs';NET.mp=null;
@@ -8755,7 +8769,7 @@ function roomRdyBtn(R){const r=roomMyRdy(R);return '<button type="button" class=
 function roomRdyHint(R,who){return '<div class="rhint">'+(roomMyRdy(R)?who+'이 시작하면 경기가 시작돼요':NET.myCh?'<b>준비완료</b>를 눌러 주세요':'캐릭터를 고르고 <b>준비완료</b>를 눌러 주세요')+'</div>'}
 function roomReady(){                              // 손님: 준비완료 / 준비 취소 (방장은 모두 준비해야 시작할 수 있음)
   const R=NET.room;if(!R||R.host||NET.match)return;const v=roomMyRdy(R)?0:1;if(v&&!NET.myCh){netToast('캐릭터를 먼저 골라 주세요');return}
-  if(R.party){R.rdy=!!v;partySend({t:'rready',r:v})}else if(R.mp){const ms=R.mem[R.me];if(ms)ms.rdy=v;netSend({t:'rready',r:v})}else{R.rdy=!!v;netSend({t:'rready',r:v})}
+  if(R.party){R.rdy=!!v;partySend({t:'rready',r:v});if(v)mnAsk()}else if(R.mp){const ms=R.mem[R.me];if(ms)ms.rdy=v;netSend({t:'rready',r:v})}else{R.rdy=!!v;netSend({t:'rready',r:v})}
   roomRender()}
 const ROOM_HINT='<div class="rhint">내 칸의 <b>캐릭터 바꾸기</b>를 누르면 캐릭터를 바꿀 수 있어요</div>';
 function roomChBtn(ch){                            // 방 안에서 내 캐릭터: 누르면 바꿀 수 있다는 게 보이게
@@ -8841,7 +8855,7 @@ function roomIncoming(c){
     const info=netCleanInfo(d);info.ch=d.ch&&netHalf(d.ch)?d.ch:null;R.op=info;NET.conn=c;NET.host=true;
     c.on('data',netData);c.on('close',()=>{if(NET.conn===c)netClosed()});
     try{c.send({t:'rok',room:{code:R.code,title:R.title,pub:R.pub,hasPw:!!R.pw,pw:R.pw||''},host:Object.assign(netInfo(),{ch:NET.myCh}),log:(R.log||[]).filter(x=>!x.sys).slice(-20).map(x=>({n:x.n,dev:x.dev,tst:x.tst,m:x.m}))})}catch(_){}
-    roomLog({sys:1,m:info.name+' 님이 들어왔어요'});roomPub();if(ROOM.view==='invite')ROOM.view='room';if(ROOM.view==='room')roomRender();
+    roomLog({sys:1,m:info.name+' 님이 들어왔어요'});mnRoom(info.name+' 님이 들어왔어요');roomPub();if(ROOM.view==='invite')ROOM.view='room';if(ROOM.view==='room')roomRender();
   });
 }
 /* 손님: 코드로 입장 */
@@ -8966,7 +8980,7 @@ function roomAct(a,b){
   else if(a==='create'){let t=(m.querySelector('.rtitle').value||'').replace(/\s+/g,' ').trim();const pw=(m.querySelector('.rpw').value||'').trim(),pub=!!m.querySelector('[data-r="tpub"].on[data-v="1"]');
     if(!t)t=[...(NET.me.name||'나')].slice(0,14).join('')+'의 방';const mc=modCheck(t);if(mc.bad||mc.pi){roomMsg('사용할 수 없는 방 제목이에요');return}
     if(pw&&!/^[0-9A-Za-z]{1,8}$/.test(pw)){roomMsg('비밀번호는 숫자·영어 8자까지예요');return}
-    const mb=m.querySelector('[data-r="tmode"].on'),md=mb?mb.dataset.v:'1v1',pt=md==='2v2'&&!!m.querySelector('[data-r="tparty"].on[data-v="1"]');roomCreate(t,pub,pw,md,pt)}
+    const mb=m.querySelector('[data-r="tmode"].on'),md=mb?mb.dataset.v:'1v1',pt=md==='2v2'&&!!m.querySelector('[data-r="tparty"].on[data-v="1"]');mnAsk();roomCreate(t,pub,pw,md,pt)}
   else if(a==='join'||a==='pick'){if(!NET.me.name){roomHide();netMsg('이름부터 정해주세요!','bad');return}
     const code=a==='pick'?b.dataset.code:(m.querySelector('.rcode').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
     if(!/^[A-Z2-9]{6}$/.test(code)){roomMsg('방 코드 6자리를 입력해 주세요');return}roomJoin(code,'')}
@@ -9005,7 +9019,7 @@ function partyIncoming(c,d,no){const R=NET.room;
   const info=netCleanInfo(d);info.ch=d.ch&&netHalf(d.ch)?d.ch:null;R.pm=info;R.pc=c;c._seat=1;
   c.on('data',x=>{if(NET.room===R&&R.pc===c)partyData(x)});c.on('close',()=>{if(NET.room===R&&R.pc===c)partyGone()});c.on('error',()=>{});
   try{c.send({t:'rok',room:{code:R.code,title:R.title,pub:R.pub,hasPw:!!R.pw,mode:'2v2',party:1},host:Object.assign(netInfo(),{ch:NET.myCh}),log:(R.log||[]).filter(x=>!x.sys).slice(-20).map(x=>({n:x.n,dev:x.dev,tst:x.tst,m:x.m}))})}catch(_){}
-  roomLog({sys:1,m:info.name+' 님이 파티에 들어왔어요'});roomPub();if(ROOM.view==='invite')ROOM.view='room';if(ROOM.view==='room')roomRender()}
+  roomLog({sys:1,m:info.name+' 님이 파티에 들어왔어요'});mnRoom(info.name+' 님이 파티에 들어왔어요');roomPub();if(ROOM.view==='invite')ROOM.view='room';if(ROOM.view==='room')roomRender()}
 function partyJoined(code,c,me,d){                    // 파티원: 들어옴
   const h=netCleanInfo(d.host||{});h.ch=d.host&&netHalf(d.host.ch)?d.host.ch:null;
   NET.peers=NET.peers.filter(x=>x!==me);              // 매칭하면서 정리되지 않게 따로 둠
@@ -9037,7 +9051,7 @@ function partyFind(){                                 // 파티장: 같이 매�
   if(!R.pm){netToast('파티원이 들어와야 매칭할 수 있어요');return}
   if(!NET.myCh||!R.pm.ch){netToast('둘 다 캐릭터를 골라야 해요');return}
   if(!R.pm.rdy){netToast('파티원이 준비완료를 눌러야 해요');return}
-  roomHide();NET.party={lead:true,pp:R.pm.pid};partySend({t:'pq'});mpFind('2v2');
+  mnAsk();roomHide();NET.party={lead:true,pp:R.pm.pid};partySend({t:'pq'});mpFind('2v2');
   netOvEl().querySelector('.mtt1').textContent='파티 매칭 중...'}
 function partyWait(){                                 // 파티원: 파티장이 찾는 동안 기다림
   const R=NET.room;if(NET.state!=='room'||NET.match||!R.pm)return;roomHide();
@@ -9293,7 +9307,7 @@ function mpMatched(){
   NET.peers.slice().forEach(p=>{if(!keep.includes(p))netKill(p);else{try{p.disconnect()}catch(_){}}});   // 매칭 자리는 비워 주고 연결만 남김
   if(NET.host){for(const c of NET.mp.conns){c.on('data',d=>mpHostData(c,d));c.on('close',()=>mpGuestGone(c));c.on('error',()=>{})}}
   else{const c=NET.conn;c.on('data',netData);c.on('close',()=>netClosed());c.on('error',()=>{})}
-  netBeep([660,990],.09);
+  netBeep([660,990],.09);mnFound();
   const m=netOvEl();cancelAnimationFrame(netOvRaf);m.querySelector('.kkad').hidden=true;m.querySelector('.mcnt').hidden=true;
   m.querySelector('.mtt1').textContent='매칭 완료!';m.querySelector('.mdots').hidden=true;m.querySelector('.mfield').hidden=true;m.querySelector('.mtime').hidden=true;m.querySelector('.mstat').hidden=true;m.querySelector('.mcancel').hidden=true;m.querySelector('.mretry').hidden=true;
   const v=m.querySelector('.mvs');v.hidden=false;mpVsHTML(v);
@@ -9355,7 +9369,7 @@ function mroomIncoming(c,d,no){
   c.on('data',x=>mpHostData(c,x));c.on('close',()=>mpGuestGone(c));c.on('error',()=>{});
   mroomSelf(R);
   try{c.send({t:'rok',room:{code:R.code,title:R.title,pub:R.pub,hasPw:!!R.pw,pw:R.pw||'',mode:R.mode},mem:mroomMem(R),you:i,host:netInfo(),log:(R.log||[]).filter(x=>!x.sys).slice(-20).map(x=>({n:x.n,dev:x.dev,tst:x.tst,m:x.m}))})}catch(_){}
-  roomLog({sys:1,m:info.name+' 님이 들어왔어요'});mroomCast();roomPub();if(ROOM.view==='invite')ROOM.view='room';if(ROOM.view==='room')roomRender()}
+  roomLog({sys:1,m:info.name+' 님이 들어왔어요'});mnRoom(info.name+' 님이 들어왔어요');mroomCast();roomPub();if(ROOM.view==='invite')ROOM.view='room';if(ROOM.view==='room')roomRender()}
 function mroomHost(R,c,d){const s=R.mem[c._seat];if(!s||s.c!==c)return;
   if(d.t==='rpick'){s.ch=d.ch&&netHalf(d.ch)?d.ch:null;if(!s.ch)s.rdy=0}
   else if(d.t==='rready'){s.rdy=d.r&&s.ch?1:0}
