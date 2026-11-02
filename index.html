@@ -706,8 +706,8 @@ body.in-net .cabtn,.stage:has(.end:not([hidden])) .cabtn{display:none}
 .shbox{height:min(560px,88vh);overflow:hidden;padding-bottom:12px}
 .shhd{position:relative;flex:none;min-height:44px;display:flex;align-items:center;justify-content:flex-start;gap:6px;padding:0 44px 0 4px}.shhd .rtt{flex:none;margin:0;font-size:22px;font-weight:400;text-align:left}
 .shbd{flex:1;min-height:0;display:flex;gap:10px;margin-top:6px;border-top:2px solid var(--ink)}
-.shtabs{flex:none;width:68px;display:flex;flex-direction:column;gap:0;padding:10px 8px 0 0;border-right:2px solid var(--ink)}.shtab+.shtab{margin-top:-2px}
-.shtab{height:42px;border:2px solid var(--ink);background:#fff;color:#111;font:400 17px/1 "Jua",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}.shtab.on{background:#111;color:#fff}
+.shtabs{flex:none;width:68px;display:flex;flex-direction:column;gap:0;padding:0;margin-top:-2px;border-right:2px solid var(--ink)}.shtab+.shtab{margin-top:-2px}.shtab{margin-right:-2px}
+.shtab{height:32px;border:2px solid var(--ink);background:#fff;color:#111;font:400 17px/1 "Jua",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}.shtab.on{background:#111;color:#fff}
 .shmain{flex:1;min-width:0;min-height:0;display:flex;flex-direction:column}
 .shmain .shsoon{padding-top:34px}
 .shscroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:10px 2px 8px 0}
@@ -5392,6 +5392,10 @@ const PATCH_NOTES=[
    chars:[],
    fx:[],
    sys:['보스전 추가 (최대 4명 · 인원이 많을수록 보스가 강해진다)','보스전 랭킹 · 칭호 추가','할로윈 테마 추가 (프로필의 설정에서 끌 수 있다)','온라인 방 채팅에 /할로윈 명령 추가 (방장 전용)','렉 감소']},
+  {ver:'4.12.28',date:'2026-10-23',
+   chars:[],
+   fx:[],
+   sys:['버그 수정']},
   {ver:'4.12.27',date:'2026-10-23',
    chars:[{who:'산와머니',tag:'new',lines:['신규 캐릭터 추가']},{who:'권루트',tag:'new',lines:['신규 캐릭터 추가']}],
    fx:[],
