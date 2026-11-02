@@ -8122,7 +8122,7 @@ const BL_MAX=99999999;
 const BL_COLORS=[['빨강','#e03131'],['주황','#f76707'],['노랑','#f0b400'],['초록','#2f9e44'],['하늘','#15aabf'],['파랑','#1c63d6'],['보라','#7048e8'],['분홍','#e64980']];
 const BL_HEX=BL_COLORS.map(x=>x[1]);
 const blColOk=c=>typeof c==='string'&&/^#[0-9a-fA-F]{6}$/.test(c);
-const BLF=n=>String(Math.max(0,Math.floor(+n||0))).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const BLF=n=>{n=Math.floor(+n||0);return (n<0?'-':'')+String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',')};   // 볼 수 (회수로 마이너스가 될 수도 있음)
 /* 업적: [아이디, 묶음, 이름, 설명, 세는 것(g 대전 · w 승 · ch 캐릭터 · pt 분 · fr 친구 · bn 산 횟수), 목표, 받는 볼, 얻는 칭호] */
 const ACH=[
  ['w1','승리','첫 승리','온라인 대전에서 처음 이기기','w',1,10,'첫 승리'],
@@ -8161,7 +8161,7 @@ const shBlank=()=>({b:0,own:[],cc:'#ff4d6d',nc:'',tt:'',ti:[],ac:[],bn:0,lk:'',l
 var SH=shBlank();   // 내 볼 · 산 것 · 커스텀 색 · 쓰는 색 · 쓰는 칭호 · 산 칭호 · 받은 업적 · 산 횟수 · 마지막 경기(볼 고치려고) · 받은 편지 볼 · 적용한 관리자 볼 기록 · 일일 무료 볼 받은 날(dd)·받은 양(da) · 출석 마지막 날(ad)·며칠째(an)·이번 바퀴에 날마다 받은 볼(ar)·개근상 받음(ak)
 function shLoad(v){
   if(!v||typeof v!=='object')return;
-  SH.b=Math.max(0,Math.min(BL_MAX,+v.b||0));
+  SH.b=Math.max(-BL_MAX,Math.min(BL_MAX,Math.floor(+v.b)||0));
   SH.own=(Array.isArray(v.o)?v.o:[]).filter((x,i,a)=>(BL_HEX.includes(x)||x==='cu'||x==='rb')&&a.indexOf(x)===i);
   SH.cc=blColOk(v.cc)?v.cc.toLowerCase():'#ff4d6d';
   SH.nc=SH.own.includes(v.nc)?v.nc:'';
@@ -8176,7 +8176,7 @@ function shLoad(v){
 try{shLoad(JSON.parse(localStorage.getItem('bftSh')||'null'))}catch(e){}
 const shSnap=()=>({b:SH.b,o:SH.own.slice(),cc:SH.cc,nc:SH.nc,tt:SH.tt,ti:SH.ti.slice(),a:SH.ac.slice(),bn:SH.bn,lk:SH.lk,lr:SH.lr,mc:SH.mc.slice(),gl:SH.gl.slice(),dd:SH.dd,da:SH.da,ad:SH.ad,an:SH.an,ar:SH.ar.slice(),ak:SH.ak});   // 저장 · 계정 (다른 폰에서 로그인해도 이어짐)
 function shSave(){try{localStorage.setItem('bftSh',JSON.stringify(shSnap()))}catch(e){}try{cldSoon(2500)}catch(_){}}
-function blAdd(n){SH.b=Math.max(0,Math.min(BL_MAX,SH.b+(n|0)))}
+function blAdd(n){n=n|0;SH.b=n>=0?Math.min(BL_MAX,SH.b+n):Math.max(Math.min(SH.b,0),SH.b+n)}   // 받으면 마이너스도 그만큼 채워짐 · 쓰거나 뺏길 땐 0 밑으로는 안 내려감 (마이너스는 버그 회수로만)
 const blNum=n=>BLF(n).replace(/,/g,',<wbr>');   // 볼 수는 항상 숫자로 (1만 · 1.2만 같은 글자 없이) · 자리가 모자라면 쉼표 뒤에서 줄바꿈
 function blUi(){const f=BLF(SH.b);document.querySelectorAll('.blpill .bln').forEach(e=>{const sh=!!e.closest('.sh');
   if(e.dataset.v!==f){e.dataset.v=f;if(sh)e.textContent=f;else e.innerHTML=blNum(SH.b)}
@@ -8256,7 +8256,7 @@ function srvSync(force){
     srvT=d+age*1000+500;srvP=(p0+p1)/2;srvAt=p1;srvDone()   // 서버 시각은 초 단위라 0.5초를 더해 가운데로
   }).catch(()=>{}).finally(()=>{srvBusy=false})}
 const srvDay=()=>srvT==null?null:kstDay(srvT+performance.now()-srvP);   // 서버 기준 오늘 (한국 시간) · 아직 모르면 null
-function srvDone(){try{atUi();shBadge();if(shOpen()&&SHS.tab==='mn')shRender();if(caOpen())caRender();if(atReady()&&caPopDay!==srvDay())caWant=true}catch(_){}}
+function srvDone(){try{chtFix()}catch(_){}try{atUi();shBadge();if(shOpen()&&SHS.tab==='mn')shRender();if(caOpen())caRender();if(atReady()&&caPopDay!==srvDay())caWant=true}catch(_){}}
 srvSync(true);
 /* ---------- 일일 무료 볼 (밤 12시에 새로) · 출석 (수령 버튼, 7일) ---------- */
 const dfReady=()=>{const d=srvDay();return !!d&&SH.dd<d};   // 서버 기준으로 오늘 아직 안 받았음 (폰 시계를 앞으로 돌려도 미리 못 받고, 뒤로 돌려도 다시 못 받음)
@@ -8274,6 +8274,29 @@ function atClaim(){                                 // 수령 버튼: 차례대�
   shSave();blUi();atUi();try{acNote()}catch(_){}
   return {n,g,rnd:w[0]!==w[1]}}
 function atUi(){const b=document.getElementById('cabtn');if(b)b.classList.toggle('new',atReady())}   // 오늘 출석을 아직 안 받았으면 달력 버튼에 빨간 점
+/* 버그 회수: 폰 시계를 바꿔서 출석·일일 무료 볼을 미리 받은 기록이 있으면, 그걸로 받은 볼(모자라면 마이너스까지) · 개근상 · 일일 무료 볼을 회수하고 우편으로 알림
+   하루 차이는 폰 시계가 원래 조금 틀린 사람일 수도 있어서 봐줌 · 관리자 폰은 안 함 */
+const AT_L='2026-11-02';   // 출석·일일 무료 볼이 나온 날
+const dayN=d=>Math.round(Date.parse(d+'T00:00:00Z')/864e5);
+function chtFix(){
+  const T=srvDay();if(!T||admIs())return;
+  const t=dayN(T),L=dayN(AT_L),D=t-L;let n=0,ch=false;   // D: 나온 날부터 며칠 지났는지 → 정상이면 출석은 많아야 D+1번
+  const adN=SH.ad?dayN(SH.ad):-1e9;
+  if(SH.an>0&&(adN>t+1||SH.an>D+2||(SH.ak&&D+2<7))){            // 출석: 받은 날이 이틀 이상 미래 · 나온 지 얼마 안 됐는데 일차가 너무 많음 · 개근상이 너무 빠름
+    const an=SH.an,cm=adN-L+1;
+    const C=!SH.ak?an:an===7?7+7*Math.max(0,Math.floor((cm-7)/7)):7*Math.max(1,Math.floor((cm-an)/7))+an;   // 받은 횟수 (하루씩 넘기며 받았다고 보고 셈)
+    const r=i=>i>C-an?(SH.ar[i-(C-an)-1]|0):AT[(i-1)%7][0];   // i번째로 받은 볼: 이번 바퀴는 실제로 받은 양 · 그 전 바퀴는 그날 최소량
+    const G=Math.max(0,Math.min(C,D+1));                        // 원래 받을 수 있었던 횟수 (나온 날부터 오늘까지 하루 한 번)
+    for(let i=G+1;i<=C;i++)n+=r(i);
+    const g0=G?Math.floor((G-1)/7)*7:0,ar=[];for(let i=g0+1;i<=G;i++)ar.push(r(i));
+    SH.an=G?((G-1)%7)+1:0;SH.ar=ar;SH.ad=G?T:'';               // 정상으로 받았을 때처럼 (오늘 것까지 받은 걸로)
+    if(SH.ak&&G<7){SH.ak=0;if(SH.tt===AT_TT)SH.tt=''}            // 개근상 회수
+    ch=true}
+  const ddN=SH.dd?dayN(SH.dd):-1e9;
+  if(ddN>t+1){n+=(SH.da|0)+(ddN-t-1)*32;SH.dd=T;ch=true}       // 일일 무료 볼: 오늘 뒤로 받은 날 수만큼 (마지막 건 실제로 받은 양 · 나머지는 평균 32볼) · 오늘 것도 받은 걸로
+  if(!ch)return;
+  SH.b=Math.max(-BL_MAX,SH.b-n);shSave();blUi();atUi();shBadge();try{csPub()}catch(_){}
+  if(n>0)try{mlLocAdd('버그 남용을 통해 얻은 '+BLF(n)+'볼 회수','버그 남용을 통해 얻은 '+BLF(n)+'볼 회수 (상황에 따라 마이너스까지 갈 수도 있음)')}catch(_){}}
 /* 볼을 받았을 때 보여 주는 것: 랜덤으로 받은 볼은 가운데 네모난 창 · 출석 · 우편 · 업적으로 받은 볼은 아래에 +n */
 function blGain(n){
   document.querySelectorAll('.blgain').forEach(x=>x.remove());
@@ -8307,7 +8330,7 @@ function accMerge(d){                                 // 저장소에 내 계정
 var ACX={},ACXC={},ACC_RS={};   // ACXC: 계정 만든 시각 (관리자·본인 프로필에서만 보임)
 function accDate(t){return new Date(t).toLocaleString('ko-KR',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})}
    // ACX: 계정 있는 아이디 (관리자용) · ACC_RS: 관리자가 초기화한 비밀번호 (저장소에 올릴 것)
-function accPull(d){if(d.ac&&typeof d.ac==='object'){ACX={};ACXC={};BLX={};const adm=admIs();for(const k in d.ac)if(FRID.test(k)){ACX[k]=+(d.ac[k]&&d.ac[k].u)||1;const cc=d.ac[k]&&+d.ac[k].c;if(cc>0)ACXC[k]=cc;if(adm){const sb=d.ac[k]&&d.ac[k].p&&d.ac[k].p.sh;if(sb&&typeof sb==='object'&&sb.b!=null)BLX[k]=Math.max(0,Math.min(BL_MAX,+sb.b||0))}}for(const k in ACC_RS)if((ACX[k]||0)>=ACC_RS[k].u)delete ACC_RS[k];if(typeof acqFlush==='function')setTimeout(acqFlush,0)}
+function accPull(d){if(d.ac&&typeof d.ac==='object'){ACX={};ACXC={};BLX={};const adm=admIs();for(const k in d.ac)if(FRID.test(k)){ACX[k]=+(d.ac[k]&&d.ac[k].u)||1;const cc=d.ac[k]&&+d.ac[k].c;if(cc>0)ACXC[k]=cc;if(adm){const sb=d.ac[k]&&d.ac[k].p&&d.ac[k].p.sh;if(sb&&typeof sb==='object'&&sb.b!=null)BLX[k]=Math.max(-BL_MAX,Math.min(BL_MAX,Math.floor(+sb.b)||0))}}for(const k in ACC_RS)if((ACX[k]||0)>=ACC_RS[k].u)delete ACC_RS[k];if(typeof acqFlush==='function')setTimeout(acqFlush,0)}
   accPull2(d)}
 function accPull2(d){const o=d.ac&&d.ac[PID];if(ACC&&o&&+o.c>0&&!(ACC.c>0)){ACC.c=+o.c;accSave()}if(!ACC||!o||!(+o.u>ACC.u)||!/^[0-9a-f]{32}$/.test(o.s)||!/^[0-9a-f]{64}$/.test(o.h))return;{const oc=ACC.c;ACC={id:PID,s:o.s,h:o.h,u:+o.u};if(o.v===2)ACC.v=2;if(+o.c>0)ACC.c=+o.c;else if(oc>0)ACC.c=oc;accSave()}}
 const accPwOk=pw=>pw.length>=6&&pw.length<=20&&/^[\x21-\x7e]+$/.test(pw)&&!/^\d+$/.test(pw);   // 6~20자 · 숫자만은 안 됨
@@ -8330,7 +8353,7 @@ async function accLogin(id,pw){                       // 다른 아이디로 로
   const p=a.p&&typeof a.p==='object'?a.p:{};
   if(id===PID){if(Array.isArray(p.ul)){const U=unlkGet();for(const x of p.ul)if(typeof x==='string'&&!U.includes(x))U.push(x);try{localStorage.setItem('bftUnlk',JSON.stringify(U.slice(0,20)))}catch(e){}unlkApply()}ACC={id,s:a.s,h:a.h,u:+a.u||Date.now()};if(+a.c>0)ACC.c=+a.c;if(a.v===2||accPwOk(pw))ACC.v=2;accSave();if(ACC.v===2&&a.v!==2)cldSoon(500);return ''}   // 지금 쓰는 아이디로 로그인: 이 폰 기록은 그대로 두고 계정만 연결
   try{
-    for(const k of ['bftDm','bftGc','bftFr','bftPen','bftPenLog','bftMyChat','bftAdmDm','bftWc','bftMlA'])localStorage.removeItem(k);   // 이 폰에 남은 예전 아이디 기록은 비움
+    for(const k of ['bftDm','bftGc','bftFr','bftPen','bftPenLog','bftMyChat','bftAdmDm','bftWc','bftMlA','bftMlL'])localStorage.removeItem(k);   // 이 폰에 남은 예전 아이디 기록은 비움
     document.cookie='bftPen=;max-age=0;path=/';
     stSet('bftPid',id,true);localStorage.setItem('bftAcc',JSON.stringify(Object.assign({id,s:a.s,h:a.h,u:+a.u||Date.now()},a.v===2||accPwOk(pw)?{v:2}:{},+a.c>0?{c:+a.c}:{})));
     const nm=String(p.n||'').slice(0,NMX);localStorage.setItem('bftNick',nm);localStorage.setItem('bftDev',p.dv?'1':'0');localStorage.setItem('bftTst',p.ts?'1':'0');
@@ -9413,12 +9436,16 @@ function tvRender(){if(!tvEl)return;const box=tvEl.querySelector('.tvlist'),L=SP
   if(box._h!==h){box._h=h;box.innerHTML=h}}
 setInterval(()=>{if(!tvOpen())return;if(document.body.classList.contains('in-net')){tvHide();return}if(Date.now()-SPEC.t>3000)specAsk();tvRender()},1000);
 /* ---------- 우편함: 운영자가 보낸 편지 (관리자 도장이 맞는 것만) · 읽음/지움은 이 폰에만 저장 ---------- */
-var ML={L:[],E:[],arc:{},all:[],ok:false,r:new Set(),d:new Set(),n:new Set()};   // L: 나에게 온 편지(기간이 남은 것) · E: 기간이 지나 만료된 편지(받은 적 있는 것만, 지우기 전까지 우편함에 남음) · arc: 받은 적 있는 편지 보관(이 폰) · all: 저장소의 편지 전부 (관리자 화면·정리용) · r 읽음 · d 지움 · n 새 편지 알림을 띄운 것
+var ML={L:[],E:[],arc:{},all:[],ok:false,r:new Set(),d:new Set(),n:new Set(),loc:[]};   // L: 나에게 온 편지(기간이 남은 것) · E: 기간이 지나 만료된 편지(받은 적 있는 것만, 지우기 전까지 우편함에 남음) · arc: 받은 적 있는 편지 보관(이 폰) · all: 저장소의 편지 전부 (관리자 화면·정리용) · r 읽음 · d 지움 · n 새 편지 알림을 띄운 것
 try{const v=JSON.parse(localStorage.getItem('bftMl')||'null');if(v&&typeof v==='object')for(const k of ['r','d','n'])if(Array.isArray(v[k]))v[k].slice(-300).forEach(x=>{if(typeof x==='string')ML[k].add(x.slice(0,24))})}catch(e){}
 try{const v=JSON.parse(localStorage.getItem('bftMlA')||'null');if(Array.isArray(v))for(const m of v.slice(-120)){const e=mlClean(m);if(e&&e.s&&!idOld(e.i))ML.arc[e.i]=e}}catch(e){}
+try{const v=JSON.parse(localStorage.getItem('bftMlL')||'null');if(Array.isArray(v))ML.loc=v.filter(e=>e&&typeof e.i==='string'&&/^mz[0-9a-z]{4,20}$/.test(e.i)&&e.p===PID).map(e=>({i:e.i,t:+e.t||0,x:+e.x||0,to:PID,h:String(e.h||'').slice(0,30),b:String(e.b||'').slice(0,300),v:0,s:'',p:PID})).slice(-20)}catch(e){}   // loc: 이 폰에서 생긴 알림 편지 (버그 회수 등 · 볼 없음)
+function mlLocSave(){try{localStorage.setItem('bftMlL',JSON.stringify(ML.loc.slice(-20)))}catch(e){}}
+function mlLocAdd(h,b){const t=Date.now(),e={i:'mz'+t.toString(36),t,x:t+30*864e5,to:PID,h:String(h).slice(0,30),b:String(b).slice(0,300),v:0,s:'',p:PID};
+  ML.loc.push(e);ML.loc=ML.loc.slice(-20);mlLocSave();mlBadge();if(mlOpen())mlRender();else if(!NET.match)try{netToast('우편함에 새 편지가 왔어요')}catch(_){}}
 function mlSaveA(){const ks=Object.keys(ML.arc);if(ks.length>120)ks.sort((a,b)=>ML.arc[a].t-ML.arc[b].t).slice(0,ks.length-120).forEach(k=>delete ML.arc[k]);
   try{localStorage.setItem('bftMlA',JSON.stringify(Object.values(ML.arc)))}catch(e){}}
-function mlSave(){try{const keep=ML.ok?new Set(ML.all.map(m=>m.i).concat(Object.keys(ML.arc))):null,o={};for(const k of ['r','d','n'])o[k]=[...ML[k]].filter(x=>!keep||keep.has(x)).slice(-300);localStorage.setItem('bftMl',JSON.stringify(o))}catch(e){}}   // 저장소에서 사라진 편지는 기록도 지움
+function mlSave(){try{const keep=ML.ok?new Set(ML.all.map(m=>m.i).concat(Object.keys(ML.arc),ML.loc.map(e=>e.i))):null,o={};for(const k of ['r','d','n'])o[k]=[...ML[k]].filter(x=>!keep||keep.has(x)).slice(-300);localStorage.setItem('bftMl',JSON.stringify(o))}catch(e){}}   // 저장소에서 사라진 편지는 기록도 지움
 const mlSig=m=>m.v>0?['ml',m.i,m.t,m.x,m.to,m.h,m.b,m.v]:['ml',m.i,m.t,m.x,m.to,m.h,m.b];   // 관리자 도장을 찍는 내용 (받는 사람·제목·내용·보관 기간을 바꾸면 도장이 안 맞음)
 function mlClean(m){if(!m||typeof m!=='object'||typeof m.i!=='string'||!/^m[0-9a-z]{4,20}$/.test(m.i))return null;
   const to=m.to==='*'||m.to==='@in'||m.to==='@out'?m.to:String(m.to||'').split(',').filter(x=>/^[A-Z2-9]{6}$/.test(x)).slice(0,60).join(',');if(!to)return null;   // *: 모두 · @in: 로그인한 사람 · @out: 로그인 안 한 사람 · 아니면 아이디들
@@ -9443,7 +9470,7 @@ function mlPull(d){                                   // 저장소 → 내 폰
   const fresh=ML.L.filter(e=>!ML.r.has(e.i)&&!ML.d.has(e.i)&&!ML.n.has(e.i));
   if(fresh.length){fresh.forEach(e=>ML.n.add(e.i));if(!NET.match&&!mlOpen())try{netToast('우편함에 새 편지가 왔어요')}catch(_){}}
   mlSave();mlBadge();if(mlOpen())mlRender()}
-const mlUnread=()=>ML.L.filter(e=>!ML.r.has(e.i)&&!ML.d.has(e.i)).length;
+const mlUnread=()=>ML.L.filter(e=>!ML.r.has(e.i)&&!ML.d.has(e.i)).length+ML.loc.filter(e=>!ML.r.has(e.i)).length;
 function mlBadge(){const b=document.getElementById('mlbtn');if(!b)return;const n=mlUnread(),g=b.querySelector('.mlbg');if(g){g.hidden=!n;g.textContent=n>9?'9+':String(n)}b.classList.toggle('new',n>0)}
 let mlEl=null,mlCur='';try{mlRefilter()}catch(_){}
 const mlOpen=()=>!!(mlEl&&!mlEl.hidden);
@@ -9461,8 +9488,8 @@ function mlShow(){
   mlEl.hidden=false;mlRender();if(Date.now()-(CLD.last||0)>15000)Promise.resolve(cldSync(false)).catch(()=>{})}   // 열 때 새 편지가 있는지 저장소를 한 번 더 봄
 function mlHide(){if(mlEl)mlEl.hidden=true}
 const mlRisky=e=>e.v>0&&e.x>Date.now()&&!SH.mc.includes(e.i);   // 아직 안 받은 볼이 남은 편지 (지우면 볼을 못 받음)
-const mlAll=()=>ML.L.filter(e=>!ML.d.has(e.i)).concat(ML.E);   // 우편함에 보이는 편지 (기간이 남은 것 → 만료된 것)
-function mlDel(i){ML.d.add(i);ML.r.add(i);delete ML.arc[i];if(mlCur===i)mlCur=''}
+const mlAll=()=>ML.L.filter(e=>!ML.d.has(e.i)).concat(ML.loc).sort((a,b)=>b.t-a.t).concat(ML.E);   // 우편함에 보이는 편지 (기간이 남은 것·이 폰 알림 → 만료된 것)
+function mlDel(i){ML.d.add(i);ML.r.add(i);delete ML.arc[i];const k=ML.loc.findIndex(e=>e.i===i);if(k>=0){ML.loc.splice(k,1);mlLocSave()}if(mlCur===i)mlCur=''}
 function mlAfter(){mlRefilter();mlSave();mlSaveA();mlBadge();mlRender()}
 const ML_X='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function mlRender(){if(!mlOpen())return;
@@ -9536,7 +9563,7 @@ function bgSend(id,a,done){
   const t=Date.now(),g={i:'g'+t.toString(36)+Math.random().toString(36).slice(2,6),p:id,a,t,x:t+90*864e5};
   SG.sign(sgMsg(...bgSig(g))).then(sg=>{if(!sg)throw 0;g.s=sg;return mlAdmEdit(L=>{L.push(g)},'bg')}).then(why=>{
     if(why){try{netToast('보내지 못했어요 · '+why)}catch(_){}done(false);return}
-    if(BLX[id]!=null)BLX[id]=Math.max(0,Math.min(BL_MAX,BLX[id]+a));BGL.push(g);
+    if(BLX[id]!=null)BLX[id]=a>=0?Math.min(BL_MAX,BLX[id]+a):Math.max(Math.min(BLX[id],0),BLX[id]+a);BGL.push(g);
     try{netToast('볼 '+(a>0?'+':'-')+BLF(Math.abs(a))+' 보냈어요 (그 사람이 접속하면 적용돼요)')}catch(_){}done(true);mlConfirm(g,2,'bg');usrReRender()},
     ()=>{try{netToast('도장을 찍지 못했어요')}catch(_){}done(false)})}
 const blKnown=id=>id===PID?SH.b:(BLX[id]!=null?BLX[id]:null);
