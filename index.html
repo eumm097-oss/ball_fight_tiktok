@@ -8243,18 +8243,33 @@ function acNote(){                                  // 새로 달성한 업적�
   if(nw.length)try{netToast('업적 달성!')}catch(_){}}
 setTimeout(()=>{blUi();try{acNote()}catch(_){}},0);
 setInterval(()=>{try{acNote()}catch(_){}},15000);
+/* ---------- 서버 시간: 폰 시계를 바꿔서 출석·일일 무료 볼을 미리 받는 걸 막음 ----------
+   날짜는 서버가 알려 준 시각 + 그 뒤로 흐른 시간(performance.now: 폰 시계를 바꿔도 안 바뀜)으로만 셈 · 서버 시간을 아직 모르면 못 받음 */
+let srvT=null,srvP=0,srvBusy=false,srvAt=-1e9;
+function srvSync(force){
+  if(srvBusy||!/^https?:$/.test(location.protocol))return;
+  if(!force&&performance.now()-srvAt<5*60e3)return;   // 평소엔 5분마다 한 번 (다시 들어왔을 땐 바로)
+  srvBusy=true;const p0=performance.now();
+  fetch(location.pathname+'?_t='+Date.now(),{method:'HEAD',cache:'no-store'}).then(r=>{
+    const p1=performance.now(),d=Date.parse(r.headers.get('date')||''),age=Math.max(0,+r.headers.get('age')||0);
+    if(!isFinite(d))return;
+    srvT=d+age*1000+500;srvP=(p0+p1)/2;srvAt=p1;srvDone()   // 서버 시각은 초 단위라 0.5초를 더해 가운데로
+  }).catch(()=>{}).finally(()=>{srvBusy=false})}
+const srvDay=()=>srvT==null?null:kstDay(srvT+performance.now()-srvP);   // 서버 기준 오늘 (한국 시간) · 아직 모르면 null
+function srvDone(){try{atUi();shBadge();if(shOpen()&&SHS.tab==='mn')shRender();if(caOpen())caRender();if(atReady()&&caPopDay!==srvDay())caWant=true}catch(_){}}
+srvSync(true);
 /* ---------- 일일 무료 볼 (밤 12시에 새로) · 출석 (수령 버튼, 7일) ---------- */
-const dfReady=()=>SH.dd<kstDay();   // 한국 시간으로 아직 오늘 안 받았음 (폰 시계를 뒤로 돌려도 다시 못 받음)
+const dfReady=()=>{const d=srvDay();return !!d&&SH.dd<d};   // 서버 기준으로 오늘 아직 안 받았음 (폰 시계를 앞으로 돌려도 미리 못 받고, 뒤로 돌려도 다시 못 받음)
 function dfClaim(){
   if(!dfReady())return 0;
-  const n=rollN(DF.lo,DF.hi,DF.pw);SH.dd=kstDay();SH.da=n;blAdd(n);shSave();blUi();shBadge();try{acNote()}catch(_){}
+  const n=rollN(DF.lo,DF.hi,DF.pw);SH.dd=srvDay();SH.da=n;blAdd(n);shSave();blUi();shBadge();try{acNote()}catch(_){}
   return n}
-const atReady=()=>SH.ad<kstDay();   // 오늘 출석을 아직 안 받았음
+const atReady=()=>{const d=srvDay();return !!d&&SH.ad<d};   // 서버 기준으로 오늘 출석을 아직 안 받았음
 function atClaim(){                                 // 수령 버튼: 차례대로 1일차부터 (빠진 날이 있어도 이어서 · 7일차를 받으면 다음엔 1일차부터 또)
   if(!atReady())return null;
   const n=SH.an>=7?1:SH.an+1,w=AT[n-1],g=rollN(w[0],w[1],w[2]);
   SH.ar=n===1?[]:SH.ar.slice(0,n-1);while(SH.ar.length<n-1)SH.ar.push(0);SH.ar.push(g);
-  SH.ad=kstDay();SH.an=n;blAdd(g);
+  SH.ad=srvDay();SH.an=n;blAdd(g);
   if(n===7)SH.ak=1;
   shSave();blUi();atUi();try{acNote()}catch(_){}
   return {n,g,rnd:w[0]!==w[1]}}
@@ -9600,7 +9615,7 @@ function shRenderTt(box){                          // 칭호 탭: 사면 이름 
   const n=box.querySelector('.shscroll');if(n)n.scrollTop=st}
 function shRenderMn(box){                          // 메인 탭: 일일 무료 볼
   const sc=box.querySelector('.shscroll'),st=sc?sc.scrollTop:0,ok=dfReady();
-  box.innerHTML='<div class="shscroll"><div class="dfc"><div class="dft">일일 무료 볼</div><button type="button" class="dfbtn" data-sh="df"'+(ok?'':' disabled')+'>'+(ok?'<i class="blb"></i>무료 볼 받기':'오늘은 받았어요')+'</button></div></div>';
+  box.innerHTML='<div class="shscroll"><div class="dfc"><div class="dft">일일 무료 볼</div><button type="button" class="dfbtn" data-sh="df"'+(ok?'':' disabled')+'>'+(ok?'<i class="blb"></i>무료 볼 받기':srvDay()?'오늘은 받았어요':'확인 중')+'</button></div></div>';
   const n=box.querySelector('.shscroll');if(n)n.scrollTop=st}
 setInterval(()=>{try{if(shOpen()&&SHS.tab==='mn'&&dfReady()!==!!shEl.querySelector('.dfbtn:not([disabled])'))shRender()}catch(_){}},1000);   // 밤 12시가 지나면 다시 받을 수 있게
 function shRender(){
@@ -9697,7 +9712,7 @@ function caRender(){
       +'</div>'}
   const sc=caEl.querySelector('.cascr'),sp=sc.scrollTop;
   sc.innerHTML='<div class="cagrid">'+h+'</div>';sc.scrollTop=sp;
-  const bt=caEl.querySelector('.caact button');bt.disabled=!ready;bt.textContent=ready?'수령':'수령 완료'}
+  const bt=caEl.querySelector('.caact button');bt.disabled=!ready;bt.textContent=ready?'수령':srvDay()?'수령 완료':'확인 중'}
 function caShow(){
   if(!caEl){caEl=document.createElement('div');caEl.className='frmodal camodal';caEl.hidden=true;
     caEl.innerHTML='<div class="frbox cabox"><button type="button" class="frx" data-ca="close" aria-label="닫기">✕</button><div class="rtt">출석</div><div class="cascr"></div><div class="caact"><button type="button" class="rbtn rgo" data-ca="claim">수령</button></div></div>';
@@ -9710,10 +9725,10 @@ function caShow(){
 function caHide(){if(caEl)caEl.hidden=true}
 let caPopDay='',caWant=true;   // caWant: 들어와서 출석 창을 띄울 차례를 기다리는 중
 const caFree=()=>phase==='idle'&&!document.body.classList.contains('in-net')&&!document.querySelector('.lgn,.blpop,.adm,.pnmodal:not([hidden]),.frmodal:not([hidden]),.modal:not([hidden])');
-setInterval(()=>{try{if(!caWant)return;if(!atReady()||caPopDay===kstDay()){caWant=false;return}if(!caFree())return;caWant=false;caPopDay=kstDay();caShow()}catch(_){}},1200);   // 오늘 출석을 안 받았으면 들어왔을 때 출석 창이 열림 (받았으면 안 열림)
+setInterval(()=>{try{if(!caWant)return;const d=srvDay();if(!d)return;if(!atReady()||caPopDay===d){caWant=false;return}if(!caFree())return;caWant=false;caPopDay=d;caShow()}catch(_){}},1200);   // 오늘 출석을 안 받았으면 들어왔을 때 출석 창이 열림 (받았으면 안 열림)
 setTimeout(()=>{try{atUi();shBadge()}catch(e){dbgErr((e&&e.message)||e,1)}},600);
-setInterval(()=>{try{atUi();shBadge();if(caOpen())caRender()}catch(_){}},30000);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{atUi();shBadge();if(atReady()&&caPopDay!==kstDay())caWant=true}catch(_){}}});
+setInterval(()=>{try{srvSync();atUi();shBadge();if(caOpen())caRender()}catch(_){}},30000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){try{srvSync(true);atUi();shBadge();if(atReady()&&caPopDay!==srvDay())caWant=true}catch(_){}}});   // 다시 들어오면 서버 시간도 다시 확인 (폰이 잠들어 있던 동안 밀린 시간 맞춤)
 setInterval(()=>{if(acOpen())acRender()},5000);
 /* 프로필의 칭호 정하기 */
 function ttRowHTML(){const own=ttOwned();
@@ -9972,13 +9987,18 @@ document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault
 // 두 번 톡톡 확대는 touch-action(pan-y·manipulation)으로 막음 — 빠른 연속 터치는 막지 않음 (어드민 패널을 열어 둔 채 게임을 눌러도 바로 눌리게)
 document.addEventListener('contextmenu',e=>{if(e.target.closest('img,canvas,.ball,svg'))e.preventDefault()});
 
-/* 옛 버전(캐시) 자동 갱신: 접속할 때 최신 파일의 버전을 확인하고 다르면 한 번만 새로고침 */
+/* 옛 버전(캐시) 자동 갱신: 접속할 때 최신 파일을 받아 보고, 버전이 다르거나 버전은 같아도 코드가 바뀌었으면 한 번만 새로고침 */
 (function(){try{
   if(location.protocol==='file:')return;
   fetch(location.pathname+'?_='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{
-    const m=/const PATCH_VERSION='([^']+)'/.exec(t);if(!m||m[1]===PATCH_VERSION)return;
-    let k='bftVerTry';try{if(sessionStorage.getItem(k)===m[1])return;sessionStorage.setItem(k,m[1])}catch(e){return}
-    location.replace(location.pathname+'?v='+m[1]+location.hash);
+    const m=/const PATCH_VERSION='([^']+)'/.exec(t);if(!m)return;
+    if(m[1]===PATCH_VERSION){                                     // 버전이 같으면 코드(스크립트·스타일)를 비교: 최신 파일의 것이 지금 화면에 다 그대로 있으면 최신
+      const cur=new Set([...document.querySelectorAll('script:not([src]),style')].map(e=>e.textContent)),re=/<(script|style)\b([^>]*)>([\s\S]*?)<\/\1\s*>/gi;let x,same=true;
+      t=t.replace(/\r\n?/g,'\n');while((x=re.exec(t)))if(!/\bsrc\s*=/i.test(x[2])&&!cur.has(x[3])){same=false;break}
+      if(same)return}
+    let h=t.length;for(let i=0;i<t.length;i+=31)h=(h*31+t.charCodeAt(i))|0;   // 받은 파일 표시 (같은 파일 때문에 계속 새로고침하지 않게)
+    const v=m[1]+'-'+(h>>>0).toString(36),k='bftVerTry';try{if(sessionStorage.getItem(k)===v)return;sessionStorage.setItem(k,v)}catch(e){return}
+    location.replace(location.pathname+'?v='+v+location.hash);
   }).catch(()=>{});
 }catch(e){}})();
 </script>
