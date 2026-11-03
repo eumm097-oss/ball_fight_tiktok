@@ -5721,7 +5721,7 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
   if(k==='char')return '<div class="admsub">자리</div><div class="admsk admtg"><button type="button" class="admsw on" data-slot="auto">자동</button><button type="button" class="admsw" data-slot="left">1P</button><button type="button" class="admsw" data-slot="right">2P</button></div>'
     +'<div class="admsub">소환</div><div class="admsk admsum">'+[...document.querySelectorAll('.modal .half[data-name]')].map(h=>'<button type="button" class="admbtn" data-sum="'+h.dataset.name+'">'+h.dataset.name+'</button>').join('')+'</div><div class="admnote">자동: 빈 자리에 들어가고 다 차 있으면 2P를 바꿉니다. 1P·2P: 그 자리에 넣고 이미 있으면 바꿉니다. 게임 중이면 바로 싸우기 시작합니다.</div>'
     +'<div class="admsub">능력치</div><div class="admstats"></div><div class="admnote">지금 게임에 있는 캐릭터에만 바로 적용됩니다.</div>'
-    +'<div class="admsub">스킬 확률</div><div class="admodds"></div><div class="admnote">새로고침하면 원래 확률로 돌아갑니다.</div>';
+    +(ADM_G?'':'<div class="admsub">스킬 확률</div><div class="admodds"></div><div class="admnote">새로고침하면 원래 확률로 돌아갑니다.</div>');
   if(k==='game')return '<div class="admsub">캐릭터</div><div class="admchars"></div>';
   if(k==='mod')return '<div class="admsub">내 정보</div><div class="admkv modme"></div>'
     +'<div class="admsub">방 목록 (비공개 포함)</div><div class="admsk"><button type="button" class="admbtn" data-a="roomsget">불러오기</button></div><div class="modrooms"></div>'
@@ -5882,7 +5882,7 @@ function openAdmin(g){
     T(()=>{if(w.querySelector('.admpg.on[data-p="rk"]')){if(!rinit){rinit=1;cldSync(false)}const r2=JSON.stringify(BOSSDB)+(BADM?1:0)+'|'+rkQ(),ae=document.activeElement;if(r2!==rsig&&!(ae&&ae.tagName==='INPUT'&&ae.closest('.rkbox'))){rsig=r2;const bx=w.querySelector('.rkbox');if(bx)bx.innerHTML=bossAdmHTML()}}});   // 처치 횟수 칸에 쓰는 중이면 다 쓸 때까지 다시 그리지 않음
     T(()=>{if(w.querySelector('.admpg.on[data-p="ml"]')){if(!mlinit){mlinit=1;cldSync(false)}const m2=ML.ok+':'+ML.all.map(x=>x.i).join(',');if(m2!==mlsig){mlsig=m2;mlAdmRender()}mlXUpd();mlLfTick(w.querySelector('.mlsent'))}});
     T(()=>{const s2=chars.map(c=>c.side+c.kind).join('|');if(s2!==ssig){ssig=s2;stb.innerHTML=admStatsHTML()}});
-    T(()=>{if(!osig){osig='1';odb.innerHTML=admOddsHTML()}});
+    T(()=>{if(!osig&&odb){osig='1';odb.innerHTML=admOddsHTML()}});
     T(()=>{admVals(w);});
     T(()=>{admSync();});
   };
@@ -6281,6 +6281,7 @@ function admSkip(){                              // 카운트다운 건너뛰고
 }
 /* 어드민 조작을 명령으로 만들어서 실행 — 온라인 경기 중이면 상대 폰에도 보내서 두 폰이 같은 순간(같은 계산 단계)에 똑같이 실행 */
 function admCmd(m){
+  if(ADM_G&&(m.a==='odds'||m.a==='oddsreset'))return;   // 게임 전용 패널: 스킬 확률은 못 바꿈
   if(ADM_G&&NET.match){netToast('온라인 경기 중에는 쓸 수 없어요');return}
   if(admBossNo()){netToast('보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
   if(NET.spec){netToast('관전 중에는 쓸 수 없어요');return}
