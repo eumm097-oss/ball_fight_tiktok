@@ -3221,7 +3221,7 @@ function castJy(c){                 // 햄버거 25% / 치킨 30% / 야채 25% /
 /* ---------- 태권히어로: 아우라 + 주먹 ---------- */
 /* 아우라: 몸 가장자리에서 4m 바깥까지. 상대 몸이 아우라에 닿으면(두 공 사이 간격 4m 이내) 주먹이 나감 */
 const RESIST={cut:.2,cut2:.5,cut3:.7};   // 보호 20% / 보호II 50% / 보호III 70% 감소
-const NU={spin:60,aura:.06,hit:3,ult:30,gap:.3,need:5,sec:1,ultSec:2.5,p1:.9,col3:8,colCd:HIT_GUARD,cycle:5,offSec:1.5,fade:.4,fxSec:3};
+const NU={spin:60,aura:.06,hit:3,ult:35,gap:.3,need:5,sec:1,ultSec:2.5,p1:.9,col3:8,colCd:HIT_GUARD,cycle:5,offSec:1.5,fade:.4,fxSec:3};
 const nuReach=t=>R+NU.aura+((t&&t.rad)||R);          // 상대 몸이 아우라에 조금이라도 닿으면 (보스처럼 큰 공은 그 반지름만큼 더)
 const BURN={gap:.5,lo:1,hi:5,lo2:5,hi2:10};                                 // 연소: 0.5초마다 1~5 (연소II는 5~10)
 const TG_RED='#CD2E3A',TG_BLUE='#0047A0';                              // 태극기의 홍·청
@@ -4957,7 +4957,7 @@ function slmTick(dt){
   if(simDraw)slmDraw(W,H)}
 function slmDraw(W,H){
   const NS='http://www.w3.org/2000/svg';
-  if(!slmSvg){slmSvg=document.createElementNS(NS,'svg');slmSvg.setAttribute('class','slmsv');auraLayer.appendChild(slmSvg)}
+  if(!slmSvg){slmSvg=document.createElementNS(NS,'svg');slmSvg.setAttribute('class','slmsv');auraLayer.insertBefore(slmSvg,[...auraLayer.children].find(e=>!e.classList.contains('kitem')&&!e.classList.contains('mletter'))||null)}   // 바닥에 떨어진 아이템보다는 위, 아우라(태권히어로 등)보다는 아래
   const w=Math.round(WB*W),h=Math.round(WB*H);
   if(slmSvg._w!==w||slmSvg._h!==h){slmSvg._w=w;slmSvg._h=h;slmSvg.setAttribute('width',w);slmSvg.setAttribute('height',h);slmSvg.setAttribute('viewBox','0 0 '+w+' '+h)}
   for(const s of slmSl){
@@ -5357,9 +5357,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.37';
+const PATCH_VERSION='4.13.38';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.38',date:'2026-11-03',chars:[{who:'태권히어로',tag:'buff',lines:['정권찌르기 데미지 {+30 → 35}']}],fx:[],sys:[]},
   {ver:'4.13.37',date:'2026-11-03',chars:[{who:'슬계',tag:'new',lines:['신규 캐릭터 추가']}],fx:[],
    sys:['매칭 중에 다른 앱으로 나가도 매칭이 계속됨','매칭이 잡히면 다른 앱에 있어도 알림이 옴','내가 만든 방에 누가 들어오면 다른 앱에 있어도 알림이 옴']},
   {ver:'4.13.36',date:'2026-11-02',chars:[{who:'제리얌',tag:'nerf',lines:['회복량 전체 {-15} 하락','햄버거 회복 {-40 → 25}']},{who:'낭만박상환',tag:'nerf',lines:['꼼짝마! 슬로우 {-1.75초 → 없음}']}],fx:[],
