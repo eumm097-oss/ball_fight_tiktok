@@ -314,7 +314,7 @@ body.scr-2v2 .hud>div.bleeding .status,body.in-mp .hud>div.bleeding .status{marg
 .auralayer{position:absolute;inset:0;pointer-events:none;z-index:1}
 .auralayer>*{position:absolute}
 .rb .fill.bnc{transition:transform .12s}.bnlayer{position:absolute;inset:0;pointer-events:none;z-index:3}.bnlayer>*{position:absolute}.bnorb,.bnzone i{border-radius:50%;box-sizing:border-box;background:radial-gradient(circle at 31% 27%,rgba(255,255,255,.98) 0,rgba(255,255,255,.9) 7%,rgba(255,255,255,0) 15%),radial-gradient(circle at 70% 76%,rgba(255,255,255,.6) 0,rgba(255,255,255,0) 20%),radial-gradient(circle at 50% 50%,rgba(205,232,250,.1) 0,rgba(205,232,250,.1) 55%,rgba(190,222,245,.32) 76%,rgba(150,196,226,.7) 94%,rgba(120,172,208,.85) 100%);box-shadow:inset -3px -3px 5px rgba(150,205,255,.45),inset 3px 3px 5px rgba(255,190,225,.38),0 0 0 .5px rgba(110,160,198,.6),0 0 5px 1px rgba(205,232,255,.75)}.bnorb::after,.bnzone i::after{content:'';position:absolute;left:15%;top:9%;width:36%;height:19%;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,0));transform:rotate(-34deg)}.bnorb::before,.bnzone i::before{content:'';position:absolute;right:13%;bottom:12%;width:30%;height:14%;border-radius:50%;background:linear-gradient(0deg,rgba(255,255,255,.7),rgba(255,255,255,0));transform:rotate(-34deg)}.bnorb{left:0;top:0;will-change:transform;animation:bnpp .26s cubic-bezier(.2,1.7,.4,1)}@keyframes bnpp{from{scale:.15;opacity:0}60%{opacity:1}to{scale:1;opacity:1}}.bnzone{transform:translate(-50%,-50%);pointer-events:none;animation:bnpop .5s cubic-bezier(.15,.85,.3,1.15);transition:opacity .4s}.bnzone .bnhz{position:absolute;inset:-7%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.7) 0,rgba(240,246,252,.55) 55%,rgba(235,243,250,0) 100%);animation:bnhz 3s ease-in-out infinite alternate}.bnzone .bnrt{position:absolute;inset:0;animation:bnjg 2.9s ease-in-out infinite alternate}.bnzone u{position:absolute;left:35%;top:35%;width:30%;height:30%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.9) 0,rgba(236,242,248,.6) 50%,rgba(236,242,248,0) 72%);opacity:0;animation:bnsm 2.4s ease-out infinite}@keyframes bnhz{from{transform:scale(.95)}to{transform:scale(1.06)}}@keyframes bnjg{0%{transform:scale(1,1) translateY(0)}50%{transform:scale(1.025,.975) translateY(-1%)}100%{transform:scale(.975,1.025) translateY(.6%)}}@keyframes bnsm{0%{transform:translate(0,0) scale(.5);opacity:0}22%{opacity:.8}100%{transform:translate(calc(var(--dx)*1%),calc(var(--dy)*1%)) scale(1.7);opacity:0}}.bnzone.off{opacity:0}.bnzone canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.93;animation:bnbr 1.9s ease-in-out infinite alternate-reverse}.bnzone i{position:absolute;opacity:0;animation:bnrise 2.2s ease-in infinite}@keyframes bnpop{from{transform:translate(-50%,-50%) scale(.2);opacity:0}}@keyframes bnbr{from{transform:scale(.985)}to{transform:scale(1.015)}}@keyframes bnrise{0%{transform:translateY(0) scale(.3);opacity:0}12%{opacity:1}75%{opacity:.95;transform:translateY(calc(var(--u)*-75%)) scale(1)}92%{opacity:.8;transform:translateY(calc(var(--u)*-100%)) scale(1.18)}100%{opacity:0;transform:translateY(calc(var(--u)*-104%)) scale(1.5)}}
-.slmsv{left:0;top:0;overflow:hidden;pointer-events:none}.slmsv .slme1{fill:#3c7d2f;stroke:#3c7d2f;stroke-width:3;stroke-linejoin:round}.slmsv .slme2{fill:#86d06c}.slmsv .slme3{fill:#57a443}
+.slmsv{left:0;top:0;overflow:hidden;pointer-events:none}.slmsv .slmmA{fill:#3c7d2f;opacity:.88}.slmsv .slmmB{fill:#7cc65f;opacity:.88}.slmsv .slme1{fill:#3c7d2f;stroke:#3c7d2f;stroke-width:3;stroke-linejoin:round}.slmsv .slme2{fill:#86d06c}.slmsv .slme3{fill:#57a443}
 .ball{z-index:2}
 
 /* 녹화 금지 안내 (로비·게임 중 항상 표시) */
@@ -2375,7 +2375,7 @@ function stepCells(h){
     const own=o.owner,hit=c=>c.alive&&Math.hypot(c.x-o.x,c.y-o.y)<R+MK.r,foe=()=>chars.find(c=>!ally(c,own)&&hit(c));
     if(!o.hl){const mate=chars.find(c=>c!==own&&ally(c,own)&&hit(c));if(mate)cellBounce(o,mate)}   // 같은 팀 공(2대2)은 통과하지 않고 부딪힘 (회복 세포는 팀원도 먹을 수 있음)
     if(o.hl){
-      const e=foe();if(e){if(o.t==='mac'){mkSlash(o,e);continue}cellBounce(o,e)}   // 대식세포는 상대를 벰 · NK·T세포는 상대 팀에 튕김
+      const e=foe();if(e){bnCellBump(e,o);if(o.t==='mac'){mkSlash(o,e);continue}cellBounce(o,e)}   // 대식세포는 상대를 벰 · NK·T세포는 상대 팀에 튕김
       const eat=hit(own)?own:chars.find(c=>c!==own&&ally(c,own)&&hit(c));   // 목박사 본인 또는 같은 팀 공이 닿으면 먹음
       if(eat&&now-o.born>.3){                                       // 목박사와 닿으면 빨려 들어가며 회복 (대식 20 · NK 30 · T 10)
         mkFly(o,eat.x,eat.y,130,.2);sndMkAbsorb();try{const W=aW(),H=aH();mkDots(eat.x*W,eat.y*H,['#2fc455','#a2ffb7'],5,W*.05,W*.016,360)}catch(_){}
@@ -2384,6 +2384,7 @@ function stepCells(h){
     }else{
       if(hit(own))cellBounce(o,own);                                     // 바이러스는 목박사에게 튕김
       const t=foe();if(!t)continue;
+      bnCellBump(t,o);
       if(o.t==='pox'){cellBounce(o,t);continue}                          // 천연두는 상대에 닿아도 터지지 않고 튕김 (시간이 되면 자폭)
       const d=o.t==='nip'?(grand()<MK.nipP?MK.nipDmg:MK.amt):(o.t==='flu'||o.t==='cov')?MK.psnHit:MK.amt;   // 니파: 70% 확률로 40, 아니면 10 · 스페인 독감·코로나: 7
       mkVirusFx(o,t,d===MK.nipDmg);
@@ -2393,7 +2394,7 @@ function stepCells(h){
     }
   }}
 function applyPoison(t,sec){                            // 독: 이미 걸려 있으면 겹치지 않고 더 긴 시간으로 (0.5초 틱 간격은 그대로 이어감)
-  if(!t.alive||debImmune(t))return;const u=now+sec;
+  if(!t.alive||t.kind==='bn'||debImmune(t))return;const u=now+sec;   // 비누계는 독 면역
   if(t.psnUntil>now)t.psnUntil=Math.max(t.psnUntil,u);else{t.psnUntil=u;t.psnNext=now+PSN.gap}}
 function psnTick(){
   for(const c of chars){
@@ -4667,10 +4668,11 @@ function drawBH(b){
   ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
 }
 function removeBH(b){bhHumKill(b);b.cv.remove();bhs=bhs.filter(x=>x!==b)}
-function bhBaseSpeed(m){            // 우주의 반응이 발동해 있는 동안은 상대(우주의 반응 주인이 아닌 쪽)의 기본 이동속도가 0.3으로 낮아짐 (상태효과가 아니라 속도 값 자체를 낮춤)
+function bhBaseSpeed0(m){            // 우주의 반응이 발동해 있는 동안은 상대(우주의 반응 주인이 아닌 쪽)의 기본 이동속도가 0.3으로 낮아짐 (상태효과가 아니라 속도 값 자체를 낮춤)
   for(const b of bhs)if(b.phase>=1&&!ally(b.owner,m))return Math.min(m.speed,BH.slowSpeed);
   return m.speed;
 }
+function bhBaseSpeed(m){const v=bhBaseSpeed0(m);return meltOn(m)?Math.min(v,MELT.speed):v}   // 녹은 슬라임이 켜져 있으면 이동속도 0.25
 const bhOn=m=>bhs.some(b=>b.phase>=1&&!ally(b.owner,m));   // 상대의 우주의 반응이 발동해 있음 (경기장 어디에 있든 영향)
 function bhPull(m,h){               // 상대를 중심으로 끌어당김: 범위는 경기장 전체, 멀수록 약하고 가까울수록 강함 (김켈리는 영향 없음)
   for(const b of bhs){
@@ -4886,9 +4888,12 @@ function krMakePortals(c,mode){
 function krPtRemove(p){if(p.el){p.el.remove();p.el=null}const i=krPts.indexOf(p);if(i>=0)krPts.splice(i,1)}
 /* ---------- 슬계: 끈적한 슬라임 (벽에 닿으면 그 벽과 슬계 사이에 슬라임이 늘어남 → 이어진 채로 다른 벽에 닿으면 두 벽 사이에 붙음 → 다음에 닿으면 또 새로) ---------- */
 const SLM={dmg:6,slowSec:2,tick:.5,e:.011,mid:.0035,abDmg:8,abHeal:3};   // 상대가 닿으면 6 데미지 + 슬로우 2초 · 계속 닿아 있으면 0.5초마다 다시 (슬라임 줄마다 따로) · e: 벽에 붙은 끝 두께(반) · mid: 가운데 최소 두께(반) · 슬라임 정리: 닿으면 8 데미지, 1개당 체력 3 회복
+const MELT={hp:50,speed:.25,r:R*.75,gap:R*.45,max:200,slowSec:.3,dmg:5,tick:1};   // 녹은 슬라임: 체력 50 이하면 이동속도 0.25 · 지나간 자리마다 끈적한 흔적이 남고, 상대가 밟고 있는 동안 슬로우II + 1초마다 5 데미지
+let slmMt=[],slmMtNt=new Map();
+const meltOn=c=>!!c&&c.kind==='sg'&&c.alive&&!lostPas(c)&&c.hp<=MELT.hp;
 const SLM_SND='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';
 /* ---------- 비누계: 거품 존 ---------- */
-const BN={r:R*2,dmg:12,tick:1,slowSec:.6,slowGap:.5,life:8};   // 7.8초마다 랜덤한 자리에 거품 존(반지름 = 공 반지름의 2배, 8초 동안) · 몸이 닿은 상대는 슬로우II + 1초마다 12 데미지
+const BN={r:R*2,hr:R*2*.9,dmg:12,tick:1,slowSec:.6,slowGap:.5,life:8};   // 7.8초마다 랜덤한 자리에 거품 존(반지름 = 공 반지름의 2배, 8초 동안) · 몸이 닿은 상대는 슬로우II + 1초마다 12 데미지
 let bnZ=[];
 const BNO={dmg:10,max:5,rot:ROD.rot*.8,r:MK.r*.8,orb:.14,grace:.4,cd:.25};   // 거품 방울: 다른 공과 부딪힐 때마다 하나씩(최대 5개) 비누계 둘레를 돎(숏타민 각목보다 0.8배 느리게) · 크기는 목박사 세포의 0.8배 · 상대에 닿으면 터지면서 10 데미지
 let bnO=[];
@@ -4897,13 +4902,17 @@ function bnOrb(c,deg){                                          // 거품 방울
   if(!c.alive||over||bnO.filter(o=>o.own===c).length>=BNO.max)return;
   const el=document.createElement('div');el.className='bnorb';bnLayer.appendChild(el);
   el.style.width=el.style.height=(BNO.r*2*100)+'%';
-  bnO.push({own:c,off:0,a:deg,g:BNO.grace,x:c.x,y:c.y,el});bnOrbPos(bnO[bnO.length-1])}
-function bnOrbPos(o){const th=o.a*Math.PI/180;o.x=o.own.x+Math.sin(th)*BNO.orb;o.y=o.own.y-Math.cos(th)*BNO.orb;
-  if(simDraw){const W=aW(),H=aH();o.el.style.transform='translate('+(o.x*W)+'px,'+(o.y*H)+'px) translate(-50%,-50%)'}}
+  bnO.push({own:c,off:0,a:deg,g:BNO.grace,x:c.x,y:c.y,el});
+  const L=bnO.filter(q=>q.own===c);L.forEach((q,i)=>{q.off=i*360/L.length;q.a=((c.bnA||0)+q.off)%360;bnOrbPos(q,true)})}   // 자리를 바로 잡아서 그 자리에서 뽕 하고 나타남 (화면 구석에서 날아오지 않게 처음부터 제 위치에 그림)
+function bnOrbPos(o,force){const th=o.a*Math.PI/180;o.x=o.own.x+Math.sin(th)*BNO.orb;o.y=o.own.y-Math.cos(th)*BNO.orb;
+  if(simDraw||force){const W=aW(),H=aH();o.el.style.transform='translate('+(o.x*W)+'px,'+(o.y*H)+'px) translate(-50%,-50%)'}}
 function bnBump(a,b){if(ally(a,b))return;                       // 비누계가 다른 공과 부딪힘: 거품 방울 하나 (같은 부딪힘에서 두 번 생기지 않게 짧은 간격)
   for(const [s,t] of [[a,b],[b,a]]){
     if(s.kind!=='bn'||!s.alive||!t.alive||lostPas(s)||now<(s.bnCd||0))continue;
     s.bnCd=now+BNO.cd;bnOrb(s,Math.atan2(t.x-s.x,-(t.y-s.y))*180/Math.PI)}}
+function bnCellBump(s,m){                                       // 비누계가 상대 목박사의 세포·바이러스와 부딪힘: 공과 부딪힐 때와 똑같이 방울 하나
+  if(!s||s.kind!=='bn'||!s.alive||ally(s,m.owner)||lostPas(s)||now<(s.bnCd||0))return;
+  s.bnCd=now+BNO.cd;bnOrb(s,Math.atan2(m.x-s.x,-(m.y-s.y))*180/Math.PI)}
 const bnFoamC=[];                                              // 거품 더미 그림은 몇 장만 그려 두고 돌려 씀 (거품 존이 나올 때마다 새로 그리면 렉이 걸림)
 function bnFoamMake(){                                         // 거품 더미 그림: 휘핑크림 · 샴푸 거품처럼 쫀득하고 몽글몽글한 큰 덩어리 몇 개가 겹쳐 쌓인 모양 (잔 구멍 없이 매끈하게)
   const S=300,h=S/2,cv=document.createElement('canvas');cv.width=cv.height=S;const g=cv.getContext('2d'),rn=(a,b)=>a+Math.random()*(b-a),L=[];
@@ -4959,11 +4968,11 @@ function bnTick(dt){
     z.t+=dt;
     if(z.t>=BN.life-.4&&!z.off){z.off=1;z.el.classList.add('off')}
     for(const t of chars){
-      if(!t.alive||ally(t,c)||Math.hypot(t.x-z.x,t.y-z.y)>BN.r+(t.rad||R))continue;
+      if(!t.alive||ally(t,c)||Math.hypot(t.x-z.x,t.y-z.y)>BN.hr+(t.rad||R))continue;
       if(now>=(z.sn.get(t)||0)){z.sn.set(t,now+BN.slowGap-1e-6);applySlow(t,2,BN.slowSec)}
       if(now>=(z.nt.get(t)||0)){z.nt.set(t,now+BN.tick-1e-6);try{burstAt(t.x*W,t.y*H,'#bfe9ff',.6,6)}catch(e){}hurt(t,(BN.dmg+atk(c))*frail(c))}}
     for(const m of mkCells.slice()){                       // 거품 존 안의 상대 세포·바이러스: 1초마다 한 번씩 맞음
-      if(ally(m.owner,c)||Math.hypot(m.x-z.x,m.y-z.y)>BN.r+(m.r||MK.r)||now<(z.nt.get(m)||0))continue;
+      if(ally(m.owner,c)||Math.hypot(m.x-z.x,m.y-z.y)>BN.hr+(m.r||MK.r)||now<(z.nt.get(m)||0))continue;
       z.nt.set(m,now+BN.tick-1e-6);cellBn(m)}}}
 let slmB=null,slmL=false,slmT=0,slmSl=[],slmSvg=null;
 function slmSndLoad(){if(slmB||slmL||!actx)return;slmL=true;
@@ -4992,7 +5001,7 @@ function slmWall(c,wx,wy){                    // 슬계가 벽에 닿음 (wx·wy
   try{slmSnd();burstAt(x*aW(),y*aH(),'#84cf6a',.5,5)}catch(e){}}
 function slmDrop(s){const i=slmSl.indexOf(s);if(i>=0)slmSl.splice(i,1);
   for(const e of [s.e1,s.e2,s.e3])if(e){try{e.animate([{opacity:1},{opacity:0}],{duration:300,fill:'forwards'}).onfinish=()=>e.remove()}catch(_){e.remove()}}}
-function slmReset(){slmSl=[];if(slmSvg){slmSvg.remove();slmSvg=null}}
+function slmReset(){slmSl=[];slmMt=[];slmMtNt=new Map();if(slmSvg){slmSvg.remove();slmSvg=null}}
 function slmAbsorb(c){                       // 슬라임 정리: 깔아 둔 슬라임을 전부 슬계 입으로 빨아들임 — 슬라임을 점 여러 개로 이은 줄로 바꿔서, 슬계에 제일 가까운 곳부터 입으로 끌려 들어가고 양쪽 줄이 딸려 들어옴
   const L=slmSl.filter(s=>s.own===c&&!s.ab);if(!L.length)return;
   let far=0;
@@ -5015,9 +5024,28 @@ function slmHitP(P,px,py,rr,k){               // 빨려 가는 줄 판정: 보�
 function slmGulp(c,n){                       // 꿀꺽: 다 빨아들이면 슬계가 한 번 부풀었다 돌아오고 초록 방울이 튐
   try{const W=aW(),H=aH(),b='translate(-50%,-50%) ';burstAt(c.x*W,c.y*H,'#84cf6a',.75+Math.min(.45,n*.08),6+Math.min(6,n*2));
     c.ball.animate([{transform:b+'scale(1)'},{transform:b+'scale(1.22)',offset:.3},{transform:b+'scale(.93)',offset:.65},{transform:b+'scale(1)'}],{duration:300,easing:'ease-out'})}catch(e){}}
+function slmMeltTick(W,H){                    // 녹은 슬라임: 체력 50 이하인 슬계가 지나간 자리마다 흔적을 남기고, 상대가 밟고 있는 동안 슬로우II + 1초마다 5 데미지
+  for(const c of chars){
+    if(c.kind!=='sg')continue;
+    if(!meltOn(c)){c._mtX=null;continue}
+    if(!c._mtOn){c._mtOn=true;try{burstAt(c.x*W,c.y*H,'#84cf6a',.8,8)}catch(e){}}
+    if(c._mtX==null||Math.hypot(c.x-c._mtX,c.y-c._mtY)>=MELT.gap){c._mtX=c.x;c._mtY=c.y;slmMt.push({own:c,x:c.x,y:c.y});
+      while(slmMt.length>MELT.max){const o=slmMt.shift();if(o.a)o.a.remove();if(o.b)o.b.remove()}}}
+  for(const c of chars)if(c.kind==='sg'&&!meltOn(c))c._mtOn=false;
+  for(let i=slmMt.length-1;i>=0;i--){const o=slmMt[i];if(!o.own.alive){if(o.a)o.a.remove();if(o.b)o.b.remove();slmMt.splice(i,1)}}   // 슬계가 쓰러지면 흔적도 사라짐
+  if(!slmMt.length||revPause>0)return;
+  for(const t of chars){
+    if(!t.alive)continue;
+    for(const o of slmMt){
+      if(ally(t,o.own)||Math.hypot(t.x-o.x,t.y-o.y)>=MELT.r+(t.rad||R)*.6)continue;
+      applySlow(t,2,MELT.slowSec);
+      if(now>=(slmMtNt.get(t)||0)){slmMtNt.set(t,now+MELT.tick-1e-6);try{burstAt(t.x*W,t.y*H,'#84cf6a',.5,5)}catch(e){}hurt(t,(MELT.dmg+atk(o.own))*frail(o.own))}
+      break}}}
 function slmTick(dt){
-  if(!slmSl.length)return;
-  const W=aW(),H=aH(),got=new Map();
+  const W=aW(),H=aH();
+  slmMeltTick(W,H);
+  if(!slmSl.length){if(slmMt.length&&simDraw)slmDraw(W,H);return}
+  const got=new Map();
   for(const s of slmSl.slice()){
     const c=s.own;if(!c.alive){slmDrop(s);continue}               // 슬계가 쓰러지면 슬라임도 사라짐
     if(s.ab){                                                    // 빨려 가는 중: 가까운 끝이 입으로 들어가고, 줄이 팽팽해지면서 나머지가 줄줄이 딸려 들어옴 · 닿아 있는 상대는 0.5초마다 데미지
@@ -5038,6 +5066,9 @@ function slmTick(dt){
         if(!t.alive||ally(t,c)||now<(A.nt.get(t)||0)||!A.C.some(q=>slmHitP(q.P,t.x,t.y,t.rad||R,k)))continue;
         A.nt.set(t,now+SLM.tick-1e-6);try{burstAt(t.x*W,t.y*H,'#84cf6a',.6,6)}catch(e){}
         hurt(t,(SLM.abDmg+atk(c))*frail(c))}
+      for(const m of mkCells.slice()){
+        if(ally(m.owner,c)||now<(A.nt.get(m)||0)||!A.C.some(q=>slmHitP(q.P,m.x,m.y,m.r||MK.r,k)))continue;
+        A.nt.set(m,now+SLM.tick-1e-6);cellHurt(m)}
       continue}
     if(lostPas(c)||revPause>0)continue;
     const g=slmGeo(s);
@@ -5046,7 +5077,10 @@ function slmTick(dt){
       s.nt.set(t,now+SLM.tick-1e-6);                               // 닿자마자 한 번 · 계속 닿아 있으면 0.5초마다 (다른 줄은 따로 세서 여러 줄에 닿으면 그만큼 더 맞음)
       try{slmSnd();burstAt(t.x*W,t.y*H,'#84cf6a',.6,6)}catch(e){}
       hurt(t,(SLM.dmg+atk(c))*frail(c));
-      if(t.alive)applySlow(t,1,SLM.slowSec)}}
+      if(t.alive)applySlow(t,1,SLM.slowSec)}
+    for(const m of mkCells.slice()){                              // 상대 목박사의 세포·바이러스도 슬라임에 닿으면 체력이 1 깎임 (0.5초마다)
+      if(ally(m.owner,c)||now<(s.nt.get(m)||0)||!slmHit(g,m.x,m.y,m.r||MK.r))continue;
+      s.nt.set(m,now+SLM.tick-1e-6);try{burstAt(m.x*W,m.y*H,'#84cf6a',.4,4)}catch(e){}cellHurt(m)}}
   for(const [c,n] of got){const h=SLM.abHeal*n,g=Math.min(h,c.max-c.hp);slmGulp(c,n);if(g>0)try{healFx(c,g)}catch(e){}heal(c,h)}   // 빨아들인 슬라임 1개당 체력 3 회복
   if(simDraw)slmDraw(W,H)}
 function slmDraw(W,H){
@@ -5054,6 +5088,12 @@ function slmDraw(W,H){
   if(!slmSvg){slmSvg=document.createElementNS(NS,'svg');slmSvg.setAttribute('class','slmsv');auraLayer.insertBefore(slmSvg,[...auraLayer.children].find(e=>!e.classList.contains('kitem')&&!e.classList.contains('mletter'))||null)}   // 바닥에 떨어진 아이템보다는 위, 아우라(태권히어로 등)보다는 아래
   const w=Math.round(WB*W),h=Math.round(WB*H);
   if(slmSvg._w!==w||slmSvg._h!==h){slmSvg._w=w;slmSvg._h=h;slmSvg.setAttribute('width',w);slmSvg.setAttribute('height',h);slmSvg.setAttribute('viewBox','0 0 '+w+' '+h)}
+  if(!slmSvg._mg){const gA=document.createElementNS(NS,'g'),gB=document.createElementNS(NS,'g');gA.setAttribute('class','slmmA');gB.setAttribute('class','slmmB');slmSvg.insertBefore(gB,slmSvg.firstChild);slmSvg.insertBefore(gA,slmSvg.firstChild);slmSvg._mg=[gA,gB]}   // 녹은 슬라임 흔적: 테두리 층 → 안쪽 층 (겹쳐도 한 덩어리로 이어져 보임)
+  for(const o of slmMt){
+    if(!o.a){o.a=document.createElementNS(NS,'circle');o.b=document.createElementNS(NS,'circle');slmSvg._mg[0].appendChild(o.a);slmSvg._mg[1].appendChild(o.b)}
+    if(o._w===w)continue;o._w=w;                                   // 화면 크기가 바뀌면 다시 맞춤
+    o.a.setAttribute('cx',(o.x*W).toFixed(1));o.a.setAttribute('cy',(o.y*H).toFixed(1));o.a.setAttribute('r',(MELT.r*W+2.5).toFixed(1));
+    o.b.setAttribute('cx',(o.x*W).toFixed(1));o.b.setAttribute('cy',(o.y*H).toFixed(1));o.b.setAttribute('r',(MELT.r*W).toFixed(1))}
   for(const s of slmSl){
     if(!s.e1){for(const k of ['e1','e2','e3']){s[k]=document.createElementNS(NS,'path');s[k].setAttribute('class','slm'+k);slmSvg.appendChild(s[k])}}
     const d=slmD(s,W,H,1);
@@ -5382,8 +5422,8 @@ const INFO=[
      {n:'탱고',p:KR_ODDS.tango+'%',d:'하늘에서 '+KR.roseSec+'초 동안 장미가 떨어진다. 장미마다 각도가 다르고, 맞으면 '+KR.roseDmg+' 데미지를 입는다. 장미는 맞아도 사라지지 않고 끝까지 떨어지며, 넉백은 없다.'}
    ]},
   {kind:'sh',cls:'sh',name:'설화',color:'#e0709a',tag:'아직 스킬이 없는 공',chips:['HP '+STATS.sh.max,'이동속도 '+STATS.sh.speed,'스킬 쿨타임 없음'],skills:[]},
-  {kind:'bn',cls:'bn',name:'비누계',color:'#9ad7f5',tag:'거품으로 공격하는 공',chips:['HP '+STATS.bn.max,'이동속도 '+STATS.bn.speed,'스킬 쿨타임 '+STATS.bn.cooldown+'초'],skills:[{n:'거품 존',p:STATS.bn.cooldown+'초마다',d:'랜덤한 위치에 거품 존이 생긴다(반경 '+Math.round(BN.r*100)+'m, '+BN.life+'초 동안). 상대의 몸이 거품 존에 닿아 있는 동안 슬로우II에 걸리고 '+BN.tick+'초마다 '+BN.dmg+' 데미지를 입는다.'},{n:'거품 방울',p:'패시브',d:'다른 공과 부딪히면 거품 방울이 하나 생겨서 비누계 둘레를 돈다(최대 '+BNO.max+'개). 돌다가 상대에 닿으면 터지면서 '+BNO.dmg+' 데미지를 준다. 아래 게이지는 5칸이고 방울 1개당 1칸씩 찬다.'},{n:'목박사 세포·바이러스 제거',p:'패시브',d:'상대 목박사의 바이러스는 방울이나 거품 존에 한 번 닿으면 사라지고, 세포는 3번 닿으면 사라진다.'}]},
-  {kind:'sg',cls:'sg',name:'슬계',color:'#8fdc8f',tag:'슬라임으로 공격하는 공',chips:['HP '+STATS.sg.max,'이동속도 '+STATS.sg.speed,'스킬 쿨타임 '+STATS.sg.cooldown+'초'],skills:[{n:'끈적한 슬라임',p:'패시브',d:'벽에 닿으면 그 벽과 슬계 사이에 슬라임이 늘어나 이어진다. 이어진 채로 다른 벽에 닿으면 슬라임이 두 벽 사이에 붙고, 다음에 벽에 닿으면 새 슬라임이 또 이어진다. 상대가 슬라임에 닿으면 '+SLM.dmg+' 데미지를 입고 '+SLM.slowSec+'초 동안 슬로우에 걸린다. 계속 닿아 있으면 '+SLM.tick+'초마다 다시 데미지를 입고, 슬라임 여러 줄에 닿으면 줄마다 따로 데미지를 입는다.'},{n:'슬라임 정리',p:STATS.sg.cooldown+'초마다',d:'깔아 둔 슬라임을 전부 슬계 쪽으로 빨아들인다. 빨려 오는 슬라임에 닿은 상대는 '+SLM.abDmg+' 데미지를 입고, 슬계는 빨아들인 슬라임 1개당 체력을 '+SLM.abHeal+' 회복한다.'}]},
+  {kind:'bn',cls:'bn',name:'비누계',color:'#9ad7f5',tag:'거품으로 공격하는 공',chips:['HP '+STATS.bn.max,'이동속도 '+STATS.bn.speed,'스킬 쿨타임 '+STATS.bn.cooldown+'초'],skills:[{n:'거품 존',p:STATS.bn.cooldown+'초마다',d:'랜덤한 위치에 거품 존이 생긴다(반경 '+Math.round(BN.r*100)+'m, '+BN.life+'초 동안). 상대의 몸이 거품 존에 닿아 있는 동안 슬로우II에 걸리고 '+BN.tick+'초마다 '+BN.dmg+' 데미지를 입는다.'},{n:'거품 방울',p:'패시브',d:'다른 공과 부딪히면 거품 방울이 하나 생겨서 비누계 둘레를 돈다(최대 '+BNO.max+'개). 돌다가 상대에 닿으면 터지면서 '+BNO.dmg+' 데미지를 준다. 아래 게이지는 5칸이고 방울 1개당 1칸씩 찬다.'},{n:'목박사 세포·바이러스 제거',p:'패시브',d:'상대 목박사의 바이러스는 방울이나 거품 존에 한 번 닿으면 사라지고, 세포는 3번 닿으면 사라진다. 세포·바이러스와 부딪혀도 거품 방울이 생긴다.'},{n:'독 면역',p:'패시브',d:'독에 걸리지 않는다.'}]},
+  {kind:'sg',cls:'sg',name:'슬계',color:'#8fdc8f',tag:'슬라임으로 공격하는 공',chips:['HP '+STATS.sg.max,'이동속도 '+STATS.sg.speed,'스킬 쿨타임 '+STATS.sg.cooldown+'초'],skills:[{n:'끈적한 슬라임',p:'패시브',d:'벽에 닿으면 그 벽과 슬계 사이에 슬라임이 늘어나 이어진다. 이어진 채로 다른 벽에 닿으면 슬라임이 두 벽 사이에 붙고, 다음에 벽에 닿으면 새 슬라임이 또 이어진다. 상대가 슬라임에 닿으면 '+SLM.dmg+' 데미지를 입고 '+SLM.slowSec+'초 동안 슬로우에 걸린다. 계속 닿아 있으면 '+SLM.tick+'초마다 다시 데미지를 입고, 슬라임 여러 줄에 닿으면 줄마다 따로 데미지를 입는다. 상대 목박사의 세포·바이러스도 슬라임에 닿으면 체력이 1 깎인다.'},{n:'녹은 슬라임',p:'패시브',d:'체력이 '+MELT.hp+' 이하가 되면 이동속도가 '+MELT.speed+'이 되고, 지나가는 곳마다 끈적한 녹은 슬라임 흔적이 남는다. 상대가 흔적을 밟고 있는 동안 슬로우II에 걸리고 '+MELT.tick+'초마다 '+MELT.dmg+' 데미지를 입는다.'},{n:'슬라임 정리',p:STATS.sg.cooldown+'초마다',d:'깔아 둔 슬라임을 전부 슬계 쪽으로 빨아들인다. 빨려 오는 슬라임에 닿은 상대는 '+SLM.abDmg+' 데미지를 입고, 슬계는 빨아들인 슬라임 1개당 체력을 '+SLM.abHeal+' 회복한다.'}]},
 ];
 const CHEV="<svg viewBox='0 0 24 10' fill='none' stroke='currentColor' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true'><polyline points='2.5,2.5 12,7.5 21.5,2.5'/></svg>";   // 납작하고 각이 넓은 ∨
 function renderFx(){                 // 상태효과 정리 (수치는 게임에서 쓰는 값에서 가져와요)
@@ -6677,8 +6717,9 @@ function admHitLoop(){                           // 히트박스: 공 몸통과 
   for(const l of krLs)circ(l.x,l.y,KR.lR,K.obj,!l.go);                                           // 권루트 L (끌려오는 중에만 맞음)
   for(const r0 of krRoses)circ(r0.x,r0.y,KR.roseR,K.obj);                                         // 권루트 장미
   for(const p of krPts)if(p.pair)circ(p.x,p.y,KR.ptH-R,K.pt);
-  for(const z of bnZ)circ(z.x,z.y,BN.r,K.hit);
+  for(const z of bnZ)circ(z.x,z.y,BN.hr,K.hit);
   for(const o of bnO)circ(o.x,o.y,BNO.r,K.hit);                                                   // 비누계 거품 존 (몸이 닿으면 맞음)
+  for(const o of slmMt)circ(o.x,o.y,MELT.r-R*.4,K.hit);   // 녹은 슬라임 흔적 (공 테두리가 닿으면 맞음)
   for(const s of slmSl){g.setLineDash([]);g.strokeStyle=K.hit;try{g.stroke(new Path2D(slmD(s,W,H,1)))}catch(e){}}   // 슬계 슬라임 (보이는 모양 그대로 · 공 테두리가 닿으면 맞음)
   for(const f of foods)circ(f.x,f.y,.045,K.get,true);                                             // 제리얌 음식 (제리얌이 먹음)
   for(const l of mletters)circ(l.x,l.y,MART.pickR,K.get,true);                                    // 신비마트 글자 (김켈리가 먹음)
@@ -6894,6 +6935,31 @@ function netPaintOnl(){
 onlEl.querySelector('.mkbtn').addEventListener('click',()=>netFind());
 onlEl.querySelector('.rmbtn').addEventListener('click',()=>{if(NET.state!=='idle'&&!NET.room)return;if(NET.room){roomShow('room');return}if(!NET.me.name){netMsg('이름부터 정해주세요!','bad');return}roomShow('menu')});
 
+/* 매칭 중 백그라운드 유지: 다른 앱에 가 있어도 매칭 찾기가 멈추지 않게 (화면 밖에서는 브라우저가 타이머를 늦추고 페이지를 얼려서 매칭이 안 잡히거나 알림이 안 왔음) */
+const BGW={w:null,m:new Map(),n:1e9,bad:false};
+function bgWorker(){
+  if(BGW.w||BGW.bad)return BGW.w;
+  try{const u=URL.createObjectURL(new Blob(["const T={};onmessage=e=>{const d=e.data;if(d.c){clearTimeout(T[d.i]);clearInterval(T[d.i]);delete T[d.i];return}if(d.r)T[d.i]=setInterval(()=>postMessage(d.i),d.m);else T[d.i]=setTimeout(()=>{delete T[d.i];postMessage(d.i)},d.m)}"],{type:'text/javascript'}));
+    const w=new Worker(u);w.onmessage=e=>{const o=BGW.m.get(e.data);if(!o)return;if(!o.r)BGW.m.delete(e.data);try{o.f()}catch(err){console.error(err)}};w.onerror=()=>{BGW.bad=true};BGW.w=w}catch(_){BGW.bad=true}
+  return BGW.w}
+function bgT(f,ms){const w=bgWorker();if(!w)return setTimeout(f,ms);const i=++BGW.n;BGW.m.set(i,{f,r:false});w.postMessage({i,m:ms,r:false});return i}   // 화면 밖에서도 늦춰지지 않는 setTimeout
+function bgI(f,ms){const w=bgWorker();if(!w)return setInterval(f,ms);const i=++BGW.n;BGW.m.set(i,{f,r:true});w.postMessage({i,m:ms,r:true});return i}
+function bgC(i){if(i>=1e9){if(BGW.m.delete(i)&&BGW.w)BGW.w.postMessage({i,c:1})}else{clearTimeout(i);clearInterval(i)}}
+const MKEEP={on:false,au:null,rel:null,iv:0,url:''};
+function mnKeepOn(){
+  if(MKEEP.on)return;MKEEP.on=true;
+  try{if(navigator.locks&&navigator.locks.request)navigator.locks.request('bft-search',()=>new Promise(r=>{MKEEP.rel=r})).catch(()=>{})}catch(_){}   // 잠금을 쥐고 있으면 브라우저가 페이지를 얼리지 않음
+  try{if(!MKEEP.url){const n=8000,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,t)=>{for(let i=0;i<t.length;i++)b[o+i]=t.charCodeAt(i)};
+      w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);
+      for(let i=0;i<n;i++)b[44+i]=128+(i&1);MKEEP.url=URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}   // 들리지 않는 아주 작은 소리를 반복 재생
+    const a=MKEEP.au||(MKEEP.au=new Audio(MKEEP.url));a.loop=true;a.volume=.02;const pr=a.play();if(pr&&pr.catch)pr.catch(()=>{})}catch(_){}
+  MKEEP.iv=bgI(()=>{if(NET.state!=='search')mnKeepOff()},1000)}
+function mnKeepOff(){
+  if(!MKEEP.on)return;MKEEP.on=false;
+  try{if(MKEEP.rel){MKEEP.rel();MKEEP.rel=null}}catch(_){}
+  try{if(MKEEP.au)MKEEP.au.pause()}catch(_){}
+  bgC(MKEEP.iv);MKEEP.iv=0}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&MKEEP.on){try{if(MKEEP.au&&MKEEP.au.paused)MKEEP.au.play().catch(()=>{})}catch(_){}}});
 /* 매칭 알림: 매칭 중에 다른 앱·탭에 가 있어도 매칭이 잡히면 폰 알림으로 알려 줌 (매칭을 시작할 때 알림 허용을 한 번 물어봄) */
 let mnReg=null,mnAsked=false;
 try{if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))navigator.serviceWorker.register('sw.js').then(r=>{mnReg=r}).catch(()=>{})}catch(_){}   // 안드로이드 크롬은 서비스 워커로만 알림을 띄울 수 있음
@@ -6901,7 +6967,10 @@ function mnAsk(){try{if(mnAsked||!('Notification' in window)||Notification.permi
 function mnShow(t,tag){                              // 다른 앱·탭에 가 있을 때만 알림 (게임을 보고 있으면 안 띄움)
   try{if(!document.hidden&&document.hasFocus())return;if(!('Notification' in window)||Notification.permission!=='granted')return;
     const plain=()=>{try{new Notification(t,{tag,renotify:true})}catch(_){}};
-    if(mnReg&&mnReg.showNotification)mnReg.showNotification(t,{tag,renotify:true,vibrate:[200,100,200]}).catch(plain);else plain()}catch(_){}}
+    const o={tag,renotify:true,vibrate:[200,100,200],requireInteraction:true};
+    if(mnReg&&mnReg.showNotification)mnReg.showNotification(t,o).catch(plain);
+    else if(navigator.serviceWorker&&navigator.serviceWorker.ready)navigator.serviceWorker.ready.then(r=>r.showNotification(t,o)).catch(plain);   // 서비스 워커 등록이 아직 안 끝났어도 끝나는 대로 알림
+    else plain()}catch(_){}}
 function mnFound(){mnShow('매칭이 잡혔어요!','bft-match')}   // 매칭이 잡힘
 function mnRoom(t){mnShow(t,'bft-room')}                     // 내가 만든 방에 누가 들어옴
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&mnReg&&mnReg.getNotifications)mnReg.getNotifications().then(L=>L.forEach(n=>n.close())).catch(()=>{})});   // 돌아오면 알림은 지움
@@ -6920,7 +6989,7 @@ function netOvEl(){
   return m;
 }
 function netOvShow(){
-  const m=netOvEl();m.hidden=false;m.className='mmodal';
+  mnKeepOn();const m=netOvEl();m.hidden=false;m.className='mmodal';
   m.querySelector('.mtt1').textContent='매칭 중...';m.querySelector('.mdots').hidden=true;
   m.querySelector('.mfield').hidden=false;m.querySelector('.mtime').hidden=false;m.querySelector('.mvs').hidden=true;m.querySelector('.mstat').hidden=false;
   m.querySelector('.mretry').hidden=true;m.querySelector('.kkad').hidden=true;m.querySelector('.mcnt').hidden=true;const cb=m.querySelector('.mcancel');cb.hidden=false;cb.textContent='취소';
@@ -6969,15 +7038,15 @@ function netKill(p){try{p.destroy()}catch(e){}NET.peers=NET.peers.filter(x=>x!==
 function netPeer(id){return new Promise((res,rej)=>{
   let p;try{p=id?new Peer(id,netOpts()):new Peer(netOpts())}catch(e){rej(e);return}
   NET.peers.push(p);let done=false;
-  const to=setTimeout(()=>{if(done)return;done=true;netKill(p);rej({type:'timeout'})},9000);
-  p.on('open',()=>{if(done)return;done=true;clearTimeout(to);res(p)});
-  p.on('error',e=>{if(done)return;done=true;clearTimeout(to);netKill(p);rej(e||{})});
+  const to=bgT(()=>{if(done)return;done=true;netKill(p);rej({type:'timeout'})},9000);
+  p.on('open',()=>{if(done)return;done=true;bgC(to);res(p)});
+  p.on('error',e=>{if(done)return;done=true;bgC(to);netKill(p);rej(e||{})});
 })}
 const netInfo=()=>({name:NET.me.name,dev:!!NET.me.dev,tst:!NET.me.dev&&!!NET.me.tst,ch:NET.myCh,pid:PID});
 function netCleanInfo(d){let n=String(d&&d.name||'').replace(/[^0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ !?.~()]/g,'').replace(/\s+/g,' ').trim();if(!/[0-9A-Za-z가-힣ㄱ-ㅎㅏ-ㅣ]/.test(n)||modCheck(n).bad)n='';return {pid:/^[A-Z2-9]{6}$/.test(d&&d.pid)?d.pid:'',name:[...(n||'???')].slice(0,NMX).join(''),dev:!!(d&&d.dev),tst:!(d&&d.dev)&&!!(d&&d.tst),ch:netHalf(d&&d.ch)?d.ch:'더미'}}
 function netJoin(me,id){return new Promise(res=>{
   let done=false,c=null,to=0;
-  const fin=r=>{if(done)return;done=true;clearTimeout(to);try{me.off('error',onErr)}catch(_){}if(r!=='ok'&&c){try{c.close()}catch(_){}}res(r)};
+  const fin=r=>{if(done)return;done=true;bgC(to);try{me.off('error',onErr)}catch(_){}if(r!=='ok'&&c){try{c.close()}catch(_){}}res(r)};
   const onErr=e=>{if(e&&e.type==='peer-unavailable'&&String(e.message||'').indexOf(id)>=0)fin('empty')};
   me.on('error',onErr);
   try{c=me.connect(id,{reliable:true,serialization:'json'})}catch(e){c=null}
@@ -6987,13 +7056,13 @@ function netJoin(me,id){return new Promise(res=>{
     if(d.t==='welcome'){NET.conn=c;NET.host=false;NET.op=netCleanInfo(d);NET.mySide=d.side==='left'?'left':'right';NET.seed=d.seed|0;fin('ok')}
     else if(d.t==='busy')fin('busy')});
   c.on('close',()=>fin('closed'));c.on('error',()=>fin('fail'));
-  to=setTimeout(()=>fin('fail'),10000);
+  to=bgT(()=>fin('fail'),10000);
 })}
 function netHostWait(hp,sid,ctl){return new Promise(res=>{
   const cf=()=>res('cancel');(NET.cw||(NET.cw=new Set())).add(cf);if(ctl)ctl.cancel=cf;
   hp.on('disconnected',()=>{if(!NET.conn)res('lost')});          // 화면이 꺼지는 등으로 서버 연결이 끊기면 처음부터 다시 찾기
   hp.on('connection',c=>{
-    const busy=()=>{const s=()=>{try{c.send({t:'busy'})}catch(_){}setTimeout(()=>{try{c.close()}catch(_){}},400)};if(c.open)s();else c.on('open',s)};
+    const busy=()=>{const s=()=>{try{c.send({t:'busy'})}catch(_){}bgT(()=>{try{c.close()}catch(_){}},400)};if(c.open)s();else c.on('open',s)};
     if(NET.conn||sid!==NET.searchId||NET.state!=='search'){busy();return}
     let ok=false;
     c.on('data',d=>{
@@ -7004,7 +7073,7 @@ function netHostWait(hp,sid,ctl){return new Promise(res=>{
       try{c.send(Object.assign({t:'welcome',v:NET_PROTO,side:gs,seed:NET.seed},netInfo()))}catch(_){}
       NET.cw.delete(cf);res('ok');
     });
-    setTimeout(()=>{if(!ok&&NET.conn!==c){try{c.close()}catch(_){}}},12000);
+    bgT(()=>{if(!ok&&NET.conn!==c){try{c.close()}catch(_){}}},12000);
   });
 })}
 async function netFind(){
@@ -7045,7 +7114,7 @@ async function netFind(){
         netKill(hp);if(!alive())return;
       }
     }
-    await new Promise(r=>setTimeout(r,600+Math.random()*900));
+    await new Promise(r=>bgT(r,600+Math.random()*900));
   }
 }
 function netMatched(){
@@ -9328,12 +9397,12 @@ async function mpFind(md){
       if(!alive()){if(hp)netKill(hp);return}
       if(hp){netStat('같이 할 사람을 기다리는 중');if(NET.party&&NET.party.lead)partySend({t:'pslot',id:mpSlot(md,empty)});const r=await mpHostWait(hp,sid,md);
         if(r==='ok'&&alive()){netKill(me);mpMatched();return}netKill(hp);if(!alive())return}}
-    await new Promise(r=>setTimeout(r,600+Math.random()*900));
+    await new Promise(r=>bgT(r,600+Math.random()*900));
   }
 }
 function mpJoin(me,id,md,alive){return new Promise(res=>{
-  let done=false,c=null,to=0,acc=false;const iv=setInterval(()=>{if(!alive())fin('cancel')},300);
-  function fin(r){if(done)return;done=true;clearTimeout(to);clearInterval(iv);try{me.off('error',onErr)}catch(_){}if(r!=='start'&&c){try{c.close()}catch(_){}}res(r)}
+  let done=false,c=null,to=0,acc=false;const iv=bgI(()=>{if(!alive())fin('cancel')},300);
+  function fin(r){if(done)return;done=true;bgC(to);bgC(iv);try{me.off('error',onErr)}catch(_){}if(r!=='start'&&c){try{c.close()}catch(_){}}res(r)}
   function onErr(e){if(e&&e.type==='peer-unavailable'&&String(e.message||'').indexOf(id)>=0)fin('empty')}
   me.on('error',onErr);
   try{c=me.connect(id,{reliable:true,serialization:'json'})}catch(e){c=null}
@@ -9341,31 +9410,31 @@ function mpJoin(me,id,md,alive){return new Promise(res=>{
   const PT=NET.party?(NET.party.lead?{pr:NET.party.pp}:{pf:NET.party.lp}):{};   // 파티: 파티장은 자리 2개, 파티원은 맡아 둔 자리로
   c.on('open',()=>{try{c.send(Object.assign({t:'hello',v:NET_PROTO,m:md},netInfo(),PT))}catch(_){fin('fail')}});
   c.on('data',d=>{if(done||!d)return;
-    if(d.t==='mwait'){if(!acc&&PT.pr)partySend({t:'pslot',id});acc=true;clearTimeout(to);{const QQ=(NET.mpQs&&NET.mpQs[md])||NET.mpQ;if(QQ)QQ.n=Math.max(1,Math.min(QQ.max,d.n|0))}mpOvCount();netStat(d.w?'곧 시작해요 · '+(d.w|0)+'초 (한 명 더 오면 바로)':'모이는 중... 다 모이면 바로 시작해요')}
+    if(d.t==='mwait'){if(!acc&&PT.pr)partySend({t:'pslot',id});acc=true;bgC(to);{const QQ=(NET.mpQs&&NET.mpQs[md])||NET.mpQ;if(QQ)QQ.n=Math.max(1,Math.min(QQ.max,d.n|0))}mpOvCount();netStat(d.w?'곧 시작해요 · '+(d.w|0)+'초 (한 명 더 오면 바로)':'모이는 중... 다 모이면 바로 시작해요')}
     else if(d.t==='mstart'){const P=mpCleanP(d.P,md);if(!P||!P[d.me]){fin('fail');return}
       NET.conn=c;NET.host=false;NET.mp={mode:md,P,dir:{},hs:P[d.hs]?d.hs:null,conns:[]};NET.mySide=d.me;NET.seed=d.seed|0;fin('start')}
     else if(d.t==='busy')fin('busy')});
   c.on('close',()=>fin(acc?'lost':'closed'));c.on('error',()=>fin('fail'));
-  to=setTimeout(()=>fin('fail'),10000);
+  to=bgT(()=>fin('fail'),10000);
 })}
 function mpHostWait(hp,sid,md,ctl){return new Promise(res=>{
   const max=MP_MAX[md],min=MP_MIN[md],Q=[],RV={};let done=false,t3=0;   // RV: 파티원 몫으로 맡아 둔 자리 (아이디 → 맡은 시각)
   if(NET.party&&NET.party.lead&&md==='2v2')RV[NET.party.pp]=Infinity;
   const alive=()=>sid===NET.searchId&&NET.state==='search';
-  const fin=r=>{if(done)return;done=true;clearInterval(iv);if(NET.cw)NET.cw.delete(cancel);res(r)};
+  const fin=r=>{if(done)return;done=true;bgC(iv);if(NET.cw)NET.cw.delete(cancel);res(r)};
   const cnt=()=>1+Q.length+Object.keys(RV).length;
   const wsec=()=>t3?Math.max(0,15-Math.floor((Date.now()-t3)/1000)):0;
   const cast=()=>{const n=cnt(),QQ=(NET.mpQs&&NET.mpQs[md])||NET.mpQ;if(QQ)QQ.n=n;mpOvCount();if(n>=min&&n<max&&!Object.keys(RV).length){if(!t3)t3=Date.now()}else t3=0;
     for(const c of Q)try{c.send({t:'mwait',n,max,w:wsec()})}catch(_){}};
   const go=()=>{if(done||NET.conn)return;mpQuickStart(Q,md);fin('ok')};   // 다른 모드에서 먼저 잡혔으면 시작 안 함
   const cancel=()=>{for(const c of Q.slice())try{c.close()}catch(_){}fin('cancel')};(NET.cw||(NET.cw=new Set())).add(cancel);if(ctl)ctl.cancel=cancel;
-  const iv=setInterval(()=>{if(!alive()){cancel();return}
+  const iv=bgI(()=>{if(!alive()){cancel();return}
     const now=Date.now();for(const k in RV)if(RV[k]!==Infinity&&now-RV[k]>20000){delete RV[k];const L=Q.find(x=>x._pp===k);if(L)try{L.close()}catch(_){}}   // 파티원이 20초 안에 안 오면 그 파티는 다시 찾게 함
     if(t3){if(now-t3>15000){go();return}netStat(cnt()+'명이 모였어요! '+wsec()+'초 뒤 시작 (한 명 더 오면 바로)');if(now%2000<500)cast()}
     else netStat(Q.length?'모이는 중... 다 모이면 바로 시작해요':'같이 할 사람을 기다리는 중')},500);
   hp.on('disconnected',()=>{if(done)return;if(!Q.length)fin('lost');else{try{hp.reconnect()}catch(_){}}});
   hp.on('connection',c=>{
-    const busy=()=>{const s=()=>{try{c.send({t:'busy'})}catch(_){}setTimeout(()=>{try{c.close()}catch(_){}},400)};if(c.open)s();else c.on('open',s)};
+    const busy=()=>{const s=()=>{try{c.send({t:'busy'})}catch(_){}bgT(()=>{try{c.close()}catch(_){}},400)};if(c.open)s();else c.on('open',s)};
     if(done||!alive()){busy();return}
     let ok=false;
     c.on('data',d=>{if(ok||!d||d.t!=='hello')return;
@@ -9380,7 +9449,7 @@ function mpHostWait(hp,sid,md,ctl){return new Promise(res=>{
     c.on('close',()=>{if(done)return;const i=Q.indexOf(c);if(i>=0){Q.splice(i,1);if(c._pp)delete RV[c._pp];
       const mate=Q.find(x=>(c._pp&&x._pl&&x._info.pid===c._pp)||(c._pl&&x._pp&&x._info.pid===c._pl));if(mate)try{mate.close()}catch(_){}   // 파티는 같이 나감
       cast()}});
-    setTimeout(()=>{if(!ok){try{c.close()}catch(_){}}},12000);
+    bgT(()=>{if(!ok){try{c.close()}catch(_){}}},12000);
   });
 })}
 function mpQuickStart(Q,md){                          // 방장: 자리(팀)는 랜덤으로 나눔 (2대2 파티는 같은 팀)
@@ -9448,7 +9517,7 @@ async function multiFind(modes){
       if(win&&alive()){netKill(me);NET.qmodes=[win.m];NET.mpQs=null;if(win.m==='1v1')netMatched();else mpMatched();return}
       if(win){try{if(NET.conn)NET.conn.close()}catch(_){}NET.conn=null;NET.mp=null}
       if(!alive())return}
-    await new Promise(r=>setTimeout(r,600+Math.random()*900));
+    await new Promise(r=>bgT(r,600+Math.random()*900));
   }
 }
 /* 2대2 · 1대1대1대1 방: 방장이 자리(1P~4P)를 관리하고 바뀔 때마다 모두에게 알려 줌 */
