@@ -8384,7 +8384,7 @@ function profRec(side){                           // 온라인 경기 결과 기
 }
 /* ---------- 볼 · 업적 · 칭호 · 이름표 색 ---------- */
 const BL_EARN={w:10,d:5,l:3};   // 온라인 경기 하나가 끝날 때 얻는 볼: 이기면 · 비기면 · 지면
-const BL_PRICE={c:150,cu:200,rb:300};   // 상점 값: 기본 색 · 커스텀 색 · 무지개
+const BL_PRICE={c:150,cu:200,rb:1000};   // 상점 값: 기본 색 · 커스텀 색 · 무지개
 const BL_MAX=99999999;
 const BL_COLORS=[['빨강','#e03131'],['주황','#f76707'],['노랑','#f0b400'],['초록','#2f9e44'],['하늘','#15aabf'],['파랑','#1c63d6'],['보라','#7048e8'],['분홍','#e64980']];
 const BL_HEX=BL_COLORS.map(x=>x[1]);
@@ -8782,6 +8782,7 @@ function prBuild(){
     else if(a==='edit'){PRS.edit=true;prRender();const i=prEl.querySelector('.prnin');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}}
     else if(a==='cancel'){PRS.edit=false;prRender()}else if(a==='save')prSaveName();
     else if(a==='tt'){PRS.tt=!PRS.tt;prRender()}else if(a==='ttset'){ttSet(b.dataset.v);PRS.tt=false;prRender()}
+    else if(a==='nc'){PRS.nc=!PRS.nc;prRender()}else if(a==='ncset'){const v=b.dataset.v||'';if(!v||SH.own.includes(v)){SH.nc=v;shSave();csPub();try{if(shOpen())shRender()}catch(_){}}PRS.nc=false;prRender()}   // 이름 색 바꾸기
     else if(/^ac/.test(a))accAct(a,b)});
   m.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('prnin'))prSaveName()});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&prOpen())prHide()});
@@ -8796,7 +8797,7 @@ function prRender(){
   prEl.querySelector('.prin').innerHTML=
     (PRS.edit?'<div class="rrow prnrow"><input class="rin prnin" maxlength="60" placeholder="프로필 이름 (10글자까지)" autocomplete="off" spellcheck="false" value="'+netEsc(PROF.name)+'"><button type="button" class="rbtn" data-p="save">저장</button></div><div class="rmsg prmsg"></div><div class="prcan"><button type="button" class="frsm" data-p="cancel">취소</button></div>'
       :'<div class="prname">'+(PROF.name?netWho({name:PROF.name,dev:PROF.dev,tst:PROF.tst,pid:PID}):'<span class="prnone">이름 없음</span>')+'</div><div class="prcan"><button type="button" class="frsm" data-p="edit">'+(PROF.name?'이름 바꾸기':'이름 정하기')+'</button></div>')
-    +(PRS.edit?'':ttRowHTML())+'<div class="prsub">온라인 이름 <b>'+(NET.me.name?netEsc(NET.me.name):'없음')+'</b></div>'
+    +(PRS.edit?'':ttRowHTML()+ncRowHTML())+'<div class="prsub">온라인 이름 <b>'+(NET.me.name?netEsc(NET.me.name):'없음')+'</b></div>'
     +'<div class="frme">내 아이디 <b>'+PID+'</b><button type="button" class="rcpy" data-p="copy">복사</button></div>'
     +(PRS.acc?accHTML()+'<div style="display:none">':'')
     +'<div class="frsec">온라인 전적</div>'
@@ -8809,7 +8810,7 @@ function prRender(){
 
     +(PRS.acc?'</div>':accHTML());
 }
-function prShow(){PRS.edit=false;PRS.tt=false;PRS.acc=null;prBuild().hidden=false;prRender();try{frUI()}catch(_){}}
+function prShow(){PRS.edit=false;PRS.tt=false;PRS.nc=false;PRS.acc=null;prBuild().hidden=false;prRender();try{frUI()}catch(_){}}
 function prHide(){PRS.edit=false;PRS.tt=false;PRS.acc=null;if(prEl)prEl.hidden=true}
 setInterval(()=>{if(prOpen()&&document.body.classList.contains('in-net'))prHide()},500);
 setTimeout(frUI,0);
@@ -10066,6 +10067,12 @@ setInterval(()=>{if(acOpen())acRender()},5000);
 function ttRowHTML(){const own=ttOwned();
   let h='<div class="prtt">칭호 <b>'+(SH.tt?'<span class="'+ttcl(SH.tt)+'">'+netEsc(SH.tt)+'</span>':'없음')+'</b><button type="button" class="frsm" data-p="tt">'+(PRS.tt?'닫기':'정하기')+'</button></div>';
   if(PRS.tt)h+='<div class="ttpick">'+(own.length?'<button type="button" class="ttpk'+(SH.tt?'':' on')+'" data-p="ttset" data-v="">없음</button>'+own.map(t=>'<button type="button" class="ttpk'+(TT_GOLD.has(t)?' gold':'')+(SH.tt===t?' on':'')+'" data-p="ttset" data-v="'+netEsc(t)+'">'+netEsc(t)+'</button>').join(''):'<div class="rnone">얻은 칭호가 없어요</div>')+'</div>';
+  return h}
+function ncRowHTML(){                                   // 프로필의 이름 색 정하기: 상점에서 산 색 중에서 고름
+  const own=[...BL_COLORS.filter(x=>SH.own.includes(x[1])).map(x=>[x[1],x[0],x[1]]),...(SH.own.includes('cu')?[['cu','커스텀',SH.cc]]:[]),...(SH.own.includes('rb')?[['rb','무지개','rb']]:[])];
+  const cur=own.find(x=>x[0]===SH.nc);
+  let h='<div class="prtt">이름 색 <b>'+(cur?csSpan(netEsc(cur[1]),cur[2]):'기본')+'</b><button type="button" class="frsm" data-p="nc">'+(PRS.nc?'닫기':'바꾸기')+'</button></div>';
+  if(PRS.nc)h+='<div class="ttpick">'+(own.length?'<button type="button" class="ttpk'+(cur?'':' on')+'" data-p="ncset" data-v="">기본</button>'+own.map(([k,n,c])=>'<button type="button" class="ttpk'+(SH.nc===k?' on':'')+'" data-p="ncset" data-v="'+k+'">'+csSpan(netEsc(n),c)+'</button>').join(''):'<div class="rnone">산 이름 색이 없어요 (상점에서 살 수 있어요)</div>')+'</div>';
   return h}
 let cheerBtn=null;
 function cheerUpd(){const on=!!NET.spec;document.body.classList.toggle('spec-u',on&&!admIs());
