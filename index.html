@@ -497,6 +497,7 @@ body.in-mp .recwarn{display:none}
 .offmd{display:none;position:absolute;left:50%;top:22px;transform:translateX(-50%);z-index:5}
 body:not(.in-net):not(.scr-online) .offmd{display:block}.stage:has(.end:not([hidden])) .offmd{display:none!important}
 .offbtn{display:flex;align-items:center;gap:5px;height:28px;padding:0 12px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:400 15px/1 "Jua",sans-serif;cursor:pointer}.offbtn i{font-style:normal;font-size:12px}
+.gtm{display:none;position:absolute;left:0;top:0;z-index:6;pointer-events:none;white-space:nowrap;font:900 18px/1 "Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111;letter-spacing:-.3px;font-variant-numeric:tabular-nums;text-shadow:0 0 3px #fff,0 0 3px #fff}body.gt-on .gtm{display:block}.gtm i{font-style:normal;position:relative;top:-.1em;margin:0 .02em}.gtm.ins{font-size:15px;opacity:.8}
 .spdc{display:none;position:absolute;left:50%;top:22px;transform:translateX(-50%);z-index:6;gap:6px;align-items:center;white-space:nowrap}body.usr-run .spdc{display:flex}
 .spdc>button{display:flex;align-items:center;justify-content:center;height:28px;min-width:38px;padding:0 10px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:400 15px/1 "Jua",sans-serif;cursor:pointer;touch-action:manipulation}.spdc .spdp{padding:0;width:38px}.spdc .spdp svg{width:14px;height:14px;display:block}
 .spdr{display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border:2px solid var(--ink);border-radius:5px;background:#fff;box-sizing:border-box}.spdr[hidden]{display:none}.spdr input{width:118px;margin:0;accent-color:#111;touch-action:pan-x}.spdr b{min-width:30px;font:400 14px/1 "Jua",sans-serif;color:#111;text-align:right}
@@ -912,7 +913,7 @@ body.scr-2v2.bn2 .p3,body.scr-2v2.bn2 .p4,body.scr-2v2.bn1 .p2,body.scr-2v2.bn1 
 </head>
 <body>
 <div class="stage"><div class="credit">created by ball_fight_tiktok</div><div class="wrap">
-  <div class="arena"><div class="count" aria-live="polite"></div></div><div class="offmd"><button type="button" class="offbtn"><span>1대1</span><i>▾</i></button><div class="offlist" hidden><button type="button" data-om="1v1">1대1</button><button type="button" data-om="2v2">2대2</button><button type="button" data-om="ffa">1대1대1대1</button></div></div><div class="spdc"><button type="button" class="spdp" aria-label="일시정지"></button><button type="button" class="spdx">1×</button><div class="spdr" hidden><input type="range" min="0.1" max="2" step="0.1" value="1" aria-label="게임 속도"><b>1×</b></div></div>
+  <div class="arena"><div class="count" aria-live="polite"></div></div><div class="gtm" aria-hidden="true">0:00.0</div><div class="offmd"><button type="button" class="offbtn"><span>1대1</span><i>▾</i></button><div class="offlist" hidden><button type="button" data-om="1v1">1대1</button><button type="button" data-om="2v2">2대2</button><button type="button" data-om="ffa">1대1대1대1</button></div></div><div class="spdc"><button type="button" class="spdp" aria-label="일시정지"></button><button type="button" class="spdx">1×</button><div class="spdr" hidden><input type="range" min="0.1" max="2" step="0.1" value="1" aria-label="게임 속도"><b>1×</b></div></div>
   <div class="hud">
     <div class="p1"><div class="name"><button class="add" type="button">추가하기</button></div><div class="hp">250 / 250</div><div class="rail"><div class="rb"></div></div><div class="status"></div></div>
     <div class="p2"><div class="name"><button class="add" type="button">추가하기</button></div><div class="hp">250 / 250</div><div class="rail"><div class="rb"></div></div><div class="status"></div></div>
@@ -1091,6 +1092,50 @@ window.clearTimeout=function(id){if(typeof id==='number'&&id<0){const i=WT.findI
 function wtRun(){if(!WT.length)return;const t=vNow();let g=0;
   while(WT.length&&g++<500){let bi=-1,bd=Infinity;for(let i=0;i<WT.length;i++)if(WT[i].due<bd){bd=WT[i].due;bi=i}if(bi<0||bd>t)break;const x=WT.splice(bi,1)[0];try{x.fn(...x.a)}catch(e){console.error(e)}}}
 function wtFlush(){const t=vNow(),L=WT;WT=[];for(const x of L)_sT(()=>{try{x.fn(...x.a)}catch(e){console.error(e)}},Math.max(0,x.due-t))}   // 경기 계산이 멈추면 남은 타이머는 실제 시간으로
+/* ===== 효과음도 배속을 따름 (음높이는 그대로) =====
+   배속이 1×가 아닐 때 새로 나는 소리는, ① 오실레이터·소리 크기·필터 같은 예약 시각을 지금부터의 간격만큼 늘이고 줄여서 (주파수는 그대로) ② 미리 만든 소리 버퍼는 짧은 조각을 겹쳐 이어 붙여 길이만 바꿔서 틀어 줌. 1×일 때는 아무것도 건드리지 않음 */
+let AUDRAW=false;
+const audK=()=>{const k=VC.k;return(!AUDRAW&&k>0&&k!==1)?k:1};
+const audNow=()=>{try{return actx?actx.currentTime:0}catch(e){return 0}};
+const audT=(T,k)=>{const n=audNow();return(T>n)?n+(T-n)/k:T};
+const audRaw=f=>function(){const w=AUDRAW;AUDRAW=true;try{return f.apply(this,arguments)}finally{AUDRAW=w}};
+const audStC=new WeakMap();
+function audStretch(b,k){                              // 겹쳐 잇기(WSOLA): 조각마다 앞 조각과 가장 자연스럽게 이어지는 자리를 골라 붙임
+  let m=audStC.get(b);if(!m)audStC.set(b,m=new Map());const key=Math.round(k*1000);if(m.has(key))return m.get(key);
+  const sr=b.sampleRate,N=b.length,W=1024,Hs=512,tol=256,Ha=Hs*k,outLen=Math.max(W,Math.ceil(N/k)+W),nb=actx.createBuffer(b.numberOfChannels,outLen,sr);
+  const hann=new Float32Array(W);for(let i=0;i<W;i++)hann[i]=.5-.5*Math.cos(2*Math.PI*i/W);
+  const frames=[];let prev=0;
+  const x0=b.getChannelData(0);
+  for(let f=0;;f++){const op=f*Hs;if(op>=outLen-W)break;const nom=Math.round(f*Ha);if(nom>=N)break;let st=nom;
+    if(f>0){const tg=prev+Hs;if(tg+W<N){let best=-Infinity;for(let d=-tol;d<=tol;d+=2){const q=nom+d;if(q<0||q+W>N)continue;let c=0;for(let i=0;i<W;i+=4)c+=x0[q+i]*x0[tg+i];if(c>best){best=c;st=q}}}}
+    frames.push([op,st]);prev=st}
+  for(let c=0;c<b.numberOfChannels;c++){const inp=b.getChannelData(c),out=new Float32Array(outLen),nm=new Float32Array(outLen);
+    for(let f=0;f<frames.length;f++){const op=frames[f][0],st=frames[f][1];
+      for(let i=0;i<W;i++){const w=(f===0&&i<W/2)?1:hann[i],x=st+i<N?inp[st+i]:0;out[op+i]+=x*w;nm[op+i]+=w}}   // 첫 조각의 앞쪽은 1로 두어 소리의 첫 '탁'이 깎이지 않게
+    for(let i=0;i<outLen;i++)if(nm[i]>.001)out[i]/=nm[i];
+    if(nb.copyToChannel)nb.copyToChannel(out,c);else nb.getChannelData(c).set(out)}
+  if(m.size>24)m.clear();m.set(key,nb);return nb}
+{
+  const AP=window.AudioParam&&AudioParam.prototype;
+  if(AP){
+    for(const nm of ['setValueAtTime','linearRampToValueAtTime','exponentialRampToValueAtTime']){const o=AP[nm];if(o)AP[nm]=function(v,T){const k=audK();return k===1?o.call(this,v,T):o.call(this,v,audT(T,k))}}
+    {const o=AP.setTargetAtTime;if(o)AP.setTargetAtTime=function(v,T,tc){const k=audK();return k===1?o.call(this,v,T,tc):o.call(this,v,audT(T,k),tc/k)}}
+    {const o=AP.setValueCurveAtTime;if(o)AP.setValueCurveAtTime=function(v,T,d){const k=audK();return k===1?o.call(this,v,T,d):o.call(this,v,audT(T,k),d/k)}}
+    for(const nm of ['cancelScheduledValues','cancelAndHoldAtTime']){const o=AP[nm];if(o)AP[nm]=function(T){const k=audK();return k===1?o.call(this,T):o.call(this,audT(T,k))}}
+  }
+  const SN=window.AudioScheduledSourceNode&&AudioScheduledSourceNode.prototype;
+  if(SN){
+    {const o=SN.start;SN.start=function(T){const k=this._st!==undefined?this._st:audK();return(k===1||T===undefined)?o.apply(this,arguments):o.call(this,audT(T,k))}}
+    {const o=SN.stop;SN.stop=function(T){const k=this._st!==undefined?this._st:audK();return(k===1||T===undefined)?o.apply(this,arguments):o.call(this,audT(T,k))}}
+  }
+  const BS=window.AudioBufferSourceNode&&AudioBufferSourceNode.prototype;
+  if(BS){
+    {const o=BS.start;BS.start=function(T,off,dur){const k=this._st!==undefined?this._st:audK();if(k===1)return o.apply(this,arguments);
+      const a=[T===undefined?0:audT(T,k)];if(off!==undefined){a.push(off/k);if(dur!==undefined)a.push(dur/k)}return o.apply(this,a)}}
+    const d=Object.getOwnPropertyDescriptor(BS,'buffer');
+    if(d&&d.set)Object.defineProperty(BS,'buffer',{get:d.get,set:function(b){let st=1,nb=b;const k=audK();if(b&&k!==1&&b.length<=b.sampleRate*4){try{nb=audStretch(b,k);st=k}catch(e){nb=b;st=1}}this._st=st;d.set.call(this,nb)},configurable:true,enumerable:d.enumerable});
+  }
+}
 let stageEl=null;
 {const _an=Element.prototype.animate;Element.prototype.animate=function(k,o){const a=_an.call(this,k,o);try{if(VC.k!==1&&(stageEl||(stageEl=document.querySelector('.stage')))&&stageEl.contains(this))a.playbackRate=VC.k}catch(e){}return a}}
 function usrSweep(force){                                                 // 경기장·체력바에서 돌고 있는 애니메이션을 지금 배율로
@@ -1101,13 +1146,28 @@ function usrSweep(force){                                                 // 경
 function usrRateSync(){
   const k=usrRate();if(k===VC.k)return;
   VC.v=vNow();VC.r=performance.now();const was=VC.k;VC.k=k;usrSweep(true);
-  try{for(const P of (typeof umAllPl!=='undefined'?umAllPl:[]))if(P.src)P.src.playbackRate.value=k||was||1}catch(e){}   // 엄....edit 영상 소리도 같은 속도로
+  try{for(const P of (typeof umAllPl!=='undefined'?umAllPl:[]))if(P.src)P.src.setRate(k||was||1)}catch(e){}   // 엄....edit 영상 소리도 같은 속도로 (음높이는 그대로)
   try{if(k===0&&actx&&actx.state==='running'){USR.susp=true;actx.suspend()}else if(k!==0&&USR.susp){USR.susp=false;if(actx)actx.resume()}}catch(e){}   // 일시정지면 소리도 멈춤
 }
 function usrPlace(){try{const a=document.querySelector('.arena'),c=document.querySelector('.spdc');if(a&&c)c.style.top=Math.round(a.offsetTop-c.offsetHeight-8)+'px'}catch(e){}}   // 경기장 바로 위 (경기장을 가리지 않게)
 addEventListener('resize',()=>{if(USR.vis)usrPlace()});
+function gtPlace(){try{const a=document.querySelector('.arena'),g=document.querySelector('.gtm');if(!a||!g)return;const pr=(g.offsetParent||document.body).getBoundingClientRect(),ar=a.getBoundingClientRect(),h=g.offsetHeight,w=g.offsetWidth;
+  let y=ar.top-pr.top-h-3;                                  // 경기장 바로 위 오른쪽
+  const c=USR.vis?document.querySelector('.spdc'):null,rr=document.querySelector('.spdr'),open=!!(rr&&!rr.hidden);
+  if(c){const cr=c.getBoundingClientRect();y=open?cr.top-pr.top-h-3:cr.top-pr.top+(cr.height-h)/2}   // 조작 버튼 줄 오른쪽 끝 (속도 막대를 열면 버튼 줄 위로 비켜 줌)
+  y+=2;const ins=pr.top+y<4;if(ins)y=ar.top-pr.top+4;
+  g.classList.toggle('ins',ins);g.style.top=Math.round(y)+'px';g.style.left=Math.round(ar.right-pr.left-w-(ins?8:3))+'px';GT.k=USR.vis+'|'+open}catch(e){}}   // 화면이 낮아 위에 자리가 없으면 경기장 안 맨 위에 작게
+let GT={on:false,tx:'',t0:0,k:''};
+function gtUi(){                                           // 게임 시간 (분:초.소수) — 경기장 위. 일시정지·배속에도 게임 시간 그대로
+  const on=phase==='run';                                  // 카운트다운이 끝나고 공이 풀리는 순간부터 0:00.0
+  if(on!==GT.on){GT.on=on;GT.t0=now;GT.tx='';document.body.classList.toggle('gt-on',on);if(on)gtPlace()}
+  if(!on)return;
+  const tt=Math.max(0,Math.floor((now-GT.t0)*10+1e-6)),m=Math.floor(tt/600),sc=(tt%600)/10,tx=m+':'+(sc<10?'0':'')+sc.toFixed(1);
+  if(tx!==GT.tx){GT.tx=tx;const g=document.querySelector('.gtm');if(g){g.innerHTML=tx.replace(':','<i>:</i>');gtPlace()}}   // 글자 폭이 바뀌면 오른쪽 끝에 다시 맞춤
+  else{const rr=document.querySelector('.spdr');if(GT.k!==USR.vis+'|'+!!(rr&&!rr.hidden))gtPlace()}}
+addEventListener('resize',()=>{if(GT.on)gtPlace()});
 function usrUi(){
-  const on=usrOn();if(on!==USR.vis){USR.vis=on;document.body.classList.toggle('usr-run',on);if(!on){const r=document.querySelector('.spdr');if(r)r.hidden=true}else usrPlace()}
+  const on=usrOn();if(on!==USR.vis){USR.vis=on;document.body.classList.toggle('usr-run',on);if(!on){const r=document.querySelector('.spdr');if(r)r.hidden=true}else usrPlace();if(GT.on)gtPlace()}
   const p=document.querySelector('.spdp');if(p){const pz=USR.pause;if(p._pz!==pz){p._pz=pz;p.setAttribute('aria-label',pz?'재생':'일시정지');
     p.innerHTML=pz?'<svg viewBox="0 0 14 14"><path d="M3 1.5L12.5 7L3 12.5Z" fill="#111"/></svg>':'<svg viewBox="0 0 14 14"><rect x="2.5" y="1.5" width="3.2" height="11" rx=".8" fill="#111"/><rect x="8.3" y="1.5" width="3.2" height="11" rx=".8" fill="#111"/></svg>'}}
   const lb=(Math.round(USR.spd*10)/10)+'×',x=document.querySelector('.spdx');if(x&&x.textContent!==lb)x.textContent=lb;
@@ -3119,12 +3179,27 @@ function umLoad(){
     }
   }
 }
+/* 엄....edit 영상 소리: 배속이 1×가 아니어도 음높이는 그대로 (재생 속도만 바꾸지 않고, 짧은 조각을 겹쳐 이어 붙여서 속도만 바꿈) */
+function umMkSrc(pt,pos0,k0){
+  const G=.12,H=.06,o={k:k0,pos:pos0,c0:actx.currentTime,cur:null,nt:0,dead:false,gs:[],iv:0};
+  o.posAt=T=>o.pos+(T-o.c0)*o.k;
+  o.plain=audRaw(()=>{const s=actx.createBufferSource();s.buffer=pt.buf;s.connect(master);s.start(0,Math.min(pt.buf.duration-.01,Math.max(0,o.posAt(actx.currentTime))));o.cur=s});
+  o.killG=audRaw(when=>{for(const g of o.gs){try{g.stop(when||0)}catch(e){}}if(!when)o.gs.length=0});
+  o.pump=audRaw(()=>{if(o.dead||o.k===1)return;const t=actx.currentTime;if(o.nt<t)o.nt=t;
+    while(o.nt<t+.15){const q=o.posAt(o.nt);if(q>=pt.buf.duration-.02)break;
+      const s=actx.createBufferSource(),g=actx.createGain();s.buffer=pt.buf;g.gain.setValueAtTime(0,o.nt);g.gain.linearRampToValueAtTime(1,o.nt+G/2);g.gain.linearRampToValueAtTime(0,o.nt+G);
+      s.connect(g);g.connect(master);s.onended=()=>{const i=o.gs.indexOf(s);if(i>=0)o.gs.splice(i,1)};s.start(o.nt,Math.max(0,q),G+.02);o.gs.push(s);o.nt+=H}});
+  o.setRate=audRaw(k=>{if(o.dead||k===o.k||!(k>0))return;const T=actx.currentTime;o.pos=o.posAt(T);o.c0=T;o.k=k;
+    if(k===1){o.killG();o.plain()}else{if(o.cur){try{o.cur.stop()}catch(e){}o.cur=null}o.nt=T;o.pump()}});
+  o.stop=audRaw(when=>{o.dead=true;clearInterval(o.iv);try{if(o.cur)o.cur.stop(when||0)}catch(e){}o.killG(when||0)});
+  if(k0===1)o.plain();else o.pump();
+  o.iv=setInterval(o.pump,30);
+  return o}
 function umAud(P,k){                   // 소리: 효과음과 같은 볼륨 조절·게임 종료 시 음소거를 따름 (소리가 늦게 준비되면 지금 시점부터 이어서 재생)
   const pt=UMP[k];if(!P.on||P.src||!pt.buf||!actx||!master)return;
   try{
     if(actx.state==='suspended')actx.resume();
-    const sr=actx.createBufferSource();sr.buffer=pt.buf;sr.connect(master);
-    sr.playbackRate.value=VC.k||1;sr.start(0,Math.min(pt.buf.duration-.01,Math.max(0,(vNow()-P.t0)/1000)));P.src=sr;
+    P.src=umMkSrc(pt,Math.max(0,(vNow()-P.t0)/1000),VC.k||1);
   }catch(e){}
 }
 function umEnsure(c){
@@ -3528,6 +3603,7 @@ function tickBody(t){
     usrRateSync();wtRun();usrSweep();usrUi();
   }
   if(!go){usrRateSync();wtFlush();usrUi()}
+  gtUi();
   raf=go?requestAnimationFrame(tick):0;
 }
 function simStep(dt){
@@ -7130,7 +7206,7 @@ function resetGame(){krWinStop();ADMUSED=false;chatInClear();wbSet();USR.pause=f
   document.querySelectorAll('.ball').forEach(b=>{if(b._anim)b._anim.cancel();b.remove()});document.querySelectorAll('.swel,.swtm').forEach(e=>e.remove());if(bmBox)bmBox.innerHTML='';
   cancelAnimationFrame(barRaf);barRaf=0;bhs.forEach(bhHumKill);bhSprayUpdate(-1);fx.classList.remove('gend');chars=[];movers=[];events=[];follows=[];foods=[];projs=[];mkCells=[];kdSl=[];bhs=[];mletters=[];bkSouls=[];krReset();slmReset();bnReset();shReset();now=0;lastMeet=0;over=false;objStop=0;revPause=0;if(shakeAnim){shakeAnim.cancel();shakeAnim=null}fx.innerHTML='';auraLayer.innerHTML='';
   admTp=null;admPause=false;if(!document.querySelector('.adm'))admSpd=1;rngOff();   // 어드민 패널이 없는 폰: 온라인에서 받은 게임 속도가 다음 판에 남지 않게
-  used.length=0;side=null;phase='idle';usrRateSync();wtFlush();usrUi();modal.hidden=true;count.textContent='';count.classList.remove('win');count.getAnimations().forEach(a=>a.cancel());
+  used.length=0;side=null;phase='idle';usrRateSync();wtFlush();usrUi();gtUi();modal.hidden=true;count.textContent='';count.classList.remove('win');count.getAnimations().forEach(a=>a.cancel());
   ['.p1','.p2','.p3','.p4'].forEach(k=>{
     const p=document.querySelector(k),hp=p.querySelector('.hp');
     p.classList.remove('on','bleeding');p.style.removeProperty('--nb');p.style.removeProperty('--tall');p.querySelector('.rb').classList.remove('tall');p.querySelector('.rb').innerHTML='';p.querySelector('.rail').classList.remove('boost','cells5');p.querySelector('.hp').classList.remove('sgdiv');
