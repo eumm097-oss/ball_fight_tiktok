@@ -497,7 +497,7 @@ body.in-mp .recwarn{display:none}
 .offmd{display:none;position:absolute;left:50%;top:22px;transform:translateX(-50%);z-index:5}
 body:not(.in-net):not(.scr-online) .offmd{display:block}.stage:has(.end:not([hidden])) .offmd{display:none!important}
 .offbtn{display:flex;align-items:center;gap:5px;height:28px;padding:0 12px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:400 15px/1 "Jua",sans-serif;cursor:pointer}.offbtn i{font-style:normal;font-size:12px}
-.gtm{display:none;position:absolute;left:0;top:0;z-index:6;pointer-events:none;white-space:nowrap;font:900 18px/1 "Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111;letter-spacing:-.3px;font-variant-numeric:tabular-nums;text-shadow:0 0 3px #fff,0 0 3px #fff}body.gt-on .gtm{display:block}.gtm i{font-style:normal;position:relative;top:-.1em;margin:0 .02em}.gtm.ins{font-size:15px;opacity:.8}
+.gtm{display:none;position:absolute;left:0;top:0;z-index:6;pointer-events:none;white-space:nowrap;font:900 18px/1 "Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:#111;letter-spacing:-.3px;font-variant-numeric:tabular-nums;text-shadow:0 0 3px #fff,0 0 3px #fff}body.gt-on .gtm{display:block}.gtm i{display:inline-block;position:relative;width:.34em;height:.73em;vertical-align:baseline}.gtm i::before,.gtm i::after{content:'';position:absolute;left:50%;width:.23em;height:.23em;margin-left:-.115em;border-radius:50%;background:currentColor}.gtm i::before{top:.1em}.gtm i::after{top:.4em}.gtm.ins{font-size:15px;opacity:.8}
 .spdc{display:none;position:absolute;left:50%;top:22px;transform:translateX(-50%);z-index:6;gap:6px;align-items:center;white-space:nowrap}body.usr-run .spdc{display:flex}
 .spdc>button{display:flex;align-items:center;justify-content:center;height:28px;min-width:38px;padding:0 10px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:400 15px/1 "Jua",sans-serif;cursor:pointer;touch-action:manipulation}.spdc .spdp{padding:0;width:38px}.spdc .spdp svg{width:14px;height:14px;display:block}
 .spdr{display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border:2px solid var(--ink);border-radius:5px;background:#fff;box-sizing:border-box}.spdr[hidden]{display:none}.spdr input{width:118px;margin:0;accent-color:#111;touch-action:pan-x}.spdr b{min-width:30px;font:400 14px/1 "Jua",sans-serif;color:#111;text-align:right}
@@ -1155,15 +1155,16 @@ function gtPlace(){try{const a=document.querySelector('.arena'),g=document.query
   let y=ar.top-pr.top-h-3;                                  // 경기장 바로 위 오른쪽
   const c=USR.vis?document.querySelector('.spdc'):null,rr=document.querySelector('.spdr'),open=!!(rr&&!rr.hidden);
   if(c){const cr=c.getBoundingClientRect();y=open?cr.top-pr.top-h-3:cr.top-pr.top+(cr.height-h)/2}   // 조작 버튼 줄 오른쪽 끝 (속도 막대를 열면 버튼 줄 위로 비켜 줌)
-  y+=2;const ins=pr.top+y<4;if(ins)y=ar.top-pr.top+4;
-  g.classList.toggle('ins',ins);g.style.top=Math.round(y)+'px';g.style.left=Math.round(ar.right-pr.left-w-(ins?8:3))+'px';GT.k=USR.vis+'|'+open}catch(e){}}   // 화면이 낮아 위에 자리가 없으면 경기장 안 맨 위에 작게
+  y+=2;const ins=pr.top+y+(window.scrollY||0)<4;   /* 자리가 모자란지는 페이지 맨 위 기준으로 (도움말로 내려가 있어도 위치가 바뀌지 않게) */
+  if(ins)y=ar.top-pr.top+4;
+  g.classList.toggle('ins',ins);g.style.top=Math.round(y)+'px';g.style.left=Math.round(ar.right-pr.left-w-(ins?12:9))+'px';GT.k=USR.vis+'|'+open}catch(e){}}   // 화면이 낮아 위에 자리가 없으면 경기장 안 맨 위에 작게
 let GT={on:false,tx:'',t0:0,k:''};
 function gtUi(){                                           // 게임 시간 (분:초.소수) — 경기장 위. 일시정지·배속에도 게임 시간 그대로
   const on=phase==='run';                                  // 카운트다운이 끝나고 공이 풀리는 순간부터 0:00.0
   if(on!==GT.on){GT.on=on;GT.t0=now;GT.tx='';document.body.classList.toggle('gt-on',on);if(on)gtPlace()}
   if(!on)return;
   const tt=Math.max(0,Math.floor((now-GT.t0)*10+1e-6)),m=Math.floor(tt/600),sc=(tt%600)/10,tx=m+':'+(sc<10?'0':'')+sc.toFixed(1);
-  if(tx!==GT.tx){GT.tx=tx;const g=document.querySelector('.gtm');if(g){g.innerHTML=tx.replace(':','<i>:</i>');gtPlace()}}   // 글자 폭이 바뀌면 오른쪽 끝에 다시 맞춤
+  if(tx!==GT.tx){GT.tx=tx;const g=document.querySelector('.gtm');if(g){g.innerHTML=tx.replace(':','<i></i>');gtPlace()}}   // 글자 폭이 바뀌면 오른쪽 끝에 다시 맞춤
   else{const rr=document.querySelector('.spdr');if(GT.k!==USR.vis+'|'+!!(rr&&!rr.hidden))gtPlace()}}
 addEventListener('resize',()=>{if(GT.on)gtPlace()});
 function usrUi(){
