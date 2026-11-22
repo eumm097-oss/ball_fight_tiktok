@@ -6009,9 +6009,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.49';
+const PATCH_VERSION='4.13.50';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.50',date:'2026-11-23',chars:[],fx:[],sys:['관리자 도장이 있는 폰은 게임에 들어오면 관리자 패널이 바로 떠 있게 (접으면 네모 아이콘)']},
   {ver:'4.13.49',date:'2026-11-23',chars:[],fx:[],sys:['주소가 https가 아니거나 옛 브라우저여서 "계정 기능을 쓸 수 없어요"가 뜨던 곳에서도 로그인·계정 만들기가 되게 수정']},
   {ver:'4.13.48',date:'2026-11-23',chars:[],fx:[],sys:['김치스시 게이지가 다른 캐릭터 게이지와 같은 두께로 보이게 수정 (확률은 아래 데미지 옆에 표시)']},
   {ver:'4.13.47',date:'2026-11-22',chars:[{who:'설화',tag:'buff',lines:['자기 하트를 먹으면 체력 {+10} 회복']}],fx:[],sys:[]},
@@ -10719,6 +10720,10 @@ function wcUI(){if(!wcBtn)return;if(wcOpen()){if(WC.L.some(x=>x.t>WC.r&&x.p!==PI
 setInterval(()=>{if(wcOpen())wcRender()},1000);
 setInterval(()=>{const top=document.body.classList.contains('in-net')||!!document.querySelector('.rmodal:not([hidden]),.frmodal:not([hidden]),.mmodal:not([hidden]),.modal:not([hidden]),.pnmodal:not([hidden])');if(document.body.classList.contains('wc-top')!==top){document.body.classList.toggle('wc-top',top);if(wcBtn)wcBtnFit()}},300);   // 경기 중이나 창이 떠 있으면 버튼을 오른쪽 위로 비켜 둠
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wcBuild);else wcBuild();
+/* 관리자 도장이 있는 폰: 들어오면 관리자 패널이 기본으로 떠 있음 (비밀번호 없이 · 접으면 네모 아이콘) */
+(()=>{let done=false;const go=()=>{if(done)return;done=true;setTimeout(()=>{try{if(!sgHave()||document.querySelector('.adm'))return;
+  if(document.querySelector('.pwmodal'))return;ADM_OK=true;openAdmin()}catch(e){}},900)};
+  if(document.readyState==='complete')go();else addEventListener('load',go)})();
 function srvWcRender(force){                         // 어드민 서버 탭: 접속자 · 전체 채팅 기록 (펼치고 접기)
   const w=document.querySelector('.adm');if(!w)return;const bx=w.querySelector('.srvwc'),n=w.querySelector('.srvwcn'),nw=w.querySelector('.srvnow');
   if(n)n.textContent='('+WCLOG.length+'개)';if(nw){const on=!!PRES.n,qm=PRES.qm||{},cn=x=>on?(x|0)+'명':'-';
