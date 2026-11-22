@@ -948,7 +948,7 @@ body.scr-2v2.bn2 .p3,body.scr-2v2.bn2 .p4,body.scr-2v2.bn1 .p2,body.scr-2v2.bn1 
       <button class="half" type="button" data-name="엄....edit" data-cls="um" data-kind="um">엄....edit</button>
       <button class="half" type="button" data-name="목박사" data-cls="mk" data-kind="mk">목박사</button>
       <button class="half" type="button" data-name="김동희세계관" data-cls="kd" data-kind="kd">김동희세계관</button>
-      <button class="half" type="button" data-name="산와머니" data-cls="swm" data-kind="swm">산와머니</button>
+      <button class="half lockd" type="button" data-name="산와머니" data-cls="swm" data-kind="swm" data-lock="h:2okdd6">산와머니</button>
       <button class="half" type="button" data-name="권루트" data-cls="kr" data-kind="kr">권루트</button>
       <button class="half" type="button" data-name="슬라임계" data-cls="sg" data-kind="sg">슬라임계</button>
       <button class="half" type="button" data-name="설화" data-cls="sh" data-kind="sh">설화</button>
@@ -6009,9 +6009,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.50';
+const PATCH_VERSION='4.13.51';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.51',date:'2026-11-23',chars:[],fx:[],sys:['산와머니 점검 중 (비밀번호가 있어야 고를 수 있음)']},
   {ver:'4.13.50',date:'2026-11-23',chars:[],fx:[],sys:['관리자 도장이 있는 폰은 게임에 들어오면 관리자 패널이 바로 떠 있게 (접으면 네모 아이콘)']},
   {ver:'4.13.49',date:'2026-11-23',chars:[],fx:[],sys:['주소가 https가 아니거나 옛 브라우저여서 "계정 기능을 쓸 수 없어요"가 뜨던 곳에서도 로그인·계정 만들기가 되게 수정']},
   {ver:'4.13.48',date:'2026-11-23',chars:[],fx:[],sys:['김치스시 게이지가 다른 캐릭터 게이지와 같은 두께로 보이게 수정 (확률은 아래 데미지 옆에 표시)']},
