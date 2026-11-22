@@ -6009,9 +6009,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.48';
+const PATCH_VERSION='4.13.49';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.49',date:'2026-11-23',chars:[],fx:[],sys:['주소가 https가 아니거나 옛 브라우저여서 "계정 기능을 쓸 수 없어요"가 뜨던 곳에서도 로그인·계정 만들기가 되게 수정']},
   {ver:'4.13.48',date:'2026-11-23',chars:[],fx:[],sys:['김치스시 게이지가 다른 캐릭터 게이지와 같은 두께로 보이게 수정 (확률은 아래 데미지 옆에 표시)']},
   {ver:'4.13.47',date:'2026-11-22',chars:[{who:'설화',tag:'buff',lines:['자기 하트를 먹으면 체력 {+10} 회복']}],fx:[],sys:[]},
   {ver:'4.13.46',date:'2026-11-22',chars:[{who:'설화',tag:'nerf',lines:['매혹인 동안 데미지 받는 간격 {-0.5초 → 0.8초}']},{who:'김치스시',tag:'new',lines:['신규 캐릭터 추가']}],fx:[],sys:[]},
@@ -7156,7 +7157,6 @@ function admAct(a,b){
   else if(a==='usrroom'){usrRoom(b.dataset.id,b.dataset.w)}
   else if(a==='usrpw'){const id=b.dataset.id,row=b.closest('.usrpw'),pw=((row.querySelector('[data-rp]')||{}).value||'').trim();
     if(!accPwOk(pw)){b.textContent='6~20자 · 숫자만은 안 돼요';setTimeout(()=>{if(b.isConnected)b.textContent=ACX[id]?'비밀번호 초기화':'계정 만들어 주기'},1500);return}
-    if(!window.crypto||!crypto.subtle){netToast('이 브라우저에서는 할 수 없어요');return}
     b.disabled=true;b.textContent='저장 중...';accReset(id,pw).then(()=>{delete usrEd[id];ACX[id]=Date.now();netToast('새 비밀번호: '+pw+' (유저에게 알려 주세요)');const w=document.querySelector('.adm');if(w)usrRender(w)}).catch(()=>{b.disabled=false;b.textContent='다시 시도'})}
   else if(a==='usrwb'){regWb(b.dataset.id,+b.dataset.v);const w=document.querySelector('.adm');if(w)usrRender(w)}
   else if(a==='usrpe'){const id=b.dataset.id,row=b.closest('.usrper'),rc=id===PID?[PROF.w,PROF.l,PROF.d]:(FRX.rc[id]||[0,0,0]),g=(k,i)=>{const x=(row.querySelector('[data-k="'+k+'"]')||{}).value;return x===''||x==null?rc[i]|0:Math.max(0,parseInt(x,10)||0)};
@@ -9079,10 +9079,42 @@ function shBadge(){const b=document.getElementById('shbtn');if(b)b.classList.tog
 var ACC=null;try{const v=JSON.parse(localStorage.getItem('bftAcc')||'null');if(v&&v.id===PID&&/^[0-9a-f]{32}$/.test(v.s)&&/^[0-9a-f]{64}$/.test(v.h))ACC=v}catch(e){}
 function accSave(){try{if(ACC)localStorage.setItem('bftAcc',JSON.stringify(ACC));else localStorage.removeItem('bftAcc')}catch(e){}}
 const hexOf=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+/* 암호 도구를 못 쓰는 환경(주소가 https 가 아니거나 아주 옛날 브라우저)에서도 계정이 되게: PBKDF2-SHA256 을 직접 계산 (결과는 브라우저 기능과 똑같음) */
+const SHA_K=new Uint32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+const SHA_IV=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19],SHA_W=new Uint32Array(64);
+function shaBlock(H,b){const w=SHA_W,K=SHA_K;for(let i=0;i<16;i++)w[i]=b[i];
+  for(let i=16;i<64;i++){const x=w[i-15],y=w[i-2];w[i]=(w[i-16]+((x>>>7|x<<25)^(x>>>18|x<<14)^(x>>>3))+w[i-7]+((y>>>17|y<<15)^(y>>>19|y<<13)^(y>>>10)))|0}
+  let a=H[0],b1=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+  for(let i=0;i<64;i++){const t1=(h+((e>>>6|e<<26)^(e>>>11|e<<21)^(e>>>25|e<<7))+((e&f)^(~e&g))+K[i]+w[i])|0,t2=(((a>>>2|a<<30)^(a>>>13|a<<19)^(a>>>22|a<<10))+((a&b1)^(a&c)^(b1&c)))|0;
+    h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b1;b1=a;a=(t1+t2)|0}
+  H[0]=(H[0]+a)|0;H[1]=(H[1]+b1)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0}
+function shaRun(H,bytes,extra){                       // bytes 를 이어서 섞고 끝 표시 (extra = 앞서 이미 섞은 바이트 수)
+  const n=bytes.length,tot=n+1+8,len=Math.ceil(tot/64)*64,buf=new Uint8Array(len);buf.set(bytes);buf[n]=0x80;
+  const bits=(n+extra)*8,dv=new DataView(buf.buffer);dv.setUint32(len-8,Math.floor(bits/4294967296));dv.setUint32(len-4,bits>>>0);
+  const blk=new Uint32Array(16);for(let o=0;o<len;o+=64){for(let i=0;i<16;i++)blk[i]=dv.getUint32(o+i*4);shaBlock(H,blk)}return H}
+function shaOut(H){const o=new Uint8Array(32),dv=new DataView(o.buffer);for(let i=0;i<8;i++)dv.setUint32(i*4,H[i]>>>0);return o}
+async function pbkdf2Js(pw,salt,iters){                // 15만 번 섞는 동안 화면이 멈추지 않게 조금씩 나눠서
+  let key=pw;if(key.length>64)key=shaOut(shaRun(Uint32Array.from(SHA_IV),key,0));
+  const ip=new Uint8Array(64).fill(0x36),op=new Uint8Array(64).fill(0x5c);for(let i=0;i<key.length;i++){ip[i]^=key[i];op[i]^=key[i]}
+  const blk=new Uint32Array(16),dvb=new DataView(new ArrayBuffer(64)),words=u=>{for(let i=0;i<16;i++)blk[i]=dvb.getUint32(i*4);};
+  const hi=Uint32Array.from(SHA_IV),ho=Uint32Array.from(SHA_IV);
+  for(let i=0;i<16;i++)blk[i]=((ip[i*4]<<24)|(ip[i*4+1]<<16)|(ip[i*4+2]<<8)|ip[i*4+3])|0;shaBlock(hi,blk);
+  for(let i=0;i<16;i++)blk[i]=((op[i*4]<<24)|(op[i*4+1]<<16)|(op[i*4+2]<<8)|op[i*4+3])|0;shaBlock(ho,blk);
+  const hmac32=m=>{                                    // 32바이트 글자의 HMAC
+    const a=Uint32Array.from(hi),b=new Uint32Array(16);b.set(m);b[8]=0x80000000;b[15]=768;shaBlock(a,b);
+    const c=Uint32Array.from(ho),d=new Uint32Array(16);d.set(a);d[8]=0x80000000;d[15]=768;shaBlock(c,d);return c};
+  const sm=new Uint8Array(salt.length+4);sm.set(salt);sm[sm.length-1]=1;
+  let a=Uint32Array.from(hi);a=shaRun(a,sm,64);
+  let u=Uint32Array.from(ho);const d0=new Uint32Array(16);d0.set(a);d0[8]=0x80000000;d0[15]=768;shaBlock(u,d0);
+  const t=Uint32Array.from(u);let cur=u;
+  for(let i=1;i<iters;i++){cur=hmac32(cur);for(let k=0;k<8;k++)t[k]^=cur[k];if(i%20000===0)await new Promise(r=>setTimeout(r,0))}
+  return [...shaOut(t)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 async function accHash(pw,salt){                     // 비밀번호는 그대로 저장하지 않고 소금 + 15만 번 섞은 값만 저장
-  const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveBits']);
-  const salt8=new Uint8Array(salt.match(/../g).map(h=>parseInt(h,16)));
-  return hexOf(await crypto.subtle.deriveBits({name:'PBKDF2',salt:salt8,iterations:150000,hash:'SHA-256'},k,256))}
+  const pwB=new TextEncoder().encode(pw),salt8=new Uint8Array(salt.match(/../g).map(h=>parseInt(h,16)));
+  if(window.crypto&&crypto.subtle){try{
+    const k=await crypto.subtle.importKey('raw',pwB,'PBKDF2',false,['deriveBits']);
+    return hexOf(await crypto.subtle.deriveBits({name:'PBKDF2',salt:salt8,iterations:150000,hash:'SHA-256'},k,256))}catch(e){}}
+  return pbkdf2Js(pwB,salt8,150000)}   // 브라우저 기능을 못 쓰는 환경(https 가 아닌 주소 등)에서는 직접 계산 — 결과는 같음
 function accProf(){const top={};Object.entries(PROF.ch).sort((a,b)=>b[1].g-a[1].g).slice(0,10).forEach(([n,o])=>top[n]={g:o.g|0,w:o.w|0});
   return {n:NET.me.name||'',dv:NET.me.dev?1:0,ts:NET.me.tst?1:0,pn:PROF.name||'',pdv:PROF.dev?1:0,pts:PROF.tst?1:0,w:PROF.w|0,l:PROF.l|0,d:PROF.d|0,ch:top,pt:Math.floor(PT.t/60000),ul:unlkGet(),sh:shSnap()}}
 function accMerge(d){                                 // 저장소에 내 계정(비밀번호 확인값 + 프로필) 올림
@@ -9199,7 +9231,6 @@ async function accAct(a,b){
   if(a==='acv'){PRS.acc=b.dataset.v;prRender();const i=box.querySelector('.acid,.acp0,.acp1');if(i)i.focus();return}
   if(a==='acback'){PRS.acc=null;prRender();return}
   if(PRS.busy)return;
-  if(!window.crypto||!crypto.subtle){msg('이 브라우저에서는 계정 기능을 쓸 수 없어요');return}
   PRS.busy=true;b.disabled=true;const done=()=>{PRS.busy=false;if(b.isConnected)b.disabled=false};
   try{
     if(a==='acmake'){const p1=val('.acp1'),p2=val('.acp2');if(!accPwOk(p1)){msg('비밀번호는 6~20자로, 숫자만 쓰지 말고 영어를 섞어 주세요');return}if(p1!==p2){msg('두 비밀번호가 달라요');return}
