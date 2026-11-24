@@ -3188,7 +3188,7 @@ const UM_WIN_AUD='SUQzBAAAAAACIVRYWFgAAAASAAADbWFqb3JfYnJhbmQAaXNvbQBUWFhYAAAAEw
 const UMP=[
   {fr:UM_FR,aud:UM_AUD,fps:30,w:450,h:497,size:0.562,imgs:null,buf:null,dec:false},
   {fr:UM2_FR,aud:UM2_AUD,fps:30,w:510,h:306,size:.9,alpha:.92,fade:true,imgs:null,buf:null,dec:false}];
-const UM2={sec:3.05,beats:[.2,.9,1.6,2.3],sx:276/340,sy:199/204,dmg:9,fall:1.5,dmgMin:0,tam:34,tamR:.06,wall:.2,knock:.3,kLv:1,dur:.27,maxR:.65,thick:.012,shake:14};   // 박자 = 템버린이 바닥에 닿는 시각(초) / sx,sy = 그 지점(영상 안 비율)
+const UM2={sec:3.05,beats:[.2,.9,1.6,2.3],sx:276/340,sy:199/204,dmg:13,fall:1.5,dmgMin:1,tam:38,tamR:.06,wall:.2,knock:.3,kLv:1,dur:.27,maxR:.65,thick:.012,shake:14};   // 박자 = 템버린이 바닥에 닿는 시각(초) / sx,sy = 그 지점(영상 안 비율)
 let umClip=null,umP2=null,umRings=[],umCasts=[],umAllPl=[];   // 엄....edit 두 명(미러전)도 각자 따로 재생·판정
 const umPlOf=c=>{if(!c.umPl){c.umPl=[{},{}];umAllPl.push(...c.umPl)}return c.umPl};
 function umB64(b){const s=atob(b),a=new Uint8Array(s.length);for(let i=0;i<s.length;i++)a[i]=s.charCodeAt(i);return a}
@@ -6126,7 +6126,7 @@ const PATCH_VERSION='4.13.60';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'4.13.60',date:'2026-11-25',chars:[
-    {who:'엄....edit',tag:'adj',lines:['새 스킬 {+개굴개굴} 추가 (게이지 2개)','기존 스킬 이름 {~구수한 뽕짝 고속도로 트로트}로 변경','구수한 뽕짝 고속도로 트로트 데미지 전체 {-10 감소}','구수한 뽕짝 고속도로 트로트 쿨타임 {-8초 → 14초}','파동에 맞으면 {-부딪힘 없음} (탬버린에 맞을 때만 부딪힘)']},
+    {who:'엄....edit',tag:'adj',lines:['새 스킬 {+개굴개굴} 추가 (게이지 2개)','기존 스킬 이름 {~구수한 뽕짝 고속도로 트로트}로 변경','구수한 뽕짝 고속도로 트로트 데미지 전체 {-6 감소}','구수한 뽕짝 고속도로 트로트 쿨타임 {-8초 → 14초}','파동에 맞으면 {-부딪힘 없음} (탬버린에 맞을 때만 부딪힘)']},
     {who:'김치스시',tag:'buff',lines:['4단계 이후 확률 {+10%} (50·40·30·20·10 → 60·50·40·30·20)']}],fx:[],sys:[]},
   {ver:'4.13.59',date:'2026-11-24',chars:[{who:'권루트',tag:'buff',lines:['크리스 크로스 데미지 {+20 → 30}','크리스 크로스 L 범위 {+2.2m → 3.8m}']}],fx:[],sys:[]},
   {ver:'4.13.58',date:'2026-11-24',chars:[
