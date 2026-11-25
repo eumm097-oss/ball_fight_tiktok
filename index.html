@@ -2074,7 +2074,7 @@ function gameOver(){                 // 한 명이 죽으면 게임 종료
   else later(()=>MODE==='bag'?showBagResult():MODE==='boss'?showBossResult():MODE==='2v2'?showTeamVictory():showVictory(chars.find(o=>o.alive)),800);
   
 }
-function hurt(c,d,keep,noPush,full){const h0=c.hp;hurt0(c,d,keep,noPush,full);if(c.bag&&h0>c.hp)bagAttr(h0-c.hp)}   // 샌드백이 맞은 만큼은 누가 때렸는지 세어 이름 옆에 표시
+function hurt(c,d,keep,noPush,full){const h0=c.hp,la=LAST_ATK;LAST_ATK=null;hurt0(c,d,keep,noPush,full);if(c.bag&&h0>c.hp)bagAttr(h0-c.hp,la,c)}   // 샌드백이 맞은 만큼은 누가 때렸는지 세어 이름 옆에 표시
 function hurt0(c,d,keep,noPush,full){if(!c.alive||revPause>0||c.admGod)return;if(d>0&&sgGhost(c))return;   // 녹은 슬라임이 투명해진 동안은 데미지를 안 입음
 if(c.kind==='bt'&&d>BT.cap&&!full)d=BT.cap;   // 보스: 한 번에 BT.cap까지만 들어감 (full: 낭만박상환 체력별 데미지는 그대로)
 if(c.kind==='st'&&d>0&&!keep){d=stDodge(c,d);if(d<=0)return}
@@ -2536,6 +2536,7 @@ function stepCells(h){
     }
   }}
 function applyPoison(t,sec){                            // 독: 이미 걸려 있으면 겹치지 않고 더 긴 시간으로 (0.5초 틱 간격은 그대로 이어감)
+  if(t.bag)t.psnK=bagKindNow()||t.psnK;
   if(!t.alive||t.kind==='bn'||debImmune(t))return;const u=now+sec;   // 비누계는 독 면역
   if(t.psnUntil>now)t.psnUntil=Math.max(t.psnUntil,u);else{t.psnUntil=u;t.psnNext=now+PSN.gap}}
 function psnTick(){
@@ -3520,6 +3521,7 @@ function applySlow(t,lvl,sec){      // 슬로우(×.5) / 슬로우II(×.25): 겹
   else{t.slowMul=mul;t.slowUntil=until}
 }
 function applyBurn(t,lvl,sec){          // 연소 3초: 이미 타는 중이면 더 센 쪽 + 시간 갱신 (0.5초 틱 간격은 그대로 이어감)
+  if(t.bag){t.burnK=bagKindNow()||t.burnK;t.burnA=LAST_ATK||t.burnA}
   if(debImmune(t))return;
   const until=now+(sec||NU.fxSec);
   if(t.burnUntil>now){t.burnLvl=Math.max(t.burnLvl||1,lvl);t.burnUntil=Math.max(t.burnUntil,until)}
@@ -4300,24 +4302,40 @@ function bagIdle(){                                   // 샌드백 모드: 가�
   if(MODE!=='bag'||phase!=='idle'||NET.match||NET.screen==='online'||bagOf())return;
   const o=document.querySelector('.modal .half[data-name="설화"]');if(!o)return;
   addCharAt('boss',o,false);const c=chars.find(x=>x.side==='boss');if(!c)return;
-  bagLast=null;c.bag=true;c.bagT=0;c.name='설화';c.max=c.hp=BAG.hp;c.rad=R*BAG.big;c._lh=c.hp;c.ball.style.width=(14*BAG.big)+'%';
+  bagLast=null;bagSp=null;c.bag=true;c.bagT=0;c.name='설화';c.max=c.hp=BAG.hp;c.rad=R*BAG.big;c._lh=c.hp;c.ball.style.width=(14*BAG.big)+'%';
   c.P.classList.add('bagp');const pn=c.P.querySelector('.pname');if(pn)pn.textContent='설화 (샌드백)';
   renderHp(c);initBar(c);bossLay();placeBall(c);
 }
 function bagLock(){const b=bagOf();if(b){b.x=b.y=WB*.5;b.vx=b.vy=0;b.bpx=b.bpy=0;b.kbUntil=0;b.swPx=b.swPy=0}}   // 샌드백(설화)은 뭐에 맞아도 가운데에서 절대 움직이지 않음
 const BAG_FN=[[/^(kd)/,'kd'],[/^(mk|stepCells)/,'mk'],[/^(sFreeze|sPercent|sHeal|sYear|castNm)/,'nm'],[/^(table|sFork|jyBump|spawnFood|stepProjs)/,'jy'],[/^(rod|st[A-Z])/,'st'],[/^bk/,'bk'],[/^um/,'um'],[/^nu/,'nu'],[/^sw/,'swm'],[/^(bh|dk|kk)/,'kk'],[/^sh/,'sh'],[/^kc/,'kc'],[/^kr/,'kr'],[/^bn/,'bn'],[/^slm/,'sg']];
 let bagLast=null;
-function bagAttr(dmg){                                  // 맞은 데미지를 때린 캐릭터에게 더함 (호출한 스킬 함수 이름으로 누구 건지 알아냄 — 같은 캐릭터가 둘이면 마지막으로 공격한 쪽)
-  const ps=chars.filter(c=>c.side!=='boss');let kind=null;
-  try{for(const ln of String(new Error().stack||'').split('\n')){const m=/^\s*(?:at\s+)?(?:async\s+)?(?:[\w$]+\.)*([A-Za-z0-9_$]+)/.exec(ln);if(!m)continue;const f=BAG_FN.find(x=>x[0].test(m[1]));if(f){kind=f[1];break}}}catch(_){}
-  let who=null;if(kind){const cand=ps.filter(c=>c.kind===kind);who=cand.length>1?(cand.find(c=>c===LAST_ATK)||cand[0]):cand[0]}
-  if(!who)who=(bagLast&&ps.includes(bagLast))?bagLast:(ps.find(c=>c===LAST_ATK)||ps[0]);
-  if(!who)return;who.bagDmg=(who.bagDmg||0)+dmg;bagLast=who}
+function bagKindNow(){                                  // 지금 호출 줄(스택)에서 어느 캐릭터의 스킬 함수인지 알아냄 (이름 줄이 없으면 null)
+  try{for(const ln of String(new Error().stack||'').split('\n')){const m=/^\s*(?:at\s+)?(?:async\s+)?(?:[\w$]+\.)*([A-Za-z0-9_$]+)/.exec(ln);if(!m)continue;const f=BAG_FN.find(x=>x[0].test(m[1]));if(f)return f[1]}}catch(_){}
+  return null}
+function bagAttr(dmg,la,b){                              // 샌드백이 맞은 데미지를 때린 캐릭터에게 더함. 순서: ① 호출한 스킬 함수 이름 ② 직전에 힘(atk) 계산을 한 공격자 ③ 독·화상은 그 효과를 건 쪽 ④ 마지막으로 때린 쪽
+  const ps=chars.filter(c=>c.side!=='boss'),isP=c=>!!c&&ps.includes(c);let kind=null,dot=null;
+  try{for(const ln of String(new Error().stack||'').split('\n')){const m=/^\s*(?:at\s+)?(?:async\s+)?(?:[\w$]+\.)*([A-Za-z0-9_$]+)/.exec(ln);if(!m)continue;
+    if(m[1]==='burnTick'){kind=b&&b.burnK||null;dot=b&&b.burnA;break}
+    if(m[1]==='psnTick'){kind=b&&b.psnK||'mk';break}
+    const f=BAG_FN.find(x=>x[0].test(m[1]));if(f){kind=f[1];break}}}catch(_){}
+  let who=null;
+  if(kind){const cand=ps.filter(c=>c.kind===kind);who=cand.length>1?(cand.find(c=>c===la||c===dot)||cand[0]):cand[0]}
+  if(!who&&isP(dot))who=dot;
+  if(!who&&isP(la))who=la;
+  if(!who)who=isP(bagLast)?bagLast:ps[0];
+  if(!who)return;who.bagDmg=(who.bagDmg||0)+dmg;bagLast=who;if(simDraw)try{bagHud()}catch(_){}}
+function bagSplit(total){                                // 캐릭터별 데미지를 정수로 나눔 (합이 총 데미지와 딱 맞게: 소수점이 큰 쪽부터 1씩 더함)
+  const ps=chars.filter(c=>c.side!=='boss'),f=ps.map(c=>Math.floor(c.bagDmg||0));let rest=total-f.reduce((a,x)=>a+x,0);
+  const ord=ps.map((c,i)=>[i,(c.bagDmg||0)-f[i]]).sort((a,b)=>b[1]-a[1]);
+  for(const [i] of ord){if(rest<=0)break;f[i]++;rest--}
+  const m=new Map();ps.forEach((c,i)=>m.set(c,Math.max(0,f[i])));return m}
+function bagVal(c){const b=bagOf();return b&&bagSp&&bagSp.has(c)?bagSp.get(c):(c.bagDmg||0)}
+let bagSp=null;
 function bagHud(){                                      // 이름 옆에 이 캐릭터가 설화에게 준 데미지
   for(const c of chars){if(c.side==='boss')continue;
     if(!c._bd){const nm=c.P.querySelector('.pname');if(!nm)continue;c._bd=document.createElement('span');c._bd.className='bagd';try{c._bd.style.color=getComputedStyle(nm).color}catch(_){}   // 이름과 같은 색
     nm.appendChild(c._bd)}
-    const v=Math.round(c.bagDmg||0)+'';if(c._bdv!==v){c._bdv=v;c._bd.textContent=v}}}
+    const v=Math.round(bagVal(c))+'';if(c._bdv!==v){c._bdv=v;c._bd.textContent=v}}}
 function bagTick(dt){
   const b=bagOf();if(!b)return;bagLock();if(simDraw)bagHud();
   if(b.hp<b.max&&b._lh!=null&&b.hp<b._lh&&simDraw&&!over)try{const d=b._lh-b.hp,W=aW(),H=aH(),e=mk('bagdm','-'+Math.round(d));e.style.left=(b.x*W/WB)+'px';e.style.top=((b.y-b.rad*1.1)*H/WB)+'px';
@@ -4351,12 +4369,13 @@ function bagRecAdd(s,t,names){
 function bagAll(){const runs=BAGDB.r.slice();for(const r of bagRecGet().runs)if(!runs.some(x=>x.k===r.k))runs.push(r);return runs.sort(bagCmp)}
 function showBagResult(){                             // 샌드백 결과: 총 데미지 + 순위
   const b=bagOf(),mem=chars.filter(c=>c.side!=='boss'),dm=Math.round(b?b.max-b.hp:0),cl=!!b&&!b.alive,t=cl?b.bagT:BAG.sec;
+  bagSp=bagSplit(dm);try{bagHud()}catch(_){}
   let sub='';
   if(dm>0&&!(ADMUSED||admSpd!==1||admPause)){
     const run=bagRecAdd(cl?BAG.hp:dm,Math.max(.1,Math.min(BAG.sec,t)),mem.map(c=>c.name).join(' · '));
     const rk=bagAll().findIndex(x=>x.k===run.k)+1;sub=(rk?rk+'위':'')+(cl?' · '+t.toFixed(1)+'초 만에 처치!':'')}
   else if(cl)sub=t.toFixed(1)+'초 만에 처치!';
-  count.innerHTML='<span class="wt">'+(cl?'설화 쓰러짐!':'시간 종료!')+' 총 데미지 '+dm+(sub?'<span class="btclr">'+sub+'</span>':'')+'<span class="bgl">'+mem.slice().sort((a,b)=>(b.bagDmg||0)-(a.bagDmg||0)).map(c=>'<span><b style="color:'+((c._bd&&c._bd.style.color)||'#111')+'">'+netEsc(c.name)+'</b><i>'+Math.round(c.bagDmg||0)+'</i></span>').join('')+'</span></span>';
+  count.innerHTML='<span class="wt">'+(cl?'설화 쓰러짐!':'시간 종료!')+' 총 데미지 '+dm+(sub?'<span class="btclr">'+sub+'</span>':'')+'<span class="bgl">'+mem.slice().sort((a,b)=>bagVal(b)-bagVal(a)).map(c=>'<span><b style="color:'+((c._bd&&c._bd.style.color)||'#111')+'">'+netEsc(c.name)+'</b><i>'+bagVal(c)+'</i></span>').join('')+'</span></span>';
   count.classList.add('win');count.animate([{opacity:0},{opacity:1}],{duration:400,fill:'forwards'});
   if(cl){try{netConfetti();netFanfare()}catch(e){}
     if(!(ADMUSED||admSpd!==1||admPause)){const had=SH.bg>0&&(SH.bx>0||mem.some(c=>c.kind==='kc'));SH.bg=(SH.bg|0)+1;if(!mem.some(c=>c.kind==='kc'))SH.bx=(SH.bx|0)+1;shSave();try{acNote()}catch(_){}if(!had)try{count.querySelector('.wt').insertAdjacentHTML('beforeend','<span class="btclr">업적 달성! 업적 창에서 볼 받기</span>')}catch(_){}}}
@@ -6207,9 +6226,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.62';
+const PATCH_VERSION='4.13.63';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.63',date:'2026-11-26',chars:[],fx:[],sys:['샌드백 딜량이 잘못 기록되던 오류 수정']},
   {ver:'4.13.62',date:'2026-11-26',chars:[],fx:[],sys:['이벤트 샌드백 추가']},
   {ver:'4.13.61',date:'2026-11-25',chars:[{who:'김치스시',tag:'nerf',lines:['데미지가 강화된 그 공격은 {-강화 전 데미지}로 들어감 (강화는 다음 공격부터)']}],fx:[],sys:[]},
   {ver:'4.13.60',date:'2026-11-25',chars:[
@@ -6648,7 +6668,8 @@ function admGate(){                              // 어드민 패널: 두 번 �
   inp.focus();setTimeout(()=>{if(m.isConnected&&document.activeElement!==inp)inp.focus()},30);
 }
 let BOSS_UNLK=false;try{BOSS_UNLK=sessionStorage.getItem('bftBossAdm')==='1'&&sgHave()}catch(e){}
-const admBossNo=()=>(MODE==='boss'&&!BOSS_UNLK)||MODE==='bag';   // 샌드백은 비밀번호로도 못 풂   // 보스전: 관리자 패널 버튼이 모두 잠김 (비번 129를 넣어야 풀림)
+let BAG_UNLK=false;try{BAG_UNLK=sessionStorage.getItem('bftBagAdm')==='1'&&sgHave()}catch(e){}   // 샌드백: 비밀번호 1957
+const admBossNo=()=>(MODE==='boss'&&!BOSS_UNLK)||(MODE==='bag'&&!BAG_UNLK);   // 보스전: 관리자 패널 버튼이 모두 잠김 (비번 129를 넣어야 풀림)
 function openAdmin(g){
   g=g===true;
   if(!g)try{localStorage.setItem('bftAdm','1')}catch(e){}                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
@@ -6768,8 +6789,8 @@ function openAdmin(g){
   };
   {const lb=document.createElement('div');lb.className='admlockbar';lb.innerHTML='<span>보스전 · 샌드백 잠금</span><input class="admlkin" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호"><button type="button" class="admlkok">풀기</button>';
     win.insertBefore(lb,w.querySelector('.admmain'));const inp=lb.querySelector('.admlkin');
-    const tryU=()=>{if(MODE==='bag'){inp.value='';netToast('샌드백 이벤트에서는 패널을 쓸 수 없어요');return}if(inp.value==='129'&&!sgHave()){inp.value='';netToast('관리자 도장이 있는 폰에서만 풀 수 있어요');return}   // 도장이 없는 폰은 비밀번호를 알아도 못 풂
-      if(inp.value==='129'){BOSS_UNLK=true;try{sessionStorage.setItem('bftBossAdm','1')}catch(e){}inp.value='';admLockSync(w);netToast('잠금을 풀었어요')}else{inp.value='';netToast('비밀번호가 틀렸습니다')}};
+    const tryU=()=>{const PW=MODE==='bag'?'1957':'129';if(inp.value===PW&&!sgHave()){inp.value='';netToast('관리자 도장이 있는 폰에서만 풀 수 있어요');return}   // 도장이 없는 폰은 비밀번호를 알아도 못 풂
+      if(inp.value===PW){if(MODE==='bag'){BAG_UNLK=true;try{sessionStorage.setItem('bftBagAdm','1')}catch(e){}}else{BOSS_UNLK=true;try{sessionStorage.setItem('bftBossAdm','1')}catch(e){}}inp.value='';admLockSync(w);netToast('잠금을 풀었어요')}else{inp.value='';netToast('비밀번호가 틀렸습니다')}};
     lb.querySelector('.admlkok').addEventListener('click',tryU);inp.addEventListener('keydown',e=>{if(e.key==='Enter')tryU()});admLockSync(w)}
   w._iv=setInterval(()=>{if(!document.hidden){admLockSync(w);refresh()}},400);refresh();
 }
@@ -6878,7 +6899,7 @@ function admSumExec(name,sd){                      // 온라인: 두 폰이 같�
   launch(addCharAt(sd,o,false),grand()*360);
 }
 function admSummon(name,slot){
-  if(admBossNo()){netToast(MODE==='bag'?'샌드백 이벤트에서는 패널을 쓸 수 없어요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
+  if(admBossNo()){netToast(MODE==='bag'?'샌드백에서는 잠겨 있어요 · 비밀번호를 넣어 주세요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
   if(NET.match){if(!admOnOk())return;                                            // 온라인: 지금 있는 자리 중 하나를 바꿈
     const sd=slot==='left'||slot==='right'?slot:'right';if(!chars.some(c=>c.side===sd))return;
     admCmd({a:'sum',name,side:sd});return}
@@ -7166,7 +7187,7 @@ function admSkip(){                              // 카운트다운 건너뛰고
 function admCmd(m){
   if(ADM_G&&(m.a==='odds'||m.a==='oddsreset'))return;   // 게임 전용 패널: 스킬 확률은 못 바꿈
   if(ADM_G&&NET.match){netToast('온라인 경기 중에는 쓸 수 없어요');return}
-  if(admBossNo()){netToast(MODE==='bag'?'샌드백 이벤트에서는 패널을 쓸 수 없어요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
+  if(admBossNo()){netToast(MODE==='bag'?'샌드백에서는 잠겨 있어요 · 비밀번호를 넣어 주세요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
   if(NET.spec){netToast('관전 중에는 쓸 수 없어요');return}
   if(NET.match&&NET.conn){if(!sgHave()){netToast('관리자 도장이 없는 폰이라서 온라인 경기에서는 쓸 수 없어요');return}
     m.k2=NET.sim&&m.a!=='pause'?NET.step+(NET.mp?60:24):-1;m.r=Math.random().toString(36).slice(2,8);NET.admHist.push(Object.assign({},m));
@@ -7210,7 +7231,7 @@ function admExec(m){
 }
 function admAct(a,b){
   if(ADM_G&&NET.match){netToast('온라인 경기 중에는 쓸 수 없어요');return}
-  if(admBossNo()){netToast(MODE==='bag'?'샌드백 이벤트에서는 패널을 쓸 수 없어요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
+  if(admBossNo()){netToast(MODE==='bag'?'샌드백에서는 잠겨 있어요 · 비밀번호를 넣어 주세요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
   const c=b.dataset.side?chars.find(o=>o.side===b.dataset.side):null;
   if(a==='restart')admRestart();
   else if(a==='skip')admSkip();
