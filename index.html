@@ -297,6 +297,7 @@ background:linear-gradient(#e02424,#e02424) 50% 0/2px 9px no-repeat,linear-gradi
 .rb .bkflash{position:absolute;top:-1px;bottom:-1px;z-index:3;pointer-events:none;transform-origin:center}
 .nmtxt{display:inline-grid}.nmtxt>span{grid-area:1/1}
 .rb .bkdiv{position:absolute;top:0;bottom:0;width:1px;margin-left:-.5px;background:var(--ink);z-index:2;pointer-events:none}
+body.bagm .count{padding:0}body.bagm .count.win .wt{display:block;text-align:center;background:rgba(255,255,255,.86);padding:.35em .9em .45em;border-radius:12px}.bgl{display:flex;flex-direction:column;gap:.15em;margin:.55em auto 0;width:max-content;min-width:60%;font-size:.62em;line-height:1.15;text-shadow:0 0 4px #fff,0 0 4px #fff}.bgl span{display:flex;justify-content:space-between;gap:1.4em}.bgl b{font-weight:900}.bgl i{font-style:normal;font-weight:900;font-variant-numeric:tabular-nums}.bagd{margin-left:.4em;font-size:.82em;font-weight:900;font-variant-numeric:tabular-nums}.pb.bagp .hp::before,.pb.bagp .hp::after{display:none}.bagclk{position:absolute;left:50%;top:8px;transform:translateX(-50%);z-index:7;pointer-events:none;font:900 22px/1 "Noto Sans KR",sans-serif;color:#e0709a;text-shadow:0 0 3px #fff,0 0 3px #fff}.bagdm{position:absolute;z-index:7;pointer-events:none;font:900 14px/1 "Noto Sans KR",sans-serif;color:#e5231b;text-shadow:0 0 3px #fff,0 0 3px #fff}
 .rb .fill.st{background:#f5a01a}.rb .fill.um{background:#8d9298}.rb .fill.um2{background:#2f7bff}.umfband{position:absolute;pointer-events:none;z-index:2;background:rgba(120,120,120,.26);box-sizing:border-box;display:flex;align-items:center;justify-content:flex-start;overflow:hidden;font-weight:900;color:rgba(50,50,50,.75);line-height:1;letter-spacing:-.1em}.umfband.vt{flex-direction:column}.arclip{position:absolute;left:0;top:0;width:calc(100% * var(--wb,1));height:calc(100% * var(--wb,1));overflow:hidden;pointer-events:none}.umfrog{position:absolute;pointer-events:none;z-index:6;will-change:transform,translate}.umfrog img{display:block;width:100%;height:100%;filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}
 .umfx{position:absolute;left:50%;top:50%;width:calc(var(--W)*.9);aspect-ratio:400/230;transform:translate(-50%,-50%);pointer-events:none;opacity:0;z-index:6;will-change:transform,opacity}.umfx canvas{display:block;width:100%;height:100%}
 .krwin{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:0}.krwin video{width:100%;height:100%;object-fit:cover;opacity:.35;display:block}
@@ -883,7 +884,7 @@ body.bossm .hud{row-gap:12px}
 .btsay{position:absolute;white-space:nowrap;font:400 calc(var(--W)*.075)/1 "Jua",sans-serif;color:#fe2c55;-webkit-text-stroke:1.5px #000;pointer-events:none;z-index:7}
 .btclr{display:block;margin-top:.18em;font-size:.5em;font-weight:700;color:#111}
 
-.offrk{display:none;position:absolute;left:100%;top:0;margin-left:6px;height:28px;padding:0 10px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:400 15px/1 "Jua",sans-serif;cursor:pointer;white-space:nowrap}body.bossm .offrk{display:block}
+.offrk{display:none;position:absolute;left:100%;top:0;margin-left:6px;height:28px;padding:0 10px;border:2px solid var(--ink);border-radius:5px;background:#fff;color:#111;font:400 15px/1 "Jua",sans-serif;cursor:pointer;white-space:nowrap}body.bagm .offrk{display:block}
 body.scr-2v2.bn2 .p3,body.scr-2v2.bn2 .p4,body.scr-2v2.bn1 .p2,body.scr-2v2.bn1 .p3,body.scr-2v2.bn1 .p4{display:none}
 .bkm{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px}
 .bkbox{width:100%;max-width:420px;max-height:84vh;display:flex;flex-direction:column;background:#fff;border:2px solid #111;padding:14px;font-family:"Noto Sans KR",sans-serif;color:#111}
@@ -918,7 +919,7 @@ body.scr-2v2.bn2 .p3,body.scr-2v2.bn2 .p4,body.scr-2v2.bn1 .p2,body.scr-2v2.bn1 
 </head>
 <body>
 <div class="stage"><div class="credit">created by ball_fight_tiktok</div><div class="wrap">
-  <div class="arena"><div class="count" aria-live="polite"></div></div><div class="gtm" aria-hidden="true">0:00.0</div><div class="offmd"><button type="button" class="offbtn"><span>1대1</span><i>▾</i></button><div class="offlist" hidden><button type="button" data-om="1v1">1대1</button><button type="button" data-om="2v2">2대2</button><button type="button" data-om="ffa">1대1대1대1</button></div></div><div class="spdc"><button type="button" class="spdp" aria-label="일시정지"></button><button type="button" class="spdx">1×</button><div class="spdr" hidden><input type="range" min="0.1" max="2" step="0.1" value="1" aria-label="게임 속도"><b>1×</b></div></div>
+  <div class="arena"><div class="count" aria-live="polite"></div></div><div class="gtm" aria-hidden="true">0:00.0</div><div class="offmd"><button type="button" class="offbtn"><span>1대1</span><i>▾</i></button><div class="offlist" hidden><button type="button" data-om="1v1">1대1</button><button type="button" data-om="2v2">2대2</button><button type="button" data-om="ffa">1대1대1대1</button><button type="button" data-om="bag">샌드백</button></div><button type="button" class="offrk" data-bag="rank">랭킹</button></div><div class="spdc"><button type="button" class="spdp" aria-label="일시정지"></button><button type="button" class="spdx">1×</button><div class="spdr" hidden><input type="range" min="0.1" max="2" step="0.1" value="1" aria-label="게임 속도"><b>1×</b></div></div>
   <div class="hud">
     <div class="p1"><div class="name"><button class="add" type="button">추가하기</button></div><div class="hp">250 / 250</div><div class="rail"><div class="rb"></div></div><div class="status"></div></div>
     <div class="p2"><div class="name"><button class="add" type="button">추가하기</button></div><div class="hp">250 / 250</div><div class="rail"><div class="rb"></div></div><div class="status"></div></div>
@@ -1162,7 +1163,8 @@ function gtPlace(){try{const a=document.querySelector('.arena'),g=document.query
   let y=ar.top-pr.top-h-3;                                  // 경기장 바로 위 오른쪽
   const c=USR.vis?document.querySelector('.spdc'):null,rr=document.querySelector('.spdr'),open=!!(rr&&!rr.hidden);
   if(c){const cr=c.getBoundingClientRect();y=open?cr.top-pr.top-h-3:cr.top-pr.top+(cr.height-h)/2}   // 조작 버튼 줄 오른쪽 끝 (속도 막대를 열면 버튼 줄 위로 비켜 줌)
-  y+=2;const ins=pr.top+y+(window.scrollY||0)<4;   /* 자리가 모자란지는 페이지 맨 위 기준으로 (도움말로 내려가 있어도 위치가 바뀌지 않게) */
+  let sk=0;try{sk=new DOMMatrixReadOnly(getComputedStyle(document.querySelector('.stage')).transform).m42||0}catch(_){}   // 화면이 흔들리는 동안에는 흔들린 만큼 빼고 자리를 판단 (아니면 위·안쪽을 왔다갔다 함)
+  y+=2;const ins=pr.top+y-sk+(window.scrollY||0)<4;   /* 자리가 모자란지는 페이지 맨 위 기준으로 (도움말로 내려가 있어도 위치가 바뀌지 않게) */
   if(ins)y=ar.top-pr.top+4;
   g.classList.toggle('ins',ins);g.style.top=Math.round(y)+'px';g.style.left=Math.round(ar.right-pr.left-w-(ins?12:9))+'px';GT.k=USR.vis+'|'+open}catch(e){}}   // 화면이 낮아 위에 자리가 없으면 경기장 안 맨 위에 작게
 let GT={on:false,tx:'',t0:0,k:''};
@@ -1170,7 +1172,7 @@ function gtUi(){                                           // 게임 시간 (분
   const on=phase==='run';                                  // 카운트다운이 끝나고 공이 풀리는 순간부터 0:00.0
   if(on!==GT.on){GT.on=on;GT.t0=now;GT.tx='';document.body.classList.toggle('gt-on',on);if(on)gtPlace()}
   if(!on)return;
-  const tt=Math.max(0,Math.floor((now-GT.t0)*10+1e-6)),m=Math.floor(tt/600),sc=(tt%600)/10,tx=m+':'+(sc<10?'0':'')+sc.toFixed(1);
+  const tt=MODE==='bag'?Math.max(0,Math.min(BAG.sec*10,Math.ceil((BAG.sec-(now-GT.t0))*10-1e-6))):Math.max(0,Math.floor((now-GT.t0)*10+1e-6)),m=Math.floor(tt/600),sc=(tt%600)/10,tx=m+':'+(sc<10?'0':'')+sc.toFixed(1);
   if(tx!==GT.tx){GT.tx=tx;const g=document.querySelector('.gtm');if(g){g.innerHTML=tx.replace(':','<i></i>');gtPlace()}}   // 글자 폭이 바뀌면 오른쪽 끝에 다시 맞춤
   else{const rr=document.querySelector('.spdr');if(GT.k!==USR.vis+'|'+!!(rr&&!rr.hidden))gtPlace()}}
 addEventListener('resize',()=>{if(GT.on)gtPlace()});
@@ -1841,9 +1843,9 @@ function launch(ball,deg){
 /* ---------- characters ---------- */
 function makeChar(sd,o,ball){
   const KIND=o.dataset.dummy?'dummy':(STATS[o.dataset.kind]?o.dataset.kind:'nm');
-  wbSet();const P=document.querySelector(pSel(sd)),F3=MODE==='ffa'?({left:[.25,.3],right:[.75,.3],left2:[.25,.7],right2:[.75,.7]}[sd]||[.5,.5]):(MODE==='boss'?(sd==='boss'?[.5,.19]:({left:[.2,.84],right:[.8,.84],left2:[.4,.84],right2:[.6,.84]}[sd]||[.5,.84])):null);
+  wbSet();const P=document.querySelector(pSel(sd)),F3=MODE==='ffa'?({left:[.25,.3],right:[.75,.3],left2:[.25,.7],right2:[.75,.7]}[sd]||[.5,.5]):(BOSSY()?(sd==='boss'?(MODE==='bag'?[.5,.5]:[.5,.19]):({left:[.2,.84],right:[.8,.84],left2:[.4,.84],right2:[.6,.84]}[sd]||[.5,.84])):null);
   const c={side:sd,name:o.dataset.name,kind:KIND,ball,hp:STATS[KIND].max,alive:true,frozen:0,started:false,
-    x:WB*(F3?F3[0]:(isL(sd)?.25:.75)),y:WB*(F3?F3[1]:(MODE==='2v2'?(sd==='left'||sd==='right'?.3:.7):.5)),tm:F3?(MODE==='boss'?(sd==='boss'?'B':'P'):sd):(isL(sd)?'L':'R'),vx:0,vy:0,gauge:0,mode:'fill',btime:0,left:0,tags:[],
+    x:WB*(F3?F3[0]:(isL(sd)?.25:.75)),y:WB*(F3?F3[1]:(MODE==='2v2'?(sd==='left'||sd==='right'?.3:.7):.5)),tm:F3?(BOSSY()?(sd==='boss'?'B':'P'):sd):(isL(sd)?'L':'R'),vx:0,vy:0,gauge:0,mode:'fill',btime:0,left:0,tags:[],
     P,hpEl:P.querySelector('.hp'),rail:P.querySelector('.rail'),rb:P.querySelector('.rb'),status:P.querySelector('.status')};
   ball._c=c;chars.push(c);placeBall(c);   // 처음 자리 (2대2는 위·아래로 나눠 섬)
   c.speed=STATS[c.kind].speed;c.cd=STATS[c.kind].cooldown;c.max=STATS[c.kind].max;
@@ -1904,7 +1906,7 @@ function makeChar(sd,o,ball){
   return c;
 }
 function refreshMirror(){            // 같은 캐릭터끼리(미러전)면 왼쪽 1P(파랑) / 오른쪽 2P(빨강)로 구분 — 2대2는 항상 1P~4P 표시
-  if(MULTI()){chars.forEach(c=>{if(c.side==='boss'||c.bm)return;const n=(MODE==='ffa'||MODE==='boss')?({left:1,right:2,left2:3,right2:4}[c.side]||1):(isL(c.side)?1:2),lab=sideLab(c.side);if(c.team===lab)return;c.team=lab;c.teamN=n;c.ball.classList.remove('t1','t2','t3','t4');c.ball.classList.add('t'+n);
+  if(MULTI()){chars.forEach(c=>{if(c.side==='boss'||c.bm)return;const n=(MODE==='ffa'||BOSSY())?({left:1,right:2,left2:3,right2:4}[c.side]||1):(isL(c.side)?1:2),lab=sideLab(c.side);if(c.team===lab)return;c.team=lab;c.teamN=n;c.ball.classList.remove('t1','t2','t3','t4');c.ball.classList.add('t'+n);
     c.ball.querySelectorAll('.tm').forEach(x=>x.remove());const m=document.createElement('i');m.className='tm t'+n;m.textContent=lab;c.ball.appendChild(m);
     const nm=c.P.querySelector('.pname');if(nm){nm.querySelectorAll('.tbadge').forEach(x=>x.remove());const b=document.createElement('span');b.className='tbadge t'+n;b.textContent=lab;if(isL(c.side))nm.append(b);else nm.prepend(b)}});return}
   if(chars.length!==2||chars[0].kind!==chars[1].kind)return;
@@ -2069,10 +2071,11 @@ function gameOver(){                 // 한 명이 죽으면 게임 종료
   bhs.slice().forEach(removeBH);bhSprayUpdate(-1);mletters.slice().forEach(removeMLetter);try{btClear()}catch(e){}
   try{admLogPush()}catch(e){}
   if(NET.sim){try{netOnOver()}catch(e){console.error(e)}later(netVictoryMaybe,800)}
-  else later(()=>MODE==='boss'?showBossResult():MODE==='2v2'?showTeamVictory():showVictory(chars.find(o=>o.alive)),800);
+  else later(()=>MODE==='bag'?showBagResult():MODE==='boss'?showBossResult():MODE==='2v2'?showTeamVictory():showVictory(chars.find(o=>o.alive)),800);
   
 }
-function hurt(c,d,keep,noPush,full){if(!c.alive||revPause>0||c.admGod)return;if(d>0&&sgGhost(c))return;   // 녹은 슬라임이 투명해진 동안은 데미지를 안 입음
+function hurt(c,d,keep,noPush,full){const h0=c.hp;hurt0(c,d,keep,noPush,full);if(c.bag&&h0>c.hp)bagAttr(h0-c.hp)}   // 샌드백이 맞은 만큼은 누가 때렸는지 세어 이름 옆에 표시
+function hurt0(c,d,keep,noPush,full){if(!c.alive||revPause>0||c.admGod)return;if(d>0&&sgGhost(c))return;   // 녹은 슬라임이 투명해진 동안은 데미지를 안 입음
 if(c.kind==='bt'&&d>BT.cap&&!full)d=BT.cap;   // 보스: 한 번에 BT.cap까지만 들어감 (full: 낭만박상환 체력별 데미지는 그대로)
 if(c.kind==='st'&&d>0&&!keep){d=stDodge(c,d);if(d<=0)return}
 if(c.kind==='kr'&&c.krDodge&&d>0&&!keep&&!noPush&&krDodge(c))return;   // 측면대측면: 물리공격은 피함   // keep=true: 부딪힘 벽·몸 충돌 데미지는 회피로 피하지 않음
@@ -2081,10 +2084,11 @@ if(d>0&&!keep&&!noPush&&c.swMap&&c.mode==='sw'&&!c.swNorm)swHitPush(c);   // 산
 let cut=0;if(c.resist&&!lostPas(c))cut=c.resistBase||RESIST.cut;if(c.resistUntil>now)cut=Math.max(cut,c.resistCut||RESIST.cut);if(cut>0&&d>0)d=d*(1-cut);const old=c.hp;c.hp=Math.max(0,Math.round((c.hp-d)*1e6)/1e6);renderHp(c);hpChange(c,old);if(c.hp<=0){if(c.kind==='nm'&&!c.revived&&!c.admNoPas)startRevive(c);else die(c)}}   // 받는 피해 증감으로 생긴 소수점은 반올림하지 않고 그대로 데이터에 남김
 let MODE='1v1';
 var OFF_MODE='1v1';   // 로비에서 고르는 모드: 1대1 / 2대2 / 1대1대1대1 (처음엔 1대1)
-const MULTI=()=>MODE==='2v2'||MODE==='ffa'||MODE==='boss';
+const BOSSY=()=>MODE==='boss'||MODE==='bag';   // 보스전처럼 한 팀(최대 4명)이 가운데의 한 상대를 때리는 모드 (샌드백 포함)
+const MULTI=()=>MODE==='2v2'||MODE==='ffa'||MODE==='boss'||MODE==='bag';
 const SIDE_P={left:'.p1',right:'.p2',left2:'.p3',right2:'.p4',boss:'.pb'};
 const pSel=sd=>SIDE_P[sd]||'.p1',isL=sd=>sd==='left'||sd==='left2';
-const sideLab=sd=>MODE==='2v2'?({left:'1P',left2:'2P',right:'3P',right2:'4P'}[sd]||''):((MODE==='ffa'||MODE==='boss')?({left:'1P',right:'2P',left2:'3P',right2:'4P'}[sd]||''):(isL(sd)?'1P':'2P'));
+const sideLab=sd=>MODE==='2v2'?({left:'1P',left2:'2P',right:'3P',right2:'4P'}[sd]||''):((MODE==='ffa'||BOSSY())?({left:'1P',right:'2P',left2:'3P',right2:'4P'}[sd]||''):(isL(sd)?'1P':'2P'));
 const ally=(a,b)=>a===b||(!!a&&!!b&&a.tm===b.tm);
 const foe=c=>{let best=null,bd=1e9;for(const o of chars){if(o===c||!o.alive||ally(o,c))continue;const d=(o.x-c.x)*(o.x-c.x)+(o.y-c.y)*(o.y-c.y);if(d<bd){bd=d;best=o}}return best};   // 가장 가까운 상대 팀
 const resistOf=o=>Math.max((o.resist&&!lostPas(o))?(o.resistBase||RESIST.cut):0,(o.resistUntil>now)?(o.resistCut||RESIST.cut):0);   // 지금 이 캐릭터가 가진 보호 수치
@@ -2724,6 +2728,7 @@ function runChain(c){
   try{k(c,next)}catch(e){console.error(e);next()}
 }
 function startCast(c){
+  if(c.bag){c.gauge=0;return}   // 샌드백은 스킬을 쓰지 않음
   if(revPause>0)return;                           // 부활 연출 중에는 스킬이 써지지 않음
   if(!foe(c)){c.gauge=0;return}
   if(c.silenceUntil>now){c.gauge=0;burstAt(c.x*aW(),c.y*aH(),'#9aa0a6',.5,4);return}   // 스킬 실패: 써지지 않고 게이지만 비워짐
@@ -2837,7 +2842,7 @@ function addSpeedBuff(c,mul,sec){
 }
 /* 힘: 내가 입히는 직접 공격·스킬 데미지 +10 (10초). 겹치지 않고 다시 얻으면 시간만 갱신.
    부딪힘 같은 디버프 상태효과가 주는 데미지(벽 충돌)는 힘으로 늘어나지 않음 */
-const atk=c=>(c&&c.strUntil>now)?JY.strAtk:0;
+let LAST_ATK=null;const atk=c=>{LAST_ATK=c;return (c&&c.strUntil>now)?JY.strAtk:0};
 const FRAIL={cut:.2};                 // 나약함: 자신이 주는 데미지 20% 감소
 const frail=c=>(c&&((c.frailPerm&&!lostPas(c))||c.frailUntil>now))?1-FRAIL.cut:1;
 function addStrength(c){
@@ -3368,7 +3373,7 @@ function umFrogTick(dt){
       if(!st){
         if(Math.abs(lat-f.line)<hw+rr*.6&&ax>=lo-rr&&ax<=hi+rr){
           hurt(t,(UMF.dmg+atk(c))*frail(c));
-          st={c:t.alive};f.hit.set(t,st);
+          st={c:t.alive&&!t.bag};f.hit.set(t,st);
           try{playHit();burstAt(t.x*W,t.y*H,'#3b82f6',.8,8)}catch(e){}
         }
       }
@@ -3675,7 +3680,7 @@ function placeOutside(mv,f){          // 멈춘 공(f) 바깥으로 mv를 옮기
   else if(y<lo||y>hi){y=Math.min(hi,Math.max(lo,y));x=f.x+(dx>=0?1:-1)*Math.sqrt(Math.max(0,sr*sr-(y-f.y)*(y-f.y)))}
   mv.x=Math.min(hi,Math.max(lo,x));mv.y=Math.min(hi,Math.max(lo,y));
 }
-const isStill=o=>o.frozen>0||!!o.admStop||o.kdHoldUntil>now||o.btHold>now||o.kcHoldUntil>now;    // 정지 상태이거나 관리자가 멈춰 둔 공
+const isStill=o=>o.frozen>0||!!o.admStop||!!o.bag||o.kdHoldUntil>now||o.btHold>now||o.kcHoldUntil>now;    // 정지 상태이거나 관리자가 멈춰 둔 공
 function separate(a,b){               // 위치만 떼어내기 (속도는 건드리지 않음)
   let dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);const sr=(a.rad||R)+(b.rad||R);
   if(d>=sr)return;
@@ -3720,7 +3725,7 @@ function tickBody(t){
   raf=go?requestAnimationFrame(tick):0;
 }
 function simStep(dt){
-  now+=dt;
+  now+=dt;bagLock();
   if(objStop>0){                                                    // 꼼짝마 중: 밥상·포크 등 모든 오브젝트의 시간도 정지
     for(const p of projs)p.born+=dt;
     for(const f of follows)if(f.pause)f.pause(dt);
@@ -3810,7 +3815,7 @@ function simStep(dt){
     placeBall(m);
   }
 
-  tickFoods();buffTick(dt);nuTick(dt);burnTick();psnTick();bleedTick(dt);kkTick(dt);bkTick(dt);stTick(dt);bhTick(dt);umTick(dt);kdTick(dt);btTick(dt);swTick(dt);krTick(dt);slmTick(dt);bnTick(dt);shTick(dt);dkTick(dt);kcTick(dt);
+  tickFoods();buffTick(dt);nuTick(dt);burnTick();psnTick();bleedTick(dt);kkTick(dt);bkTick(dt);stTick(dt);bhTick(dt);umTick(dt);kdTick(dt);btTick(dt);swTick(dt);krTick(dt);slmTick(dt);bnTick(dt);shTick(dt);dkTick(dt);kcTick(dt);bagTick(dt);
   if(revPause>0&&!chars.some(c=>c.reviving))revPause=0;   // 안전장치: 부활 연출이 없는데 '모든 피해 정지'가 남아 있으면 풂
   for(const c of chars){               // 안전장치: 정지/스킬 상태가 비정상적으로 오래 가면 풀어줌
     if(!c.alive)continue;
@@ -3819,7 +3824,7 @@ function simStep(dt){
     if(c.mode==='chain'&&now-c.chainT>40){endBoostUI(c);c.mode='fill';c.gauge=0}
   }
   for(const c of chars){               // skill gauge
-    if((c.kind!=='nm'&&c.kind!=='jy'&&c.kind!=='kk'&&c.kind!=='kr'&&c.kind!=='um'&&c.kind!=='sg'&&c.kind!=='bn'&&c.kind!=='sh'&&!(c.kind==='swm'&&!c.bm))||!c.alive||!c.started)continue;
+    if((c.kind!=='nm'&&c.kind!=='jy'&&c.kind!=='kk'&&c.kind!=='kr'&&c.kind!=='um'&&c.kind!=='sg'&&c.kind!=='bn'&&c.kind!=='sh'&&!(c.kind==='swm'&&!c.bm))||!c.alive||!c.started||c.bag)continue;
     if(c.mode==='fill'&&c.kind==='swm'){if(!c.frozen&&revPause<=0){c.mode='sw';c.swT=SW.sec;swGen(c)}}   // 산와머니: 쿨타임 없이 바로 시작해서 10초마다 새 맵
     else if(c.mode==='fill'){
       if(!c.frozen){c.gauge+=dt/Math.max(.1,c.cd);if(c.gauge>=1){c.gauge=1;if(c.kind==='swm'){if(revPause<=0){c.mode='sw';c.swT=SW.sec;swGen(c)}}else startCast(c)}}
@@ -4041,7 +4046,7 @@ const BT={pushW:.35,pushV:.5,speed:.36,cap:50,big:1.7,hp:n=>Math.round(400*n*(1+
   slam:{up:.45,warn:1.2,fall:.22,rest:.45,n:3,gap:7,r:.17,dmg:30,kbSec:1}};   // 3페이즈: 위로 날아갔다가 그림자 자리로 쿵 (연속 3번)                                   // 1~2페이즈 소환: 3초마다 체력 50짜리 일반 크기 공을 소환 (최대 8마리, 닿으면 5 피해)
 const bossOf=()=>chars.find(c=>c.kind==='bt');
 const bossFmt=t=>{t=Math.max(0,t);const m=Math.floor(t/60),s=t-m*60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s.toFixed(1)};
-function bossUi(){document.body.classList.toggle('bossm',MODE==='boss')}
+function bossUi(){document.body.classList.toggle('bossm',BOSSY());document.body.classList.toggle('bagm',MODE==='bag')}
 function hpbTick(){                                    // 3명 이상이 싸우면 공마다 수치 없는 작은 체력바 (2명이면 없음)
   const ps=chars.filter(c=>c.side!=='boss'&&!c.bm),on=ps.length>=3;
   for(const c of ps){
@@ -4052,7 +4057,7 @@ function hpbTick(){                                    // 3명 이상이 싸우�
   }
 }
 function bossLay(){                                   // 보스전: 인원수에 맞게 가운데 기준으로 고르게 (1명=가운데, 2명=양옆, 3명=왼·가운데·오른)
-  if(MODE!=='boss')return;const ps=chars.filter(o=>o.side!=='boss');
+  if(!BOSSY())return;const ps=chars.filter(o=>o.side!=='boss');
   ps.forEach((o,i)=>{o.x=WB*(i+1)/(ps.length+1);o.y=WB*.84;placeBall(o);followSync(o)});
   const b=bossOf();if(b&&phase==='idle')bossFit(b)}
 function followSync(o){                                // 시작 전(시뮬레이션이 안 도는 때) 공을 옮기면 아우라·글자 같은 따라다니는 것도 같이 옮김
@@ -4065,7 +4070,7 @@ function bossFit(c){                                  // 인원수에 맞춰 보
   c.max=c.hp=BT.hp(n);renderHp(c);initBar(c);if(c.bt){c.bt.n=n;c.bt.dm=1+.1*(n-1)}}
 let bossNoIdle=false;
 function bossIdleShow(){                              // 혼자 하는 보스전은 시작 전에도 맵 위쪽에 보스가 보임
-  if(bossNoIdle)return;if(MODE==='boss'&&phase==='idle'&&NET.screen==='2v2'&&!NET.match&&!NET.mp&&!bossOf())addBoss()}
+  if(bossNoIdle)return;try{bagIdle()}catch(e){console.error(e)}if(MODE==='boss'&&phase==='idle'&&NET.screen==='2v2'&&!NET.match&&!NET.mp&&!bossOf())addBoss()}
 function addBoss(){                                   // 보스 공을 맵 위쪽 가운데에 놓음 (모든 폰이 같은 순서로)
   {const e=bossOf();if(e){bossFit(e);bossLay();return null}}
   const n=Math.max(1,chars.filter(c=>c.side!=='boss').length);
@@ -4288,6 +4293,86 @@ function btClear(c){
 function bossOffRec(win,b){                              // 한 기기에서 한 보스전 기록 (이름이 없으면 '이름 없음')
   const me=NET.me.name||PROF.name||'',ch=chars.filter(c=>c.tm==='P').map(c=>c.name).join(' · ');
   bossRec(win,win?b.bt.dead:0,[{pid:PID,name:me,ch}],'o'+PID+Date.now())}
+/* ---------- 이벤트: 설화 때리기 (샌드백) — 가운데에 서 있는 큰 설화(체력 5000)를 최대 4명이 30초 안에 최대한 때림 · 랭킹 ---------- */
+const BAG={sec:30,hp:5000,big:2.2,max:500};
+const bagOf=()=>chars.find(c=>c.bag);
+function bagIdle(){                                   // 샌드백 모드: 가운데에 크게 서 있는 설화를 놓음 (플레이어는 아래쪽에 고르게)
+  if(MODE!=='bag'||phase!=='idle'||NET.match||NET.screen==='online'||bagOf())return;
+  const o=document.querySelector('.modal .half[data-name="설화"]');if(!o)return;
+  addCharAt('boss',o,false);const c=chars.find(x=>x.side==='boss');if(!c)return;
+  bagLast=null;c.bag=true;c.bagT=0;c.name='설화';c.max=c.hp=BAG.hp;c.rad=R*BAG.big;c._lh=c.hp;c.ball.style.width=(14*BAG.big)+'%';
+  c.P.classList.add('bagp');const pn=c.P.querySelector('.pname');if(pn)pn.textContent='설화 (샌드백)';
+  renderHp(c);initBar(c);bossLay();placeBall(c);
+}
+function bagLock(){const b=bagOf();if(b){b.x=b.y=WB*.5;b.vx=b.vy=0;b.bpx=b.bpy=0;b.kbUntil=0;b.swPx=b.swPy=0}}   // 샌드백(설화)은 뭐에 맞아도 가운데에서 절대 움직이지 않음
+const BAG_FN=[[/^(kd)/,'kd'],[/^(mk|stepCells)/,'mk'],[/^(sFreeze|sPercent|sHeal|sYear|castNm)/,'nm'],[/^(table|sFork|jyBump|spawnFood|stepProjs)/,'jy'],[/^(rod|st[A-Z])/,'st'],[/^bk/,'bk'],[/^um/,'um'],[/^nu/,'nu'],[/^sw/,'swm'],[/^(bh|dk|kk)/,'kk'],[/^sh/,'sh'],[/^kc/,'kc'],[/^kr/,'kr'],[/^bn/,'bn'],[/^slm/,'sg']];
+let bagLast=null;
+function bagAttr(dmg){                                  // 맞은 데미지를 때린 캐릭터에게 더함 (호출한 스킬 함수 이름으로 누구 건지 알아냄 — 같은 캐릭터가 둘이면 마지막으로 공격한 쪽)
+  const ps=chars.filter(c=>c.side!=='boss');let kind=null;
+  try{for(const ln of String(new Error().stack||'').split('\n')){const m=/^\s*(?:at\s+)?(?:async\s+)?(?:[\w$]+\.)*([A-Za-z0-9_$]+)/.exec(ln);if(!m)continue;const f=BAG_FN.find(x=>x[0].test(m[1]));if(f){kind=f[1];break}}}catch(_){}
+  let who=null;if(kind){const cand=ps.filter(c=>c.kind===kind);who=cand.length>1?(cand.find(c=>c===LAST_ATK)||cand[0]):cand[0]}
+  if(!who)who=(bagLast&&ps.includes(bagLast))?bagLast:(ps.find(c=>c===LAST_ATK)||ps[0]);
+  if(!who)return;who.bagDmg=(who.bagDmg||0)+dmg;bagLast=who}
+function bagHud(){                                      // 이름 옆에 이 캐릭터가 설화에게 준 데미지
+  for(const c of chars){if(c.side==='boss')continue;
+    if(!c._bd){const nm=c.P.querySelector('.pname');if(!nm)continue;c._bd=document.createElement('span');c._bd.className='bagd';try{c._bd.style.color=getComputedStyle(nm).color}catch(_){}   // 이름과 같은 색
+    nm.appendChild(c._bd)}
+    const v=Math.round(c.bagDmg||0)+'';if(c._bdv!==v){c._bdv=v;c._bd.textContent=v}}}
+function bagTick(dt){
+  const b=bagOf();if(!b)return;bagLock();if(simDraw)bagHud();
+  if(b.hp<b.max&&b._lh!=null&&b.hp<b._lh&&simDraw&&!over)try{const d=b._lh-b.hp,W=aW(),H=aH(),e=mk('bagdm','-'+Math.round(d));e.style.left=(b.x*W/WB)+'px';e.style.top=((b.y-b.rad*1.1)*H/WB)+'px';
+    e.animate([{transform:'translate(-50%,0)',opacity:1},{transform:'translate(-50%,-26px)',opacity:0}],{duration:650,easing:'ease-out',fill:'forwards'}).onfinish=()=>e.remove()}catch(_){}
+  b._lh=b.hp;
+  if(phase!=='run'||over)return;
+  b.bagT+=dt;const left=Math.max(0,BAG.sec-b.bagT);
+  if(left<=0)gameOver()
+}
+/* 샌드백 랭킹: 점수 = 설화에게 준 총 데미지 (같으면 더 빨리 쓰러뜨린 쪽이 위) · 이 폰에 저장하고 저장소(d.bag)와 합침 */
+var BAGDB={r:[]},BAGREC=null;
+const bagOk=r=>!!(r&&r.k&&+r.s>0&&+r.s<=BAG.hp+.5&&+r.t>0&&+r.t<=BAG.sec+.5&&Array.isArray(r.p));
+const bagCmp=(a,b)=>(b.s-a.s)||(a.t-b.t);
+const bagClean=r=>({k:String(r.k).slice(0,24),s:Math.round(+r.s*10)/10,t:Math.round(+r.t*100)/100,d:+r.d||0,p:r.p.slice(0,1).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)}))});
+function bagRecGet(){
+  if(BAGREC)return BAGREC;let v=null;try{v=JSON.parse(localStorage.getItem('bftBagRk')||'null')}catch(e){}
+  BAGREC={runs:Array.isArray(v&&v.runs)?v.runs.filter(bagOk).map(bagClean).slice(0,BAG.max):[]};return BAGREC}
+function bagRecSave(){try{localStorage.setItem('bftBagRk',JSON.stringify({runs:bagRecGet().runs}))}catch(e){}}
+function bagMerge(d){                                   // 내 폰 → 저장소
+  const B=bagRecGet();if(!B.runs.length)return;
+  if(!d.bag||typeof d.bag!=='object'||Array.isArray(d.bag))d.bag={r:[]};if(!Array.isArray(d.bag.r))d.bag.r=[];
+  const have=new Set(d.bag.r.map(x=>x&&x.k));for(const r of B.runs)if(!have.has(r.k)){d.bag.r.push(r);have.add(r.k)}
+  d.bag.r=d.bag.r.filter(bagOk).map(bagClean).sort(bagCmp).slice(0,BAG.max)}
+function bagPull(d){                                    // 저장소 → 내 폰
+  const b=d&&d.bag;if(!b||typeof b!=='object'||!Array.isArray(b.r))return;
+  BAGDB={r:b.r.slice(0,BAG.max*2).filter(bagOk).map(bagClean).sort(bagCmp).slice(0,BAG.max)}}
+function bagRecAdd(s,t,names){
+  const B=bagRecGet(),me=NET.me.name||PROF.name||'';
+  const run=bagClean({k:'g'+PID+Date.now(),s,t,d:Date.now(),p:[{i:PID,n:me,c:names}]});
+  B.runs.push(run);B.runs.sort(bagCmp);B.runs=B.runs.slice(0,BAG.max);bagRecSave();try{cldSoon(1500)}catch(e){}return run}
+function bagAll(){const runs=BAGDB.r.slice();for(const r of bagRecGet().runs)if(!runs.some(x=>x.k===r.k))runs.push(r);return runs.sort(bagCmp)}
+function showBagResult(){                             // 샌드백 결과: 총 데미지 + 순위
+  const b=bagOf(),mem=chars.filter(c=>c.side!=='boss'),dm=Math.round(b?b.max-b.hp:0),cl=!!b&&!b.alive,t=cl?b.bagT:BAG.sec;
+  let sub='';
+  if(dm>0&&!(ADMUSED||admSpd!==1||admPause)){
+    const run=bagRecAdd(cl?BAG.hp:dm,Math.max(.1,Math.min(BAG.sec,t)),mem.map(c=>c.name).join(' · '));
+    const rk=bagAll().findIndex(x=>x.k===run.k)+1;sub=(rk?rk+'위':'')+(cl?' · '+t.toFixed(1)+'초 만에 처치!':'')}
+  else if(cl)sub=t.toFixed(1)+'초 만에 처치!';
+  count.innerHTML='<span class="wt">'+(cl?'설화 쓰러짐!':'시간 종료!')+' 총 데미지 '+dm+(sub?'<span class="btclr">'+sub+'</span>':'')+'<span class="bgl">'+mem.slice().sort((a,b)=>(b.bagDmg||0)-(a.bagDmg||0)).map(c=>'<span><b style="color:'+((c._bd&&c._bd.style.color)||'#111')+'">'+netEsc(c.name)+'</b><i>'+Math.round(c.bagDmg||0)+'</i></span>').join('')+'</span></span>';
+  count.classList.add('win');count.animate([{opacity:0},{opacity:1}],{duration:400,fill:'forwards'});
+  if(cl){try{netConfetti();netFanfare()}catch(e){}
+    if(!(ADMUSED||admSpd!==1||admPause)){const had=SH.bg>0&&(SH.bx>0||mem.some(c=>c.kind==='kc'));SH.bg=(SH.bg|0)+1;if(!mem.some(c=>c.kind==='kc'))SH.bx=(SH.bx|0)+1;shSave();try{acNote()}catch(_){}if(!had)try{count.querySelector('.wt').insertAdjacentHTML('beforeend','<span class="btclr">업적 달성! 업적 창에서 볼 받기</span>')}catch(_){}}}
+}
+function bagRankShow(){
+  let m=document.querySelector('.bkm');
+  if(!m){m=document.createElement('div');m.className='bkm';document.body.appendChild(m);
+    m.addEventListener('click',e=>{if(e.target===m||e.target.closest('[data-bk="x"]'))m.remove()});
+    Promise.resolve(typeof cldSync==='function'?cldSync(false):0).then(()=>{if(document.body.contains(m))bagRankShow()}).catch(()=>{})}
+  const runs=bagAll().slice(0,100);
+  const rows=runs.map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+(r.s>=BAG.hp?r.t.toFixed(1)+'초 처치':Math.round(r.s))+'</div></div>'}).join('');
+  m.innerHTML='<div class="bkbox"><div class="bkt">설화 때리기 랭킹</div><div class="bkmy">최대 4명 · '+BAG.sec+'초 안에 설화(체력 '+BAG.hp+')에게 준 데미지</div>'
+    +'<div class="bklist">'+(rows||'<div class="bknone">아직 기록이 없어요. 첫 기록의 주인공이 되어 보세요!</div>')+'</div>'
+    +'<button type="button" class="bkclose" data-bk="x">닫기</button></div>';
+}
+document.addEventListener('click',e=>{if(e.target.closest('[data-bag="rank"]')){e.stopPropagation();bagRankShow()}},true);
 function showBossResult(){                           // 혼자(한 기기) 하는 보스전 결과
   const b=bossOf(),win=!!b&&!b.alive,al=chars.filter(o=>o.tm==='P'&&o.alive);
   count.innerHTML=win?'<span class="wt">보스 처치!<span class="btclr">'+bossFmt(b.bt.dead)+'</span></span>':'<span class="wt">도전 실패...</span>';
@@ -6122,9 +6207,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.61';
+const PATCH_VERSION='4.13.62';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.62',date:'2026-11-26',chars:[],fx:[],sys:['이벤트 샌드백 추가: 모드 선택에서 고르면 가운데 서 있는 설화(체력 5000)를 최대 4명이 30초 안에 때려요 · 랭킹 있음','샌드백 격파 업적 2개 추가 (칭호 「설화 혐오」 · 「설화 극혐」)']},
   {ver:'4.13.61',date:'2026-11-25',chars:[{who:'김치스시',tag:'nerf',lines:['데미지가 강화된 그 공격은 {-강화 전 데미지}로 들어감 (강화는 다음 공격부터)']}],fx:[],sys:[]},
   {ver:'4.13.60',date:'2026-11-25',chars:[
     {who:'엄....edit',tag:'adj',lines:['새 스킬 {+개굴개굴} 추가 (게이지 2개)','기존 스킬 이름 {~구수한 뽕짝 고속도로 트로트}로 변경','구수한 뽕짝 고속도로 트로트 데미지 전체 {-6 감소}','구수한 뽕짝 고속도로 트로트 쿨타임 {-8초 → 14초}','파동에 맞으면 {-부딪힘 없음} (탬버린에 맞을 때만 부딪힘)']},
@@ -6562,7 +6648,7 @@ function admGate(){                              // 어드민 패널: 두 번 �
   inp.focus();setTimeout(()=>{if(m.isConnected&&document.activeElement!==inp)inp.focus()},30);
 }
 let BOSS_UNLK=false;try{BOSS_UNLK=sessionStorage.getItem('bftBossAdm')==='1'&&sgHave()}catch(e){}
-const admBossNo=()=>MODE==='boss'&&!BOSS_UNLK;   // 보스전: 관리자 패널 버튼이 모두 잠김 (비번 129를 넣어야 풀림)
+const admBossNo=()=>(MODE==='boss'&&!BOSS_UNLK)||MODE==='bag';   // 샌드백은 비밀번호로도 못 풂   // 보스전: 관리자 패널 버튼이 모두 잠김 (비번 129를 넣어야 풀림)
 function openAdmin(g){
   g=g===true;
   if(!g)try{localStorage.setItem('bftAdm','1')}catch(e){}                  // 떠 있는 관리자 창: 뒤를 막지 않아서 게임과 번갈아 터치 가능, 끌어서 옮기고 네모 아이콘으로 접기
@@ -6680,9 +6766,9 @@ function openAdmin(g){
     T(()=>{admVals(w);});
     T(()=>{admSync();});
   };
-  {const lb=document.createElement('div');lb.className='admlockbar';lb.innerHTML='<span>보스전 잠금</span><input class="admlkin" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호"><button type="button" class="admlkok">풀기</button>';
+  {const lb=document.createElement('div');lb.className='admlockbar';lb.innerHTML='<span>보스전 · 샌드백 잠금</span><input class="admlkin" type="password" inputmode="numeric" autocomplete="off" placeholder="비밀번호"><button type="button" class="admlkok">풀기</button>';
     win.insertBefore(lb,w.querySelector('.admmain'));const inp=lb.querySelector('.admlkin');
-    const tryU=()=>{if(inp.value==='129'&&!sgHave()){inp.value='';netToast('관리자 도장이 있는 폰에서만 풀 수 있어요');return}   // 도장이 없는 폰은 비밀번호를 알아도 못 풂
+    const tryU=()=>{if(MODE==='bag'){inp.value='';netToast('샌드백 이벤트에서는 패널을 쓸 수 없어요');return}if(inp.value==='129'&&!sgHave()){inp.value='';netToast('관리자 도장이 있는 폰에서만 풀 수 있어요');return}   // 도장이 없는 폰은 비밀번호를 알아도 못 풂
       if(inp.value==='129'){BOSS_UNLK=true;try{sessionStorage.setItem('bftBossAdm','1')}catch(e){}inp.value='';admLockSync(w);netToast('잠금을 풀었어요')}else{inp.value='';netToast('비밀번호가 틀렸습니다')}};
     lb.querySelector('.admlkok').addEventListener('click',tryU);inp.addEventListener('keydown',e=>{if(e.key==='Enter')tryU()});admLockSync(w)}
   w._iv=setInterval(()=>{if(!document.hidden){admLockSync(w);refresh()}},400);refresh();
@@ -6792,7 +6878,7 @@ function admSumExec(name,sd){                      // 온라인: 두 폰이 같�
   launch(addCharAt(sd,o,false),grand()*360);
 }
 function admSummon(name,slot){
-  if(admBossNo()){netToast('보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
+  if(admBossNo()){netToast(MODE==='bag'?'샌드백 이벤트에서는 패널을 쓸 수 없어요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
   if(NET.match){if(!admOnOk())return;                                            // 온라인: 지금 있는 자리 중 하나를 바꿈
     const sd=slot==='left'||slot==='right'?slot:'right';if(!chars.some(c=>c.side===sd))return;
     admCmd({a:'sum',name,side:sd});return}
@@ -7080,7 +7166,7 @@ function admSkip(){                              // 카운트다운 건너뛰고
 function admCmd(m){
   if(ADM_G&&(m.a==='odds'||m.a==='oddsreset'))return;   // 게임 전용 패널: 스킬 확률은 못 바꿈
   if(ADM_G&&NET.match){netToast('온라인 경기 중에는 쓸 수 없어요');return}
-  if(admBossNo()){netToast('보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
+  if(admBossNo()){netToast(MODE==='bag'?'샌드백 이벤트에서는 패널을 쓸 수 없어요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
   if(NET.spec){netToast('관전 중에는 쓸 수 없어요');return}
   if(NET.match&&NET.conn){if(!sgHave()){netToast('관리자 도장이 없는 폰이라서 온라인 경기에서는 쓸 수 없어요');return}
     m.k2=NET.sim&&m.a!=='pause'?NET.step+(NET.mp?60:24):-1;m.r=Math.random().toString(36).slice(2,8);NET.admHist.push(Object.assign({},m));
@@ -7124,7 +7210,7 @@ function admExec(m){
 }
 function admAct(a,b){
   if(ADM_G&&NET.match){netToast('온라인 경기 중에는 쓸 수 없어요');return}
-  if(admBossNo()){netToast('보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
+  if(admBossNo()){netToast(MODE==='bag'?'샌드백 이벤트에서는 패널을 쓸 수 없어요':'보스전에서는 잠겨 있어요 · 비밀번호를 넣어 주세요');return}
   const c=b.dataset.side?chars.find(o=>o.side===b.dataset.side):null;
   if(a==='restart')admRestart();
   else if(a==='skip')admSkip();
@@ -7417,6 +7503,7 @@ btn.addEventListener('click',()=>{
   if(MODE==='ffa'&&chars.length<3){netToast('3명 이상 넣어야 시작할 수 있어요');return}
   if(MODE==='2v2'&&new Set(chars.map(c=>c.tm)).size<2){netToast('양쪽 팀에 한 명씩은 있어야 해요');return}
   if(MODE==='boss'&&!chars.some(c=>c.side!=='boss')){netToast('캐릭터를 한 명 이상 넣어 주세요');return}
+  if(MODE==='bag'&&!chars.some(c=>c.side!=='boss')){netToast('캐릭터를 한 명 이상 넣어 주세요');return}
   initAudio();refreshMirror();if(MODE==='boss')addBoss();
   document.querySelectorAll('.rm').forEach(b=>b.remove());     // 시작하면 − 버튼은 사라짐
   btn.hidden=true;endBtn.hidden=false;
@@ -7484,7 +7571,7 @@ function resetGame(){krWinStop();ADMUSED=false;chatInClear();wbSet();USR.pause=f
 }
 endBtn.addEventListener('click',resetGame);
 function offSetMode(m){                                  // 로비 화면에서 모드 바꾸기: 1대1이면 메인 모양, 2대2·1대1대1대1이면 4인 모양으로 (화면 넘김 없이 한 화면에서)
-  if(phase!=='idle'||NET.match||NET.screen==='online'||!MP_MAX[m]||m==='boss')return;
+  if(phase!=='idle'||NET.match||NET.screen==='online'||!(MP_MAX[m]||m==='bag')||m==='boss')return;
   OFF_MODE=m;bossNoIdle=true;try{resetGame()}finally{bossNoIdle=false}
   NET.screen=m==='1v1'?'lobby':'2v2';MODE=m;document.body.classList.toggle('scr-2v2',m!=='1v1');
   bossUi();bossIdleShow();try{netPaintOnl()}catch(_){}netDots();try{window.footLay&&window.footLay()}catch(_){}}
@@ -7495,7 +7582,7 @@ function offSetMode(m){                                  // 로비 화면에서 
   rg.addEventListener('input',()=>{const v=Math.max(.1,Math.min(2,Math.round(+rg.value*10)/10));USR.spd=v;try{localStorage.setItem('bftSpd',String(v))}catch(e){}usrRateSync();usrUi()});
   document.addEventListener('pointerdown',e=>{if(!rr.hidden&&!e.target.closest('.spdc'))rr.hidden=true});
   usrUi()}
-{const om=document.querySelector('.offmd'),ob=om.querySelector('.offbtn'),ol=om.querySelector('.offlist'),LB={'1v1':'1대1','2v2':'2대2','ffa':'1대1대1대1','boss':'보스전'};   // 맵 위 '1대1 ▾'를 누르면 1대1 · 2대2 · 1대1대1대1을 고를 수 있음
+{const om=document.querySelector('.offmd'),ob=om.querySelector('.offbtn'),ol=om.querySelector('.offlist'),LB={'1v1':'1대1','2v2':'2대2','ffa':'1대1대1대1','bag':'샌드백','boss':'보스전'};   // 맵 위 '1대1 ▾'를 누르면 1대1 · 2대2 · 1대1대1대1을 고를 수 있음
   const paint=()=>{ob.querySelector('span').textContent=LB[OFF_MODE];ol.querySelectorAll('[data-om]').forEach(b=>b.classList.toggle('on',b.dataset.om===OFF_MODE))};paint();
   ob.addEventListener('click',e=>{e.stopPropagation();if(phase!=='idle')return;ol.hidden=!ol.hidden});
   ol.addEventListener('click',e=>{const b=e.target.closest('[data-om]');if(!b)return;e.stopPropagation();ol.hidden=true;if(phase!=='idle'||NET.match)return;
@@ -8277,6 +8364,7 @@ function cldPull(d){                                  // 저장소 → 내 폰
     if(MT.on&&!admIs()&&!d.mt.on&&(+d.mt.u||0)>0&&Date.now()-(MT.at||0)>25000&&sgOk(['m',0,String(d.mt.m||'').slice(0,80),+d.mt.u||0],d.mt.s)){MT={on:false,m:'',u:+d.mt.u||0,at:0};mtCheck()}}   // 막힌 폰은 저장소가 '점검 끝'이면 번호와 상관없이 풀림
   try{accPull(d)}catch(_){}
   try{bossPull(d)}catch(_){}
+  try{bagPull(d)}catch(_){}
   try{mlPull(d)}catch(_){}
   try{bgPull(d)}catch(_){}
   if(Array.isArray(d.kl)&&admIs()){const have=new Set(KLOG.map(x=>x.id+':'+x.t));let ch=false;
@@ -8306,6 +8394,7 @@ function cldMergeInto(d){                             // 내 폰 → 저장소 (
   if(admIs()&&KLOG.length){if(!Array.isArray(d.kl))d.kl=[];const have=new Set(d.kl.map(x=>x&&x.id+':'+x.t));   // 추방 기록: 관리자 폰끼리 같이 봄
     for(const x of KLOG){const k=x.id+':'+x.t;if(!have.has(k)){d.kl.push(x);have.add(k)}}d.kl.sort((a,b)=>(a&&a.t||0)-(b&&b.t||0));if(d.kl.length>300)d.kl=d.kl.slice(-300)}
   try{bossMerge(d)}catch(_){}
+  try{bagMerge(d)}catch(_){}
   frMerge(d);try{accMerge(d)}catch(_){}
   return JSON.stringify(d)!==before;
 }
@@ -8999,7 +9088,9 @@ const ACH=[
  ['pt3000','시간','터줏대감','게임에 50시간 머물기','pt',3000,150,'터줏대감'],
  ['fr1','친구','첫 친구','친구 1명 사귀기','fr',1,10,'외롭지 않아'],
  ['fr5','친구','인싸','친구 5명 사귀기','fr',5,30,'인싸'],
- ['bn1','상점','첫 쇼핑','상점에서 처음 물건 사기','bn',1,10,'멋쟁이']
+ ['bn1','상점','첫 쇼핑','상점에서 처음 물건 사기','bn',1,10,'멋쟁이'],
+ ['bag1','이벤트','샌드백 격파','이벤트 샌드백에서 설화를 30초 안에 쓰러뜨리기','bg',1,300,'설화 혐오'],
+ ['bag2','이벤트','김치스시 없이 격파','이벤트 샌드백에서 김치스시를 쓰지 않고 설화를 쓰러뜨리기','bx',1,500,'설화 극혐']
 ];
 const achOf=id=>ACH.find(a=>a[0]===id);
 const TT_SHOP=[['rich','돈이 넘쳐나는 놈',3000]];   // 상점에서 사는 칭호: [열쇠, 이름, 값]
@@ -9014,7 +9105,7 @@ const ttcl=t=>TT_GOLD.has(t)?'ttl gold':'ttl';
 const ACH_T=new Set(ACH.map(a=>a[7]).concat(TT_SHOP.map(x=>x[1]),[AT_TT]));
 const idOld=id=>{const t=parseInt(String(id).slice(1,9),36);return t>1e12&&Date.now()-t>400*864e5};   // 편지 · 볼 기록 아이디에는 만든 시각이 들어 있음: 400일이 지나면 받은 기록도 지움 (그때는 편지 · 기록 자체가 없음)
 const idList=(a,p)=>(Array.isArray(a)?a:[]).filter((x,i,A)=>typeof x==='string'&&new RegExp('^'+p+'[0-9a-z]{4,20}$').test(x)&&A.indexOf(x)===i&&!idOld(x)).slice(-500);
-const shBlank=()=>({b:0,bd:{},lg:0,rs:0,ct:0,own:[],cc:'#ff4d6d',nc:'',tt:'',ti:[],ac:[],bn:0,lk:'',lr:0,mc:[],gl:[],dd:'',da:0,ad:'',an:0,ar:[],ak:0,nn:0});
+const shBlank=()=>({b:0,bd:{},lg:0,rs:0,ct:0,own:[],cc:'#ff4d6d',nc:'',tt:'',ti:[],ac:[],bn:0,lk:'',lr:0,mc:[],gl:[],dd:'',da:0,ad:'',an:0,ar:[],ak:0,nn:0,bg:0,bx:0});
 /* 계정 볼·칭호를 여러 기기(폰·패드)·여러 창에서 같이 씀: 볼은 기기마다 '얼마나 얻고 썼는지'를 따로 적고 합쳐서 셈 (서로 덮어써서 볼이 줄거나 늘지 않게)
    산 것·받은 업적·받은 편지·칭호는 합치고, 고른 색·칭호는 나중에 고른 쪽, 무료 볼·출석은 더 나중에 받은 쪽 */
 let DID=stGet('bftDid');if(!/^[0-9a-z]{8}$/.test(DID||'')){DID='';for(let i=0;i<8;i++)DID+='0123456789abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random()*36)]}stSet('bftDid',DID);   // 이 기기 표시
@@ -9038,9 +9129,9 @@ function shParse(v){
   SH.ar=(Array.isArray(v.ar)?v.ar:[]).slice(0,SH.an).map(x=>Math.max(0,Math.min(1e5,x|0)));while(SH.ar.length<SH.an)SH.ar.push(0);
   SH.tt=(SH.ac.some(id=>achOf(id)[7]===v.tt)||SH.ti.some(k=>ttShopOf(k)[1]===v.tt)||(SH.ak&&v.tt===AT_TT))?v.tt:'';
   SH.mc=idList(v.mc,'m');SH.gl=idList(v.gl,'g');
-  SH.bn=Math.max(0,v.bn|0);SH.lk=typeof v.lk==='string'?v.lk.slice(0,24):'';SH.lr=Math.max(0,v.lr|0);SH.nn=Math.max(0,Math.min(999,v.nn|0));SH._ck=SH.nc+'|'+SH.cc+'|'+SH.tt;return SH}
+  SH.bn=Math.max(0,v.bn|0);SH.bg=Math.max(0,Math.min(99999,v.bg|0));SH.bx=Math.max(0,Math.min(99999,v.bx|0));SH.lk=typeof v.lk==='string'?v.lk.slice(0,24):'';SH.lr=Math.max(0,v.lr|0);SH.nn=Math.max(0,Math.min(999,v.nn|0));SH._ck=SH.nc+'|'+SH.cc+'|'+SH.tt;return SH}
 try{shLoad(JSON.parse(localStorage.getItem('bftSh')||'null'))}catch(e){}
-const shSnap=()=>({b:SH.b,bd:JSON.parse(JSON.stringify(SH.bd)),lg:SH.lg,rs:SH.rs,ct:SH.ct,o:SH.own.slice(),cc:SH.cc,nc:SH.nc,tt:SH.tt,ti:SH.ti.slice(),a:SH.ac.slice(),bn:SH.bn,lk:SH.lk,lr:SH.lr,mc:SH.mc.slice(),gl:SH.gl.slice(),dd:SH.dd,da:SH.da,ad:SH.ad,an:SH.an,ar:SH.ar.slice(),ak:SH.ak,nn:SH.nn});   // 저장 · 계정 (다른 폰에서 로그인해도 이어짐)
+const shSnap=()=>({b:SH.b,bd:JSON.parse(JSON.stringify(SH.bd)),lg:SH.lg,rs:SH.rs,ct:SH.ct,o:SH.own.slice(),cc:SH.cc,nc:SH.nc,tt:SH.tt,ti:SH.ti.slice(),a:SH.ac.slice(),bn:SH.bn,lk:SH.lk,lr:SH.lr,mc:SH.mc.slice(),gl:SH.gl.slice(),dd:SH.dd,da:SH.da,ad:SH.ad,an:SH.an,ar:SH.ar.slice(),ak:SH.ak,nn:SH.nn,bg:SH.bg,bx:SH.bx});   // 저장 · 계정 (다른 폰에서 로그인해도 이어짐)
 function shSave(){const k=SH.nc+'|'+SH.cc+'|'+SH.tt;if(k!==SH._ck){SH._ck=k;SH.ct=Math.max(Date.now(),SH.ct+1)}   // 색·칭호를 바꾼 시각 (다른 기기와 맞출 때 나중에 바꾼 쪽)
   try{localStorage.setItem('bftSh',JSON.stringify(shSnap()))}catch(e){}try{cldSoon(2500)}catch(_){}}
 function shMerge(v,cloud){                          // 다른 기기(계정 저장소)나 다른 창에서 저장한 기록을 내 기록과 합침 · 바뀐 게 있으면 true
@@ -9056,7 +9147,7 @@ function shMerge(v,cloud){                          // 다른 기기(계정 저�
     SH.b=bdSum(SH.bd);
     const un=(a,b)=>a.concat(b.filter(x=>!a.includes(x)));
     SH.own=un(SH.own,R.own);SH.ti=un(SH.ti,R.ti);SH.ac=un(SH.ac,R.ac);SH.mc=un(SH.mc,R.mc).slice(-500);SH.gl=un(SH.gl,R.gl).slice(-500);
-    SH.bn=Math.max(SH.bn,R.bn);SH.ak=Math.max(SH.ak,R.ak);SH.nn=Math.max(SH.nn,R.nn);
+    SH.bn=Math.max(SH.bn,R.bn);SH.bg=Math.max(SH.bg,R.bg);SH.bx=Math.max(SH.bx,R.bx);SH.ak=Math.max(SH.ak,R.ak);SH.nn=Math.max(SH.nn,R.nn);
     if(R.dd>SH.dd){SH.dd=R.dd;SH.da=R.da}
     if(R.ad>SH.ad||(R.ad===SH.ad&&R.an>SH.an)){SH.ad=R.ad;SH.an=R.an;SH.ar=R.ar.slice()}
     if(R.ct>SH.ct){SH.nc=R.nc;SH.cc=R.cc;SH.tt=R.tt;SH.ct=R.ct}
@@ -9122,7 +9213,7 @@ const ttChip=(pid,name)=>{const e=csFor({name,pid});return e&&e.t?'<span class="
 /* 업적 */
 function acVal(k){
   switch(k){case 'g':return PROF.w+PROF.l+PROF.d;case 'w':return PROF.w;case 'ch':return Object.keys(PROF.ch).length;
-    case 'pt':return Math.floor(PT.t/60000);case 'bn':return SH.bn;case 'fr':try{return frFriends().length}catch(e){return 0}}
+    case 'pt':return Math.floor(PT.t/60000);case 'bn':return SH.bn;case 'bg':return SH.bg|0;case 'bx':return SH.bx|0;case 'fr':try{return frFriends().length}catch(e){return 0}}
   return 0}
 const acDone=a=>acVal(a[4])>=a[5];
 const acClaimable=()=>ACH.filter(a=>acDone(a)&&!SH.ac.includes(a[0]));
