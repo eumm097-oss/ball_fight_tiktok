@@ -4349,7 +4349,8 @@ function bagTick(dt){
 var BAGDB={r:[],c:{}},BAGREC=null;
 const bagOk=r=>!!(r&&r.k&&+r.s>0&&+r.s<=BAG.hp+.5&&+r.t>0&&+r.t<=BAG.sec+.5&&Array.isArray(r.p));
 const bagCmp=(a,b)=>(b.s-a.s)||(a.t-b.t);
-const bagClean=r=>({k:String(r.k).slice(0,24),s:Math.round(+r.s*10)/10,t:Math.round(+r.t*100)/100,d:+r.d||0,p:r.p.slice(0,1).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)}))});
+const bagUn=r=>!!(r&&(r.u||(r.p||[]).some(m=>m&&/낭만박상환|김치스시/.test(String(m.c||'')))));   // 비공식: 낭만박상환·김치스시를 하나라도 쓴 판
+const bagClean=r=>({k:String(r.k).slice(0,24),s:Math.round(+r.s*10)/10,t:Math.round(+r.t*100)/100,d:+r.d||0,u:bagUn(r)?1:0,p:r.p.slice(0,1).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)}))});
 function bagRecGet(){
   if(BAGREC)return BAGREC;let v=null;try{v=JSON.parse(localStorage.getItem('bftBagRk')||'null')}catch(e){}
   BAGREC={runs:Array.isArray(v&&v.runs)?v.runs.filter(bagOk).map(bagClean).slice(0,BAG.max):[],za:+(v&&v.za)||0,o:v&&v.o!=null&&isFinite(+v.o)?Math.max(0,Math.min(99999,+v.o|0)):null,ob:+(v&&v.ob)||0};return BAGREC}
@@ -4373,18 +4374,19 @@ function bagPull(d){                                    // 저장소 → 내 폰
   if(b.z&&typeof b.z==='object'&&!Array.isArray(b.z)){const e=b.z[PID];if(e&&typeof e==='object'&&(+e.t||0)>B.za&&sgOk(['gz',PID,+e.t||0,e.c|0],e.s)){B.za=+e.t;B.o=Math.max(0,Math.min(99999,e.c|0));B.ob=SH.bg|0;ch=true}}   // 관리자가 횟수를 고치면 내 랭킹 횟수도 그대로 맞춰짐
   if(xs.size&&B.runs.some(x=>bagDead(xs,x.k))){B.runs=B.runs.filter(x=>!bagDead(xs,x.k));ch=true}
   if(ch)bagRecSave()}
-function bagRecAdd(s,t,names){
+function bagRecAdd(s,t,names,un){
   const B=bagRecGet(),me=NET.me.name||PROF.name||'';
-  const run=bagClean({k:'g'+PID+Date.now()+Math.floor(Math.random()*1e4).toString(36).padStart(3,'0').slice(0,3),s,t,d:Date.now(),p:[{i:PID,n:me,c:names}]});
+  const run=bagClean({k:'g'+PID+Date.now()+Math.floor(Math.random()*1e4).toString(36).padStart(3,'0').slice(0,3),s,t,d:Date.now(),u:un?1:0,p:[{i:PID,n:me,c:names}]});
   B.runs.push(run);B.runs.sort(bagCmp);B.runs=B.runs.slice(0,BAG.max);bagRecSave();try{cldSoon(1500)}catch(e){}return run}
 function bagAll(){const runs=BAGDB.r.slice();for(const r of bagRecGet().runs)if(!runs.some(x=>x.k===r.k))runs.push(r);return runs.sort(bagCmp)}
+const bagList=un=>bagAll().filter(r=>bagUn(r)===!!un);   // 공식(false) · 비공식(true) 랭킹
 function showBagResult(){                             // 샌드백 결과: 총 데미지 + 순위
   const b=bagOf(),mem=chars.filter(c=>c.side!=='boss'),dm=Math.round(b?b.max-b.hp:0),cl=!!b&&!b.alive,t=cl?b.bagT:BAG.sec;
   bagSp=bagSplit(dm);try{bagHud()}catch(_){}
   let sub='';
   if(dm>0&&!(ADMUSED||admSpd!==1||admPause)){
-    const run=bagRecAdd(cl?BAG.hp:dm,Math.max(.1,Math.min(BAG.sec,t)),mem.map(c=>c.name).join(' · '));
-    const rk=bagAll().findIndex(x=>x.k===run.k)+1;sub=(rk?rk+'위':'')+(cl?' · '+t.toFixed(1)+'초 만에 처치!':'')}
+    const un=mem.some(c=>c.kind==='kc'||c.kind==='nm'),run=bagRecAdd(cl?BAG.hp:dm,Math.max(.1,Math.min(BAG.sec,t)),mem.map(c=>c.name).join(' · '),un);
+    const rk=bagList(un).findIndex(x=>x.k===run.k)+1;sub=(rk?(un?'비공식 ':'')+rk+'위':'')+(cl?' · '+t.toFixed(1)+'초 만에 처치!':'')}
   else if(cl)sub=t.toFixed(1)+'초 만에 처치!';
   count.innerHTML='<span class="wt">'+(cl?'설화 쓰러짐!':'시간 종료!')+' 총 데미지 '+dm+(sub?'<span class="btclr">'+sub+'</span>':'')+'<span class="bgl">'+mem.slice().sort((a,b)=>bagVal(b)-bagVal(a)).map(c=>'<span><b style="color:'+((c._bd&&c._bd.style.color)||'#111')+'">'+netEsc(c.name)+'</b><i>'+bagVal(c)+'</i></span>').join('')+'</span></span>';
   count.classList.add('win');count.animate([{opacity:0},{opacity:1}],{duration:400,fill:'forwards'});
@@ -4398,13 +4400,14 @@ function bagRankShow(tab){
     Promise.resolve(typeof cldSync==='function'?cldSync(false):0).then(()=>{if(document.body.contains(m))bagRankShow(m._tab)}).catch(()=>{})}
   tab=tab||m._tab||'d';m._tab=tab;
   const all=bagAll(),my=NET.me.name||PROF.name||'',kc=bagMy();let rows;
-  if(tab==='d')rows=all.slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+(r.s>=BAG.hp?'처치':Math.round(r.s))+'</div></div>'}).join('');
-  else if(tab==='t')rows=all.filter(r=>r.s>=BAG.hp).sort((a,b)=>a.t-b.t).slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+r.t.toFixed(1)+'초</div></div>'}).join('');
+  const own=bagList(false),unf=bagList(true);
+  if(tab==='d'||tab==='u')rows=(tab==='u'?unf:own).slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+Math.round(r.s)+'</div></div>'}).join('');
+  else if(tab==='t')rows=own.filter(r=>r.s>=BAG.hp).sort((a,b)=>a.t-b.t).slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+r.t.toFixed(1)+'초</div></div>'}).join('');
   else{const cm=Object.assign({},BAGDB.c);if(kc>0&&/^[A-Z2-9]{6}$/.test(PID)&&(!cm[PID]||cm[PID].c<kc))cm[PID]={n:my||'이름 없음',c:kc};
     rows=Object.entries(cm).sort((a,b)=>b[1].c-a[1].c).slice(0,100).map(([id,e],i)=>'<div class="bkrow'+(id===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(e.n||'이름 없음')+'</div><div class="bkval">'+e.c+'회</div></div>').join('')}
-  m.innerHTML='<div class="bkbox"><div class="bkt">설화 때리기 랭킹</div><div class="bkmy">최대 4명 · '+BAG.sec+'초 안에 설화(체력 '+BAG.hp+')에게 준 데미지 · 내 처치 <b>'+kc+'회</b></div>'
-    +'<div class="bktabs"><button type="button" data-bgt="d"'+(tab==='d'?' class="on"':'')+'>데미지</button><button type="button" data-bgt="t"'+(tab==='t'?' class="on"':'')+'>처치</button><button type="button" data-bgt="c"'+(tab==='c'?' class="on"':'')+'>처치 횟수</button></div>'
-    +'<div class="bklist">'+(rows||'<div class="bknone">'+(tab==='d'?'아직 기록이 없어요. 첫 기록의 주인공이 되어 보세요!':tab==='t'?'아직 설화를 쓰러뜨린 사람이 없어요.':'아직 처치 기록이 없어요.')+'</div>')+'</div>'
+  m.innerHTML='<div class="bkbox"><div class="bkt">설화 때리기 랭킹</div><div class="bkmy">최대 4명 · '+BAG.sec+'초 안에 설화(체력 '+BAG.hp+')에게 준 데미지 · 내 처치 <b>'+kc+'회</b>'+(tab==='u'?'<br>낭만박상환 · 김치스시를 하나라도 쓴 판의 기록이에요':'')+'</div>'
+    +'<div class="bktabs"><button type="button" data-bgt="d"'+(tab==='d'?' class="on"':'')+'>데미지</button><button type="button" data-bgt="t"'+(tab==='t'?' class="on"':'')+'>처치</button><button type="button" data-bgt="c"'+(tab==='c'?' class="on"':'')+'>처치 횟수</button><button type="button" data-bgt="u"'+(tab==='u'?' class="on"':'')+'>비공식</button></div>'
+    +'<div class="bklist">'+(rows||'<div class="bknone">'+(tab==='d'?'아직 기록이 없어요. 첫 기록의 주인공이 되어 보세요!':tab==='u'?'아직 비공식 기록이 없어요.':tab==='t'?'아직 설화를 쓰러뜨린 사람이 없어요.':'아직 처치 기록이 없어요.')+'</div>')+'</div>'
     +'<button type="button" class="bkclose" data-bk="x">닫기</button></div>';
 }
 document.addEventListener('click',e=>{if(e.target.closest('[data-bag="rank"]')){e.stopPropagation();bagRankShow('d')}},true);
@@ -4622,7 +4625,7 @@ function bagAdmHTML(){
   const all=bagAll(),rank=new Map(all.map((r,i)=>[r.k,i+1])),runs=all.filter(r=>hit(r.p));
   const cm=Object.assign({},BAGDB.c),mc=bagMy();if(mc>0&&/^[A-Z2-9]{6}$/.test(PID)&&(!cm[PID]||cm[PID].c<mc))cm[PID]={n:NET.me.name||PROF.name||'',c:mc};
   const cs=Object.entries(cm).filter(([id,e])=>!q||id===q.toUpperCase()||rkNz(e.n).includes(Q)).sort((a,b)=>b[1].c-a[1].c);
-  const rr=runs.slice(0,200).map(r=>{const p=r.p[0]||{};return '<div class="admch"><div class="admcn"><b>'+rank.get(r.k)+'. '+E(p.n||'이름 없음')+'</b><span class="modw" style="color:#17e3d6">'+(r.s>=BAG.hp?'처치 '+r.t.toFixed(1)+'초':Math.round(r.s))+'</span></div><div class="modl">'+E(p.c||'')+(r.d?' · '+fd(r.d):'')+' · '+(p.i||'아이디 없음')+'</div>'
+  const rr=runs.slice(0,200).map(r=>{const p=r.p[0]||{};return '<div class="admch"><div class="admcn"><b>'+rank.get(r.k)+'. '+E(p.n||'이름 없음')+'</b><span class="modw" style="color:#17e3d6">'+(r.s>=BAG.hp?'처치 '+r.t.toFixed(1)+'초':Math.round(r.s))+'</span></div><div class="modl">'+E(p.c||'')+(r.d?' · '+fd(r.d):'')+' · '+(p.i||'아이디 없음')+(bagUn(r)?' · 비공식':'')+'</div>'
     +'<div class="admsk"><button type="button" class="admbtn admred" data-a="bgdel" data-k="'+E(r.k)+'">기록 삭제</button></div></div>'}).join('')||'<div class="admnone">'+(q?'검색 결과가 없어요':'기록 없음')+'</div>';
   const cc=cs.slice(0,200).map(([id,e],i)=>{const nm=rkBadNm(e.n)?'':e.n;
     return '<div class="admch"><div class="admcn"><b>'+(q?'':(i+1)+'. ')+E(nm||'(이름 모름)')+'</b><i>'+id+'</i><span class="modw" style="color:#17e3d6">'+e.c+'회</span></div>'
@@ -6291,9 +6294,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.65';
+const PATCH_VERSION='4.13.66';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.66',date:'2026-11-26',chars:[],fx:[],sys:['샌드백 랭킹에 비공식 탭 추가 (낭만박상환 · 김치스시를 하나라도 쓴 기록은 비공식 랭킹에 올라감)','샌드백 데미지 랭킹에서 처치 표시 삭제']},
   {ver:'4.13.65',date:'2026-11-26',chars:[],fx:[],sys:['설화 극혐 업적은 낭만박상환 · 김치스시를 쓰지 않고 샌드백을 깨야 얻도록 변경','샌드백 설화 체력 10000으로 변경']},
   {ver:'4.13.64',date:'2026-11-26',chars:[],fx:[],sys:['앱 · 다른 브라우저에서 이미 받은 출석 · 일일 무료 볼을 또 받을 수 있던 오류 수정']},
   {ver:'4.13.63',date:'2026-11-26',chars:[],fx:[],sys:['샌드백 딜량이 잘못 기록되던 오류 수정']},
