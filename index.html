@@ -2285,7 +2285,7 @@ function kdCellHit(o){                                  // 소닉피어스에 �
 function kdTarget(c){let best=null,bd=1e9,cell=false;   // 소닉피어스 대상: 상대 공과 상대 목박사의 세포·바이러스 중 무조건 가장 가까운 것
   for(const o of chars){if(o===c||!o.alive||ally(o,c))continue;const d=(o.x-c.x)*(o.x-c.x)+(o.y-c.y)*(o.y-c.y);if(d<bd){bd=d;best=o;cell=false}}
   for(const o of mkCells){if(ally(o.owner,c))continue;const d=(o.x-c.x)*(o.x-c.x)+(o.y-c.y)*(o.y-c.y);if(d<bd){bd=d;best=o;cell=true}}
-  return best?{o:best,cell,r:cell?MK.r:R}:null}
+  return best?{o:best,cell,r:cell?MK.r:tR(best)}:null}
 let kdImgW=null;
 function kdWarm(){kdSnLoad();if(!kdImgW){try{const tt=document.createElement('div');tt.className='kdsp';document.body.appendChild(tt);const u=getComputedStyle(tt).backgroundImage.replace(/^url\(["']?|["']?\)$/g,'');tt.remove();kdImgW=new Image();kdImgW.src=u;if(kdImgW.decode)kdImgW.decode().catch(()=>{})}catch(_){}}if(document.getElementById('kdwarm'))return;const e=document.createElement('div');e.id='kdwarm';e.className='kdsp';const ww=Math.round(R*8.2*aW())||300;e.style.cssText='position:fixed;left:0;top:0;width:'+ww+'px;height:'+(ww*250/300)+'px;opacity:.01;z-index:9999;pointer-events:none';document.body.appendChild(e)}   // 소닉피어스 그림을 미리 풀어 둠 (처음 쓸 때 끊김 방지)
 function kdStabStart(c){
@@ -2346,7 +2346,7 @@ function stepKdSl(h,noHit){                             // 검기 이동 + 판�
     for(let k=-12;k<=12&&!hitT&&!blk;k++){const dl=k*KDS.hitA/12*Math.PI/180,cd=Math.cos(dl),sd=Math.sin(dl)*KDS.side,px=p.x+(cd*ux-sd*uy)*KDS.r*.98,py=p.y+(cd*uy+sd*ux)*KDS.r*.98;   // 눈에 보이는 초승달 모양 그대로 (±120°, 점 25개 · 옆(좌우)으로는 KDS.side배로 좁음)
       for(const o of mkCells){if(ally(o.owner,p.owner))continue;if(Math.hypot(o.x-px,o.y-py)<MK.r+KDS.hitR){blk=o;break}}   // 목박사 세포·바이러스에 먼저 닿으면 막힘
       if(blk)break;
-      for(const c of chars){if(!c.alive||(ally(c,p.owner)||sgGhost(c)))continue;if(Math.hypot(c.x-px,c.y-py)<R+KDS.hitR){hitT=c;break}}}
+      for(const c of chars){if(!c.alive||(ally(c,p.owner)||sgGhost(c)))continue;if(Math.hypot(c.x-px,c.y-py)<tR(c)+KDS.hitR){hitT=c;break}}}
     if(blk)kdBlock(p,blk);else if(hitT)kdHit(p,hitT)}}
 function kdBlock(p,o){                                  // 공허참이 중간에 세포·바이러스에 막힘: 세포는 튕겨 나가며 체력 1 깎이고, 검기는 그 자리에서 부서져 사라짐
   const W=aW(),H=aH(),bx=o.x*W,by=o.y*H;
@@ -2473,7 +2473,7 @@ function mkPox(o){                                      // 천연두 자폭: 둘
     mkDots(cx,cy,['#e03131','#7a0d12','#f2c94c'],12,D*.62,W*.022,520)}catch(_){}
   shake(6,240);sndMkBoom();
   const pd=MK.poxLo+Math.floor(grand()*(MK.poxHi-MK.poxLo+1));   // 자폭 데미지 35~50 랜덤 (한 번 터질 때 한 번 정함)
-  for(const c of chars){if(!c.alive||(ally(c,own)||sgGhost(c))||Math.hypot(c.x-o.x,c.y-o.y)>=MK.poxR+R)continue;
+  for(const c of chars){if(!c.alive||(ally(c,own)||sgGhost(c))||Math.hypot(c.x-o.x,c.y-o.y)>=MK.poxR+tR(c))continue;
     hurt(c,(pd+atk(own))*frail(own));if(c.alive)applyKnock(c,c.x-o.x,c.y-o.y,MK.poxKb,2)}}
 function mkSlash(o,e){                                  // 대식세포: 상대에게 닿는 순간 검으로 베며 돌진 → 30 데미지 + 슬로우 1.6초, 그리고 사라짐
   const own=o.owner,W=aW(),H=aH(),sx=o.x*W,sy=o.y*H,ex=e.x*W,ey=e.y*H,ang=Math.atan2(ey-sy,ex-sx)*180/Math.PI;
@@ -2515,7 +2515,7 @@ function stepCells(h){
       for(const q of sw.swMap.plats){const c=swCirc(o,MK.r,q);if(!c)continue;o.x+=c.nx*c.dep;o.y+=c.ny*c.dep;const vn=o.vx*c.nx+o.vy*c.ny;if(vn<0){o.vx-=2*vn*c.nx;o.vy-=2*vn*c.ny}}}
     if(o.pass&&o.pass<=now&&o.passBall&&o.passBall.alive&&Math.hypot(o.passBall.x-o.x,o.passBall.y-o.y)<R+MK.r)o.pass=now+.05;   // 통과 중인 공에서 다 빠져나올 때까지 계속 통과 (갑자기 순간이동하지 않게)
     if(revPause>0||o.pass>now)continue;                                  // 부활 연출 중 · 벽과 공 사이에 낀 직후에는 공과 부딪히지 않음
-    const own=o.owner,hit=c=>c.alive&&Math.hypot(c.x-o.x,c.y-o.y)<R+MK.r,foe=()=>{const t=chars.find(c=>!(ally(c,own)||sgGhost(c))&&hit(c));if(t)bnCellHit(t,o);return t};
+    const own=o.owner,hit=c=>c.alive&&Math.hypot(c.x-o.x,c.y-o.y)<tR(c)+MK.r,foe=()=>{const t=chars.find(c=>!(ally(c,own)||sgGhost(c))&&hit(c));if(t)bnCellHit(t,o);return t};
     if(!o.hl){const mate=chars.find(c=>c!==own&&ally(c,own)&&hit(c));if(mate){bnCellHit(mate,o);cellBounce(o,mate)}}   // 같은 팀 공(2대2)은 통과하지 않고 부딪힘 (회복 세포는 팀원도 먹을 수 있음)
     if(o.hl){
       const e=foe();if(e){if(o.t==='mac'){mkSlash(o,e);continue}cellBounce(o,e)}   // 대식세포는 상대를 벰 · NK·T세포는 상대 팀에 튕김
@@ -2898,7 +2898,7 @@ function stepProjs(h){              // 밥상: 벽에서 계속 튕기고, 던�
     if(p.x<p.r){p.x=p.r;p.vx=Math.abs(p.vx);b=true}else if(p.x>WB-p.r){p.x=WB-p.r;p.vx=-Math.abs(p.vx);b=true}
     if(p.y<p.r){p.y=p.r;p.vy=Math.abs(p.vy);b=true}else if(p.y>WB-p.r){p.y=WB-p.r;p.vy=-Math.abs(p.vy);b=true}
     if(b){playHit();if(p.owner&&p.owner.kind==='bt'){removeProj(p);continue}p.bn=(p.bn||0)+1;if(p.bn>=5){removeProj(p);continue}}     // 벽에 5번 튕기면 사라짐
-    const t=chars.find(o=>o.alive&&!(ally(o,p.owner)||sgGhost(o))&&Math.hypot(o.x-p.x,o.y-p.y)<R+p.r*.8);   // 날아가다 닿은 상대 팀 누구든
+    const t=chars.find(o=>o.alive&&!(ally(o,p.owner)||sgGhost(o))&&Math.hypot(o.x-p.x,o.y-p.y)<tR(o)+p.r*.8);   // 날아가다 닿은 상대 팀 누구든
     for(const o of mkCells){if(ally(o.owner,p.owner)||now<(o.tbCd||0))continue;      // 밥상에 맞은 세포는 날아감 (밥상은 계속 날아감)
       if(Math.hypot(o.x-p.x,o.y-p.y)<MK.r+p.r*.8){o.tbCd=now+.4;cellKnock(o,p.vx,p.vy,1.9,'#ffd24a');playHit()}}
     if(t){tableHit(p,t);continue}
@@ -2973,7 +2973,7 @@ function rodTest(c,t,ang,rr){           // 각목(직사각형) 과 상대 공(�
   const th=ang*Math.PI/180,ux=Math.sin(th),uy=-Math.cos(th),px=Math.cos(th),py=Math.sin(th);
   const dx=t.x-c.x,dy=t.y-c.y,al=dx*ux+dy*uy,pe=dx*px+dy*py,hw=ROD.len*ROD.wr/2;
   const qa=Math.min(ROD.len,Math.max(0,al)),qp=Math.min(hw,Math.max(-hw,pe));
-  return Math.hypot(al-qa,pe-qp)<=(rr||R);
+  return Math.hypot(al-qa,pe-qp)<=(rr||tR(t));
 }
 function rodHit(c,a0){
   for(const o of mkCells){if(ally(o.owner,c)||now<(o.rodCd||0))continue;           // 각목에 맞은 상대 세포는 튕겨 날아감
@@ -3409,7 +3409,7 @@ function umGaugeTick(dt){                      // 두 번째 게이지(개구리
 function umTam(owner,sx,sy){           // 템버린에 직접 맞으면 데미지 (이어서 퍼지는 파동 데미지도 따로 받음) — 쓴 사람만 빼고 모두
   for(const c of chars){
     if((ally(c,owner)||sgGhost(c))||!c.alive||!c.started)continue;
-    if(Math.hypot(c.x-sx,c.y-sy)<=R+UM2.tamR){hurt(c,UM2.tam);if(c.alive){let dx=c.x-sx,dy=c.y-sy;if(Math.hypot(dx,dy)<1e-6){dx=1;dy=0}applyKnock(c,dx,dy,UM2.knock,UM2.kLv)}}   // 템버린에 직접 맞으면 데미지 + 부딪힘
+    if(Math.hypot(c.x-sx,c.y-sy)<=tR(c)+UM2.tamR){hurt(c,UM2.tam);if(c.alive){let dx=c.x-sx,dy=c.y-sy;if(Math.hypot(dx,dy)<1e-6){dx=1;dy=0}applyKnock(c,dx,dy,UM2.knock,UM2.kLv)}}   // 템버린에 직접 맞으면 데미지 + 부딪힘
   }
 }
 function umTick(dt){
@@ -3448,7 +3448,7 @@ function umTick(dt){
     if(!w.hit&&!over){
       for(const c of chars){
         if((ally(c,w.owner)||sgGhost(c))||!c.alive||!c.started)continue;
-        if(Math.abs(Math.hypot(c.x-w.x,c.y-w.y)-r)<=R+UM2.thick){w.hit=true;const wd=Math.max(UM2.dmgMin,UM2.dmg-UM2.fall*Math.floor(r*100/10+1e-9));if(wd>0)hurt(c,wd);break}   // 파동에 닿으면 데미지 (한 파동에 한 번) · 부딪힘은 없음 (템버린에 직접 맞을 때만 부딪힘)
+        if(Math.abs(Math.hypot(c.x-w.x,c.y-w.y)-r)<=tR(c)+UM2.thick){w.hit=true;const wd=Math.max(UM2.dmgMin,UM2.dmg-UM2.fall*Math.floor(r*100/10+1e-9));if(wd>0)hurt(c,wd);break}   // 파동에 닿으면 데미지 (한 파동에 한 번) · 부딪힘은 없음 (템버린에 직접 맞을 때만 부딪힘)
       }
     }
     if(!over){const cs=w.cs||(w.cs=[]);for(const o of mkCells){if(ally(o.owner,w.owner)||cs.includes(o))continue;   // 파동에 닿은 상대 세포는 바깥으로 밀려남 (한 파동에 한 번)
@@ -4296,6 +4296,7 @@ function bossOffRec(win,b){                              // 한 기기에서 한
   const me=NET.me.name||PROF.name||'',ch=chars.filter(c=>c.tm==='P').map(c=>c.name).join(' · ');
   bossRec(win,win?b.bt.dead:0,[{pid:PID,name:me,ch}],'o'+PID+Date.now())}
 /* ---------- 이벤트: 설화 때리기 (샌드백) — 가운데에 서 있는 큰 설화(체력 10000)를 최대 4명이 30초 안에 최대한 때림 · 랭킹 ---------- */
+const tR=t=>(t&&t.bag&&t.rad)||R;   // 상대 몸의 반지름 (샌드백은 큰 공이라 스킬이 보이는 크기대로 맞게)
 const BAG={sec:30,hp:10000,big:2.2,max:100};   // max: 공식 · 비공식 랭킹 각각 이만큼까지만 저장
 const bagOf=()=>chars.find(c=>c.bag);
 function bagIdle(){                                   // 샌드백 모드: 가운데에 크게 서 있는 설화를 놓음 (플레이어는 아래쪽에 고르게)
@@ -5960,7 +5961,7 @@ function krTick(dt){
       l.x+=dx/d*st;l.y+=dy/d*st;
       for(const t of chars){
         if(!t.alive||(ally(t,c)||sgGhost(t))||l.hit.has(t))continue;
-        if(Math.hypot(t.x-l.x,t.y-l.y)<R+KR.lR){l.hit.add(t);try{playPunch(1);burstAt(t.x*W,t.y*H,'#14a37f',.6,5)}catch(e){}hurt(t,(KR.lDmg+atk(c))*frail(c))}
+        if(Math.hypot(t.x-l.x,t.y-l.y)<tR(t)+KR.lR){l.hit.add(t);try{playPunch(1);burstAt(t.x*W,t.y*H,'#14a37f',.6,5)}catch(e){}hurt(t,(KR.lDmg+atk(c))*frail(c))}
       }
     }
   }
@@ -6000,7 +6001,7 @@ function krTick(dt){
     if(r.y>WB+.06){r.el.remove();krRoses.splice(krRoses.indexOf(r),1);continue}
     for(const t of chars){
       if(!t.alive||(ally(t,c)||sgGhost(t))||(r.hit&&r.hit.has(t)))continue;
-      if(Math.hypot(t.x-r.x,t.y-r.y)<R+KR.roseR){try{burstAt(t.x*W,t.y*H,'#e11d48',.35,3);sfx('rose')}catch(e){}hurt(t,(KR.roseDmg+atk(c))*frail(c),false,true);(r.hit||(r.hit=new Set())).add(t)}   // 맞아도 장미는 사라지지 않고 계속 떨어짐 (한 장미는 같은 상대를 한 번만 때림)
+      if(Math.hypot(t.x-r.x,t.y-r.y)<tR(t)+KR.roseR){try{burstAt(t.x*W,t.y*H,'#e11d48',.35,3);sfx('rose')}catch(e){}hurt(t,(KR.roseDmg+atk(c))*frail(c),false,true);(r.hit||(r.hit=new Set())).add(t)}   // 맞아도 장미는 사라지지 않고 계속 떨어짐 (한 장미는 같은 상대를 한 번만 때림)
     }
   }
   /* ----- 그리기 ----- */
@@ -6296,7 +6297,7 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.69';
+const PATCH_VERSION='4.13.70';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'4.13.64',date:'2026-11-26',chars:[],fx:[],sys:['앱 · 다른 브라우저에서 이미 받은 출석 · 일일 무료 볼을 또 받을 수 있던 오류 수정']},
