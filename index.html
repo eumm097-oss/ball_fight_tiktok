@@ -4296,7 +4296,7 @@ function bossOffRec(win,b){                              // 한 기기에서 한
   const me=NET.me.name||PROF.name||'',ch=chars.filter(c=>c.tm==='P').map(c=>c.name).join(' · ');
   bossRec(win,win?b.bt.dead:0,[{pid:PID,name:me,ch}],'o'+PID+Date.now())}
 /* ---------- 이벤트: 설화 때리기 (샌드백) — 가운데에 서 있는 큰 설화(체력 10000)를 최대 4명이 30초 안에 최대한 때림 · 랭킹 ---------- */
-const BAG={sec:30,hp:10000,big:2.2,max:500};
+const BAG={sec:30,hp:10000,big:2.2,max:100};   // max: 공식 · 비공식 랭킹 각각 이만큼까지만 저장
 const bagOf=()=>chars.find(c=>c.bag);
 function bagIdle(){                                   // 샌드백 모드: 가운데에 크게 서 있는 설화를 놓음 (플레이어는 아래쪽에 고르게)
   if(MODE!=='bag'||phase!=='idle'||NET.match||NET.screen==='online'||bagOf())return;
@@ -4349,11 +4349,12 @@ function bagTick(dt){
 var BAGDB={r:[],c:{}},BAGREC=null;
 const bagOk=r=>!!(r&&r.k&&+r.s>0&&+r.s<=BAG.hp+.5&&+r.t>0&&+r.t<=BAG.sec+.5&&Array.isArray(r.p));
 const bagCmp=(a,b)=>(b.s-a.s)||(a.t-b.t);
+const bagTrim=L=>{L=L.slice().sort(bagCmp);return L.filter(r=>!bagUn(r)).slice(0,BAG.max).concat(L.filter(r=>bagUn(r)&&r.s<BAG.hp).slice(0,BAG.max)).sort(bagCmp)};   // 공식 100개 + 비공식 100개 (비공식에서 쓰러뜨린 판은 안 보여서 저장도 안 함)
 const bagUn=r=>!!(r&&(r.u||(r.p||[]).some(m=>m&&/낭만박상환|김치스시/.test(String(m.c||'')))));   // 비공식: 낭만박상환·김치스시를 하나라도 쓴 판
 const bagClean=r=>({k:String(r.k).slice(0,24),s:Math.round(+r.s*10)/10,t:Math.round(+r.t*100)/100,d:+r.d||0,u:bagUn(r)?1:0,p:r.p.slice(0,1).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)}))});
 function bagRecGet(){
   if(BAGREC)return BAGREC;let v=null;try{v=JSON.parse(localStorage.getItem('bftBagRk')||'null')}catch(e){}
-  BAGREC={runs:Array.isArray(v&&v.runs)?v.runs.filter(bagOk).map(bagClean).slice(0,BAG.max):[],za:+(v&&v.za)||0,o:v&&v.o!=null&&isFinite(+v.o)?Math.max(0,Math.min(99999,+v.o|0)):null,ob:+(v&&v.ob)||0};return BAGREC}
+  BAGREC={runs:Array.isArray(v&&v.runs)?bagTrim(v.runs.filter(bagOk).map(bagClean)):[],za:+(v&&v.za)||0,o:v&&v.o!=null&&isFinite(+v.o)?Math.max(0,Math.min(99999,+v.o|0)):null,ob:+(v&&v.ob)||0};return BAGREC}
 function bagRecSave(){try{const B=bagRecGet();localStorage.setItem('bftBagRk',JSON.stringify({runs:B.runs,za:B.za,o:B.o,ob:B.ob}))}catch(e){}}
 const bagMy=()=>{const B=bagRecGet();return B.o==null?(SH.bg|0):Math.max(0,Math.min(99999,B.o+((SH.bg|0)-(B.ob|0))))};   // 내 처치 횟수 (관리자가 고친 값이 있으면 그 값에서 이어서 셈 · 업적 횟수(SH.bg)는 그대로)
 const bagDead=(m,k)=>{k=String(k==null?'':k).slice(0,24);const L=m.get(k);return !!L&&L.some(s=>sgOk(['gx',k],s))};   // 관리자 도장이 찍힌 샌드백 기록 삭제 표시
@@ -4364,12 +4365,12 @@ function bagMerge(d){                                   // 내 폰 → 저장소
   if(kc>0&&/^[A-Z2-9]{6}$/.test(PID)){const o=d.bag.c[PID],nm=NET.me.name||PROF.name||'',c=Math.max(kc,+(o&&o.c)||0);if(!o||(+o.c||0)<c||o.n!==nm)d.bag.c[PID]={n:nm,c}}   // 처치 횟수 (샌드백을 쓰러뜨린 횟수)
   {const ks=Object.keys(d.bag.c);if(ks.length>300)ks.sort((a,b)=>(d.bag.c[a].c||0)-(d.bag.c[b].c||0)).slice(0,ks.length-300).forEach(k=>delete d.bag.c[k])}
   const xs=bossDeadMap(d.bag.x),have=new Set(d.bag.r.map(x=>x&&x.k));for(const r of B.runs)if(!have.has(r.k)&&!bagDead(xs,r.k)){d.bag.r.push(r);have.add(r.k)}
-  d.bag.r=d.bag.r.filter(x=>!(x&&bagDead(xs,x.k))).filter(bagOk).map(bagClean).sort(bagCmp).slice(0,BAG.max)}
+  d.bag.r=d.bag.r.filter(x=>!(x&&bagDead(xs,x.k))).filter(bagOk).map(bagClean);d.bag.r=bagTrim(d.bag.r)}
 function bagPull(d){                                    // 저장소 → 내 폰
   const b=d&&d.bag;if(!b||typeof b!=='object')return;
   const c={};if(b.c&&typeof b.c==='object'&&!Array.isArray(b.c))for(const id of Object.keys(b.c).slice(0,400)){const e=b.c[id];if(/^[A-Z2-9]{6}$/.test(id)&&e&&(+e.c)>0)c[id]={n:bossNm(e.n),c:Math.min(99999,e.c|0)}}
   const xs=bossDeadMap(b.x);   // 관리자 도장이 맞는 삭제 표시만 따름
-  BAGDB={r:Array.isArray(b.r)?b.r.slice(0,BAG.max*2).filter(bagOk).filter(x=>!bagDead(xs,x.k)).map(bagClean).sort(bagCmp).slice(0,BAG.max):[],c};
+  BAGDB={r:Array.isArray(b.r)?bagTrim(b.r.slice(0,2000).filter(bagOk).filter(x=>!bagDead(xs,x.k)).map(bagClean)):[],c};
   const B=bagRecGet();let ch=false;
   if(b.z&&typeof b.z==='object'&&!Array.isArray(b.z)){const e=b.z[PID];if(e&&typeof e==='object'&&(+e.t||0)>B.za&&sgOk(['gz',PID,+e.t||0,e.c|0],e.s)){B.za=+e.t;B.o=Math.max(0,Math.min(99999,e.c|0));B.ob=SH.bg|0;ch=true}}   // 관리자가 횟수를 고치면 내 랭킹 횟수도 그대로 맞춰짐
   if(xs.size&&B.runs.some(x=>bagDead(xs,x.k))){B.runs=B.runs.filter(x=>!bagDead(xs,x.k));ch=true}
@@ -4377,7 +4378,7 @@ function bagPull(d){                                    // 저장소 → 내 폰
 function bagRecAdd(s,t,names,un){
   const B=bagRecGet(),me=NET.me.name||PROF.name||'';
   const run=bagClean({k:'g'+PID+Date.now()+Math.floor(Math.random()*1e4).toString(36).padStart(3,'0').slice(0,3),s,t,d:Date.now(),u:un?1:0,p:[{i:PID,n:me,c:names}]});
-  B.runs.push(run);B.runs.sort(bagCmp);B.runs=B.runs.slice(0,BAG.max);bagRecSave();try{cldSoon(1500)}catch(e){}return run}
+  B.runs.push(run);B.runs=bagTrim(B.runs);bagRecSave();try{cldSoon(1500)}catch(e){}return run}
 function bagAll(){const runs=BAGDB.r.slice();for(const r of bagRecGet().runs)if(!runs.some(x=>x.k===r.k))runs.push(r);return runs.sort(bagCmp)}
 const bagList=un=>bagAll().filter(r=>bagUn(r)===!!un&&(!un||r.s<BAG.hp));   // 공식(false) · 비공식(true) 랭킹
 function showBagResult(){                             // 샌드백 결과: 총 데미지 + 순위
@@ -4616,24 +4617,25 @@ async function bagAdmEdit(fn){
 function bagSetCnt(s,pid,n,nm){n=Math.max(0,Math.min(99999,n|0));const o0=s.c[pid];
   if(n>0){const o=o0||{n:'',c:0};o.c=n;if(!o.n&&nm)o.n=bossNm(nm);s.c[pid]=o}else delete s.c[pid];
   s.z[pid]={t:Date.now(),c:n}}
-var BGED={};                                                   // 관리자: 샌드백 처치 횟수 칸에 쓰다 만 숫자
+var BGED={},BGSUB='d';                                                   // 관리자: 샌드백 처치 횟수 칸에 쓰다 만 숫자
 const bgQ=()=>{const i=document.querySelector('.adm .bgq');return i?String(i.value||'').trim().slice(0,40):''};
 const bgRe=()=>{const bx=document.querySelector('.adm .bgbox');if(bx)bx.innerHTML=bagAdmHTML()};
 function bagAdmHTML(){
   const E=admEsc,q=bgQ(),Q=rkNz(q),fd=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
   const hit=ps=>!q||ps.some(m=>m&&((m.i&&m.i===q.toUpperCase())||rkNz(m.n).includes(Q)));
-  const all=bagAll(),rank=new Map(all.map((r,i)=>[r.k,i+1])),runs=all.filter(r=>hit(r.p));
+  const sub=BGSUB,list=sub==='u'?bagList(true):bagList(false),src=sub==='t'?list.filter(r=>r.s>=BAG.hp).sort((a,b)=>a.t-b.t):list,rank=new Map(src.map((r,i)=>[r.k,i+1])),runs=src.filter(r=>hit(r.p));
   const cm=Object.assign({},BAGDB.c),mc=bagMy();if(mc>0&&/^[A-Z2-9]{6}$/.test(PID)&&(!cm[PID]||cm[PID].c<mc))cm[PID]={n:NET.me.name||PROF.name||'',c:mc};
   const cs=Object.entries(cm).filter(([id,e])=>!q||id===q.toUpperCase()||rkNz(e.n).includes(Q)).sort((a,b)=>b[1].c-a[1].c);
-  const rr=runs.slice(0,200).map(r=>{const p=r.p[0]||{};return '<div class="admch"><div class="admcn"><b>'+rank.get(r.k)+'. '+E(p.n||'이름 없음')+'</b><span class="modw" style="color:#17e3d6">'+(r.s>=BAG.hp?'처치 '+r.t.toFixed(1)+'초':Math.round(r.s))+'</span></div><div class="modl">'+E(p.c||'')+(r.d?' · '+fd(r.d):'')+' · '+(p.i||'아이디 없음')+(bagUn(r)?' · 비공식':'')+'</div>'
+  const rr=runs.slice(0,200).map(r=>{const p=r.p[0]||{};return '<div class="admch"><div class="admcn"><b>'+rank.get(r.k)+'. '+E(p.n||'이름 없음')+'</b><span class="modw" style="color:#17e3d6">'+(sub==='t'?r.t.toFixed(1)+'초':Math.round(r.s))+'</span></div><div class="modl">'+E(p.c||'')+(r.d?' · '+fd(r.d):'')+' · '+(p.i||'아이디 없음')+'</div>'
     +'<div class="admsk"><button type="button" class="admbtn admred" data-a="bgdel" data-k="'+E(r.k)+'">기록 삭제</button></div></div>'}).join('')||'<div class="admnone">'+(q?'검색 결과가 없어요':'기록 없음')+'</div>';
   const cc=cs.slice(0,200).map(([id,e],i)=>{const nm=rkBadNm(e.n)?'':e.n;
     return '<div class="admch"><div class="admcn"><b>'+(q?'':(i+1)+'. ')+E(nm||'(이름 모름)')+'</b><i>'+id+'</i><span class="modw" style="color:#17e3d6">'+e.c+'회</span></div>'
     +'<div class="admsk"><button type="button" class="admbtn" data-a="bgcnt" data-id="'+id+'" data-n="'+E(nm)+'" data-d="-1">-1</button><button type="button" class="admbtn" data-a="bgcnt" data-id="'+id+'" data-n="'+E(nm)+'" data-d="1">+1</button><button type="button" class="admbtn admred" data-a="bgcnt" data-id="'+id+'" data-d="0">횟수 초기화</button></div>'
     +'<div class="admrow bgset"><span>처치 횟수 정하기</span><input class="admstep" data-bgc="'+id+'" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="'+e.c+'" value="'+E(BGED[id]||'')+'"><button type="button" class="admbtn admheal" data-a="bgset" data-id="'+id+'" data-n="'+E(nm)+'">정하기</button></div></div>'}).join('')||'<div class="admnone">'+(q?'검색 결과가 없어요':'기록 없음')+'</div>';
-  return (q?'<div class="admnote" style="color:#e3d94a;font-weight:700">\''+E(q)+'\' 검색 결과 · 사람 '+cs.length+'명 · 기록 '+runs.length+'개 (검색칸을 비우면 전부 보여요)</div>':'')
-    +'<div class="admsub">처치 횟수 <span>'+cs.length+'명</span></div><div class="rkcnts">'+cc+'</div>'
-    +'<div class="admsub">샌드백 기록 <span>'+runs.length+'개</span></div><div class="rkruns">'+rr+'</div>'}
+  const nm={d:'데미지 (공식)',t:'처치 (공식 · 빠른 순)',u:'비공식 (낭만박상환 · 김치스시를 쓴 판)'}[sub];
+  return (q?'<div class="admnote" style="color:#e3d94a;font-weight:700">\''+E(q)+'\' 검색 결과 · '+(sub==='c'?'사람 '+cs.length+'명':'기록 '+runs.length+'개')+' (검색칸을 비우면 전부 보여요)</div>':'')
+    +(sub==='c'?'<div class="admsub">처치 횟수 <span>'+cs.length+'명</span></div><div class="rkcnts">'+cc+'</div>'
+      :'<div class="admsub">'+nm+' <span>'+runs.length+'개</span></div><div class="admnote">공식 · 비공식 랭킹은 각각 100개까지만 저장돼요.</div><div class="rkruns">'+rr+'</div>')}
 function rkTrash(s,run){if(!run||typeof run!=='object')return;const k=rkKey(run.k);s.tr=(s.tr||[]).filter(x=>x&&x.k!==k);s.tr.push({k,t:Date.now(),g:RKG,r:run});if(s.tr.length>300)s.tr.splice(0,s.tr.length-300)}   // 지운 기록은 휴지통에 남겨서 되살릴 수 있게
 function bossSetCnt(s,pid,n,nm){n=Math.max(0,Math.min(99999,n|0));const o0=s.c[pid],a=(o0&&o0.c)|0,nn=String((o0&&o0.n)||nm||'').slice(0,40);
   if(n>0){const o=o0||{n:'',c:0};o.c=n;if(!o.n&&nm)o.n=bossNm(nm);s.c[pid]=o}else delete s.c[pid];
@@ -6294,9 +6296,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.67';
+const PATCH_VERSION='4.13.68';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.68',date:'2026-11-27',chars:[],fx:[],sys:['샌드백 공식 랭킹 100개 · 비공식 랭킹 100개까지 따로 저장되게 변경','관리자 패널 샌드백 랭킹에 데미지 · 처치 · 처치 횟수 · 비공식 표시 추가']},
   {ver:'4.13.67',date:'2026-11-27',chars:[],fx:[],sys:['샌드백 비공식 랭킹에 10000 데미지 기록은 안 뜨게 변경']},
   {ver:'4.13.66',date:'2026-11-26',chars:[],fx:[],sys:['샌드백 랭킹에 비공식 탭 추가 (낭만박상환 · 김치스시를 하나라도 쓴 기록은 비공식 랭킹에 올라감)','샌드백 데미지 랭킹에서 처치 표시 삭제']},
   {ver:'4.13.65',date:'2026-11-26',chars:[],fx:[],sys:['설화 극혐 업적은 낭만박상환 · 김치스시를 쓰지 않고 샌드백을 깨야 얻도록 변경','샌드백 설화 체력 10000으로 변경']},
@@ -6705,7 +6708,7 @@ function admPage(k){                           // 탭마다 안쪽을 작은 제
     +'<div class="rkhal"'+(RKTAB==='h'?'':' hidden')+'><div class="admrow"><input class="modq rkq" type="text" maxlength="40" placeholder="이름 또는 아이디로 찾기" autocomplete="off" spellcheck="false"><button type="button" class="admbtn" data-a="rkref">새로고침</button></div>'
     +'<details class="rkadd"><summary>지워진 기록 직접 만들기</summary>'+rkAddHTML()+'</details><div class="rkbox"></div>'
     +'<div class="admnote">스피드런 기록을 삭제하면 그 판에 참가한 플레이어들의 처치 횟수가 1씩 자동으로 줄어듭니다 (두 번 눌러야 삭제). 삭제와 횟수 수정은 저장소에 저장되어 접속한 모든 폰에 반영됩니다.</div></div>'
-    +'<div class="rkbag"'+(RKTAB==='s'?'':' hidden')+'><div class="admrow"><input class="modq bgq" type="text" maxlength="40" placeholder="이름 또는 아이디로 찾기" autocomplete="off" spellcheck="false"><button type="button" class="admbtn" data-a="rkref">새로고침</button></div><div class="bgbox"></div>'
+    +'<div class="rkbag"'+(RKTAB==='s'?'':' hidden')+'><div class="admrow"><input class="modq bgq" type="text" maxlength="40" placeholder="이름 또는 아이디로 찾기" autocomplete="off" spellcheck="false"><button type="button" class="admbtn" data-a="rkref">새로고침</button></div><div class="admsk bgsub">'+[['d','데미지'],['t','처치'],['c','처치 횟수'],['u','비공식']].map(x=>'<button type="button" class="admbtn rktab'+(BGSUB===x[0]?' on':'')+'" data-a="bgsub" data-v="'+x[0]+'">'+x[1]+'</button>').join('')+'</div><div class="bgbox"></div>'
     +'<div class="admnote">샌드백(설화 때리기) 랭킹이에요. 처치한 기록을 삭제하면 그 사람의 처치 횟수가 1 줄어들고 (두 번 눌러야 삭제), 횟수는 직접 고칠 수도 있어요. 삭제와 횟수 수정은 저장소에 저장되어 접속한 모든 폰에 반영됩니다.</div></div>';
   if(k==='bl')return '<div class="admsub">블랙리스트 검색</div><div class="admrow"><input class="modq blq" type="text" maxlength="12" placeholder="아이디 또는 이름" autocomplete="off" style="text-transform:none"></div>'
     +'<div class="admsub">블랙리스트 <span class="usrblc"></span></div><div class="usrbl"></div><div class="admnote">추방 중인 유저입니다. 바로 해제를 누르면 즉시 다시 들어올 수 있어요.</div>'
@@ -6857,7 +6860,7 @@ function openAdmin(g){
     T(()=>{const a2=ANN_LOG.length+':'+(ANN_LOG.length?ANN_LOG[ANN_LOG.length-1].t:0);if(a2!==asig){asig=a2;const bx=w.querySelector('.annlog');if(bx)bx.innerHTML=ANN_LOG.length?ANN_LOG.slice().reverse().map(x=>'<div class="modli"><span>'+new Date(x.t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</span> <b style="color:#17e3d6">'+admEsc(x.n)+' ('+x.pid+')</b> '+admEsc(x.m)+'</div>').join(''):'<div class="admnone">아직 공지가 없습니다.</div>'}});
     T(()=>{if(w.querySelector('.admpg.on[data-p="mod"]')){const m2=JSON.stringify(REG).length+':'+PEN.u+':'+Math.floor(Date.now()/20000)+':'+(NET.op&&NET.op.pid);if(m2!==msig){msig=m2;modRender(w)}}});
     T(()=>{if(w.querySelector('.admpg.on[data-p="user"],.admpg.on[data-p="bl"]')){const q=w.querySelector('.usrq'),bq=w.querySelector('.blq'),u2=FRP.v+':'+FRX.v+':'+JSON.stringify(FR.e).length+':'+(q?q.value:'')+':'+(bq?bq.value:'')+':'+KLOG.length+':'+[...usrOpen].join(',')+':'+NET.me.name+':'+presMy()+':'+Math.floor(Date.now()/20000)+':'+JSON.stringify(REG).length+':'+PRES.n+':'+JSON.stringify(BLX).length+':'+BGL.length;const ae=document.activeElement;if(u2!==usig&&!(ae&&ae.closest&&ae.closest('.usrlist'))){usig=u2;usrRender(w)}}});
-    T(()=>{if(w.querySelector('.admpg.on[data-p="rk"]')){if(!rinit){rinit=1;cldSync(false)}const r2=RKTAB+'|'+JSON.stringify(BOSSDB)+(BADM?1:0)+'|'+rkQ()+'|'+JSON.stringify(BAGDB)+'|'+bgQ()+'|'+bagRecGet().runs.length+':'+bagMy(),ae=document.activeElement;if(r2!==rsig&&!(ae&&ae.tagName==='INPUT'&&ae.closest('.rkbox,.bgbox'))){rsig=r2;const bx=w.querySelector('.rkbox'),gb=w.querySelector('.bgbox');if(RKTAB==='s'){if(gb)gb.innerHTML=bagAdmHTML()}else if(bx)bx.innerHTML=bossAdmHTML()}}});   // 처치 횟수 칸에 쓰는 중이면 다 쓸 때까지 다시 그리지 않음
+    T(()=>{if(w.querySelector('.admpg.on[data-p="rk"]')){if(!rinit){rinit=1;cldSync(false)}const r2=RKTAB+BGSUB+'|'+JSON.stringify(BOSSDB)+(BADM?1:0)+'|'+rkQ()+'|'+JSON.stringify(BAGDB)+'|'+bgQ()+'|'+bagRecGet().runs.length+':'+bagMy(),ae=document.activeElement;if(r2!==rsig&&!(ae&&ae.tagName==='INPUT'&&ae.closest('.rkbox,.bgbox'))){rsig=r2;const bx=w.querySelector('.rkbox'),gb=w.querySelector('.bgbox');if(RKTAB==='s'){if(gb)gb.innerHTML=bagAdmHTML()}else if(bx)bx.innerHTML=bossAdmHTML()}}});   // 처치 횟수 칸에 쓰는 중이면 다 쓸 때까지 다시 그리지 않음
     T(()=>{if(w.querySelector('.admpg.on[data-p="ml"]')){if(!mlinit){mlinit=1;cldSync(false)}const m2=ML.ok+':'+ML.all.map(x=>x.i).join(',');if(m2!==mlsig){mlsig=m2;mlAdmRender()}mlXUpd();mlLfTick(w.querySelector('.mlsent'))}});
     T(()=>{const s2=chars.map(c=>c.side+c.kind).join('|');if(s2!==ssig){ssig=s2;stb.innerHTML=admStatsHTML()}});
     T(()=>{if(!osig&&odb){osig='1';odb.innerHTML=admOddsHTML()}});
@@ -7336,6 +7339,7 @@ function admAct(a,b){
   else if(a==='usrtog'){const id=b.dataset.id;if(usrOpen.has(id))usrOpen.delete(id);else usrOpen.add(id);const w=document.querySelector('.adm');if(w)usrRender(w)}
   else if(a==='usrref'||a==='rkref'){cldSync(false)}
   else if(a==='rkpick'){RKTAB=b.dataset.v==='s'?'s':'h';const w=document.querySelector('.adm');if(w){w.querySelectorAll('.rktab').forEach(x=>x.classList.toggle('on',x.dataset.v===RKTAB));const h=w.querySelector('.rkhal'),g=w.querySelector('.rkbag');if(h)h.hidden=RKTAB!=='h';if(g)g.hidden=RKTAB!=='s';if(RKTAB==='s')bgRe();else rkRe()}}
+  else if(a==='bgsub'){BGSUB=['d','t','c','u'].includes(b.dataset.v)?b.dataset.v:'d';const w=document.querySelector('.adm');if(w)w.querySelectorAll('.bgsub .rktab').forEach(x=>x.classList.toggle('on',x.dataset.v===BGSUB));bgRe()}
   else if(a==='bgdel'){const k=b.dataset.k;if(!k)return;
     if(b.dataset.arm!=='1'){b.dataset.arm='1';b.textContent='한 번 더 누르면 삭제';clearTimeout(b._t);b._t=setTimeout(()=>{b.dataset.arm='';b.textContent='기록 삭제'},3500);return}
     b.disabled=true;let dec='';
