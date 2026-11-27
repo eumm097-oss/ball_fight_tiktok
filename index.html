@@ -4379,7 +4379,7 @@ function bagRecAdd(s,t,names,un){
   const run=bagClean({k:'g'+PID+Date.now()+Math.floor(Math.random()*1e4).toString(36).padStart(3,'0').slice(0,3),s,t,d:Date.now(),u:un?1:0,p:[{i:PID,n:me,c:names}]});
   B.runs.push(run);B.runs.sort(bagCmp);B.runs=B.runs.slice(0,BAG.max);bagRecSave();try{cldSoon(1500)}catch(e){}return run}
 function bagAll(){const runs=BAGDB.r.slice();for(const r of bagRecGet().runs)if(!runs.some(x=>x.k===r.k))runs.push(r);return runs.sort(bagCmp)}
-const bagList=un=>bagAll().filter(r=>bagUn(r)===!!un);   // 공식(false) · 비공식(true) 랭킹
+const bagList=un=>bagAll().filter(r=>bagUn(r)===!!un&&(!un||r.s<BAG.hp));   // 공식(false) · 비공식(true) 랭킹
 function showBagResult(){                             // 샌드백 결과: 총 데미지 + 순위
   const b=bagOf(),mem=chars.filter(c=>c.side!=='boss'),dm=Math.round(b?b.max-b.hp:0),cl=!!b&&!b.alive,t=cl?b.bagT:BAG.sec;
   bagSp=bagSplit(dm);try{bagHud()}catch(_){}
@@ -6294,9 +6294,10 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.66';
+const PATCH_VERSION='4.13.67';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
+  {ver:'4.13.67',date:'2026-11-27',chars:[],fx:[],sys:['샌드백 비공식 랭킹에 10000 데미지 기록은 안 뜨게 변경']},
   {ver:'4.13.66',date:'2026-11-26',chars:[],fx:[],sys:['샌드백 랭킹에 비공식 탭 추가 (낭만박상환 · 김치스시를 하나라도 쓴 기록은 비공식 랭킹에 올라감)','샌드백 데미지 랭킹에서 처치 표시 삭제']},
   {ver:'4.13.65',date:'2026-11-26',chars:[],fx:[],sys:['설화 극혐 업적은 낭만박상환 · 김치스시를 쓰지 않고 샌드백을 깨야 얻도록 변경','샌드백 설화 체력 10000으로 변경']},
   {ver:'4.13.64',date:'2026-11-26',chars:[],fx:[],sys:['앱 · 다른 브라우저에서 이미 받은 출석 · 일일 무료 볼을 또 받을 수 있던 오류 수정']},
