@@ -891,7 +891,7 @@ body.scr-2v2.bn2 .p3,body.scr-2v2.bn2 .p4,body.scr-2v2.bn1 .p2,body.scr-2v2.bn1 
 .bkt{font:400 21px/1.2 "Jua",sans-serif;margin-bottom:8px}.bkmy{font-size:12.5px;margin-bottom:10px;color:#444}.bkmy b{color:#111}.bkrw{font-size:13px;font-weight:700;color:#d6336c;background:#fff0f5;border:2px solid #d6336c;border-radius:8px;padding:6px 8px;margin-bottom:10px;text-align:center}
 .bktabs{display:flex;gap:6px;margin-bottom:8px}.bktabs button{flex:1;height:34px;border:2px solid #111;background:#fff;color:#111;font:400 15px/1 "Jua",sans-serif;cursor:pointer}.bktabs button.on{background:#111;color:#fff}
 .bklist{overflow:auto;min-height:120px;border-top:2px dashed #111;padding-top:4px}.bknone{padding:28px 6px;text-align:center;font-size:13px;color:#666}
-.bkrow{display:flex;gap:8px;align-items:center;padding:7px 2px;border-bottom:1px solid #e3e3e3;font-size:13.5px}.bkrow.me{background:#fff4c2}
+.bkhd{margin:8px 0 2px;padding:4px 6px;background:#111;color:#fff;font-size:12px;font-weight:800;border-radius:6px}.bkrow{display:flex;gap:8px;align-items:center;padding:7px 2px;border-bottom:1px solid #e3e3e3;font-size:13.5px}.bkrow.me{background:#fff4c2}
 .bkrk{flex:none;width:26px;text-align:center;font-weight:900}.bkmain{flex:1;min-width:0;font-weight:700;word-break:keep-all}.bkmain small{display:block;font-weight:500;color:#666;font-size:11.5px;margin-top:1px}
 .bkval{flex:none;font-weight:900;font-variant-numeric:tabular-nums}
 .bkclose{margin-top:10px;height:36px;border:2px solid #111;background:#111;color:#fff;font:400 16px/1 "Jua",sans-serif;cursor:pointer}
@@ -4413,7 +4413,9 @@ function bagRankShow(tab){
   const all=bagAll(),my=NET.me.name||PROF.name||'',kc=bagMy();let rows;
   const own=bagList(false),unf=bagList(true);
   if(tab==='d'||tab==='u')rows=(tab==='u'?unf:own).slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+Math.round(r.s)+'</div></div>'}).join('');
-  else if(tab==='t')rows=bagClears().slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(bagUn(r)?' · 비공식(체력 '+BAG.hpU+')':'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+r.t.toFixed(1)+'초</div></div>'}).join('');
+  else if(tab==='t'){const rw=(r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+r.t.toFixed(1)+'초</div></div>'};
+    const ofc=bagClears().filter(r=>!bagUn(r)).slice(0,100),unc=bagClears().filter(bagUn).slice(0,100);
+    rows='<div class="bkhd">공식 처치 · 설화 체력 '+BAG.hp+'</div>'+(ofc.map(rw).join('')||'<div class="bknone">아직 공식 처치가 없어요.</div>')+'<div class="bkhd">비공식 처치 · 낭만박상환·김치스시 · 설화 체력 '+BAG.hpU+'</div>'+(unc.map(rw).join('')||'<div class="bknone">아직 비공식 처치가 없어요.</div>')}
   else{const cm=Object.assign({},BAGDB.c);if(kc>0&&/^[A-Z2-9]{6}$/.test(PID)&&(!cm[PID]||cm[PID].c<kc))cm[PID]={n:my||'이름 없음',c:kc};
     rows=Object.entries(cm).sort((a,b)=>b[1].c-a[1].c).slice(0,100).map(([id,e],i)=>'<div class="bkrow'+(id===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(e.n||'이름 없음')+'</div><div class="bkval">'+e.c+'회</div></div>').join('')}
   m.innerHTML='<div class="bkbox"><div class="bkt">설화 때리기 랭킹</div><div class="bkmy">최대 4명 · '+BAG.sec+'초 안에 설화(체력 '+BAG.hp+' · 낭만박상환·김치스시가 있으면 '+BAG.hpU+')에게 준 데미지 · 내 처치 <b>'+kc+'회</b>'+(tab==='u'?'<br>낭만박상환 · 김치스시를 하나라도 쓴 판의 기록이에요':'')+'</div>'
@@ -4633,10 +4635,10 @@ const bgRe=()=>{const bx=document.querySelector('.adm .bgbox');if(bx)bx.innerHTM
 function bagAdmHTML(){
   const E=admEsc,q=bgQ(),Q=rkNz(q),fd=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
   const hit=ps=>!q||ps.some(m=>m&&((m.i&&m.i===q.toUpperCase())||rkNz(m.n).includes(Q)));
-  const sub=BGSUB,list=sub==='u'?bagList(true):bagList(false),src=sub==='t'?bagClears():list,rank=new Map(src.map((r,i)=>[r.k,i+1])),runs=src.filter(r=>hit(r.p));
+  const sub=BGSUB,list=sub==='u'?bagList(true):bagList(false),src=sub==='t'?bagClears().filter(r=>!bagUn(r)).concat(bagClears().filter(bagUn)):list,rank=(()=>{const m=new Map();let a=0,b=0;for(const r of src)m.set(r.k,sub==='t'?(bagUn(r)?++b:++a):a+++1);return m})(),runs=src.filter(r=>hit(r.p));
   const cm=Object.assign({},BAGDB.c),mc=bagMy();if(mc>0&&/^[A-Z2-9]{6}$/.test(PID)&&(!cm[PID]||cm[PID].c<mc))cm[PID]={n:NET.me.name||PROF.name||'',c:mc};
   const cs=Object.entries(cm).filter(([id,e])=>!q||id===q.toUpperCase()||rkNz(e.n).includes(Q)).sort((a,b)=>b[1].c-a[1].c);
-  const rr=runs.slice(0,200).map(r=>{const p=r.p[0]||{};return '<div class="admch"><div class="admcn"><b>'+rank.get(r.k)+'. '+E(p.n||'이름 없음')+'</b><span class="modw" style="color:#17e3d6">'+(sub==='t'?r.t.toFixed(1)+'초':Math.round(r.s))+'</span></div><div class="modl">'+E(p.c||'')+(r.d?' · '+fd(r.d):'')+' · '+(p.i||'아이디 없음')+'</div>'
+  const rr=runs.slice(0,200).map(r=>{const p=r.p[0]||{};return '<div class="admch"><div class="admcn"><b>'+(sub==='t'?(bagUn(r)?'[비공식] ':'[공식] '):'')+rank.get(r.k)+'. '+E(p.n||'이름 없음')+'</b><span class="modw" style="color:#17e3d6">'+(sub==='t'?r.t.toFixed(1)+'초':Math.round(r.s))+'</span></div><div class="modl">'+E(p.c||'')+(r.d?' · '+fd(r.d):'')+' · '+(p.i||'아이디 없음')+'</div>'
     +'<div class="admsk"><button type="button" class="admbtn admred" data-a="bgdel" data-k="'+E(r.k)+'">기록 삭제</button></div></div>'}).join('')||'<div class="admnone">'+(q?'검색 결과가 없어요':'기록 없음')+'</div>';
   const cc=cs.slice(0,200).map(([id,e],i)=>{const nm=rkBadNm(e.n)?'':e.n;
     return '<div class="admch"><div class="admcn"><b>'+(q?'':(i+1)+'. ')+E(nm||'(이름 모름)')+'</b><i>'+id+'</i><span class="modw" style="color:#17e3d6">'+e.c+'회</span></div>'
@@ -6308,7 +6310,7 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.72';
+const PATCH_VERSION='4.13.73';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'4.13.64',date:'2026-11-26',chars:[],fx:[],sys:['앱 · 다른 브라우저에서 이미 받은 출석 · 일일 무료 볼을 또 받을 수 있던 오류 수정']},
