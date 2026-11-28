@@ -372,7 +372,7 @@ body.in-net .pidtag,.stage:has(.end:not([hidden])) .pidtag{display:none}
 .admkv{display:flex;flex-wrap:wrap;gap:0.3em 0.5em;font-size:1em;align-items:baseline;margin-bottom:0.3em}.admkv span{color:#8b90a0}.admkv b{font-weight:700;margin-right:0.6em}
 .admfx{display:flex;flex-wrap:wrap;gap:0.35em;margin-top:0.3em}.admfx em{font-style:normal;font-size:0.95em;background:rgba(224,0,255,.14);border:0.1em solid rgba(224,0,255,.45);border-radius:0.5em;padding:0.15em 0.5em}
 .admrow{display:flex;align-items:center;gap:0.6em;margin-bottom:0.45em;font-size:1em}.admrow>span{flex:1;color:#cfd2dc}.admrow>b{min-width:4.2em;text-align:center}
-.admbtn.admpm{padding:0.2em 0.8em;font-size:1.2em;touch-action:none;user-select:none;-webkit-user-select:none}.admrow>b small{font-size:.8em;color:#8b90a0;font-weight:600}.admstep{width:3.6em;flex:none;box-sizing:border-box;background:#111;border:0.1em solid #444;border-radius:0.6em;color:#fff;font:inherit;font-size:1.05em;text-align:center;padding:0.3em 0.2em;outline:none;-webkit-user-select:text;user-select:text}.admstep:focus{border-color:#ff3dbd}.admstep::placeholder{color:#6d7180}.admrh{margin-bottom:0.15em}.admrh em{font-style:normal;font-size:.85em;color:#8b90a0;text-align:center}.admrh em{width:3.6em;flex:none}.admbtn.admsub2{border-color:#e3d94a;background:rgba(227,217,74,.08)}.admbtn.admred{border-color:#ff3b5c;background:rgba(255,59,92,.1)}.admbtn.admdeb{border-color:#c77dff;background:rgba(199,125,255,.08)}
+.admbtn.admpm{padding:0.2em 0.8em;font-size:1.2em;touch-action:none;user-select:none;-webkit-user-select:none}.admrow>b small{font-size:.8em;color:#8b90a0;font-weight:600}.admstep{width:3.6em;flex:none;box-sizing:border-box;background:#111;border:0.1em solid #444;border-radius:0.6em;color:#fff;font:inherit;font-size:1.05em;text-align:center;padding:0.3em 0.2em;outline:none;-webkit-user-select:text;user-select:text}.admstep:focus{border-color:#ff3dbd}.admstep::placeholder{color:#6d7180}.admrh{margin-bottom:0.15em}.admrh em{font-style:normal;font-size:.85em;color:#8b90a0;text-align:center}.admrh em{width:3.6em;flex:none}.admbtn.admsub2{border-color:#e3d94a;background:rgba(227,217,74,.08)}.admbtn.admred{border-color:#ff3b5c;background:rgba(255,59,92,.1)}.admbtn.admdeb{border-color:#c77dff;background:rgba(199,125,255,.08)}.admbuf{border-color:#2bff5a;background:rgba(43,255,90,.08)}
 .admlog{font-size:1em;padding:0.4em 0;border-bottom:0.1em solid #222}.admlog i{color:#8b90a0;font-style:normal;margin-right:0.5em}.admlog span{color:#8b90a0}
 .admrange{flex:2;min-width:0;accent-color:#ff3dbd}.admsw.on[data-a="spd"]{color:#fff}
 .admccr{display:flex;align-items:center;gap:0.6em}.admccr .ccd{color:#fff;min-width:6.5em}.admccr b{flex:1}
@@ -4072,7 +4072,7 @@ function bossFit(c){                                  // 인원수에 맞춰 보
   c.max=c.hp=BT.hp(n);renderHp(c);initBar(c);if(c.bt){c.bt.n=n;c.bt.dm=1+.1*(n-1)}}
 let bossNoIdle=false;
 function bossIdleShow(){                              // 혼자 하는 보스전은 시작 전에도 맵 위쪽에 보스가 보임
-  if(bossNoIdle)return;try{bagIdle()}catch(e){console.error(e)}if(MODE==='boss'&&phase==='idle'&&NET.screen==='2v2'&&!NET.match&&!NET.mp&&!bossOf())addBoss()}
+  if(bossNoIdle)return;try{bagIdle();bagHpSync()}catch(e){console.error(e)}if(MODE==='boss'&&phase==='idle'&&NET.screen==='2v2'&&!NET.match&&!NET.mp&&!bossOf())addBoss()}
 function addBoss(){                                   // 보스 공을 맵 위쪽 가운데에 놓음 (모든 폰이 같은 순서로)
   {const e=bossOf();if(e){bossFit(e);bossLay();return null}}
   const n=Math.max(1,chars.filter(c=>c.side!=='boss').length);
@@ -4297,13 +4297,16 @@ function bossOffRec(win,b){                              // 한 기기에서 한
   bossRec(win,win?b.bt.dead:0,[{pid:PID,name:me,ch}],'o'+PID+Date.now())}
 /* ---------- 이벤트: 설화 때리기 (샌드백) — 가운데에 서 있는 큰 설화(체력 10000)를 최대 4명이 30초 안에 최대한 때림 · 랭킹 ---------- */
 const tR=t=>(t&&t.bag&&t.rad)||R;   // 상대 몸의 반지름 (샌드백은 큰 공이라 스킬이 보이는 크기대로 맞게)
-const BAG={sec:30,hp:10000,big:2.2,max:100};   // max: 공식 · 비공식 랭킹 각각 이만큼까지만 저장
+const BAG={sec:30,hp:3000,hpU:10000,big:2.2,max:100};   // hp: 공식 설화 체력 · hpU: 낭만박상환·김치스시가 있을 때(비공식)   // max: 공식 · 비공식 랭킹 각각 이만큼까지만 저장
 const bagOf=()=>chars.find(c=>c.bag);
+const bagHpNow=()=>chars.some(c=>c.side!=='boss'&&(c.kind==='kc'||c.kind==='nm'))?BAG.hpU:BAG.hp;   // 낭만박상환·김치스시가 한 명이라도 있으면 설화 체력 10000 (비공식), 아니면 3000
+function bagHpSync(){const b=bagOf();if(!b||over||b.hp!==b.max||b.bagT>0)return;const h=bagHpNow();if(b.max===h)return;b.max=b.hp=h;b._lh=h;try{renderHp(b);initBar(b)}catch(_){}}   // 아직 안 맞은 설화는 지금 팀에 맞는 체력으로
+setInterval(()=>{if(MODE==='bag')try{bagHpSync()}catch(_){}},250);   // 캐릭터를 넣고 빼면 설화 체력이 바로 바뀜
 function bagIdle(){                                   // 샌드백 모드: 가운데에 크게 서 있는 설화를 놓음 (플레이어는 아래쪽에 고르게)
   if(MODE!=='bag'||phase!=='idle'||NET.match||NET.screen==='online'||bagOf())return;
   const o=document.querySelector('.modal .half[data-name="설화"]');if(!o)return;
   addCharAt('boss',o,false);const c=chars.find(x=>x.side==='boss');if(!c)return;
-  bagLast=null;bagSp=null;c.bag=true;c.bagT=0;c.name='설화';c.max=c.hp=BAG.hp;c.rad=R*BAG.big;c._lh=c.hp;c.ball.style.width=(14*BAG.big)+'%';
+  bagLast=null;bagSp=null;c.bag=true;c.bagT=0;c.name='설화';c.max=c.hp=bagHpNow();c.rad=R*BAG.big;c._lh=c.hp;c.ball.style.width=(14*BAG.big)+'%';
   c.P.classList.add('bagp');const pn=c.P.querySelector('.pname');if(pn)pn.textContent='설화 (샌드백)';
   renderHp(c);initBar(c);bossLay();placeBall(c);
 }
@@ -4338,7 +4341,7 @@ function bagHud(){                                      // 이름 옆에 이 캐
     nm.appendChild(c._bd)}
     const v=Math.round(bagVal(c))+'';if(c._bdv!==v){c._bdv=v;c._bd.textContent=v}}}
 function bagTick(dt){
-  const b=bagOf();if(!b)return;bagLock();if(simDraw)bagHud();
+  const b=bagOf();if(!b)return;bagLock();bagHpSync();if(simDraw)bagHud();
   if(b.hp<b.max&&b._lh!=null&&b.hp<b._lh&&simDraw&&!over)try{const d=b._lh-b.hp,W=aW(),H=aH(),e=mk('bagdm','-'+Math.round(d));e.style.left=(b.x*W/WB)+'px';e.style.top=((b.y-b.rad*1.1)*H/WB)+'px';
     e.animate([{transform:'translate(-50%,0)',opacity:1},{transform:'translate(-50%,-26px)',opacity:0}],{duration:650,easing:'ease-out',fill:'forwards'}).onfinish=()=>e.remove()}catch(_){}
   b._lh=b.hp;
@@ -4348,11 +4351,12 @@ function bagTick(dt){
 }
 /* 샌드백 랭킹: 점수 = 설화에게 준 총 데미지 (같으면 더 빨리 쓰러뜨린 쪽이 위) · 이 폰에 저장하고 저장소(d.bag)와 합침 */
 var BAGDB={r:[],c:{}},BAGREC=null;
-const bagOk=r=>!!(r&&r.k&&+r.s>0&&+r.s<=BAG.hp+.5&&+r.t>0&&+r.t<=BAG.sec+.5&&Array.isArray(r.p));
+const bagOk=r=>!!(r&&r.k&&+r.s>0&&+r.s<=BAG.hpU+.5&&+r.t>0&&+r.t<=BAG.sec+.5&&Array.isArray(r.p));
 const bagCmp=(a,b)=>(b.s-a.s)||(a.t-b.t);
-const bagTrim=L=>{L=L.slice().sort(bagCmp);return L.filter(r=>!bagUn(r)).slice(0,BAG.max).concat(L.filter(r=>bagUn(r)&&r.s<BAG.hp).slice(0,BAG.max)).sort(bagCmp)};   // 공식 100개 + 비공식 100개 (비공식에서 쓰러뜨린 판은 안 보여서 저장도 안 함)
-const bagUn=r=>!!(r&&(r.u||(r.p||[]).some(m=>m&&/낭만박상환|김치스시/.test(String(m.c||'')))));   // 비공식: 낭만박상환·김치스시를 하나라도 쓴 판
-const bagClean=r=>({k:String(r.k).slice(0,24),s:Math.round(+r.s*10)/10,t:Math.round(+r.t*100)/100,d:+r.d||0,u:bagUn(r)?1:0,p:r.p.slice(0,1).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,40)}))});
+const bagTrim=L=>{L=L.slice().sort(bagCmp);return L.filter(r=>!bagUn(r)).slice(0,BAG.max).concat(L.filter(r=>bagUn(r)&&!bagClr(r)).slice(0,BAG.max),L.filter(r=>bagUn(r)&&bagClr(r)).sort((a,b)=>a.t-b.t).slice(0,BAG.max)).sort(bagCmp)};   // 공식 100개 + 비공식 100개 (비공식에서 쓰러뜨린 판은 안 보여서 저장도 안 함)
+const bagUn=r=>!!(r&&(r.u||(r.p||[]).some(m=>{const c=String(m&&m.c||'');return /낭만박상환|김치스시/.test(c)||(c.length===40&&c.split(' · ').length<4)})));   // 예전 기록은 캐릭터 이름이 40자에서 잘려 있어서, 40자인데 4명이 다 안 보이면 비공식으로 봄   // 비공식: 낭만박상환·김치스시를 하나라도 쓴 판
+const bagClean=r=>({k:String(r.k).slice(0,24),s:Math.min(Math.round(+r.s*10)/10,bagUn(r)?BAG.hpU:BAG.hp),t:Math.round(+r.t*100)/100,d:+r.d||0,u:bagUn(r)?1:0,p:r.p.slice(0,1).map(m=>({i:/^[A-Z2-9]{6}$/.test(m&&m.i)?m.i:'',n:bossNm(m&&m.n),c:String(m&&m.c||'').slice(0,120)}))});
+const bagClr=r=>!!r&&+r.s>=(bagUn(r)?BAG.hpU:BAG.hp)&&+r.t<BAG.sec-1e-6;   // 설화를 쓰러뜨린 판 (시간이 다 돼서 끝난 판은 t가 정확히 30초)
 function bagRecGet(){
   if(BAGREC)return BAGREC;let v=null;try{v=JSON.parse(localStorage.getItem('bftBagRk')||'null')}catch(e){}
   BAGREC={runs:Array.isArray(v&&v.runs)?bagTrim(v.runs.filter(bagOk).map(bagClean)):[],za:+(v&&v.za)||0,o:v&&v.o!=null&&isFinite(+v.o)?Math.max(0,Math.min(99999,+v.o|0)):null,ob:+(v&&v.ob)||0};return BAGREC}
@@ -4381,14 +4385,15 @@ function bagRecAdd(s,t,names,un){
   const run=bagClean({k:'g'+PID+Date.now()+Math.floor(Math.random()*1e4).toString(36).padStart(3,'0').slice(0,3),s,t,d:Date.now(),u:un?1:0,p:[{i:PID,n:me,c:names}]});
   B.runs.push(run);B.runs=bagTrim(B.runs);bagRecSave();try{cldSoon(1500)}catch(e){}return run}
 function bagAll(){const runs=BAGDB.r.slice();for(const r of bagRecGet().runs)if(!runs.some(x=>x.k===r.k))runs.push(r);return runs.sort(bagCmp)}
-const bagList=un=>bagAll().filter(r=>bagUn(r)===!!un&&(!un||r.s<BAG.hp));   // 공식(false) · 비공식(true) 랭킹
+const bagClears=()=>bagAll().filter(bagClr).sort((a,b)=>a.t-b.t);   // 처치 랭킹: 공식·비공식 모두 (빠른 순)
+const bagList=un=>bagAll().filter(r=>bagUn(r)===!!un&&(!un||!bagClr(r)));   // 공식(false) · 비공식(true) 랭킹
 function showBagResult(){                             // 샌드백 결과: 총 데미지 + 순위
   const b=bagOf(),mem=chars.filter(c=>c.side!=='boss'),dm=Math.round(b?b.max-b.hp:0),cl=!!b&&!b.alive,t=cl?b.bagT:BAG.sec;
   bagSp=bagSplit(dm);try{bagHud()}catch(_){}
   let sub='';
   if(dm>0&&!(ADMUSED||admSpd!==1||admPause)){
-    const un=mem.some(c=>c.kind==='kc'||c.kind==='nm'),run=bagRecAdd(cl?BAG.hp:dm,Math.max(.1,Math.min(BAG.sec,t)),mem.map(c=>c.name).join(' · '),un);
-    const rk=bagList(un).findIndex(x=>x.k===run.k)+1;sub=(rk?(un?'비공식 ':'')+rk+'위':'')+(cl?' · '+t.toFixed(1)+'초 만에 처치!':'')}
+    const un=mem.some(c=>c.kind==='kc'||c.kind==='nm'),run=bagRecAdd(cl?b.max:dm,Math.max(.1,Math.min(BAG.sec,t)),mem.map(c=>c.name).join(' · '),un);
+    const rk=cl?bagClears().findIndex(x=>x.k===run.k)+1:bagList(un).findIndex(x=>x.k===run.k)+1;sub=(rk?(cl?'처치 ':un?'비공식 ':'')+rk+'위':'')+(cl?' · '+t.toFixed(1)+'초 만에 처치!':'')}
   else if(cl)sub=t.toFixed(1)+'초 만에 처치!';
   count.innerHTML='<span class="wt">'+(cl?'설화 쓰러짐!':'시간 종료!')+' 총 데미지 '+dm+(sub?'<span class="btclr">'+sub+'</span>':'')+'<span class="bgl">'+mem.slice().sort((a,b)=>bagVal(b)-bagVal(a)).map(c=>'<span><b style="color:'+((c._bd&&c._bd.style.color)||'#111')+'">'+netEsc(c.name)+'</b><i>'+bagVal(c)+'</i></span>').join('')+'</span></span>';
   count.classList.add('win');count.animate([{opacity:0},{opacity:1}],{duration:400,fill:'forwards'});
@@ -4404,10 +4409,10 @@ function bagRankShow(tab){
   const all=bagAll(),my=NET.me.name||PROF.name||'',kc=bagMy();let rows;
   const own=bagList(false),unf=bagList(true);
   if(tab==='d'||tab==='u')rows=(tab==='u'?unf:own).slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+Math.round(r.s)+'</div></div>'}).join('');
-  else if(tab==='t')rows=own.filter(r=>r.s>=BAG.hp).sort((a,b)=>a.t-b.t).slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+r.t.toFixed(1)+'초</div></div>'}).join('');
+  else if(tab==='t')rows=bagClears().slice(0,100).map((r,i)=>{const p=r.p[0]||{};return '<div class="bkrow'+(p.i&&p.i===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(p.n||'이름 없음')+'<small>'+netEsc(p.c||'')+(bagUn(r)?' · 비공식(체력 '+BAG.hpU+')':'')+(r.d?' · '+new Date(r.d).toLocaleDateString('ko-KR'):'')+'</small></div><div class="bkval">'+r.t.toFixed(1)+'초</div></div>'}).join('');
   else{const cm=Object.assign({},BAGDB.c);if(kc>0&&/^[A-Z2-9]{6}$/.test(PID)&&(!cm[PID]||cm[PID].c<kc))cm[PID]={n:my||'이름 없음',c:kc};
     rows=Object.entries(cm).sort((a,b)=>b[1].c-a[1].c).slice(0,100).map(([id,e],i)=>'<div class="bkrow'+(id===PID?' me':'')+'"><div class="bkrk">'+(i+1)+'</div><div class="bkmain">'+netEsc(e.n||'이름 없음')+'</div><div class="bkval">'+e.c+'회</div></div>').join('')}
-  m.innerHTML='<div class="bkbox"><div class="bkt">설화 때리기 랭킹</div><div class="bkmy">최대 4명 · '+BAG.sec+'초 안에 설화(체력 '+BAG.hp+')에게 준 데미지 · 내 처치 <b>'+kc+'회</b>'+(tab==='u'?'<br>낭만박상환 · 김치스시를 하나라도 쓴 판의 기록이에요':'')+'</div>'
+  m.innerHTML='<div class="bkbox"><div class="bkt">설화 때리기 랭킹</div><div class="bkmy">최대 4명 · '+BAG.sec+'초 안에 설화(체력 '+BAG.hp+' · 낭만박상환·김치스시가 있으면 '+BAG.hpU+')에게 준 데미지 · 내 처치 <b>'+kc+'회</b>'+(tab==='u'?'<br>낭만박상환 · 김치스시를 하나라도 쓴 판의 기록이에요':'')+'</div>'
     +'<div class="bktabs"><button type="button" data-bgt="d"'+(tab==='d'?' class="on"':'')+'>데미지</button><button type="button" data-bgt="t"'+(tab==='t'?' class="on"':'')+'>처치</button><button type="button" data-bgt="c"'+(tab==='c'?' class="on"':'')+'>처치 횟수</button><button type="button" data-bgt="u"'+(tab==='u'?' class="on"':'')+'>비공식</button></div>'
     +'<div class="bklist">'+(rows||'<div class="bknone">'+(tab==='d'?'아직 기록이 없어요. 첫 기록의 주인공이 되어 보세요!':tab==='u'?'아직 비공식 기록이 없어요.':tab==='t'?'아직 설화를 쓰러뜨린 사람이 없어요.':'아직 처치 기록이 없어요.')+'</div>')+'</div>'
     +'<button type="button" class="bkclose" data-bk="x">닫기</button></div>';
@@ -4624,7 +4629,7 @@ const bgRe=()=>{const bx=document.querySelector('.adm .bgbox');if(bx)bx.innerHTM
 function bagAdmHTML(){
   const E=admEsc,q=bgQ(),Q=rkNz(q),fd=t=>new Date(t).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
   const hit=ps=>!q||ps.some(m=>m&&((m.i&&m.i===q.toUpperCase())||rkNz(m.n).includes(Q)));
-  const sub=BGSUB,list=sub==='u'?bagList(true):bagList(false),src=sub==='t'?list.filter(r=>r.s>=BAG.hp).sort((a,b)=>a.t-b.t):list,rank=new Map(src.map((r,i)=>[r.k,i+1])),runs=src.filter(r=>hit(r.p));
+  const sub=BGSUB,list=sub==='u'?bagList(true):bagList(false),src=sub==='t'?bagClears():list,rank=new Map(src.map((r,i)=>[r.k,i+1])),runs=src.filter(r=>hit(r.p));
   const cm=Object.assign({},BAGDB.c),mc=bagMy();if(mc>0&&/^[A-Z2-9]{6}$/.test(PID)&&(!cm[PID]||cm[PID].c<mc))cm[PID]={n:NET.me.name||PROF.name||'',c:mc};
   const cs=Object.entries(cm).filter(([id,e])=>!q||id===q.toUpperCase()||rkNz(e.n).includes(Q)).sort((a,b)=>b[1].c-a[1].c);
   const rr=runs.slice(0,200).map(r=>{const p=r.p[0]||{};return '<div class="admch"><div class="admcn"><b>'+rank.get(r.k)+'. '+E(p.n||'이름 없음')+'</b><span class="modw" style="color:#17e3d6">'+(sub==='t'?r.t.toFixed(1)+'초':Math.round(r.s))+'</span></div><div class="modl">'+E(p.c||'')+(r.d?' · '+fd(r.d):'')+' · '+(p.i||'아이디 없음')+'</div>'
@@ -4633,7 +4638,7 @@ function bagAdmHTML(){
     return '<div class="admch"><div class="admcn"><b>'+(q?'':(i+1)+'. ')+E(nm||'(이름 모름)')+'</b><i>'+id+'</i><span class="modw" style="color:#17e3d6">'+e.c+'회</span></div>'
     +'<div class="admsk"><button type="button" class="admbtn" data-a="bgcnt" data-id="'+id+'" data-n="'+E(nm)+'" data-d="-1">-1</button><button type="button" class="admbtn" data-a="bgcnt" data-id="'+id+'" data-n="'+E(nm)+'" data-d="1">+1</button><button type="button" class="admbtn admred" data-a="bgcnt" data-id="'+id+'" data-d="0">횟수 초기화</button></div>'
     +'<div class="admrow bgset"><span>처치 횟수 정하기</span><input class="admstep" data-bgc="'+id+'" inputmode="numeric" maxlength="5" autocomplete="off" placeholder="'+e.c+'" value="'+E(BGED[id]||'')+'"><button type="button" class="admbtn admheal" data-a="bgset" data-id="'+id+'" data-n="'+E(nm)+'">정하기</button></div></div>'}).join('')||'<div class="admnone">'+(q?'검색 결과가 없어요':'기록 없음')+'</div>';
-  const nm={d:'데미지 (공식)',t:'처치 (공식 · 빠른 순)',u:'비공식 (낭만박상환 · 김치스시를 쓴 판)'}[sub];
+  const nm={d:'데미지 (공식)',t:'처치 (공식·비공식 · 빠른 순)',u:'비공식 (낭만박상환 · 김치스시를 쓴 판)'}[sub];
   return (q?'<div class="admnote" style="color:#e3d94a;font-weight:700">\''+E(q)+'\' 검색 결과 · '+(sub==='c'?'사람 '+cs.length+'명':'기록 '+runs.length+'개')+' (검색칸을 비우면 전부 보여요)</div>':'')
     +(sub==='c'?'<div class="admsub">처치 횟수 <span>'+cs.length+'명</span></div><div class="rkcnts">'+cc+'</div>'
       :'<div class="admsub">'+nm+' <span>'+runs.length+'개</span></div><div class="admnote">공식 · 비공식 랭킹은 각각 100개까지만 저장돼요.</div><div class="rkruns">'+rr+'</div>')}
@@ -5342,9 +5347,9 @@ const SLM_SND='SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjYwLjE2LjEwMAAAAAAAAAAAAAAA//tQw
    매혹된 상대에게 설화가 부딪히면 데미지 + '깡!' 하고 매혹이 깨짐(슬로우도 같이 풀림). */
 const SHL={speed:.85,r:.025,hitK:1.4,dmg:25,dot:5,gap:.7,heal:15,eatAfter:.35,forever:1e9};   // dot: 매혹된 동안 gap초마다 입는 데미지   // 쿨타임 없음: 시작하자마자 랜덤 방향으로 쏘고, 하트가 맞으면 바로 다시 쏨 · 매혹은 설화가 부딪혀서 깰 때까지 계속
 let shLs=[];
-function shCast(c){
-  if(!c.alive||over||c.shL)return;                                  // 하트가 맵에 이미 있으면 못 씀 (사라질 때까지 기다림)
-  if(chars.some(t=>t.shCh&&t.shCh.own===c))return;                   // 매혹된 상대가 있으면 못 씀 (매혹이 풀려야 다시 쏨)
+function shCast(c,adm){
+  if(!c.alive||over||(c.shL&&!adm))return;                          // 하트가 맵에 이미 있으면 못 씀 (사라질 때까지 기다림) · 관리자는 누를 때마다 하트가 하나씩 더 생김
+  if(!adm&&chars.some(t=>t.shCh&&t.shCh.own===c))return;                   // 매혹된 상대가 있으면 못 씀 (매혹이 풀려야 다시 쏨)
   if(!foe(c))return;
   const a=grand()*Math.PI*2,dx=Math.cos(a),dy=Math.sin(a);           // 아무 방향이나 랜덤
   const h={own:c,x:c.x+dx*(R+SHL.r),y:c.y+dy*(R+SHL.r),vx:dx,vy:dy,r:SHL.r,el:null,fol:null,t0:now};
@@ -6297,7 +6302,7 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.70';
+const PATCH_VERSION='4.13.71';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'4.13.64',date:'2026-11-26',chars:[],fx:[],sys:['앱 · 다른 브라우저에서 이미 받은 출석 · 일일 무료 볼을 또 받을 수 있던 오류 수정']},
@@ -6888,9 +6893,24 @@ const ADM_SK={                              // 관리자: 캐릭터별 바로 �
   swm:[['점프맵 바로 바꾸기',c=>admSw(c,'new')],['클리어',c=>admSw(c,'win')],['실패',c=>admSw(c,'fail')]],
   sg:[['슬라임 정리',c=>slmAbsorb(c)]],
   bn:[['거품 존',c=>bnCast(c)],['거품 방울',c=>bnOrb(c)]],
-  sh:[['매혹의 하트',c=>shCast(c)]],
-  kc:[['파동 공격',c=>kcWave(c)]]
+  sh:[['매혹의 하트',c=>shCast(c,true)]],
+  kc:[['파동 공격',c=>admKcWave(c)],['강화 +1단계',c=>admKcUp(c)],['약화 -1단계',c=>admKcDown(c)]]
 };
+function admKcWave(c){                                // 관리자 파동 공격: 가장 가까운 상대 쪽으로 부채꼴을 돌려서 거리와 상관없이 무조건 바로 맞힘 (부채꼴 안의 다른 상대·세포도 같이)
+  if(!c.alive||over)return;const t0=admT(c);
+  if(t0)c.kcAng=Math.atan2(t0.y-c.y,t0.x-c.x);else if(c.kcAng==null)c.kcAng=grand()*Math.PI*2;
+  const half=KCW.ang/2*Math.PI/180,rr=KCW.r*kcRm(c);let hit0=false;
+  for(const t of chars.slice()){if(over)break;if(t===c||!t.alive||ally(t,c)||sgGhost(t))continue;if(kcIn(c,t,rr,half)){kcHit(c,t);if(t===t0)hit0=true}}
+  if(t0&&!hit0&&t0.alive&&!over)kcHit(c,t0);
+  for(const m of mkCells.slice()){if(over)break;if(!mkCells.includes(m)||ally(m.owner,c))continue;if(kcIn(c,m,rr,half,m.r||MK.r))kcHitCell(c,m)}}
+function admKcUp(c){                                    // 관리자: 김치스시 강화 한 단계 (1~7단계는 데미지 2배, 8단계는 범위 2배)
+  if(!c.alive||over)return;const hs=c.kcHs||(c.kcHs=[]);if(hs.length>=KCW.cells)return;
+  const d=hs.length<KCW.dcells;hs.push(d?'d':'r');if(d)c.kcD=(c.kcD||0)+1;else c.kcR=(c.kcR||0)+1;
+  c.kcHits=hs.length;kcPctUi(c);try{addTag(c,d?'데미지 2배':'범위 2배','kcx');const tg=c.tags[c.tags.length-1];if(tg)tg.el.classList.add('kctag')}catch(_){}}
+function admKcDown(c){                                  // 관리자: 김치스시 약화 한 단계
+  if(!c.alive||over)return;const hs=c.kcHs;if(!hs||!hs.length)return;
+  const k=hs.pop();if(k==='d')c.kcD=Math.max(0,(c.kcD||0)-1);else c.kcR=Math.max(0,(c.kcR||0)-1);
+  c.kcHits=hs.length;kcPctUi(c)}
 function admKr(c,pick){                    // 권루트: 고른 스킬을 바로 씀 (게이지·쿨타임은 그대로 두고, 이미 쓰는 중이면 끊고 새로)
   if(!c.alive||!foe(c))return;
   const m0=c.mode,g0=c.gauge;
@@ -6945,6 +6965,7 @@ function admRenderChars(box){const esc=admEsc;
       +'<div class="admlbl">체력</div><div class="admsk"><button type="button" class="admbtn admheal" data-side="'+c.side+'"'+(c.alive&&!over?'':' disabled')+'>체력 회복</button>'+A('hp1','체력 1',c.alive&&!over)+A('kill','즉사',c.alive&&!over,'admred')+'</div>'
       +'<div class="admlbl">스킬</div>'+(sk.length?'<div class="admsk">'+sk.map((k,i)=>'<button type="button" class="admbtn" data-side="'+c.side+'" data-i="'+i+'"'+(ok?'':' disabled')+'>'+esc(k[0])+'</button>').join('')+(c.kind==='swm'?'':A('gauge','게이지 채우기',ok,'admsub2'))+'</div>':'<div class="admnone">쓸 수 있는 스킬이 없습니다.</div>')
       +'<div class="admlbl">상태효과 (5초)</div><div class="admsk">'+ADM_DEB.map(d=>A('deb',d[1],ok,'admdeb','data-k="'+d[0]+'"')).join('')+'</div>'
+      +'<div class="admlbl">버프 (이동속도 5초 · 힘·보호 10초)</div><div class="admsk">'+ADM_BUF.map(d=>A('buf',d[1],ok,'admbuf','data-k="'+d[0]+'"')).join('')+'</div>'
       +'<div class="admlbl">위치</div><div class="admsk">'+A('tp','맵 터치로 이동',c.alive&&!over,'admsub2')+A('center','가운데로',c.alive&&!over,'admsub2')+'</div>'
       +(ok?'':'<div class="admnote">'+(over?'게임이 끝났습니다.':(c.alive?'게임이 시작되면 쓸 수 있습니다.':'쓰러졌습니다.'))+'</div>')+'</div>';
   }).join('');
@@ -7247,6 +7268,14 @@ function admDeb(c,k){                            // 고른 공에게 바로 상�
   }finally{debSkip=false}
   try{burstAt(c.x*aW(),c.y*aH(),(typeof BK_DEBC!=='undefined'&&BK_DEBC[k])||'#ffffff',.7,6)}catch(e){}
 }
+const ADM_BUF=[['spd','이동속도 증가'],['str','힘'],['pro','보호'],['pro2','보호II'],['pro3','보호III']];
+function admBuf(c,k){                            // 고른 공에게 바로 버프: 이동속도 증가 5초 · 힘 10초 · 보호(20%/50%/70%) 10초
+  if(!c.alive||over)return;
+  if(k==='spd')addSpeedBuff(c,JY.buffMul,JY.buffSec);
+  else if(k==='str')addStrength(c);
+  else if(k==='pro'||k==='pro2'||k==='pro3'){c.resistCut=k==='pro'?RESIST.cut:k==='pro2'?RESIST.cut2:RESIST.cut3;c.resistUntil=now+10}
+  try{burstAt(c.x*aW(),c.y*aH(),k==='spd'?'#ffb02e':k==='str'?'#ff5c3a':'#3b82f6',.7,6)}catch(e){}
+}
 function admSetHp(c,v){if(!c.alive||over)return;const old=c.hp;c.hp=Math.max(1,Math.min(c.max,v));renderHp(c);hpChange(c,old)}
 function admRestart(){                           // 같은 캐릭터로 바로 다시 시작
   if(NET.match){if(admOnOk())admCmd({a:'rst'});return}   // 온라인: 모든 캐릭터를 처음 상태로 다시 넣고 바로 출발
@@ -7296,6 +7325,7 @@ function admExec(m){
   else if(a==='kill'&&c){if(c.alive&&!over){const g=c.admGod;c.admGod=false;c._gh0=null;hurt(c,c.hp+1e6,true);c.admGod=g}}
   else if(a==='gauge'&&c){if(!c.alive||over)return;if(c.kind==='bk')c.g=BK.max;else if(c.kind==='nu'){c.nuHits=NU.need;nuGauge(c)}else if(c.mode==='fill')c.gauge=1}
   else if(a==='deb'&&c)admDeb(c,m.k);
+  else if(a==='buf'&&c)admBuf(c,m.k);
   else if(a==='center'&&c){c.x=WB/2;c.y=WB/2}
   else if(a==='sum'&&c)admSumExec(String(m.name||''),c.side);
   else if(a==='rst'){if(!over)chars.map(o=>[o.side,o.name]).forEach(([sd,n])=>admSumExec(n,sd))}
@@ -7322,7 +7352,7 @@ function admAct(a,b){
   else if(a==='stat'&&c)admCmd({a,side:c.side,f:b.dataset.f,d:+b.dataset.d*admStepOf('stat:'+c.side+':'+b.dataset.f)});
   else if(a==='odds')admCmd({a,g:b.dataset.g,k:b.dataset.k,d:+b.dataset.d*admStepOf('odds:'+b.dataset.g+':'+b.dataset.k)});
   else if(a==='oddsreset')admCmd({a,g:b.dataset.g});
-  else if(['statreset','hp1','kill','gauge','deb','center'].includes(a)&&c)admCmd({a,side:c.side,k:b.dataset.k});
+  else if(['statreset','hp1','kill','gauge','deb','buf','center'].includes(a)&&c)admCmd({a,side:c.side,k:b.dataset.k});
   else if(a==='tp'&&c)admTp=admTp===c?null:c;
   else if(a==='modwhy'||a==='modchat'){const id=b.dataset.id,box=b.closest('.modr').querySelector(a==='modwhy'?'.modwhy':'.modchat');box.hidden=!box.hidden;const key=(a==='modwhy'?'w':'c')+id;if(box.hidden)modOpen.delete(key);else modOpen.add(key);
     if(a==='modchat'&&!box.hidden){box.innerHTML='<div class="admnone">불러오는 중...</div>';modQuery(id,r=>{const h=modChatHTML(r);modChatData[id]=h;document.querySelectorAll('.modchat[data-id="'+id+'"]').forEach(el=>{el.innerHTML=h})})}}
@@ -7342,7 +7372,7 @@ function admAct(a,b){
     b.disabled=true;let dec='';
     bagAdmEdit(s=>{const run=s.r.find(x=>x&&x.k===k)||bagAll().find(x=>x.k===k);if(!run){BWHY='그 기록을 찾지 못했어요';return false}
       s.r=s.r.filter(x=>!(x&&x.k===k));s.x.push({k:String(k).slice(0,24),t:Date.now()});
-      if(+run.s>=BAG.hp)for(const m of (run.p||[])){const id=m&&m.i;if(/^[A-Z2-9]{6}$/.test(id||'')){const cur=(s.c[id]&&s.c[id].c)|0;if(cur>0){bagSetCnt(s,id,cur-1,m.n);dec=' · '+(m.n||id)+' 처치 횟수 -1'}}}}).then(ok=>{netToast(ok?'기록을 삭제했어요'+dec:'삭제하지 못했습니다 · '+BWHY);bgRe()})}
+      if(bagClr(run))for(const m of (run.p||[])){const id=m&&m.i;if(/^[A-Z2-9]{6}$/.test(id||'')){const cur=(s.c[id]&&s.c[id].c)|0;if(cur>0){bagSetCnt(s,id,cur-1,m.n);dec=' · '+(m.n||id)+' 처치 횟수 -1'}}}}).then(ok=>{netToast(ok?'기록을 삭제했어요'+dec:'삭제하지 못했습니다 · '+BWHY);bgRe()})}
   else if(a==='bgcnt'||a==='bgset'){const id=b.dataset.id,nm=b.dataset.n||'',dd=+b.dataset.d;if(!/^[A-Z2-9]{6}$/.test(id||''))return;let v=null;
     if(a==='bgset'){const row=b.closest('.bgset'),inp=row&&row.querySelector('[data-bgc]'),x=String((inp&&inp.value)||BGED[id]||'').trim();
       if(!/^\d{1,5}$/.test(x)){netToast('처치 횟수를 숫자로 넣어 주세요');if(inp)inp.focus();return}v=+x}
