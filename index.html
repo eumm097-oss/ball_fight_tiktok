@@ -4327,7 +4327,13 @@ function bagAttr(dmg,la,b){                              // 샌드백이 맞은 
   if(!who&&isP(dot))who=dot;
   if(!who&&isP(la))who=la;
   if(!who)who=isP(bagLast)?bagLast:ps[0];
-  if(!who)return;who.bagDmg=(who.bagDmg||0)+dmg;bagLast=who;if(simDraw)try{bagHud()}catch(_){}}
+  if(!who)return;who.bagDmg=(who.bagDmg||0)+dmg;bagLast=who;if(simDraw)try{bagHud();bagPop(dmg,who,b)}catch(_){}}
+function bagPop(dmg,who,b){                                // 맞을 때마다 따로 숫자가 뜸: 때린 쪽을 향한 설화 가장자리에서 (한 위치에 몰리지 않게 살짝 흩어짐 · 동시에 여러 번 맞아도 합치지 않음)
+  if(!b||over||document.querySelectorAll('.bagdm').length>45)return;
+  const a=Math.atan2((who.y||b.y)-b.y,(who.x||b.x)-b.x)+(Math.random()-.5)*.7,W=aW(),H=aH(),r=(b.rad||R)*.92,v=dmg>=1?Math.round(dmg):Math.round(dmg*10)/10;
+  if(!(v>0))return;const e=mk('bagdm','-'+v);e.style.left=((b.x+Math.cos(a)*r)*W/WB)+'px';e.style.top=((b.y+Math.sin(a)*r)*H/WB)+'px';
+  const ox=Math.cos(a)*22,oy=Math.sin(a)*22-10;
+  e.animate([{transform:'translate(-50%,-50%)',opacity:1},{transform:'translate(calc(-50% + '+ox+'px),calc(-50% + '+oy+'px))',opacity:0}],{duration:700,easing:'ease-out',fill:'forwards'}).onfinish=()=>e.remove()}
 function bagSplit(total){                                // 캐릭터별 데미지를 정수로 나눔 (합이 총 데미지와 딱 맞게: 소수점이 큰 쪽부터 1씩 더함)
   const ps=chars.filter(c=>c.side!=='boss'),f=ps.map(c=>Math.floor(c.bagDmg||0));let rest=total-f.reduce((a,x)=>a+x,0);
   const ord=ps.map((c,i)=>[i,(c.bagDmg||0)-f[i]]).sort((a,b)=>b[1]-a[1]);
@@ -4342,8 +4348,6 @@ function bagHud(){                                      // 이름 옆에 이 캐
     const v=Math.round(bagVal(c))+'';if(c._bdv!==v){c._bdv=v;c._bd.textContent=v}}}
 function bagTick(dt){
   const b=bagOf();if(!b)return;bagLock();bagHpSync();if(simDraw)bagHud();
-  if(b.hp<b.max&&b._lh!=null&&b.hp<b._lh&&simDraw&&!over)try{const d=b._lh-b.hp,W=aW(),H=aH(),e=mk('bagdm','-'+Math.round(d));e.style.left=(b.x*W/WB)+'px';e.style.top=((b.y-b.rad*1.1)*H/WB)+'px';
-    e.animate([{transform:'translate(-50%,0)',opacity:1},{transform:'translate(-50%,-26px)',opacity:0}],{duration:650,easing:'ease-out',fill:'forwards'}).onfinish=()=>e.remove()}catch(_){}
   b._lh=b.hp;
   if(phase!=='run'||over)return;
   b.bagT+=dt;const left=Math.max(0,BAG.sec-b.bagT);
@@ -5465,9 +5469,11 @@ function kcHit(c,t){                                   // 파동 한 방: 데미
   const h0=t.hp,cx=Math.cos(c.kcAng),cy=Math.sin(c.kcAng);
   const n0=c.kcHs?c.kcHs.length:0,win=n0<KCW.cells&&grand()*100<kcPct(c),pickD=win&&n0<KCW.dcells;   // 이번 공격이 성공인지 확률로 정함 — 1~7칸은 데미지 2배(최대 128), 8칸은 범위 2배, 그 뒤엔 더 안 커짐
   if(simDraw)kcWaveFx(c);
+  const hu0=c.kcHideUntil,hd0=c.kcHoldUntil;
   c.kcHideUntil=now+KCV.hide;c.kcHoldUntil=Math.max(c.kcHoldUntil||0,now+KCV.hide);   // 파동이 사라질 때까지 가만히 서 있음                          // 파동 연출이 끝날 때까지 빨간 부채꼴을 숨겼다가, 연하게 서서히(점점 빠르게) 다시 나타남
   hurt(t,(KCW.dmg*kcMul(c)+atk(c))*frail(c));   // 이번 공격은 강화 전 데미지 그대로 — 강화(데미지 2배)는 맞힌 뒤에 쌓여서 다음 공격부터 적용
   const ok=t.hp<h0||!t.alive;                          // 피했거나(권루트·숏타민 등) 데미지가 안 들어갔으면 맞은 걸로 안 침 (확률도 그대로)
+  if(!ok){c.kcHideUntil=hu0;c.kcHoldUntil=hd0}          // 피했으면 부채꼴이 멈추거나 숨지 않고 계속 돎
   if(ok){c._kcFlip=true;   // 맞췄으면 부채꼴이 반대쪽으로 넘어감 (같은 상대에게 연달아 맞히지 않게)
     if(t.alive){applySlow(t,2,KCW.slowSec);if(!t.immune){t.bpx=cx*KCW.push;t.bpy=cy*KCW.push;t.bpTau=KCW.pushT;if(!(t.swMap&&t.mode==='sw')){t.vx=cx;t.vy=cy}}}   // 밀리는 쪽으로 가던 방향도 같이 바뀜 (산와머니 점프맵은 따로 움직임)
     const hs=c.kcHs||(c.kcHs=[]);let say=null;
@@ -6302,7 +6308,7 @@ renderGuide();
    새 버전으로 올릴 때: PATCH_VERSION을 바꾸고, PATCH_NOTES 맨 앞에 새 항목을 추가한다.
    tag: nerf(빨강) / buff(초록) / adj(노랑) / rework(보라, 이펙트·연출을 완전히 갈아엎었을 때만 "리워크"라고만 적는다)
    한 줄에는 변경 한 가지만 적는다(여러 개면 줄을 나눈다). 같은 항목을 같은 버전 안에서 다시 고치면 새 줄을 더하지 말고 기존 줄을 최종 값으로 바꾼다(처음 값 → 최종 값). 이펙트·효과음의 변경 내용은 적지 않는다. chars/fx는 {who,tag,lines:[...]}, sys는 문자열 배열. */
-const PATCH_VERSION='4.13.71';
+const PATCH_VERSION='4.13.72';
 /* 줄 안의 색 표시: {+...} 좋아진 수치(초록) · {-...} 나빠진 수치(빨강) · {~...} 조정이면 중요한 부분(노랑) */
 const PATCH_NOTES=[
   {ver:'4.13.64',date:'2026-11-26',chars:[],fx:[],sys:['앱 · 다른 브라우저에서 이미 받은 출석 · 일일 무료 볼을 또 받을 수 있던 오류 수정']},
